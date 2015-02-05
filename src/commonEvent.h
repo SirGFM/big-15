@@ -6,8 +6,6 @@
 #ifndef __COMMONEVENT_H_
 #define __COMMONEVENT_H_
 
-#include <stdio.h>
-
 typedef enum {
     CE_MAX
 } commonEvent;
@@ -41,6 +39,14 @@ void ce_setParam(ce_params p, void *val);
  * @return The parsed common event or CE_MAX, on error
  */
 commonEvent ce_getEventFromFile(FILE *fp);
+
+/**
+ * Get a event's name
+ * 
+ * @param ce The common event
+ * @return The common event's name or NULL
+ */
+char* ce_getName(commonEvent ce);
 
 #endif
 

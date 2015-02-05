@@ -3,8 +3,6 @@
  */
 #include <GFraMe/GFraMe_error.h>
 
-#include <stdio.h>
-
 #include "commonEvent.h"
 
 static char *_ce_names[CE_MAX] = {
@@ -109,5 +107,16 @@ commonEvent ce_getEventFromFile(FILE *fp) {
     
 __ret:
     return ce;
+}
+
+/**
+ * Get a event's name
+ * 
+ * @param ce The common event
+ * @return The common event's name or NULL
+ */
+char* ce_getName(commonEvent ce) {
+    if (ce >= CE_MAX) return 0;
+    return _ce_names[ce];
 }
 

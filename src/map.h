@@ -25,8 +25,20 @@ void map_clean();
 
 /**
  * Load a map from a string
+ * 
+ * @param str String with the map data
+ * @param len String's len
+ * @return GFraMe error code
  */
-GFraMe_ret map_load(char *str);
+GFraMe_ret map_loads(char *str, int len);
+
+/**
+ * Load a map from a file
+ * 
+ * @param fn Filename
+ * @return GFraMe error code
+ */
+GFraMe_ret map_loadf(char *fn);
 
 /**
  * Animate the map tiles
