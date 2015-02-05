@@ -9,6 +9,7 @@
 
 #include "commonEvent.h"
 #include "event.h"
+#include "map.h"
 #include "parser.h"
 
 #define ASSERT(stmt, err) \
@@ -439,6 +440,74 @@ __ret:
         // If 'data' was allocated here
         if (!*ppData && data)
             free(data);
+    }
+    
+    return rv;
+}
+
+/**
+ * Parse a map from a file
+ * 
+ * @param ppM Returns the map
+ * @param fn The file's name
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_map(map **ppM, char *fn) {
+    FILE *fp;
+    GFraMe_ret rv;
+    map *pM;
+    
+    // Intialize this, so it can be cleaned
+    pM = NULL;
+    
+    // Sanitize parameters
+    ASSERT(pM, GFraMe_ret_bad_param);
+    ASSERT(fn, GFraMe_ret_bad_param);
+    
+    fp = fopen(fn, "rt");
+    ASSERT(fp, GFraMe_ret_file_not_found);
+    
+    // Get the working map
+    if (*ppM)
+        pM = *ppM;
+    else {
+        rv = map_init(&pM);
+        ASSERT(rv == GFraMe_ret_ok, GFraMe_ret_memory_error);
+    }
+    map_reset(pM);
+    
+    while (1) {
+        char *pData;
+        event *e;
+        int c, h, len, w;
+        
+        // Retrieve a event from map, in case it's parsed
+        rv = map_getNextEvent(&e, m);
+        ASSERT(rv == GFraMe_ret_ok);
+        // Retrieve the current map's data, to recycle it
+        rv = map_getTilemapData(&pData, &len, m);
+        ASSERT(rv == GFraMe_ret_ok);
+        
+        // Try to parse a event
+        rv = parsef_event(e, fp);
+        if (rv == GFraMe_ret_ok) {
+            map_pushEvent(m);
+            continue;
+        }
+        // Try to parse a tilemap
+        rv = parsef_tilemap(&pData, &len, &w, &h, fp);
+        if (rv == GFraMe_ret_ok) {
+            map_setTilemap(pData, len, w, h);
+            continue;
+        }
+        
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    // Backtrack on error
+    if (rv != GFraMe_ret_ok && !*ppM && pM)
+            free(pM);
     }
     
     return rv;
