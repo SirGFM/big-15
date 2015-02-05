@@ -6,7 +6,8 @@
 #include "commonEvent.h"
 
 static char *_ce_names[CE_MAX] = {
-    "ce_max" /** CE_MAX */
+    "ce_test_door1",    /** CE_TEST_DOOR1 */
+    "ce_max"            /** CE_MAX */
 };
 
 /** Object that caused the event to be called */

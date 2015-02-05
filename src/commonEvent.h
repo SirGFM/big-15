@@ -7,6 +7,7 @@
 #define __COMMONEVENT_H_
 
 typedef enum {
+    CE_TEST_DOOR1,
     CE_MAX
 } commonEvent;
 

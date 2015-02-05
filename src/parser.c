@@ -216,6 +216,7 @@ __ret:
  * Parse a event from a file
  * A event is described by following rule:
  * "e:" "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int
+ * All the numbers are read as tiles (i.e., multiplied by 8)
  * 
  * @param pE Returns the parsed event
  * @param fp File pointer
@@ -278,7 +279,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     }
     
     // Create the event
-    rv = event_init(pE, x, y, w, h, trigger t, ce);
+    rv = event_init(pE, x*8, y*8, w*8, h*8, trigger t, ce);
     
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);
