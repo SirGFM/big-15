@@ -497,12 +497,19 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         // Try to parse a tilemap
         rv = parsef_tilemap(&pData, &len, &w, &h, fp);
         if (rv == GFraMe_ret_ok) {
-            map_setTilemap(pData, len, w, h);
+            map_setTilemap(m, pData, len, w, h);
             continue;
         }
+        // TODO parse other structures
         
+        // Ignore whitespace and check that the file ended
+        parsef_ignoreWhitespace(fp, 1);
+        c = fgetc(fp);
+        ASSERT(c == EOF, GFraMe_ret_failed);
+        break;
     }
     
+    *ppMap = m;
     rv = GFraMe_ret_ok;
 __ret:
     // Backtrack on error

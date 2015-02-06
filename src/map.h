@@ -11,7 +11,7 @@
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
 
-typedef stMap map;
+typedef struct stMap map;
 
 /**
  * Initialize the map module
@@ -66,13 +66,13 @@ GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *m);
 /**
  * Set the current tilemap
  * 
+ * @param m The map
  * @param pData The tilemap
  * @param len How many bytes there are in the buffer (needn't all be in use)
  * @param w How many tiles there are horizontally
  * @param h How many tiles there are vertically
- * @param m The map
  */
-void map_setTilemap(char *pData, int len, int w, int h, map *m);
+void map_setTilemap(map *m, char *pData, int len, int w, int h);
 
 /**
  * Load a map from a string
@@ -111,11 +111,11 @@ void map_draw(map *m);
 /**
  * Get a list of objects for the map's collideable area
  * 
- * @param m The map
  * @param objs List of objects
  * @param len Number of valid objects on the list
+ * @param m The map
  */
-void map_getWalls(map *m, GFraMe_object **objs, int *len);
+void map_getWalls(GFraMe_object **objs, int *len, map *m);
 
 /**
  * Check if a sprite triggered any event
