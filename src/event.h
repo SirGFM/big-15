@@ -44,7 +44,15 @@ typedef enum {
 typedef struct stEvent event;
 
 /**
- * Initialize the event
+ * Alloc a new event
+ * 
+ * @param ppEv Returned event
+ * @return GFraMe error code
+ */
+GFraMe_ret event_getNew(event **ppEv);
+
+/**
+ * Initialize the event's fields
  * 
  * @param ev The event
  * @param x The event's horizontal position (in pixels)
@@ -55,15 +63,15 @@ typedef struct stEvent event;
  * @param ce The common event to run when this is triggered
  * @return GFraMe error code
  */
-GFraMe_ret event_init(event *ev, int x, int y, int w, int h, trigger t,
+GFraMe_ret event_setAll(event *ev, int x, int y, int w, int h, trigger t,
     commonEvent ce);
 
 /**
  * Clean up the event
  * 
- * @param ev The event
+ * @param ppEv The event
  */
-void event_clean(event *ev);
+void event_clean(event **ppEv);
 
 /**
  * Check if the event was triggered and call the appropriate callback

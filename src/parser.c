@@ -280,7 +280,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     }
     
     // Create the event
-    rv = event_init(pE, x*8, y*8, w*8, h*8, trigger t, ce);
+    rv = event_setAll(pE, x*8, y*8, w*8, h*8, trigger t, ce);
     
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);

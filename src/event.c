@@ -18,7 +18,32 @@ struct stEvent {
 };
 
 /**
- * Initialize the event
+ * Alloc a new event
+ * 
+ * @param ppEv Returned event
+ * @return GFraMe error code
+ */
+GFraMe_ret event_getNew(event **ppEv) {
+    GFraMe_ret rv;
+    
+    // Sanitize parameters
+    GFraMe_assertRV(ppEv, "No container passed!", rv = GFraMe_ret_bad_param,
+        __ret);
+    GFraMe_assertRV(!*ppEv, "Event already alloced!", rv = GFraMe_ret_bad_param,
+        __ret);
+    
+    // Alloc the event
+    *ppEv = (event*)malloc(sizeof(event));
+    GFraMe_assertRV(*ppEv, "Failed to alloc!", rv = GFraMe_ret_memory_error,
+        __ret);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Initialize the event's fields
  * 
  * @param ev The event
  * @param x The event's horizontal position (in pixels)
@@ -29,7 +54,7 @@ struct stEvent {
  * @param ce The common event to run when this is triggered
  * @return GFraMe error code
  */
-GFraMe_ret event_init(event *ev, int x, int y, int w, int h, trigger t,
+GFraMe_ret event_setAll(event *ev, int x, int y, int w, int h, trigger t,
     commonEvent ce) {
     GFraMe_ret rv;
     
@@ -76,13 +101,16 @@ __ret:
 /**
  * Clean up the event
  * 
- * @param ev The event
+ * @param ppEv The event
  */
-void event_clean(event *ev) {
-    ev->t = 0;
-    ev->ce = 0;
-    ev->active = 0;
-    GFraMe_object_clear(ev->obj);
+void event_clean(event **ppEv) {
+    *ppEv->t = 0;
+    *ppEv->ce = 0;
+    *ppEv->active = 0;
+    GFraMe_object_clear(*ppEv->obj);
+    
+    free(*ppEv);
+    *ppEv = NULL;
 }
 
 /**

@@ -16,17 +16,17 @@ typedef struct stMap map;
 /**
  * Initialize the map module
  * 
- * @param m Returns the map
+ * @param ppM Returns the map
  * @return GFraMe error code
  */
-GFraMe_ret map_init(map **m);
+GFraMe_ret map_init(map **ppM);
 
 /**
  * Clean up memory used by the map
  * 
- * @param m The map
+ * @param ppM The map
  */
-void map_clean(map **m);
+void map_clean(map **ppM);
 
 /**
  * Reset a map so it can be reused
