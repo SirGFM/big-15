@@ -10,16 +10,9 @@
 
 #include "commonEvent.h"
 #include "event.h"
+#include "global.h"
 #include "map.h"
 #include "parser.h"
-
-#define ASSERT(stmt, err) \
-  do { \
-    if (!(stmt)) { \
-      rv = err; \
-      goto __ret; \
-    } \
-  } while (0)
 
 /**
  * Simply ignore every whitespace. Since this is only called internally, no

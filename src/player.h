@@ -14,33 +14,33 @@ typedef struct stPlayer player;
 /**
  * Initialize the player.
  * 
- * @param pl The player
+ * @param ppPl The player
  * @param firstTile Sprite's standing frame (first from its set)
  * @return GFraMe error code
  */
-GFraMe_ret player_init(player *pl, int firstTile);
+GFraMe_ret player_init(player **ppPl, int firstTile);
 
 /**
  * Clean up the player
  * 
- * @param pl The player
+ * @param ppPl The player
  */
-void player_clean(player *pl);
+void player_clean(player **ppPl);
 
 /**
  * Update the player. Also handle input (i.e., jump)
  * 
- * @param pl The player
+ * @param pPl The player
  * @param ms Time elapsed from last frame, in milliseconds
  */
-void player_update(player *pl, int ms);
+void player_update(player *pPl, int ms);
 
 /**
  * Draw the player to the screen.
  * 
- * @param pl The player
+ * @param pPl The player
  */
-void player_draw(player *pl);
+void player_draw(player *pPl);
 
 #endif
 

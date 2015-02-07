@@ -8,6 +8,7 @@
 
 #include "commonEvent.h"
 #include "event.h"
+#include "global.h"
 #include "types.h"
 
 struct stEvent {
@@ -124,13 +125,15 @@ void event_check(event *ev, GFraMe_sprite *spr) {
     GFraMe_direction last_col;
     GFraMe_object *obj;
     
-    // Define simpler assert
-    #define ASSERT(rv) if (!(rv)) goto __ret;
+    // Sanitize parameters
+    ASSERT_NR(ev);
+    ASSERT_NR(spr);
+    ASSERT_NR(ev->active);
 
     // Check if the event can even be started
-    ASSERT(!(ev->t & IS_PLAYER) || (spr->id & PL_ID));
-    ASSERT(!(ev->t & IS_OBJ) || (spr->id & OBJ_ID));
-    ASSERT(!(ev->t & IS_MOB) || (spr->id & MOB_ID));
+    ASSERT_NR(!(ev->t & IS_PLAYER) || (spr->id & PL_ID));
+    ASSERT_NR(!(ev->t & IS_OBJ) || (spr->id & OBJ_ID));
+    ASSERT_NR(!(ev->t & IS_MOB) || (spr->id & MOB_ID));
         
     // Store the previous state (since event doesn't count as regular col.
     obj = GFraMe_sprite_get_object(spr);
@@ -138,7 +141,7 @@ void event_check(event *ev, GFraMe_sprite *spr) {
     obj->hit = 0;
     
     // Now, check if the sprite overlaps the event
-    ASSERT(GFraMe_object_overlap(&ev->obj, obj, GFraMe_dont_collide)
+    ASSERT_NR(GFraMe_object_overlap(&ev->obj, obj, GFraMe_dont_collide)
         == GFraMe_ret_ok);
     
     // Check if the collision was valid

@@ -21,6 +21,22 @@
 #define GAME_UFPS 60
 #define GAME_DFPS 60
 
+#define ASSERT(stmt, err) \
+  do { \
+    if (!(stmt)) { \
+      rv = err; \
+      goto __ret; \
+    } \
+  } while (0)
+
+#define ASSERT_NR(stmt) \
+  do { \
+    if (!(stmt)) { \
+      goto __ret; \
+    } \
+  } while (0)
+
+
 // Global variables
 extern int gl_running;                 /** Flag the game as running */
 extern GFraMe_spriteset *gl_sset8x8;   /** 8x8 pixels spriteset     */

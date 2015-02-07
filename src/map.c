@@ -24,21 +24,6 @@
 #define TILE_SHOCK_R3 130
 #define TILE_SHOCK_R4 131
 
-#define ASSERT(stmt, err) \
-  do { \
-    if (!(stmt)) { \
-      rv = err; \
-      goto __ret; \
-    } \
-  } while (0)
-
-#define ASSERT_NR(stmt) \
-  do { \
-    if (!(stmt)) { \
-      goto __ret; \
-    } \
-  } while (0)
-
 //============================================================================//
 //                                                                            //
 // Structs                                                                    //
