@@ -4,7 +4,9 @@
 #include <GFraMe/GFraMe_assets.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_hitbox.h>
 #include <GFraMe/GFraMe_keys.h>
+#include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_util.h>
 
 #include "global.h"
@@ -17,8 +19,9 @@
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
-map *m; /** Game map */
+map *m;     /** Game map */
 player *p1; /** First player */
+player *p2; /** Second player */
 
 /**
  * Initialize the playstate
@@ -84,6 +87,9 @@ static GFraMe_ret ps_init() {
     rv = player_init(&p1, ID_PL1, 240);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
+    rv = player_init(&p2, ID_PL2, 240);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
+    
     len = 128;
 	rv = GFraMe_assets_clean_filename(name, "maps/test_tm.txt", &len);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
@@ -102,6 +108,7 @@ static void ps_clean() {
     ui_clean();
     map_clean(&m);
     player_clean(&p1);
+    player_clean(&p2);
 }
 
 /**
@@ -111,6 +118,7 @@ static void ps_draw() {
     GFraMe_event_draw_begin();
         map_draw(m);
         player_draw(p1);
+        player_draw(p2);
         ui_draw();
     GFraMe_event_draw_end();
 }
@@ -120,27 +128,54 @@ static void ps_draw() {
  */
 static void ps_update() {
     GFraMe_event_update_begin();
-        GFraMe_object *pWalls, *pPlObj;
+        GFraMe_object *pWalls, *pPlObj1, *pPlObj2;
         int len, i;
         
+        // Update everything
         map_update(m, GFraMe_event_elapsed);
         player_update(p1, GFraMe_event_elapsed);
+        player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
         
-        player_getObject(&pPlObj, p1);
+        // Collide every entity with the environment
+        player_getObject(&pPlObj1, p1);
+        player_getObject(&pPlObj2, p2);
         map_getWalls(&pWalls, &len, m);
         i = 0;
         while (i < len) {
-            GFraMe_ret rv;
-            
-            rv = GFraMe_object_overlap(&pWalls[i], pPlObj, GFraMe_first_fixed);
-            if (rv == GFraMe_ret_ok) {
-                pPlObj->vy = 0;
-                pPlObj->ay = 0;
-            }
+            GFraMe_object_overlap(&pWalls[i], pPlObj1, GFraMe_first_fixed);
+            GFraMe_object_overlap(&pWalls[i], pPlObj2, GFraMe_first_fixed);
             
             i++;
         }
+        
+        // Collide both players
+        {
+            GFraMe_ret rv;
+            int wasPl1Down, wasPl2Down;
+            
+            wasPl1Down = (pPlObj1->hit & GFraMe_direction_down);
+            wasPl2Down = (pPlObj2->hit & GFraMe_direction_down);
+            
+            rv = GFraMe_object_overlap(pPlObj1, pPlObj2, GFraMe_dont_collide);
+            if (rv == GFraMe_ret_ok) {
+                // If any player wasn't touching down but is now, then it's
+                // above the other one
+                if (!wasPl1Down && (pPlObj1->hit & GFraMe_direction_down)) {
+                    GFraMe_hitbox *hb;
+                    
+                    hb = GFraMe_object_get_hitbox(pPlObj1);
+                    GFraMe_object_set_y(pPlObj1, pPlObj2->y - hb->hh - hb->cy);
+                }
+                else if (!wasPl2Down && (pPlObj2->hit & GFraMe_direction_down)) {
+                    GFraMe_hitbox *hb;
+                    
+                    hb = GFraMe_object_get_hitbox(pPlObj2);
+                    GFraMe_object_set_y(pPlObj2, pPlObj1->y - hb->hh - hb->cy);
+                }
+            }
+        }
+        
     GFraMe_event_update_end();
 }
 

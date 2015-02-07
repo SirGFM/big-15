@@ -121,6 +121,7 @@ void player_update(player *pPl, int ms) {
     int isDown;
     
     obj = GFraMe_sprite_get_object(&pPl->spr);
+    isDown = obj->hit & GFraMe_direction_down;
     
     if (ctr_left(pPl->spr.id)) {
         obj->vx = -PL_VX;
@@ -133,10 +134,16 @@ void player_update(player *pPl, int ms) {
     else
         obj->vx = 0;
     
-    isDown = obj->hit & GFraMe_direction_down;
+    if (isDown && ctr_jump(pPl->spr.id))
+        obj->vy = -PL_JUMPS;
+    
     // Set gravity, when in air
     if (!isDown)
         obj->ay = GRAVITY;
+    else {
+        obj->ay = 0;
+        obj->vy = 0;
+    }
     
     // Check current state and play the apropriate animation
     if (isDown && obj->vx == 0)
