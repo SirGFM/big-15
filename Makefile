@@ -13,6 +13,7 @@ CC=gcc
 #==============================================================================
  OBJS = \
          $(OBJDIR)/commonEvent.o \
+         $(OBJDIR)/controller.o \
          $(OBJDIR)/event.o \
          $(OBJDIR)/global.o \
          $(OBJDIR)/globalVar.o \

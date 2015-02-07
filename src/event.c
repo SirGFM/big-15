@@ -131,9 +131,9 @@ void event_check(event *ev, GFraMe_sprite *spr) {
     ASSERT_NR(ev->active);
 
     // Check if the event can even be started
-    ASSERT_NR(!(ev->t & IS_PLAYER) || (spr->id & PL_ID));
-    ASSERT_NR(!(ev->t & IS_OBJ) || (spr->id & OBJ_ID));
-    ASSERT_NR(!(ev->t & IS_MOB) || (spr->id & MOB_ID));
+    ASSERT_NR(!(ev->t & IS_PLAYER) || (spr->id & ID_PL));
+    ASSERT_NR(!(ev->t & IS_OBJ) || (spr->id & ID_OBJ));
+    ASSERT_NR(!(ev->t & IS_MOB) || (spr->id & ID_MOB));
         
     // Store the previous state (since event doesn't count as regular col.
     obj = GFraMe_sprite_get_object(spr);

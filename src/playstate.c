@@ -4,20 +4,21 @@
 #include <GFraMe/GFraMe_assets.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_keys.h>
 #include <GFraMe/GFraMe_util.h>
 
 #include "global.h"
 #include "map.h"
+#include "player.h"
 #include "playstate.h"
+#include "types.h"
 #include "ui.h"
 
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
-/**
- * Game map
- */
-map *m;
+map *m; /** Game map */
+player *p1; /** First player */
 
 /**
  * Initialize the playstate
@@ -80,6 +81,9 @@ static GFraMe_ret ps_init() {
     rv = map_init(&m);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
     
+    rv = player_init(&p1, ID_PL1, 240);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
+    
     len = 128;
 	rv = GFraMe_assets_clean_filename(name, "maps/test_tm.txt", &len);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
@@ -97,6 +101,7 @@ __ret:
 static void ps_clean() {
     ui_clean();
     map_clean(&m);
+    player_clean(&p1);
 }
 
 /**
@@ -105,6 +110,7 @@ static void ps_clean() {
 static void ps_draw() {
     GFraMe_event_draw_begin();
         map_draw(m);
+        player_draw(p1);
         ui_draw();
     GFraMe_event_draw_end();
 }
@@ -114,8 +120,27 @@ static void ps_draw() {
  */
 static void ps_update() {
     GFraMe_event_update_begin();
+        GFraMe_object *pWalls, *pPlObj;
+        int len, i;
+        
         map_update(m, GFraMe_event_elapsed);
+        player_update(p1, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
+        
+        player_getObject(&pPlObj, p1);
+        map_getWalls(&pWalls, &len, m);
+        i = 0;
+        while (i < len) {
+            GFraMe_ret rv;
+            
+            rv = GFraMe_object_overlap(&pWalls[i], pPlObj, GFraMe_first_fixed);
+            if (rv == GFraMe_ret_ok) {
+                pPlObj->vy = 0;
+                pPlObj->ay = 0;
+            }
+            
+            i++;
+        }
     GFraMe_event_update_end();
 }
 
@@ -133,12 +158,12 @@ static void ps_event() {
 //        GFraMe_event_on_bg();
 //        GFraMe_event_on_fg();
         GFraMe_event_on_key_down();
-//            if (GFraMe_keys.esc)
-//                gl_running = 0;
+            if (GFraMe_keys.esc)
+                gl_running = 0;
         GFraMe_event_on_key_up();
         GFraMe_event_on_controller();
-//            if (GFraMe_controller_max > 0 && GFraMe_controllers[0].home)
-//                gl_running = 0;
+            if (GFraMe_controller_max > 0 && GFraMe_controllers[0].home)
+                gl_running = 0;
         GFraMe_event_on_quit();
             gl_running = 0;
     GFraMe_event_end();
