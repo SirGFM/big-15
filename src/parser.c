@@ -6,6 +6,7 @@
 #include <GFraMe/GFraMe_error.h>
 
 #include <stdio.h>
+#include <string.h>
 
 #include "commonEvent.h"
 #include "event.h"
@@ -33,8 +34,8 @@ static void parsef_ignoreWhitespace(FILE *fp, int ignoreNewline) {
     while (1) {
         c = fgetc(fp);
         
-        if (c == EOF || c != ' ' || c != '\t' || c != '\r' ||
-            (ignoreNewline && c != '\n') || (!ignoreNewline && c == '\n'))
+        if (c == EOF || (c != ' ' && c != '\t' && c != '\r' &&
+            (!ignoreNewline || c != '\n')))
             break;
     }
     
@@ -76,6 +77,7 @@ static GFraMe_ret parsef_int(int *pI, FILE *fp) {
         if (c == EOF || c < '0' || c > '9')
             break;
     }
+    ungetc(c, fp);
     
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);
@@ -165,7 +167,7 @@ GFraMe_ret parsef_commonEvent(commonEvent *pCe, FILE *fp) {
     ce = 0;
     while (ce < CE_MAX) {
         char *ceName;
-        int c, i;
+        int c;
         
         // Get the current event's name
         ceName = ce_getName(ce);
@@ -176,21 +178,13 @@ GFraMe_ret parsef_commonEvent(commonEvent *pCe, FILE *fp) {
         ASSERT(c == '"', GFraMe_ret_failed);
         
         // Try to match every other character to the current event
-        i = 0;
-        while (1) {
+        rv = parsef_string(fp, ceName, strlen(ceName));
+        if (rv == GFraMe_ret_ok) {
             c = fgetc(fp);
             ASSERT(c != EOF, GFraMe_ret_failed);
-            
-            // Stop either at the string end or on an unmatched character
-            if (c == '"' || c != ceName[i])
+            if (c == '"')
                 break;
-            
-            i++;
         }
-        
-        // If the string ended, stop
-        if (i != 0 && c == '"' && ceName[i + 1] == '\0')
-            break;
         
         // Return to the string's begin
         irv = fsetpos(fp, &pos);
@@ -277,6 +271,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
         else if (parsef_string(fp, "ce:", 3) == GFraMe_ret_ok) {
             rv = parsef_commonEvent(&ce, fp);
             ASSERT(rv == GFraMe_ret_ok, rv);
+            ASSERT(ce < CE_MAX, GFraMe_ret_failed);
         }
         else
             ASSERT(0, GFraMe_ret_failed);
@@ -284,6 +279,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     
     // Create the event
     rv = event_setAll(pE, x*8, y*8, w*8, h*8, t, ce);
+    ASSERT(rv == GFraMe_ret_ok, rv);
     
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);
@@ -384,7 +380,7 @@ GFraMe_ret parsef_tilemap(unsigned char **ppData, int *pDataLen, int *pW,
     h = 0;
     while (1) {
         parsef_ignoreWhitespace(fp, 1);
-    
+        
         // Check if the end of the array was reached
         c = fgetc(fp);
         ASSERT(c != EOF, GFraMe_ret_failed);
@@ -413,17 +409,22 @@ GFraMe_ret parsef_tilemap(unsigned char **ppData, int *pDataLen, int *pW,
             // Ignore everything but '\n'
             parsef_ignoreWhitespace(fp, 0);
             
+            // Go to the next column
             i++;
+            
+            // Check if the line ended
+            c = fgetc(fp);
+            ASSERT(c != EOF, GFraMe_ret_failed);
+            if (c == '\n') {
+                parsef_ignoreWhitespace(fp, 1);
+                break;
+            }
+            ungetc(c, fp);
         }
         if (i > w)
             w = i;
         
-        // After reading 'i' tiles, a '\n' must be found
-        c = fgetc(fp);
-        ASSERT(c != EOF, GFraMe_ret_failed);
-        ASSERT(c == '\n', GFraMe_ret_failed);
-        
-        // Go to the next column
+        // Go to the next line
         h++;
     }
     
@@ -464,7 +465,7 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
     pM = NULL;
     
     // Sanitize parameters
-    ASSERT(pM, GFraMe_ret_bad_param);
+    ASSERT(ppM, GFraMe_ret_bad_param);
     ASSERT(fn, GFraMe_ret_bad_param);
     
     fp = fopen(fn, "rt");

@@ -433,7 +433,7 @@ void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h) {
     // Get all the animated tiles
     i = 0;
     while (i < w*h) {
-        char t;
+        unsigned char t;
         
         t = pData[i];
         if (map_tileIsAnimated(t) == GFraMe_ret_ok) {
@@ -519,7 +519,7 @@ void map_update(map *pM, int ms) {
  * @param pM The map
  */
 void map_draw(map *pM) {
-    int i, offset, x, y, w, h;
+    int i, offset, x, y;
     
     // Remove this ifdef when camera is implemented (if ever)
 #if 0
@@ -527,16 +527,12 @@ void map_draw(map *pM) {
     y = -(cam_y % TILE_HEIGHT);
     // Get the first tile position
     offset = cam_y / TILE_HEIGHT * TILES_PER_LINE;
-    w = SCR_W;
-    h = SCR_H;
 #else
     int cam_y;
     
     cam_y = 0;
     y = 0;
     offset = 0;
-    w = 320;
-    h = 240;
 #endif
     
     // Loop through every tile
@@ -559,11 +555,11 @@ void map_draw(map *pM) {
         
         // Updates the tile position
         x += 8;
-        if (x >= w) {
+        if (x >= SCR_W) {
             x = 0;
             y += 8;
         }
-        if (y - cam_y > h)
+        if (y - cam_y > SCR_H)
             break;
         i++;
     }
