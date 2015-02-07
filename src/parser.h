@@ -49,8 +49,8 @@ GFraMe_ret parsef_event(event *pE, FILE *fp);
  * @param fp File pointer
  * @return GFraMe error code
  */
-GFraMe_ret parsef_tilemap(char **ppData, int *pDataLen, int *pW, int *pH,
-    FILE *fp);
+GFraMe_ret parsef_tilemap(unsigned char **ppData, int *pDataLen, int *pW,
+    int *pH, FILE *fp);
 
 /**
  * Parse a map from a file

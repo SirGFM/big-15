@@ -12,7 +12,7 @@ GFraMe_ret ui_init() {
     GFraMe_ret rv;
     
     rv = GFraMe_ret_ok;
-__ret:
+//__ret:
     return rv;
 }
 

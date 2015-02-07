@@ -225,10 +225,9 @@ __ret:
  */
 GFraMe_ret parsef_event(event *pE, FILE *fp) {
     commonEvent ce;
-    event e;
     fpos_t pos;
     GFraMe_ret rv;
-    int c, irv, h, w, x, y;
+    int irv, h, w, x, y;
     trigger t;
     
     // Sanitize parameters
@@ -268,8 +267,12 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
             ASSERT(rv == GFraMe_ret_ok, rv);
         }
         else if (parsef_string(fp, "t:", 2) == GFraMe_ret_ok) {
-            rv = parsef_int(&t, fp);
+            int i;
+            
+            rv = parsef_int(&i, fp);
             ASSERT(rv == GFraMe_ret_ok, rv);
+            
+            t = (trigger)i;
         }
         else if (parsef_string(fp, "ce:", 3) == GFraMe_ret_ok) {
             rv = parsef_commonEvent(&ce, fp);
@@ -280,7 +283,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     }
     
     // Create the event
-    rv = event_setAll(pE, x*8, y*8, w*8, h*8, trigger t, ce);
+    rv = event_setAll(pE, x*8, y*8, w*8, h*8, t, ce);
     
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);
@@ -301,16 +304,16 @@ __ret:
  * @param val Value to be set into the buffer
  * @param GFraMe error code
  */
-static GFraMe_ret parse_setTile(char **pData, int *pDataLen, int i, int h,
-    int w, int val) {
+static GFraMe_ret parse_setTile(unsigned char **pData, int *pDataLen, int i,
+    int h, int w, int val) {
     GFraMe_ret rv;
     
     // If the buffer is too small, double its size
     if (i + h*w >= *pDataLen) {
         *pDataLen *= 2;
         
-        *pData = (char*)realloc(*pData, *pDataLen);
-        ASSERT(*pData, GFraMe_memory_error);
+        *pData = (unsigned char*)realloc(*pData, *pDataLen);
+        ASSERT(*pData, GFraMe_ret_memory_error);
     }
     
     // Set the tile
@@ -335,12 +338,12 @@ __ret:
  * @param fp File pointer
  * @return GFraMe error code
  */
-GFraMe_ret parsef_tilemap(char **ppData, int *pDataLen, int *pW, int *pH,
-    FILE *fp) {
-    char *data;
+GFraMe_ret parsef_tilemap(unsigned char **ppData, int *pDataLen, int *pW,
+    int *pH, FILE *fp) {
+    unsigned char *data;
     fpos_t pos;
     GFraMe_ret rv;
-    int c, dataLen, h, i, w;
+    int c, dataLen, h, i, irv, w;
     
     // Intialize this, so it can be cleaned
     data = NULL;
@@ -368,12 +371,12 @@ GFraMe_ret parsef_tilemap(char **ppData, int *pDataLen, int *pW, int *pH,
     // Set the working buffer
     if (!*ppData) {
         dataLen = 2;
-        data = (char*)malloc(sizeof(char)*dataLen);
-        ASSERT(data, GFraMe_memory_error);
+        data = (unsigned char*)malloc(sizeof(char)*dataLen);
+        ASSERT(data, GFraMe_ret_memory_error);
     }
     else {
         dataLen = *pDataLen;
-        data = *ppDataLen;
+        data = *ppData;
     }
     
     // Parse the tilemap
@@ -477,27 +480,27 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
     map_reset(pM);
     
     while (1) {
-        char *pData;
+        unsigned char *pData;
         event *e;
         int c, h, len, w;
         
         // Retrieve a event from map, in case it's parsed
-        rv = map_getNextEvent(&e, m);
-        ASSERT(rv == GFraMe_ret_ok);
+        rv = map_getNextEvent(&e, pM);
+        ASSERT(rv == GFraMe_ret_ok, rv);
         // Retrieve the current map's data, to recycle it
-        rv = map_getTilemapData(&pData, &len, m);
-        ASSERT(rv == GFraMe_ret_ok);
+        rv = map_getTilemapData(&pData, &len, pM);
+        ASSERT(rv == GFraMe_ret_ok, rv);
         
         // Try to parse a event
         rv = parsef_event(e, fp);
         if (rv == GFraMe_ret_ok) {
-            map_pushEvent(m);
+            map_pushEvent(pM);
             continue;
         }
         // Try to parse a tilemap
         rv = parsef_tilemap(&pData, &len, &w, &h, fp);
         if (rv == GFraMe_ret_ok) {
-            map_setTilemap(m, pData, len, w, h);
+            map_setTilemap(pM, pData, len, w, h);
             continue;
         }
         // TODO parse other structures
@@ -509,13 +512,12 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         break;
     }
     
-    *ppMap = m;
+    *ppM = pM;
     rv = GFraMe_ret_ok;
 __ret:
     // Backtrack on error
     if (rv != GFraMe_ret_ok && !*ppM && pM)
             free(pM);
-    }
     
     return rv;
 }

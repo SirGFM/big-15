@@ -10,8 +10,9 @@
 
 #include "commonEvent.h"
 #include "event.h"
+#include "global.h"
 #include "map.h"
-#include "parse.h"
+#include "parser.h"
 
 #define TILE_SHOCK_L1 96
 #define TILE_SHOCK_L2 97
@@ -44,7 +45,7 @@ typedef struct {
 } animTile;
 
 struct stMap {
-    char *data;           /** Tilemap's data                               */
+    unsigned char *data;  /** Tilemap's data                               */
     int dataLen;          /** Size of the tilemap's buffer                 */
     int w;                /** Width of the tilemap, in tiles               */
     int h;                /** Height of the tilemap, int tiles             */
@@ -93,7 +94,7 @@ static GFraMe_ret map_tileIsAnimated(int tile) {
  * @param ms Time elapsed from the previous frame
  */
 static void map_animateTile(map *pM, animTile *pT, int ms) {
-    char tile;
+    unsigned char tile;
     
     // Update the tile's running time
     pT->elapsed += ms;
@@ -108,13 +109,13 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
         case TILE_SHOCK_L3: { // 16 fps
             if (pT->elapsed >= 62) {
                 tile++;
-                pT->elased -= 62;
+                pT->elapsed -= 62;
             }
         } break;
         case TILE_SHOCK_L4: { // 16 fps
             if (pT->elapsed >= 62) {
                 tile = TILE_SHOCK_L1;
-                pT->elased -= 62;
+                pT->elapsed -= 62;
             }
         } break;
         case TILE_SHOCK_R1:
@@ -122,13 +123,13 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
         case TILE_SHOCK_R3: { // 16 fps
             if (pT->elapsed >= 62) {
                 tile++;
-                pT->elased -= 62;
+                pT->elapsed -= 62;
             }
         } break;
         case TILE_SHOCK_R4: { // 16 fps
             if (pT->elapsed >= 62) {
                 tile = TILE_SHOCK_R1;
-                pT->elased -= 62;
+                pT->elapsed -= 62;
             }
         } break;
         default: {}
@@ -159,6 +160,8 @@ static GFraMe_ret map_setEventsMinLength(map *pM, int len) {
     
     // Initialize every uninitialize event
     while (i < len) {
+        pM->evs[i] = NULL;
+        
         rv = event_getNew(&pM->evs[i]);
         ASSERT(pM->evs[i], rv);
         i++;
@@ -177,16 +180,14 @@ __ret:
  */
 static GFraMe_ret map_setObjectsMinLength(map *pM, int len) {
     GFraMe_ret rv;
-    int i;
     
     // Do nothing if the buffer is already big enough
-    ASSERT(pM->objLen < len, GFraMe_ret_ok);
+    ASSERT(pM->objsLen < len, GFraMe_ret_ok);
     
     // Expand the buffer
-    i = pM->objLen;
-    pM->obj = (GFraMe_object*)realloc(pM->obj, sizeof(GFraMe_object) * len);
-    ASSERT(pM->obj, GFraMe_ret_memory_error);
-    pM->objLen = len;
+    pM->objs = (GFraMe_object*)realloc(pM->objs, sizeof(GFraMe_object) * len);
+    ASSERT(pM->objs, GFraMe_ret_memory_error);
+    pM->objsLen = len;
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -201,14 +202,12 @@ __ret:
  */
 static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len) {
     GFraMe_ret rv;
-    int i;
     
     // Do nothing if the buffer is already big enough
     ASSERT(pM->animTilesLen < len, GFraMe_ret_ok);
     
     // Expand the buffer
-    i = pM->objLen;
-    pM->animTiles = (animTile*)realloc(pM->animTiles, sizeof(animTiles) * len);
+    pM->animTiles = (animTile*)realloc(pM->animTiles, sizeof(animTile) * len);
     ASSERT(pM->animTiles, GFraMe_ret_memory_error);
     pM->animTilesLen = len;
     
@@ -261,7 +260,7 @@ GFraMe_ret map_init(map **ppM) {
     pM->w = 40;
     pM->h = 30;
     pM->dataLen = pM->w * pM->h;
-    pM->data = (char*)malloc(pM->dataLen);
+    pM->data = (unsigned char*)malloc(pM->dataLen);
     GFraMe_assertRV(pM->data, "Failed to alloc!", rv = GFraMe_ret_memory_error,
         __ret);
     
@@ -277,12 +276,12 @@ GFraMe_ret map_init(map **ppM) {
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init anim", rv = rv, __ret);
     pM->animTilesUsed = 0;
     
-    ppM = pM;
+    *ppM = pM;
     rv = GFraMe_ret_ok;
 __ret:
     if (rv != GFraMe_ret_ok && pM)
         free(pM);
-   k 
+    
     return rv;
 }
 
@@ -298,16 +297,16 @@ void map_clean(map **ppM) {
     ASSERT_NR(ppM);
     ASSERT_NR(*ppM);
     
-    free(*ppM->data);
-    free(*ppM->objs);
-    free(*ppM->animTiles);
+    free((*ppM)->data);
+    free((*ppM)->objs);
+    free((*ppM)->animTiles);
     
     i = 0;
-    while (i < *ppM->evsLen) {
-        event_clean(&(*ppM->evs[i]));
+    while (i < (*ppM)->evsLen) {
+        event_clean(&(*ppM)->evs[i]);
         i++;
     }
-    free(*ppM->evs);
+    free((*ppM)->evs);
     
     free(*ppM);
     *ppM = NULL;
@@ -350,7 +349,7 @@ GFraMe_ret map_getNextEvent(event **ppE, map *pM) {
     
     // Expand the buffer, if necessary
     if (pM->evsUsed >= pM->evsLen) {
-        rv = map_setEventsMinLength(pM, pm->evsLen * 2);
+        rv = map_setEventsMinLength(pM, pM->evsLen * 2);
         ASSERT(rv == GFraMe_ret_ok, rv);
     }
     
@@ -389,7 +388,7 @@ __ret:
  * @param pM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *pM) {
+GFraMe_ret map_getTilemapData(unsigned char **ppData, int *pLen, map *pM) {
     GFraMe_ret rv;
     
     // Sanitize parameters
@@ -398,7 +397,7 @@ GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *pM) {
     ASSERT(pM, GFraMe_ret_bad_param);
     
     // Retrieve the to be returned variables
-    *pData = pM->data;
+    *ppData = pM->data;
     *pLen = pM->dataLen;
     rv = GFraMe_ret_ok;
 __ret:
@@ -414,7 +413,8 @@ __ret:
  * @param w How many tiles there are horizontally
  * @param h How many tiles there are vertically
  */
-void map_setTilemap(map *pM, char *pData, int len, int w, int h) {
+void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h) {
+    GFraMe_ret rv;
     int i;
     
     // Sanitize parameters
@@ -472,6 +472,8 @@ __ret:
  * @return GFraMe error code
  */
 GFraMe_ret map_loads(map *m, char *str, int len) {
+    // Wrong return... >__<
+    return GFraMe_ret_failed;
 }
 
 /**
@@ -487,7 +489,6 @@ GFraMe_ret map_loadf(map *pM, char *fn) {
     // Parse the map from a file
     rv = parsef_map(&pM, fn);
     
-__ret:
     return rv;
 }
 
@@ -518,6 +519,54 @@ void map_update(map *pM, int ms) {
  * @param pM The map
  */
 void map_draw(map *pM) {
+    int i, offset, x, y, w, h;
+    
+    // Remove this ifdef when camera is implemented (if ever)
+#if 0
+    // Get the first tile position on screen
+    y = -(cam_y % TILE_HEIGHT);
+    // Get the first tile position
+    offset = cam_y / TILE_HEIGHT * TILES_PER_LINE;
+    w = SCR_W;
+    h = SCR_H;
+#else
+    int cam_y;
+    
+    cam_y = 0;
+    y = 0;
+    offset = 0;
+    w = 320;
+    h = 240;
+#endif
+    
+    // Loop through every tile
+    i = 0;
+    x = 0;
+    while (1) {
+        // Check that the tile is still valid
+        if (i >= pM->w * pM->h)
+            break;
+        
+        // Render the tile to the screen
+        GFraMe_spriteset_draw
+            (
+             gl_sset8x8,
+             pM->data[offset + i],
+             x,
+             y,
+             0 // flipped
+            );
+        
+        // Updates the tile position
+        x += 8;
+        if (x >= w) {
+            x = 0;
+            y += 8;
+        }
+        if (y - cam_y > h)
+            break;
+        i++;
+    }
 }
 
 /**

@@ -1,11 +1,23 @@
 /**
  * @file src/playstate.c
  */
+#include <GFraMe/GFraMe_assets.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_util.h>
 
+#include "global.h"
+#include "map.h"
 #include "playstate.h"
 #include "ui.h"
+
+// Initialize variables used by the event module
+GFraMe_event_setup();
+
+/**
+ * Game map
+ */
+map *m;
 
 /**
  * Initialize the playstate
@@ -39,9 +51,9 @@ void playstate() {
     rv = ps_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
-    GFraMe_event_init(60, 60);
+    GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
-    while (1/* is running */) {
+    while (gl_running) {
         ps_event();
         ps_update();
         ps_draw();
@@ -57,10 +69,26 @@ __ret:
  * @return GFraMe error code
  */
 static GFraMe_ret ps_init() {
+/*
+	char name[128];
+    int len;
+*/
+    
     GFraMe_ret rv;
     
     rv = ui_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init ui", __ret);
+    
+    rv = map_init(&m);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
+    
+/*
+    len = 128;
+	rv = GFraMe_assets_clean_filename(name, "maps/test_tm.txt", &len);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
+    rv = map_loadf(m, name);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
+*/
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -72,6 +100,7 @@ __ret:
  */
 static void ps_clean() {
     ui_clean();
+    map_clean(&m);
 }
 
 /**
@@ -79,6 +108,7 @@ static void ps_clean() {
  */
 static void ps_draw() {
     GFraMe_event_draw_begin();
+        map_draw(m);
         ui_draw();
     GFraMe_event_draw_end();
 }
@@ -88,6 +118,7 @@ static void ps_draw() {
  */
 static void ps_update() {
     GFraMe_event_update_begin();
+        map_update(m, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
     GFraMe_event_update_end();
 }

@@ -11,6 +11,8 @@
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
 
+#include "event.h"
+
 typedef struct stMap map;
 
 /**
@@ -61,7 +63,7 @@ void map_pushEvent(map *pM);
  * @param pM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *pM);
+GFraMe_ret map_getTilemapData(unsigned char **ppData, int *pLen, map *pM);
 
 /**
  * Set the current tilemap
@@ -72,7 +74,7 @@ GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *pM);
  * @param w How many tiles there are horizontally
  * @param h How many tiles there are vertically
  */
-void map_setTilemap(map *pM, char *pData, int len, int w, int h);
+void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h);
 
 /**
  * Load a map from a string

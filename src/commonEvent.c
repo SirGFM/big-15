@@ -5,7 +5,7 @@
 
 #include "commonEvent.h"
 
-static char *_ce_names[CE_MAX] = {
+static char *_ce_names[CE_MAX+1] = {
     "ce_test_door1",    /** CE_TEST_DOOR1 */
     "ce_max"            /** CE_MAX */
 };
@@ -63,7 +63,7 @@ commonEvent ce_getEventFromFile(FILE *fp) {
     commonEvent ce;
     fpos_t pos;
     
-    GFraME_assertRV(fp, "Invalid file!", ce = CE_MAX, __ret);
+    GFraMe_assertRV(fp, "Invalid file!", ce = CE_MAX, __ret);
     
     // Get the current position, to "backtrack" on error
     i = fgetpos(fp, &pos);

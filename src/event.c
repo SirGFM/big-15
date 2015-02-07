@@ -71,10 +71,10 @@ GFraMe_ret event_setAll(event *ev, int x, int y, int w, int h, trigger t,
         __ret);
     
     // Set the event's hitbox
-    GFraMe_object_clear(ev->obj);
-    GFraMe_object_set_x(ev->obj, x);
-    GFraMe_object_set_y(ev->obj, y);
-    GFraME_hitbox_set(GFraMe_object_get_hitbox(ev->obj),
+    GFraMe_object_clear(&ev->obj);
+    GFraMe_object_set_x(&ev->obj, x);
+    GFraMe_object_set_y(&ev->obj, y);
+    GFraMe_hitbox_set(GFraMe_object_get_hitbox(&ev->obj),
         GFraMe_hitbox_upper_left, 0, 0, w, h);
     
     // Make sure that only players can start the event, if 'on_pressed' is set
@@ -104,10 +104,11 @@ __ret:
  * @param ppEv The event
  */
 void event_clean(event **ppEv) {
-    *ppEv->t = 0;
-    *ppEv->ce = 0;
-    *ppEv->active = 0;
-    GFraMe_object_clear(*ppEv->obj);
+    (*ppEv)->t = 0;
+    (*ppEv)->ce = 0;
+    (*ppEv)->active = 0;
+    
+    GFraMe_object_clear(&(*ppEv)->obj);
     
     free(*ppEv);
     *ppEv = NULL;
@@ -137,22 +138,22 @@ void event_check(event *ev, GFraMe_sprite *spr) {
     obj->hit = 0;
     
     // Now, check if the sprite overlaps the event
-    ASSERT(GFraMe_object_overlaps(ev->obj, obj, GFraMe_dont_collide)
+    ASSERT(GFraMe_object_overlap(&ev->obj, obj, GFraMe_dont_collide)
         == GFraMe_ret_ok);
     
     // Check if the collision was valid
-    if ((ev->t & ON_PRESSED) && 0/** TODO check_button */
-        || (ev->t & ON_LEFT) && (obj->hit & GFraMe_direction_left)
-        || (ev->t & ON_RIGHT) && (obj->hit & GFraMe_direction_right)
-        || (ev->t & ON_UP) && (obj->hit & GFraMe_direction_up)
-        || (ev->t & ON_DOWN) && (obj->hit & GFraMe_direction_down)) {
+    if (((ev->t & ON_PRESSED) && 0/** TODO check_button */)
+        || ((ev->t & ON_ENTER_LEFT) && (obj->hit & GFraMe_direction_left))
+        || ((ev->t & ON_ENTER_RIGHT) && (obj->hit & GFraMe_direction_right))
+        || ((ev->t & ON_ENTER_UP) && (obj->hit & GFraMe_direction_up))
+        || ((ev->t & ON_ENTER_DOWN) && (obj->hit & GFraMe_direction_down))) {
         // Restore the previous state (before calling the callback)
         obj->hit = last_col;
         
         // Set the caller and the target and call the callback
         ce_setParam(CE_CALLER, ev);
         ce_setParam(CE_TARGET, spr);
-        ce_callEvent(t->ce);
+        ce_callEvent(ev->ce);
         
         // 'Kill' the event
         if (!(ev->t & KEEP_ACTIVE))
