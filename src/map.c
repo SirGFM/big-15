@@ -8,8 +8,19 @@
 
 #include <stdio.h>
 
+#include "commonEvent.h"
 #include "event.h"
 #include "map.h"
+#include "parse.h"
+
+#define TILE_SHOCK_L1 96
+#define TILE_SHOCK_L2 97
+#define TILE_SHOCK_L3 98
+#define TILE_SHOCK_L4 99
+#define TILE_SHOCK_R1 128
+#define TILE_SHOCK_R2 129
+#define TILE_SHOCK_R3 130
+#define TILE_SHOCK_R4 131
 
 #define ASSERT(stmt, err) \
   do { \
@@ -41,6 +52,7 @@ struct stMap {
     event **evs;          /** List of events                               */
     int evsLen;           /** Size of the events list                      */
     int evsUsed;          /** How many events are currently active         */
+    int didGetEvent;      /** Whether map_getNextEvent has been called     */
     
     GFraMe_object *objs;  /** List of objects, for the walls               */
     int objsLen;          /** Size of the objects list                     */
@@ -50,6 +62,80 @@ struct stMap {
     int animTilesLen;     /** Size of the list of animated tiles           */
     int animTilesUsed;    /** Number of animated tiles on the current */
 };
+
+/**
+ * Check if a tile is animated or not
+ * 
+ * @param tile The tile to be checked
+ * @return GFraMe_ret_ok if it is, GFraMe_ret_failed otherwise
+ */
+static GFraMe_ret map_tileIsAnimated(int tile) {
+    switch (tile) {
+        case TILE_SHOCK_L1:
+        case TILE_SHOCK_L2:
+        case TILE_SHOCK_L3:
+        case TILE_SHOCK_L4:
+        case TILE_SHOCK_R1:
+        case TILE_SHOCK_R2:
+        case TILE_SHOCK_R3:
+        case TILE_SHOCK_R4:
+            return GFraMe_ret_ok;
+        default:
+            return GFraMe_ret_failed;
+    }
+}
+
+/**
+ * Updates and check if a given animated tile should be modified
+ * 
+ * @param pM The map
+ * @param pT The animated tile
+ * @param ms Time elapsed from the previous frame
+ */
+static void map_animateTile(map *pM, animTile *pT, int ms) {
+    char tile;
+    
+    // Update the tile's running time
+    pT->elapsed += ms;
+    
+    // Check which tile it is
+    tile = pM->data[pT->pos];
+    
+    // Update the tile, if necessary
+    switch (tile) {
+        case TILE_SHOCK_L1:
+        case TILE_SHOCK_L2:
+        case TILE_SHOCK_L3: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile++;
+                pT->elased -= 62;
+            }
+        } break;
+        case TILE_SHOCK_L4: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile = TILE_SHOCK_L1;
+                pT->elased -= 62;
+            }
+        } break;
+        case TILE_SHOCK_R1:
+        case TILE_SHOCK_R2:
+        case TILE_SHOCK_R3: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile++;
+                pT->elased -= 62;
+            }
+        } break;
+        case TILE_SHOCK_R4: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile = TILE_SHOCK_R1;
+                pT->elased -= 62;
+            }
+        } break;
+        default: {}
+    }
+    
+    pM->data[pT->pos] = tile;
+}
 
 /**
  * Realloc the evs buffer as to have at least 'len' members
@@ -158,12 +244,18 @@ GFraMe_ret map_init(map **ppM) {
     // Intialize every buffer, so bad things doesn't happen on error
     pM->data = NULL;
     pM->dataLen = 0;
+    pM->w = 0;
+    pM->h = 0;
     pM->evs = NULL;
     pM->evsLen = 0;
+    pM->evsUsed = 0;
+    pM->didGetEvent = 0;
     pM->objs = NULL;
     pM->objsLen = 0;
+    pM->objsUsed = 0;
     pM->animTiles = NULL;
     pM->animTilesLen = 0;
+    pM->animTilesUsed = 0;
     
     // Initialize every struture it might use
     pM->w = 40;
@@ -190,7 +282,7 @@ GFraMe_ret map_init(map **ppM) {
 __ret:
     if (rv != GFraMe_ret_ok && pM)
         free(pM);
-    
+   k 
     return rv;
 }
 
@@ -226,9 +318,19 @@ __ret:
 /**
  * Reset a map so it can be reused
  * 
- * @param m The map
+ * @param pM The map
  */
-void map_reset(map *m) {
+void map_reset(map *pM) {
+    ASSERT_NR(pM);
+    
+    pM->w = 0;
+    pM->h = 0;
+    pM->evsUsed = 0;
+    pM->objsUsed = 0;
+    pM->animTilesUsed = 0;
+    
+__ret:
+    return;
 }
 
 /**
@@ -236,19 +338,47 @@ void map_reset(map *m) {
  * Note that the event must be pushed later
  * 
  * @param ppE Returns the event
- * @param m The map
+ * @param ipM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_getNextEvent(event **ppE, map *m) {
+GFraMe_ret map_getNextEvent(event **ppE, map *pM) {
+    GFraMe_ret rv;
+    
+    // Sanitize arguments
+    ASSERT(ppE, GFraMe_ret_bad_param);
+    ASSERT(pM, GFraMe_ret_bad_param);
+    
+    // Expand the buffer, if necessary
+    if (pM->evsUsed >= pM->evsLen) {
+        rv = map_setEventsMinLength(pM, pm->evsLen * 2);
+        ASSERT(rv == GFraMe_ret_ok, rv);
+    }
+    
+    // Get the next event and return
+    *ppE = pM->evs[pM->evsUsed];
+    pM->didGetEvent = 1;
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
 /**
  * Actually push the last gotten event into the map. If no map_getNextEvent was
  * previously called, this function does nothing.
  * 
- * @param m The map
+ * @param pM The map
  */
-void map_pushEvent(map *m) {
+void map_pushEvent(map *pM) {
+    // Sanitize parameters
+    ASSERT_NR(pM);
+    ASSERT_NR(pM->didGetEvent);
+    
+    // Increase the events in use
+    pM->evsUsed++;
+    pM->didGetEvent = 0;
+    
+__ret:
+    return;
 }
 
 /**
@@ -256,22 +386,81 @@ void map_pushEvent(map *m) {
  * 
  * @param ppData Data retrieved or NULL
  * @param pLen How many bytes there are in the buffer
- * @param m The map
+ * @param pM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *m) {
+GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *pM) {
+    GFraMe_ret rv;
+    
+    // Sanitize parameters
+    ASSERT(ppData, GFraMe_ret_bad_param);
+    ASSERT(pLen, GFraMe_ret_bad_param);
+    ASSERT(pM, GFraMe_ret_bad_param);
+    
+    // Retrieve the to be returned variables
+    *pData = pM->data;
+    *pLen = pM->dataLen;
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
 /**
  * Set the current tilemap
  * 
- * @param m The map
+ * @param pM The map
  * @param pData The tilemap
  * @param len How many bytes there are in the buffer (needn't all be in use)
  * @param w How many tiles there are horizontally
  * @param h How many tiles there are vertically
  */
-void map_setTilemap(map *m, char *pData, int len, int w, int h) {
+void map_setTilemap(map *pM, char *pData, int len, int w, int h) {
+    int i;
+    
+    // Sanitize parameters
+    ASSERT_NR(pM);
+    ASSERT_NR(pData);
+    ASSERT_NR(len > 0);
+    ASSERT_NR(w > 0);
+    ASSERT_NR(h > 0);
+    
+    // Set the data
+    pM->data = pData;
+    pM->dataLen = len;
+    pM->w = w;
+    pM->h = h;
+    
+    // Get all the animated tiles
+    i = 0;
+    while (i < w*h) {
+        char t;
+        
+        t = pData[i];
+        if (map_tileIsAnimated(t) == GFraMe_ret_ok) {
+            animTile *tile;
+            
+            // Expand the buffer as necessary
+            if (pM->animTilesUsed >= pM->animTilesLen) {
+                rv = map_setAnimTilesMinLength(pM, pM->animTilesLen*2);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // TODO return the error
+            }
+            
+            // Get the animated tile
+            tile = &pM->animTiles[pM->animTilesUsed];
+            pM->animTilesUsed++;
+            
+            // Initialize the animated tile
+            tile->pos = i;
+            tile->elapsed = 0;
+        }
+        i++;
+    }
+    
+    // TODO create walls
+    
+__ret:
+    return;
 }
 
 /**
@@ -288,28 +477,47 @@ GFraMe_ret map_loads(map *m, char *str, int len) {
 /**
  * Load a map from a file
  * 
- * @param m The map
+ * @param pM The map
  * @param fn Filename
  * @return GFraMe error code
  */
-GFraMe_ret map_loadf(map *m, char *fn) {
+GFraMe_ret map_loadf(map *pM, char *fn) {
+    GFraMe_ret rv;
+    
+    // Parse the map from a file
+    rv = parsef_map(&pM, fn);
+    
+__ret:
+    return rv;
 }
 
 /**
  * Animate the map tiles
  * 
- * @param m The map
+ * @param pM The map
  * @param ms Time, in milliseconds, elapsed from the last frame
  */
-void map_update(map *m, int ms) {
+void map_update(map *pM, int ms) {
+    int i;
+    
+    // Update every animated tile
+    i = 0;
+    while (i < pM->animTilesUsed) {
+        animTile *t;
+        
+        t = &pM->animTiles[i];
+        map_animateTile(pM, t, ms);
+        
+        i++;
+    }
 }
 
 /**
  * Render the current map
  * 
- * @param m The map
+ * @param pM The map
  */
-void map_draw(map *m) {
+void map_draw(map *pM) {
 }
 
 /**

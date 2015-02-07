@@ -31,48 +31,48 @@ void map_clean(map **ppM);
 /**
  * Reset a map so it can be reused
  * 
- * @param m The map
+ * @param pM The map
  */
-void map_reset(map *m);
+void map_reset(map *pM);
 
 /**
  * Retrieve the next event on the map's list (recycled and expends as necessary)
  * Note that the event must be pushed later
  * 
  * @param ppE Returns the event
- * @param m The map
+ * @param pM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_getNextEvent(event **ppE, map *m);
+GFraMe_ret map_getNextEvent(event **ppE, map *pM);
 
 /**
  * Actually push the last gotten event into the map. If no map_getNextEvent was
  * previously called, this function does nothing.
  * 
- * @param m The map
+ * @param pM The map
  */
-void map_pushEvent(map *m);
+void map_pushEvent(map *pM);
 
 /**
  * Get the current tilemap, if any
  * 
  * @param ppData Data retrieved or NULL
  * @param pLen How many bytes there are in the buffer
- * @param m The map
+ * @param pM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *m);
+GFraMe_ret map_getTilemapData(char **ppData, int *pLen, map *pM);
 
 /**
  * Set the current tilemap
  * 
- * @param m The map
+ * @param pM The map
  * @param pData The tilemap
  * @param len How many bytes there are in the buffer (needn't all be in use)
  * @param w How many tiles there are horizontally
  * @param h How many tiles there are vertically
  */
-void map_setTilemap(map *m, char *pData, int len, int w, int h);
+void map_setTilemap(map *pM, char *pData, int len, int w, int h);
 
 /**
  * Load a map from a string
@@ -96,17 +96,17 @@ GFraMe_ret map_loadf(map *m, char *fn);
 /**
  * Animate the map tiles
  * 
- * @param m The map
+ * @param pM The map
  * @param ms Time, in milliseconds, elapsed from the last frame
  */
-void map_update(map *m, int ms);
+void map_update(map *pM, int ms);
 
 /**
  * Render the current map
  * 
- * @param m The map
+ * @param pM The map
  */
-void map_draw(map *m);
+void map_draw(map *pM);
 
 /**
  * Get a list of objects for the map's collideable area
