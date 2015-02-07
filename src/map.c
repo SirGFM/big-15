@@ -2,6 +2,7 @@
  * @file src/map.c
  */
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_hitbox.h>
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
 #include <GFraMe/GFraMe_spriteset.h>
@@ -38,6 +39,11 @@
     } \
   } while (0)
 
+//============================================================================//
+//                                                                            //
+// Structs                                                                    //
+//                                                                            //
+//============================================================================//
 
 typedef struct {
     int pos;              /** Position of the tile on the tilemap */
@@ -64,27 +70,19 @@ struct stMap {
     int animTilesUsed;    /** Number of animated tiles on the current */
 };
 
+//============================================================================//
+//                                                                            //
+// Static functions forward declaration                                       //
+//                                                                            //
+//============================================================================//
+
 /**
  * Check if a tile is animated or not
  * 
  * @param tile The tile to be checked
  * @return GFraMe_ret_ok if it is, GFraMe_ret_failed otherwise
  */
-static GFraMe_ret map_tileIsAnimated(int tile) {
-    switch (tile) {
-        case TILE_SHOCK_L1:
-        case TILE_SHOCK_L2:
-        case TILE_SHOCK_L3:
-        case TILE_SHOCK_L4:
-        case TILE_SHOCK_R1:
-        case TILE_SHOCK_R2:
-        case TILE_SHOCK_R3:
-        case TILE_SHOCK_R4:
-            return GFraMe_ret_ok;
-        default:
-            return GFraMe_ret_failed;
-    }
-}
+static GFraMe_ret map_tileIsAnimated(int tile);
 
 /**
  * Updates and check if a given animated tile should be modified
@@ -93,50 +91,45 @@ static GFraMe_ret map_tileIsAnimated(int tile) {
  * @param pT The animated tile
  * @param ms Time elapsed from the previous frame
  */
-static void map_animateTile(map *pM, animTile *pT, int ms) {
-    unsigned char tile;
-    
-    // Update the tile's running time
-    pT->elapsed += ms;
-    
-    // Check which tile it is
-    tile = pM->data[pT->pos];
-    
-    // Update the tile, if necessary
-    switch (tile) {
-        case TILE_SHOCK_L1:
-        case TILE_SHOCK_L2:
-        case TILE_SHOCK_L3: { // 16 fps
-            if (pT->elapsed >= 62) {
-                tile++;
-                pT->elapsed -= 62;
-            }
-        } break;
-        case TILE_SHOCK_L4: { // 16 fps
-            if (pT->elapsed >= 62) {
-                tile = TILE_SHOCK_L1;
-                pT->elapsed -= 62;
-            }
-        } break;
-        case TILE_SHOCK_R1:
-        case TILE_SHOCK_R2:
-        case TILE_SHOCK_R3: { // 16 fps
-            if (pT->elapsed >= 62) {
-                tile++;
-                pT->elapsed -= 62;
-            }
-        } break;
-        case TILE_SHOCK_R4: { // 16 fps
-            if (pT->elapsed >= 62) {
-                tile = TILE_SHOCK_R1;
-                pT->elapsed -= 62;
-            }
-        } break;
-        default: {}
-    }
-    
-    pM->data[pT->pos] = tile;
-}
+static void map_animateTile(map *pM, animTile *pT, int ms);
+
+/**
+ * Check which tiles should be animated and add to the list
+ * 
+ * @param pM The map
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_genAnimatedTiles(map *pM);
+
+/**
+ * Check whether a tile is already in a wall object
+ * 
+ * @param pM The map
+ * @param pos Position of the tile to be tested
+ * @return GFraMe_ret_ok if it is, GFraMe_ret_failed otherwise
+ */
+static GFraMe_ret map_isTileInWall(map *pM, int pos);
+
+/**
+ * Get the bounds of a wall
+ * 
+ * @param pX Return the horizontal position
+ * @param pY Return the vertical position
+ * @param pW Return the width
+ * @param pH Return the height
+ * @param pM The map
+ * @param pos First tile in the wall
+ */
+static void map_getWallBounds(int *pX, int *pY, int *pW, int *pH, map *pM,
+    int pos);
+
+/**
+ * Calculate where the walls should be placed
+ * 
+ * @param pM The map
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_genWalls(map *pM);
 
 /**
  * Realloc the evs buffer as to have at least 'len' members
@@ -145,32 +138,8 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
  * @param len The new minimum length
  * @return GFraMe error code
  */
-static GFraMe_ret map_setEventsMinLength(map *pM, int len) {
-    GFraMe_ret rv;
-    int i;
-    
-    // Do nothing if the buffer is already big enough
-    ASSERT(pM->evsLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-    i = pM->evsLen;
-    pM->evs = (event**)realloc(pM->evs, sizeof(event*) * len);
-    ASSERT(pM->evs, GFraMe_ret_memory_error);
-    pM->evsLen = len;
-    
-    // Initialize every uninitialize event
-    while (i < len) {
-        pM->evs[i] = NULL;
-        
-        rv = event_getNew(&pM->evs[i]);
-        ASSERT(pM->evs[i], rv);
-        i++;
-    }
-    
-    rv = GFraMe_ret_ok;
-__ret:
-    return rv;
-}
+static GFraMe_ret map_setEventsMinLength(map *pM, int len);
+
 /**
  * Realloc the objs buffer as to have at least 'len' members
  * 
@@ -178,21 +147,8 @@ __ret:
  * @param len The new minimum length
  * @return GFraMe error code
  */
-static GFraMe_ret map_setObjectsMinLength(map *pM, int len) {
-    GFraMe_ret rv;
-    
-    // Do nothing if the buffer is already big enough
-    ASSERT(pM->objsLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-    pM->objs = (GFraMe_object*)realloc(pM->objs, sizeof(GFraMe_object) * len);
-    ASSERT(pM->objs, GFraMe_ret_memory_error);
-    pM->objsLen = len;
-    
-    rv = GFraMe_ret_ok;
-__ret:
-    return rv;
-}
+static GFraMe_ret map_setObjectsMinLength(map *pM, int len);
+
 /**
  * Realloc the animTiles buffer as to have at least 'len' members
  * 
@@ -200,21 +156,13 @@ __ret:
  * @param len The new minimum length
  * @return GFraMe error code
  */
-static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len) {
-    GFraMe_ret rv;
-    
-    // Do nothing if the buffer is already big enough
-    ASSERT(pM->animTilesLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-    pM->animTiles = (animTile*)realloc(pM->animTiles, sizeof(animTile) * len);
-    ASSERT(pM->animTiles, GFraMe_ret_memory_error);
-    pM->animTilesLen = len;
-    
-    rv = GFraMe_ret_ok;
-__ret:
-    return rv;
-}
+static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len);
+
+//============================================================================//
+//                                                                            //
+// Module implementation                                                      //
+//                                                                            //
+//============================================================================//
 
 /**
  * Initialize the map module
@@ -415,7 +363,6 @@ __ret:
  */
 void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h) {
     GFraMe_ret rv;
-    int i;
     
     // Sanitize parameters
     ASSERT_NR(pM);
@@ -430,34 +377,14 @@ void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h) {
     pM->w = w;
     pM->h = h;
     
-    // Get all the animated tiles
-    i = 0;
-    while (i < w*h) {
-        unsigned char t;
-        
-        t = pData[i];
-        if (map_tileIsAnimated(t) == GFraMe_ret_ok) {
-            animTile *tile;
-            
-            // Expand the buffer as necessary
-            if (pM->animTilesUsed >= pM->animTilesLen) {
-                rv = map_setAnimTilesMinLength(pM, pM->animTilesLen*2);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // TODO return the error
-            }
-            
-            // Get the animated tile
-            tile = &pM->animTiles[pM->animTilesUsed];
-            pM->animTilesUsed++;
-            
-            // Initialize the animated tile
-            tile->pos = i;
-            tile->elapsed = 0;
-        }
-        i++;
-    }
+    // Animate the tilemap
+    rv = map_genAnimatedTiles(pM);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // TODO return the error
     
-    // TODO create walls
+    rv = map_genWalls(pM);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // TODO return the error
     
 __ret:
     return;
@@ -582,5 +509,392 @@ void map_getWalls(GFraMe_object **objs, int *len, map *m) {
  * @param spr The sprite
  */
 void map_checkEvents(map *m, GFraMe_sprite *spr) {
+}
+
+//============================================================================//
+//                                                                            //
+// Static functions implementation                                            //
+//                                                                            //
+//============================================================================//
+
+/**
+ * Check if a tile is animated or not
+ * 
+ * @param tile The tile to be checked
+ * @return GFraMe_ret_ok if it is, GFraMe_ret_failed otherwise
+ */
+static GFraMe_ret map_tileIsAnimated(int tile) {
+    switch (tile) {
+        case TILE_SHOCK_L1:
+        case TILE_SHOCK_L2:
+        case TILE_SHOCK_L3:
+        case TILE_SHOCK_L4:
+        case TILE_SHOCK_R1:
+        case TILE_SHOCK_R2:
+        case TILE_SHOCK_R3:
+        case TILE_SHOCK_R4:
+            return GFraMe_ret_ok;
+        default:
+            return GFraMe_ret_failed;
+    }
+}
+
+/**
+ * Updates and check if a given animated tile should be modified
+ * 
+ * @param pM The map
+ * @param pT The animated tile
+ * @param ms Time elapsed from the previous frame
+ */
+static void map_animateTile(map *pM, animTile *pT, int ms) {
+    unsigned char tile;
+    
+    // Update the tile's running time
+    pT->elapsed += ms;
+    
+    // Check which tile it is
+    tile = pM->data[pT->pos];
+    
+    // Update the tile, if necessary
+    switch (tile) {
+        case TILE_SHOCK_L1:
+        case TILE_SHOCK_L2:
+        case TILE_SHOCK_L3: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile++;
+                pT->elapsed -= 62;
+            }
+        } break;
+        case TILE_SHOCK_L4: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile = TILE_SHOCK_L1;
+                pT->elapsed -= 62;
+            }
+        } break;
+        case TILE_SHOCK_R1:
+        case TILE_SHOCK_R2:
+        case TILE_SHOCK_R3: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile++;
+                pT->elapsed -= 62;
+            }
+        } break;
+        case TILE_SHOCK_R4: { // 16 fps
+            if (pT->elapsed >= 62) {
+                tile = TILE_SHOCK_R1;
+                pT->elapsed -= 62;
+            }
+        } break;
+        default: {}
+    }
+    
+    pM->data[pT->pos] = tile;
+}
+
+/**
+ * Check which tiles should be animated and add to the list
+ * 
+ * @param pM The map
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_genAnimatedTiles(map *pM) {
+    GFraMe_ret rv;
+    int i;
+    
+    i = 0;
+    while (i < pM->w*pM->h) {
+        unsigned char t;
+        
+        t = pM->data[i];
+        if (map_tileIsAnimated(t) == GFraMe_ret_ok) {
+            animTile *tile;
+            
+            // Expand the buffer as necessary
+            if (pM->animTilesUsed >= pM->animTilesLen) {
+                rv = map_setAnimTilesMinLength(pM, pM->animTilesLen*2);
+                ASSERT(rv == GFraMe_ret_ok, rv);
+            }
+            
+            // Get the animated tile
+            tile = &pM->animTiles[pM->animTilesUsed];
+            pM->animTilesUsed++;
+            
+            // Initialize the animated tile
+            tile->pos = i;
+            tile->elapsed = 0;
+        }
+        i++;
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Check whether a tile is already in a wall object
+ * 
+ * @param pM The map
+ * @param pos Position of the tile to be tested
+ * @return GFraMe_ret_ok if it is, GFraMe_ret_failed otherwise
+ */
+static GFraMe_ret map_isTileInWall(map *pM, int pos) {
+    int i, x, y;
+    
+    // Retrieve horizontal and vertical position of the tile
+    x = pos % pM->w;
+    y = pos / pM->w;
+    
+    // Check against every object
+    i = 0;
+    while (i < pM->objsUsed) {
+        GFraMe_object *obj;
+        GFraMe_hitbox *hb;
+        int iniX, iniY, endX, endY;
+        
+        // Get both the object and the boundings
+        obj = &pM->objs[i];
+        hb = GFraMe_object_get_hitbox(obj);
+        
+        iniX = obj->x / 8;
+        endX = (obj->x + hb->cx + hb->hw) / 8 - 1;
+        iniY = obj->y / 8;
+        endY = (obj->y + hb->cy + hb->hh) / 8 - 1;
+        
+        // Check if the tile is inside this object
+        if (x >= iniX && x <= endX && y >= iniY && y <= endY)
+            return GFraMe_ret_ok;
+        
+        i++;
+    }
+    
+    return GFraMe_ret_failed;
+}
+
+/**
+ * Check whether a tile is a wall
+ * 
+ * @param tile The tile
+ * @return GFraMe_ret_ok on sucess, GFraMe_ret_failed otherwise
+ */
+static GFraMe_ret map_isWall(unsigned char tile) {
+    switch (tile) {
+        case 72:
+        case 73:
+        case 74:
+        case 75:
+        case 76:
+        case 77:
+        case 104:
+        case 105:
+        case 106:
+        case 107:
+        case 108:
+        case 109:
+        case 110:
+        case 136:
+        case 137:
+        case 138:
+        case 139:
+        case 140:
+        case 141:
+        case 142:
+            return GFraMe_ret_ok;
+        default:
+            return GFraMe_ret_failed;
+    }
+}
+
+/**
+ * Get the bounds of a wall. The wall will be the widest possible.
+ * (i.e., first the width is calculated and then the height)
+ * 
+ * @param pX Return the horizontal position
+ * @param pY Return the vertical position
+ * @param pW Return the width
+ * @param pH Return the height
+ * @param pM The map
+ * @param pos First tile in the wall
+ */
+static void map_getWallBounds(int *pX, int *pY, int *pW, int *pH, map *pM,
+    int pos) {
+    int i, h, w, x, y;
+    
+    // Get the (x, y) tile position
+    x = pos % pM->w;
+    y = pos / pM->w;
+    
+    // Search for the first 'non-wall' on the horizontal
+    i = 0;
+    while (x + i < pM->w) {
+        unsigned char tile;
+        
+        tile = pM->data[pos + i];
+        
+        if (map_isWall(tile) != GFraMe_ret_ok)
+            break;
+        
+        i++;
+    }
+    w = i;
+    
+    // Search for the lowest height
+    i = 0;
+    h = 0x7fffffff;
+    while (i < w) {
+        int j;
+        unsigned char tile;
+        
+        // Check which tile isn't a wall, anymore
+        j = 0;
+        while (j + y < pM->h) {
+            tile = pM->data[pos + i + j * pM->w];
+            if (map_isWall(tile) != GFraMe_ret_ok)
+                break;
+            j++;
+        }
+        // Update the height, if necessary
+        if (j < h)
+            h = j;
+        // Check the next tile
+        i++;
+    }
+    
+    // Set the return variables
+    *pX = (pos % pM->w) * 8;
+    *pY = (pos / pM->w) * 8;
+    *pW = w * 8;
+    *pH = h * 8;
+}
+
+/**
+ * Calculate where the walls should be placed
+ * 
+ * @param pM The map
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_genWalls(map *pM) {
+    GFraMe_ret rv;
+    int i;
+    
+    // Traverse every tile
+    i = -1;
+    while (++i < pM->w*pM->h) {
+        GFraMe_object *obj;
+        GFraMe_hitbox *hb;
+        int h, w, x, y;
+        
+        // Only check if the tile is a wall
+        if (map_isWall(pM->data[i]) != GFraMe_ret_ok)
+            continue;
+    
+        // Check if it already belongs to a wall object
+        if (map_isTileInWall(pM, i) == GFraMe_ret_ok)
+            // If it does, go to the next one
+            continue;
+        
+        // Otherwise, find the wall bounds...
+        map_getWallBounds(&x, &y, &w, &h, pM, i);
+        
+        // ... and add it (but, first, expand the buffer as necessary)
+        if (pM->objsUsed >= pM->objsLen) {
+            rv = map_setObjectsMinLength(pM, pM->objsLen * 2);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        
+        obj = &pM->objs[pM->objsUsed];
+        hb = GFraMe_object_get_hitbox(obj);
+        
+        GFraMe_object_clear(obj);
+        GFraMe_object_set_x(obj, x);
+        GFraMe_object_set_y(obj, y);
+        GFraMe_hitbox_set(hb, GFraMe_hitbox_upper_left, 0/*x*/, 0/*y*/, w, h);
+        
+        // Increase the objects count
+        pM->objsUsed++;
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Realloc the evs buffer as to have at least 'len' members
+ * 
+ * @param pM The map
+ * @param len The new minimum length
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_setEventsMinLength(map *pM, int len) {
+    GFraMe_ret rv;
+    int i;
+    
+    // Do nothing if the buffer is already big enough
+    ASSERT(pM->evsLen < len, GFraMe_ret_ok);
+    
+    // Expand the buffer
+    i = pM->evsLen;
+    pM->evs = (event**)realloc(pM->evs, sizeof(event*) * len);
+    ASSERT(pM->evs, GFraMe_ret_memory_error);
+    pM->evsLen = len;
+    
+    // Initialize every uninitialize event
+    while (i < len) {
+        pM->evs[i] = NULL;
+        
+        rv = event_getNew(&pM->evs[i]);
+        ASSERT(pM->evs[i], rv);
+        i++;
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Realloc the objs buffer as to have at least 'len' members
+ * 
+ * @param pM The map
+ * @param len The new minimum length
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_setObjectsMinLength(map *pM, int len) {
+    GFraMe_ret rv;
+    
+    // Do nothing if the buffer is already big enough
+    ASSERT(pM->objsLen < len, GFraMe_ret_ok);
+    
+    // Expand the buffer
+    pM->objs = (GFraMe_object*)realloc(pM->objs, sizeof(GFraMe_object) * len);
+    ASSERT(pM->objs, GFraMe_ret_memory_error);
+    pM->objsLen = len;
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+/**
+ * Realloc the animTiles buffer as to have at least 'len' members
+ * 
+ * @param pM The map
+ * @param len The new minimum length
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len) {
+    GFraMe_ret rv;
+    
+    // Do nothing if the buffer is already big enough
+    ASSERT(pM->animTilesLen < len, GFraMe_ret_ok);
+    
+    // Expand the buffer
+    pM->animTiles = (animTile*)realloc(pM->animTiles, sizeof(animTile) * len);
+    ASSERT(pM->animTiles, GFraMe_ret_memory_error);
+    pM->animTilesLen = len;
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
