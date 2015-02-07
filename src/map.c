@@ -495,20 +495,42 @@ void map_draw(map *pM) {
 /**
  * Get a list of objects for the map's collideable area
  * 
- * @param objs List of objects
- * @param len Number of valid objects on the list
- * @param m The map
+ * @param ppObjs List of objects
+ * @param pLen Number of valid objects on the list
+ * @param pM The map
  */
-void map_getWalls(GFraMe_object **objs, int *len, map *m) {
+GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM) {
+    GFraMe_ret rv;
+    
+    // Sanitize parameters
+    ASSERT(ppObjs, GFraMe_ret_bad_param);
+    ASSERT(pLen, GFraMe_ret_bad_param);
+    ASSERT(pM, GFraMe_ret_bad_param);
+    
+    // If there's a camera, return only the visible objects?
+    *ppObjs = pM->objs;
+    *pLen = pM->objsUsed;
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
 /**
  * Check if a sprite triggered any event
  * 
- * @param m The map
- * @param spr The sprite
+ * @param pM The map
+ * @param pSpr The sprite
  */
-void map_checkEvents(map *m, GFraMe_sprite *spr) {
+void map_checkEvents(map *pM, GFraMe_sprite *pSpr) {
+    int i;
+    
+    // Simply check every event
+    i = 0;
+    while (i < pM->evsUsed) {
+        event_check(pM->evs[i], pSpr);
+        i++;
+    }
 }
 
 //============================================================================//
