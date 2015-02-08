@@ -152,28 +152,36 @@ static void ps_update() {
         // Collide both players
         {
             GFraMe_ret rv;
-            int wasPl1Down, wasPl2Down;
+            int wasPl1Down, wasPl2Down, pl1Flags, pl2Flags;
             
-            wasPl1Down = (pPlObj1->hit & GFraMe_direction_down);
-            wasPl2Down = (pPlObj2->hit & GFraMe_direction_down);
+            pl1Flags = pPlObj1->hit;
+            pl2Flags = pPlObj2->hit;
+            
+            pPlObj1->hit = 0;
+            pPlObj2->hit = 0;
+            
+            wasPl1Down = (pl1Flags & GFraMe_direction_down);
+            wasPl2Down = (pl2Flags & GFraMe_direction_down);
             
             rv = GFraMe_object_overlap(pPlObj1, pPlObj2, GFraMe_dont_collide);
             if (rv == GFraMe_ret_ok) {
                 // If any player wasn't touching down but is now, then it's
                 // above the other one
-                if (!wasPl1Down && (pPlObj1->hit & GFraMe_direction_down)) {
-                    GFraMe_hitbox *hb;
-                    
-                    hb = GFraMe_object_get_hitbox(pPlObj1);
-                    GFraMe_object_set_y(pPlObj1, pPlObj2->y - hb->hh - hb->cy);
+                if (pPlObj1->y == pPlObj2->y) {} // Do nothing if they are side-by-side
+                else if ((pl1Flags & GFraMe_direction_up)
+                    || (pl2Flags & GFraMe_direction_up)) {}
+                else if (!wasPl1Down && (pPlObj1->hit&GFraMe_direction_down)){
+                    player_getCarried(p1, pPlObj2);
+                    pl1Flags |= GFraMe_direction_down;
                 }
-                else if (!wasPl2Down && (pPlObj2->hit & GFraMe_direction_down)) {
-                    GFraMe_hitbox *hb;
-                    
-                    hb = GFraMe_object_get_hitbox(pPlObj2);
-                    GFraMe_object_set_y(pPlObj2, pPlObj1->y - hb->hh - hb->cy);
+                else if (!wasPl2Down && (pPlObj2->hit&GFraMe_direction_down)){
+                    player_getCarried(p2, pPlObj1);
+                    pl2Flags |= GFraMe_direction_down;
                 }
             }
+            
+            pPlObj1->hit = pl1Flags;
+            pPlObj2->hit = pl2Flags;
         }
         
     GFraMe_event_update_end();

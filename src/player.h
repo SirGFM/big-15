@@ -59,5 +59,14 @@ void player_getObject(GFraMe_object **ppObj, player *pPl);
  */
 void player_setAnimation(player *pPl, int anim);
 
+/**
+ * Position the player (and set it to be moved) as being carried by another
+ * player
+ * 
+ * @param pPl The player
+ * @param pObj The object of the carring player
+ */
+void player_getCarried(player *pPl, GFraMe_object *pObj);
+
 #endif
 

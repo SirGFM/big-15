@@ -566,30 +566,30 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
     switch (tile) {
         case TILE_SHOCK_L1:
         case TILE_SHOCK_L2:
-        case TILE_SHOCK_L3: { // 16 fps
-            if (pT->elapsed >= 62) {
+        case TILE_SHOCK_L3: { // 12 fps
+            if (pT->elapsed >= 83) {
                 tile++;
-                pT->elapsed -= 62;
+                pT->elapsed -= 83;
             }
         } break;
-        case TILE_SHOCK_L4: { // 16 fps
-            if (pT->elapsed >= 62) {
+        case TILE_SHOCK_L4: { // 12 fps
+            if (pT->elapsed >= 83) {
                 tile = TILE_SHOCK_L1;
-                pT->elapsed -= 62;
+                pT->elapsed -= 83;
             }
         } break;
         case TILE_SHOCK_R1:
         case TILE_SHOCK_R2:
-        case TILE_SHOCK_R3: { // 16 fps
-            if (pT->elapsed >= 62) {
+        case TILE_SHOCK_R3: { // 12 fps
+            if (pT->elapsed >= 83) {
                 tile++;
-                pT->elapsed -= 62;
+                pT->elapsed -= 83;
             }
         } break;
-        case TILE_SHOCK_R4: { // 16 fps
-            if (pT->elapsed >= 62) {
+        case TILE_SHOCK_R4: { // 12 fps
+            if (pT->elapsed >= 83) {
                 tile = TILE_SHOCK_R1;
-                pT->elapsed -= 62;
+                pT->elapsed -= 83;
             }
         } break;
         default: {}

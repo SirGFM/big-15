@@ -20,17 +20,21 @@ int ctr_left(int ID) {
     switch (ID) {
         case ID_PL1: {
             if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].left || GFraMe_controllers[0].lx < -0.35;
+                return GFraMe_controllers[0].left
+                    || GFraMe_controllers[0].lx < -0.35;
             else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].left || GFraMe_controllers[0].lx < -0.35;
+                return GFraMe_controllers[0].left
+                    || GFraMe_controllers[0].lx < -0.35;
             else
                 return GFraMe_keys.a;
         } break;
         case ID_PL2: {
             if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[1].x || GFraMe_controllers[1].rx > -0.35;
+                return GFraMe_controllers[0].x
+                    || GFraMe_controllers[0].rx < -0.35;
             else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].left || GFraMe_controllers[1].lx > -0.35;
+                return GFraMe_controllers[1].left
+                    || GFraMe_controllers[1].lx < -0.35;
             else
                 return GFraMe_keys.left;
         } break;
@@ -49,17 +53,21 @@ int ctr_right(int ID) {
     switch (ID) {
         case ID_PL1: {
             if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].right || GFraMe_controllers[0].lx > 0.35;
+                return GFraMe_controllers[0].right
+                    || GFraMe_controllers[0].lx > 0.35;
             else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].right || GFraMe_controllers[0].lx > 0.35;
+                return GFraMe_controllers[0].right
+                    || GFraMe_controllers[0].lx > 0.35;
             else
                 return GFraMe_keys.d;
         } break;
         case ID_PL2: {
             if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[1].b || GFraMe_controllers[1].rx > 0.35;
+                return GFraMe_controllers[0].b
+                    || GFraMe_controllers[0].rx > 0.35;
             else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].right || GFraMe_controllers[1].lx > 0.35;
+                return GFraMe_controllers[1].right
+                    || GFraMe_controllers[1].lx > 0.35;
             else
                 return GFraMe_keys.right;
         } break;
@@ -79,17 +87,21 @@ int ctr_action(int ID) {
     switch (ID) {
         case ID_PL1: {
             if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].up || GFraMe_controllers[0].ly > 0.5;
+                return GFraMe_controllers[0].up
+                    || GFraMe_controllers[0].ly > 0.5;
             else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].up || GFraMe_controllers[0].ly > 0.5;
+                return GFraMe_controllers[0].up
+                    || GFraMe_controllers[0].ly > 0.5;
             else
                 return GFraMe_keys.w;
         } break;
         case ID_PL2: {
             if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].y || GFraMe_controllers[0].ry > 0.5;
+                return GFraMe_controllers[0].y
+                    || GFraMe_controllers[0].ry > 0.5;
             else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].up || GFraMe_controllers[0].ly > 0.5;
+                return GFraMe_controllers[1].up
+                    || GFraMe_controllers[1].ly > 0.5;
             else
                 return GFraMe_keys.up;
         } break;

@@ -10,6 +10,7 @@
 #include "controller.h"
 #include "global.h"
 #include "player.h"
+#include "types.h"
 
 #include <stdio.h>
 
@@ -30,6 +31,7 @@ struct stPlayer {
     int walkData[8];
     
     int curAnim;
+    int isBeingCarried;
 };
 
 /**
@@ -83,6 +85,7 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     pPl->curAnim = PL_STAND;
     
     pPl->spr.id = ID;
+    pPl->isBeingCarried = 0;
     
     // Set the return variables
     *ppPl = pPl;
@@ -134,15 +137,17 @@ void player_update(player *pPl, int ms) {
     else
         obj->vx = 0;
     
-    if (isDown && ctr_jump(pPl->spr.id))
-        obj->vy = -PL_JUMPS;
-    
     // Set gravity, when in air
-    if (!isDown)
+    if (obj->hit & GFraMe_direction_up)
+        obj->vy = 0;
+    else if (!isDown)
         obj->ay = GRAVITY;
     else {
         obj->ay = 0;
-        obj->vy = 0;
+        if (ctr_jump(pPl->spr.id))
+            obj->vy = -PL_JUMPS;
+        else
+            obj->vy = 32;
     }
     
     // Check current state and play the apropriate animation
@@ -154,6 +159,20 @@ void player_update(player *pPl, int ms) {
         player_setAnimation(pPl, PL_JUMP);
     else if (!isDown && obj->vy > 0)
         player_setAnimation(pPl, PL_FALL);
+    
+    if (pPl->isBeingCarried) {
+        int otherID;
+        
+        otherID = ID_PL2 - pPl->spr.id % ID_PL1;
+        if (ctr_left(otherID))
+            obj->vx -= PL_VX;
+        else if (ctr_right(otherID))
+            obj->vx += PL_VX;
+        if (obj->vy >= 0)
+            obj->vy = PL_JUMPS;
+        
+        pPl->isBeingCarried = 0;
+    }
     
     GFraMe_sprite_update(&pPl->spr, ms);
 }
@@ -205,5 +224,27 @@ void player_setAnimation(player *pPl, int anim) {
     
 __ret:
     return;
+}
+
+/**
+ * Position the player (and set it to be moved) as being carried by another
+ * player
+ * 
+ * @param pPl The player
+ * @param pObj The object of the carring player
+ */
+void player_getCarried(player *pPl, GFraMe_object *pObj) {
+    GFraMe_hitbox *pHb;
+    GFraMe_object *pThisObj;
+    
+    // Get the required Framework's object
+    pThisObj = GFraMe_sprite_get_object(&pPl->spr);
+    pHb = GFraMe_object_get_hitbox(pThisObj);
+    
+    // Set the player as being carried above the other object
+    //GFraMe_object_set_y(pThisObj, pObj->y - pHb->hh - pHb->cy);
+    pThisObj->dy = pObj->dy - pHb->hh - pHb->cy;
+    pThisObj->y = (int)pThisObj->dy;
+    pPl->isBeingCarried = 1;
 }
 
