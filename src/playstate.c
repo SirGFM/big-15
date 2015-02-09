@@ -184,6 +184,15 @@ static void ps_update() {
             pPlObj2->hit = pl2Flags;
         }
         
+        // Fix for a stupid bug
+        i = 0;
+        while (i < len) {
+            GFraMe_object_overlap(&pWalls[i], pPlObj1, GFraMe_first_fixed);
+            GFraMe_object_overlap(&pWalls[i], pPlObj2, GFraMe_first_fixed);
+            
+            i++;
+        }
+        
     GFraMe_event_update_end();
 }
 
