@@ -71,14 +71,10 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     pPl->walkData[5] = firstTile + 6;
     pPl->walkData[6] = firstTile + 7;
     pPl->walkData[7] = firstTile + 8;
-    GFraMe_animation_init(&pPl->walkAnim, 12, pPl->walkData, 8, 1);
+    GFraMe_animation_init(&pPl->walkAnim, 14, pPl->walkData, 8, 1);
     
     // Initialize the sprite
-    GFraMe_sprite_init(&pPl->spr, 16, 184, 16, 16, gl_sset16x16, 0, 0);
-    // TODO properly set the hitbox
-    //obj = GFraMe_sprite_get_object(&pPl->spr);
-    //hb = GFraMe_object_get_hitbox(obj);
-    //GFraMe_hitbox_set(hb, GFraMe_hitbox_upper_left, 0, 0, w, h);
+    GFraMe_sprite_init(&pPl->spr, 16, 184, 8, 14, gl_sset16x16, -4, -2);
     
     // Play the stand animation
     GFraMe_sprite_set_animation(&pPl->spr, &pPl->standAnim, 1);

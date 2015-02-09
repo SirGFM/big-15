@@ -21,7 +21,7 @@
 #define GAME_UFPS 60
 #define GAME_DFPS 60
 #define GRAVITY 500
-#define PL_VX 60
+#define PL_VX 80
 #define PL_JUMPS 175
 
 #define ASSERT(stmt, err) \
