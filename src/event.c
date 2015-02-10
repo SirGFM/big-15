@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_sprite.h>
 
 #include "commonEvent.h"
+#include "controller.h"
 #include "event.h"
 #include "global.h"
 #include "types.h"
@@ -125,6 +126,8 @@ void event_check(event *ev, GFraMe_sprite *spr) {
     GFraMe_direction last_col;
     GFraMe_object *obj;
     
+    obj = 0;
+    
     // Sanitize parameters
     ASSERT_NR(ev);
     ASSERT_NR(spr);
@@ -145,7 +148,7 @@ void event_check(event *ev, GFraMe_sprite *spr) {
         == GFraMe_ret_ok);
     
     // Check if the collision was valid
-    if (((ev->t & ON_PRESSED) && 0/** TODO check_button */)
+    if (((ev->t & ON_PRESSED) && ctr_action(spr->id))
         || ((ev->t & ON_ENTER_LEFT) && (obj->hit & GFraMe_direction_left))
         || ((ev->t & ON_ENTER_RIGHT) && (obj->hit & GFraMe_direction_right))
         || ((ev->t & ON_ENTER_UP) && (obj->hit & GFraMe_direction_up))
@@ -162,12 +165,11 @@ void event_check(event *ev, GFraMe_sprite *spr) {
         if (!(ev->t & KEEP_ACTIVE))
             ev->active = 0;
     }
-    else {
-        // Restore the previous state
-        obj->hit = last_col;
-    }
-    
 __ret:
+    // Restore the previous state
+    if (obj)
+        obj->hit = last_col;
+    
     return;
 }
 

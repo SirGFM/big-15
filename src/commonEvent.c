@@ -24,6 +24,9 @@ void ce_callEvent(commonEvent ce) {
     GFraMe_assertRet(ce < CE_MAX, "Invalid common event!", __ret);
     
     switch (ce) {
+        case CE_TEST_DOOR1:{
+            GFraMe_log("heya!");
+        } break;
         // TODO implement every common event
         default: {}
     }

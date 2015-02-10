@@ -197,6 +197,16 @@ void player_getObject(GFraMe_object **ppObj, player *pPl) {
 }
 
 /**
+ * Get the player's sprite, for collision
+ * 
+ * @param ppSpr Player's sprite
+ * @param pPl The player
+ */
+void player_getSprite(GFraMe_sprite **ppSpr, player *pPl) {
+    *ppSpr = &pPl->spr;
+}
+
+/**
  * Set, if necessary, the animation
  * 
  * @param pPl The player

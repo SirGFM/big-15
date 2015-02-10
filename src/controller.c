@@ -88,20 +88,20 @@ int ctr_action(int ID) {
         case ID_PL1: {
             if (GFraMe_controller_max == 1)
                 return GFraMe_controllers[0].up
-                    || GFraMe_controllers[0].ly > 0.5;
+                    || GFraMe_controllers[0].ly < -0.5;
             else if (GFraMe_controller_max > 1)
                 return GFraMe_controllers[0].up
-                    || GFraMe_controllers[0].ly > 0.5;
+                    || GFraMe_controllers[0].ly < -0.5;
             else
                 return GFraMe_keys.w;
         } break;
         case ID_PL2: {
             if (GFraMe_controller_max == 1)
                 return GFraMe_controllers[0].y
-                    || GFraMe_controllers[0].ry > 0.5;
+                    || GFraMe_controllers[0].ry < -0.5;
             else if (GFraMe_controller_max > 1)
                 return GFraMe_controllers[1].up
-                    || GFraMe_controllers[1].ly > 0.5;
+                    || GFraMe_controllers[1].ly < -0.5;
             else
                 return GFraMe_keys.up;
         } break;

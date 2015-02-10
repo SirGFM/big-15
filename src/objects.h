@@ -8,6 +8,9 @@
 
 #include <GFraMe/GFraMe_object.h>
 
+#include "commonEvent.h"
+#include "globalVar.h"
+
 typedef struct stObject object;
 
 /**
@@ -48,22 +51,42 @@ void objs_pushLastObj();
 void objs_setBounds(object *pObj, int x, int y, int w, int h);
 
 /**
- * Assign an unique ID (relative to the actives ones) to this object
+ * Assign an ID to this object
  * 
  * @param pObj The object
  * @param ID The ID
  * @return GFraMe error code
  */
-GFraMe_ret objs_setID(object *pObj, int ID);
+void objs_setID(object *pObj, int ID);
 
 /**
- * Assign a state to this object.
- * e.g ST_OPEN, ST_OPENING, ST_CLOSED, ST_CLOSING (for a door or chest)
+ * Set a common event to be run by this object
  * 
  * @param pObj The object
- * @param state The state
+ * @param ce The common event
  */
-void objs_setState(object *pObj, int state);
+void objs_setCommonEvent(object *pObj, commonEvent ce);
+
+/**
+ * Set an object's variable
+ * 
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ * @param var The actual variable
+ */
+GFraMe_ret objs_setVar(object *pObj, int index, globalVar var);
+
+/**
+ * Update every object
+ * 
+ * @param ms Time elapsed, in milliseconds, from last frame
+ */
+void objs_update(int ms);
+
+/**
+ * Draw every object
+ */
+void objs_draw();
 
 /**
  * Retrieve a list with the actives objects bounds

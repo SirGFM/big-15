@@ -8,6 +8,8 @@
 #define __PLAYER_H_
 
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_object.h>
+#include <GFraMe/GFraMe_sprite.h>
 
 typedef struct stPlayer player;
 
@@ -50,6 +52,14 @@ void player_draw(player *pPl);
  * @param pPl The player
  */
 void player_getObject(GFraMe_object **ppObj, player *pPl);
+
+/**
+ * Get the player's sprite, for collision
+ * 
+ * @param ppSpr Player's sprite
+ * @param pPl The player
+ */
+void player_getSprite(GFraMe_sprite **ppSpr, player *pPl);
 
 /**
  * Set, if necessary, the animation

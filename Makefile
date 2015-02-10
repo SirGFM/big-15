@@ -11,17 +11,18 @@ CC=gcc
 #==============================================================================
 # Define every object required by compilation
 #==============================================================================
- OBJS = \
+ OBJS =                          \
          $(OBJDIR)/commonEvent.o \
-         $(OBJDIR)/controller.o \
-         $(OBJDIR)/event.o \
-         $(OBJDIR)/global.o \
-         $(OBJDIR)/globalVar.o \
-         $(OBJDIR)/main.o \
-         $(OBJDIR)/map.o \
-         $(OBJDIR)/parser.o \
-         $(OBJDIR)/player.o \
-         $(OBJDIR)/playstate.o \
+         $(OBJDIR)/controller.o  \
+         $(OBJDIR)/event.o       \
+         $(OBJDIR)/global.o      \
+         $(OBJDIR)/globalVar.o   \
+         $(OBJDIR)/main.o        \
+         $(OBJDIR)/map.o         \
+         $(OBJDIR)/objects.o     \
+         $(OBJDIR)/parser.o      \
+         $(OBJDIR)/player.o      \
+         $(OBJDIR)/playstate.o   \
          $(OBJDIR)/ui.o
 #==============================================================================
 

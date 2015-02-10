@@ -128,8 +128,11 @@ static void ps_draw() {
  */
 static void ps_update() {
     GFraMe_event_update_begin();
-        GFraMe_object *pWalls, *pPlObj1, *pPlObj2;
+        GFraMe_object *pWalls, *pPlObj1, *pPlObj2, *pObj;
+        GFraMe_sprite *pSpr;
         int len, i;
+        
+        pObj = 0;
         
         // Update everything
         map_update(m, GFraMe_event_elapsed);
@@ -173,10 +176,12 @@ static void ps_update() {
                 else if (!wasPl1Down && (pPlObj1->hit&GFraMe_direction_down)){
                     player_getCarried(p1, pPlObj2);
                     pl1Flags |= GFraMe_direction_down;
+                    pObj = pPlObj1;
                 }
                 else if (!wasPl2Down && (pPlObj2->hit&GFraMe_direction_down)){
                     player_getCarried(p2, pPlObj1);
                     pl2Flags |= GFraMe_direction_down;
+                    pObj = pPlObj2;
                 }
             }
             
@@ -185,14 +190,19 @@ static void ps_update() {
         }
         
         // Fix for a stupid bug
-        i = 0;
-        while (i < len) {
-            GFraMe_object_overlap(&pWalls[i], pPlObj1, GFraMe_first_fixed);
-            GFraMe_object_overlap(&pWalls[i], pPlObj2, GFraMe_first_fixed);
-            
-            i++;
+        if (pObj) {
+            i = 0;
+            while (i < len) {
+                GFraMe_object_overlap(&pWalls[i], pObj, GFraMe_first_fixed);
+                i++;
+            }
         }
         
+        // Check if any event was triggered
+        player_getSprite(&pSpr, p1);
+        map_checkEvents(m, pSpr);
+        player_getSprite(&pSpr, p2);
+        map_checkEvents(m, pSpr);
     GFraMe_event_update_end();
 }
 
