@@ -10,6 +10,9 @@
 #include "controller.h"
 #include "types.h"
 
+/** Define which control scheme is currently being used */
+static ctr_mode _ctr_mode = CTR_1CTR;
+
 /**
  * Checks if the left button is pressed
  * 
@@ -17,28 +20,41 @@
  * @return 1 if the button is pressed, 0 otherwise
  */
 int ctr_left(int ID) {
-    switch (ID) {
-        case ID_PL1: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].left
-                    || GFraMe_controllers[0].lx < -0.35;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].left
-                    || GFraMe_controllers[0].lx < -0.35;
-            else
-                return GFraMe_keys.a;
-        } break;
-        case ID_PL2: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].x
-                    || GFraMe_controllers[0].rx < -0.35;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].left
-                    || GFraMe_controllers[1].lx < -0.35;
-            else
-                return GFraMe_keys.left;
-        } break;
-        default: {}
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_keys.a || GFraMe_keys.h;
+            case ID_PL2: return GFraMe_keys.left || GFraMe_keys.n4;
+            default: return 0;
+          }
+      } break;
+      case CTR_BOTH: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].left
+                            || GFraMe_controllers[0].lx < -0.35;
+            case ID_PL2: return GFraMe_keys.a || GFraMe_keys.left;
+            default: return 0;
+          }
+      } break;
+      case CTR_1CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].left
+                            || GFraMe_controllers[0].lx < -0.35;
+            case ID_PL2: return GFraMe_controllers[0].x
+                            || GFraMe_controllers[0].rx < -0.35;
+            default: return 0;
+          }
+      } break;
+      case CTR_2CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].left
+                            || GFraMe_controllers[0].lx < -0.35;
+            case ID_PL2: return GFraMe_controllers[1].left
+                            || GFraMe_controllers[1].lx < -0.35;
+            default: return 0;
+          }
+      } break;
+      default: return 0;
     }
     return 0;
 }
@@ -50,28 +66,41 @@ int ctr_left(int ID) {
  * @return 1 if the button is pressed, 0 otherwise
  */
 int ctr_right(int ID) {
-    switch (ID) {
-        case ID_PL1: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].right
-                    || GFraMe_controllers[0].lx > 0.35;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].right
-                    || GFraMe_controllers[0].lx > 0.35;
-            else
-                return GFraMe_keys.d;
-        } break;
-        case ID_PL2: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].b
-                    || GFraMe_controllers[0].rx > 0.35;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].right
-                    || GFraMe_controllers[1].lx > 0.35;
-            else
-                return GFraMe_keys.right;
-        } break;
-        default: {}
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_keys.d || GFraMe_keys.k;
+            case ID_PL2: return GFraMe_keys.right || GFraMe_keys.n6;
+            default: return 0;
+          }
+      } break;
+      case CTR_BOTH: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].right
+                            || GFraMe_controllers[0].lx > 0.35;
+            case ID_PL2: return GFraMe_keys.d || GFraMe_keys.right;
+            default: return 0;
+          }
+      } break;
+      case CTR_1CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].right
+                            || GFraMe_controllers[0].lx > 0.35;
+            case ID_PL2: return GFraMe_controllers[0].x
+                            || GFraMe_controllers[0].rx > 0.35;
+            default: return 0;
+          }
+      } break;
+      case CTR_2CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].right
+                            || GFraMe_controllers[0].lx > 0.35;
+            case ID_PL2: return GFraMe_controllers[1].left
+                            || GFraMe_controllers[1].lx > 0.35;
+            default: return 0;
+          }
+      } break;
+      default: return 0;
     }
     return 0;
 }
@@ -84,28 +113,41 @@ int ctr_right(int ID) {
  * @return 1 if the button is pressed, 0 otherwise
  */
 int ctr_action(int ID) {
-    switch (ID) {
-        case ID_PL1: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].up
-                    || GFraMe_controllers[0].ly < -0.5;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].up
-                    || GFraMe_controllers[0].ly < -0.5;
-            else
-                return GFraMe_keys.w;
-        } break;
-        case ID_PL2: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].y
-                    || GFraMe_controllers[0].ry < -0.5;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].up
-                    || GFraMe_controllers[1].ly < -0.5;
-            else
-                return GFraMe_keys.up;
-        } break;
-        default: {}
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_keys.w || GFraMe_keys.u;
+            case ID_PL2: return GFraMe_keys.up || GFraMe_keys.n8;
+            default: return 0;
+          }
+      } break;
+      case CTR_BOTH: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].up
+                            || GFraMe_controllers[0].ly < -0.5;
+            case ID_PL2: return GFraMe_keys.w || GFraMe_keys.up;
+            default: return 0;
+          }
+      } break;
+      case CTR_1CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].up
+                            || GFraMe_controllers[0].ly < -0.5;
+            case ID_PL2: return GFraMe_controllers[0].y
+                            || GFraMe_controllers[0].ry < -0.5;
+            default: return 0;
+          }
+      } break;
+      case CTR_2CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].up
+                            || GFraMe_controllers[0].ly < -0.5;
+            case ID_PL2: return GFraMe_controllers[1].up
+                            || GFraMe_controllers[1].ly < -0.5;
+            default: return 0;
+          }
+      } break;
+      default: return 0;
     }
     return 0;
 }
@@ -118,24 +160,36 @@ int ctr_action(int ID) {
  * @return 1 if the button is pressed, 0 otherwise
  */
 int ctr_jump(int ID) {
-    switch (ID) {
-        case ID_PL1: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].l1;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].a;
-            else
-                return GFraMe_keys.space;
-        } break;
-        case ID_PL2: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].r1;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].a;
-            else
-                return GFraMe_keys.n3;
-        } break;
-        default: {}
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_keys.z || GFraMe_keys.b;
+            case ID_PL2: return GFraMe_keys.delete || GFraMe_keys.n1;
+            default: return 0;
+          }
+      } break;
+      case CTR_BOTH: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].a;
+            case ID_PL2: return GFraMe_keys.z || GFraMe_keys.h;
+            default: return 0;
+          }
+      } break;
+      case CTR_1CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].l1;
+            case ID_PL2: return GFraMe_controllers[0].r1;
+            default: return 0;
+          }
+      } break;
+      case CTR_2CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].a;
+            case ID_PL2: return GFraMe_controllers[1].a;
+            default: return 0;
+          }
+      } break;
+      default: return 0;
     }
     return 0;
 }
@@ -148,24 +202,36 @@ int ctr_jump(int ID) {
  * @return 1 if the button is pressed, 0 otherwise
  */
 int ctr_item(int ID) {
-    switch (ID) {
-        case ID_PL1: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].l2;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].b;
-            else
-                return GFraMe_keys.lctrl;
-        } break;
-        case ID_PL2: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].r2;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].b;
-            else
-                return GFraMe_keys.n2;
-        } break;
-        default: {}
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_keys.x || GFraMe_keys.n;
+            case ID_PL2: return GFraMe_keys.end || GFraMe_keys.end;
+            default: return 0;
+          }
+      } break;
+      case CTR_BOTH: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].b;
+            case ID_PL2: return GFraMe_keys.x || GFraMe_keys.j;
+            default: return 0;
+          }
+      } break;
+      case CTR_1CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].l2;
+            case ID_PL2: return GFraMe_controllers[0].r2;
+            default: return 0;
+          }
+      } break;
+      case CTR_2CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].b;
+            case ID_PL2: return GFraMe_controllers[1].b;
+            default: return 0;
+          }
+      } break;
+      default: return 0;
     }
     return 0;
 }
@@ -178,24 +244,36 @@ int ctr_item(int ID) {
  * @return 1 if the button is pressed, 0 otherwise
  */
 int ctr_switchItem(int ID) {
-    switch (ID) {
-        case ID_PL1: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].select;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[0].x;
-            else
-                return GFraMe_keys.lshift;
-        } break;
-        case ID_PL2: {
-            if (GFraMe_controller_max == 1)
-                return GFraMe_controllers[0].start;
-            else if (GFraMe_controller_max > 1)
-                return GFraMe_controllers[1].x;
-            else
-                return GFraMe_keys.n1;
-        } break;
-        default: {}
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_keys.c || GFraMe_keys.m;
+            case ID_PL2: return GFraMe_keys.pgdown || GFraMe_keys.n3;
+            default: return 0;
+          }
+      } break;
+      case CTR_BOTH: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].x;
+            case ID_PL2: return GFraMe_keys.c || GFraMe_keys.k;
+            default: return 0;
+          }
+      } break;
+      case CTR_1CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].select;
+            case ID_PL2: return GFraMe_controllers[0].start;
+            default: return 0;
+          }
+      } break;
+      case CTR_2CTR: {
+          switch (ID) {
+            case ID_PL1: return GFraMe_controllers[0].x;
+            case ID_PL2: return GFraMe_controllers[1].x;
+            default: return 0;
+          }
+      } break;
+      default: return 0;
     }
     return 0;
 }

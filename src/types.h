@@ -20,5 +20,13 @@ enum {
     ID_DOOR2 = ID_OBJ | 0x00000002,
 };
 
+typedef enum {
+    CTR_KEYS,
+    CTR_BOTH,
+    CTR_1CTR,
+    CTR_2CTR,
+    CTR_MAX
+} ctr_mode;
+
 #endif
 
