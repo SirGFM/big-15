@@ -386,7 +386,6 @@ GFraMe_ret parsef_object(object *pO, FILE *fp) {
     h = -1;
     gvsUsed = 0;
     ce = CE_MAX;
-    //while (x < 0 || y < 0 || w < 0 || h < 0 || 0/* TODO ID */) {
     while (1) {
         if (parsef_string(fp, "x:", 2) == GFraMe_ret_ok) {
             rv = parsef_int(&x, fp);
@@ -425,15 +424,20 @@ GFraMe_ret parsef_object(object *pO, FILE *fp) {
             break;
         }
     }
+    ASSERT(x >= 0, GFraMe_ret_failed);
+    ASSERT(y >= 0, GFraMe_ret_failed);
+    ASSERT(w > 0, GFraMe_ret_failed);
+    ASSERT(h > 0, GFraMe_ret_failed);
     
     // Create the object
-    objs_setBounds(pO, x*8, y*8, w*8, h*8);
+    obj_setZero(pO);
+    obj_setBounds(pO, x*8, y*8, w*8, h*8);
     // TODO actually get the ID
-    objs_setID(pO, ID_OBJ | ID_DOOR1);
-    objs_setCommonEvent(pO, ce);
+    obj_setID(pO, ID_OBJ | ID_DOOR);
+    obj_setCommonEvent(pO, ce);
     while (gvsUsed > 0) {
         gvsUsed--;
-        objs_setVar(pO, gvsUsed, gvs[gvsUsed]);
+        obj_setVar(pO, gvsUsed, gvs[gvsUsed]);
     }
     
     // Get to the next valid character

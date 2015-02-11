@@ -4,6 +4,10 @@
 #include <GFraMe/GFraMe_error.h>
 
 #include "commonEvent.h"
+#include "global.h"
+#include "globalVar.h"
+#include "object.h"
+#include "types.h"
 
 static char *_ce_names[CE_MAX+1] = {
     "ce_test_door1",    /** CE_TEST_DOOR1 */
@@ -25,8 +29,40 @@ void ce_callEvent(commonEvent ce) {
     GFraMe_assertRet(ce < CE_MAX, "Invalid common event!", __ret);
     
     switch (ce) {
-        case CE_TEST_DOOR1:{
-            GFraMe_log("heya!");
+        case CE_TEST_DOOR1: {
+            globalVar gv;
+            int val;
+            
+            gv = TEST_DOOR;
+            
+            val = gv_getValue(gv);
+            if (val == 0)
+                gv_setValue(gv, 2);
+            else if (val == 2)
+                gv_setValue(gv, 0);
+        } break;
+        case CE_HANDLE_DOOR: {
+            globalVar gv;
+            int ID, val;
+            object *pO;
+            
+            // Retrieve the reference
+            ASSERT_NR(_ce_caller);
+            pO = (object*)_ce_caller;
+            
+            // Check that the object is actually a door
+            obj_getID(&ID, pO);
+            ASSERT_NR((ID & ID_DOOR) == ID_DOOR);
+            
+            // Get the door's state
+            obj_getVar(&gv, pO, 0);
+            val = gv_getValue(gv);
+            
+            if (val == 0)
+                obj_setTile(pO, 192);
+            else if (val == 2)
+                obj_setTile(pO, 196);
+            
         } break;
         // TODO implement every common event
         default: {}

@@ -15,9 +15,9 @@
 #include "types.h"
 
 struct stObject {
-    GFraMe_sprite spr;  /** Event's sprite (for rendering and collision  */
-    commonEvent ce;     /** Common event to be called every sprite frame */
-    globalVar local[OBJ_VAR_MAX]; /** Each event has 4 local global variables      */
+    GFraMe_sprite spr;            /** Event's sprite (for rendering and collision  */
+    commonEvent ce;               /** Common event to be called every sprite frame */
+    globalVar local[OBJ_VAR_MAX]; /** Each event has 4 local global variables */
 };
 
 /**
@@ -60,39 +60,29 @@ __ret:
     return;
 }
 
-#if 0
 /**
- * Return the next object in the list (and expand it as necessary)
+ * Make this a "empty" object
  * 
- * @param ppObj The retrived object
+ * @param pObj The retrived object
  * @return GFraMe error code
  */
-GFraMe_ret objs_getNextObj(object **ppObj) {
+GFraMe_ret obj_setZero(object *pObj) {
     GFraMe_ret rv;
     
-    // Expand the list, if necessary
-    if (objsUsed >= objsLen) {
-        objsLen *= 2;
-        
-        pObjs = (object*)realloc(pObjs, sizeof(object)*objsLen);
-        ASSERT(pObjs, GFraMe_ret_memory_error);
-    }
+    // Sanitize parameters
+    ASSERT(pObj, GFraMe_ret_bad_param);
     
     // Clean up this object
-    pObjs[objsUsed].ce = CE_MAX;
-    pObjs[objsUsed].local[0] = GV_MAX;
-    pObjs[objsUsed].local[1] = GV_MAX;
-    pObjs[objsUsed].local[2] = GV_MAX;
-    pObjs[objsUsed].local[3] = GV_MAX;
+    pObj->ce = CE_MAX;
+    pObj->local[0] = GV_MAX;
+    pObj->local[1] = GV_MAX;
+    pObj->local[2] = GV_MAX;
+    pObj->local[3] = GV_MAX;
     
-    // Retrive the new object
-    *ppObj = &pObjs[objsUsed];
-    didGetObj = 1;
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
 }
-#endif
 
 /**
  * Assign a object's dimension and position
@@ -103,7 +93,7 @@ __ret:
  * @param w The object's width
  * @param h The object's height
  */
-void objs_setBounds(object *pObj, int x, int y, int w, int h) {
+void obj_setBounds(object *pObj, int x, int y, int w, int h) {
     GFraMe_spriteset *pSset;
     
     // Check which tileset to use
@@ -111,6 +101,8 @@ void objs_setBounds(object *pObj, int x, int y, int w, int h) {
         pSset = gl_sset8x8;
     else if (w == 8 && h == 16)
         pSset = gl_sset8x16;
+    else if (w == 8 && h == 32)
+        pSset = gl_sset8x32;
     else if (w == 16 && h == 16)
         pSset = gl_sset16x16;
     else
@@ -126,7 +118,7 @@ void objs_setBounds(object *pObj, int x, int y, int w, int h) {
  * @param ID The ID
  * @return GFraMe error code
  */
-void objs_setID(object *pObj, int ID) {
+void obj_setID(object *pObj, int ID) {
     // Make sure the object is correctly flagged
     ID &= ~ID_PL;
     ID &= ~ID_MOB;
@@ -137,12 +129,32 @@ void objs_setID(object *pObj, int ID) {
 }
 
 /**
+ * Get the object's ID
+ * 
+ * @param pID The ID
+ * @param pObj The object
+ */
+void obj_getID(int *pID, object *pObj) {
+    *pID = pObj->spr.id;
+}
+
+/**
+ * Set the object's current tile
+ * 
+ * @param pID The ID
+ * @param tile The tile
+ */
+void obj_setTile(object *pObj, int tile) {
+    pObj->spr.cur_tile = tile;
+}
+
+/**
  * Set a common event to be run by this object
  * 
  * @param pObj The object
  * @param ce The common event
  */
-void objs_setCommonEvent(object *pObj, commonEvent ce) {
+void obj_setCommonEvent(object *pObj, commonEvent ce) {
     pObj->ce = ce;
 }
 
@@ -153,7 +165,7 @@ void objs_setCommonEvent(object *pObj, commonEvent ce) {
  * @param index The variable index (on the object)
  * @param var The actual variable
  */
-GFraMe_ret objs_setVar(object *pObj, int index, globalVar gv) {
+GFraMe_ret obj_setVar(object *pObj, int index, globalVar gv) {
     GFraMe_ret rv;
     
     // Sanitize parameters
@@ -169,53 +181,36 @@ __ret:
     return rv;
 }
 
-#if 0
+/**
+ * Get an object's variable
+ * 
+ * @param pGv The actual variable
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ */
+void obj_getVar(globalVar *pGv, object *pObj, int index) {
+    *pGv = pObj->local[index];
+}
+
 /**
  * Update every object
  * 
  * @param ms Time elapsed, in milliseconds, from last frame
  */
-void objs_update(int ms) {
-    int i;
+void obj_update(object *pObj, int ms) {
+    GFraMe_sprite_update(&pObj->spr, ms);
     
-    i = 0;
-    while (i < objsUsed) {
-        // Update the object
-        GFraMe_sprite_update(&pObjs[i].spr, ms);
-        // And call its event, if any
-        if (pObjs[i].ce != CE_MAX) {
-            // Call the object's event, with itself as the parameter
-            ce_setParam(CE_CALLER, &pObjs[i]);
-            ce_callEvent(pObjs[i].ce);
-        }
-        
-        i++;
+    // Call the object's event, if any
+    if (pObj->ce) {
+        ce_setParam(CE_CALLER, pObj);
+        ce_callEvent(pObj->ce);
     }
 }
 
 /**
  * Draw every object
  */
-void objs_draw() {
-    int i;
-    
-    // Draw every sprite
-    i = 0;
-    while (i < objsUsed) {
-        GFraMe_sprite_draw(&pObjs[i].spr);
-        i++;
-    }
+void obj_draw(object *pObj) {
+    GFraMe_sprite_draw(&pObj->spr);
 }
-
-
-/**
- * Retrieve a list with the actives objects bounds
- * 
- * @param ppObjs The list of objects
- * @param pLen How many objects there are in the list
- * @return GFraMe error code
- */
-GFraMe_ret objs_getCollideList(GFraMe_object **ppObjs, int *pLen);
-
-#endif
 

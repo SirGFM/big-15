@@ -37,18 +37,12 @@ GFraMe_ret obj_getNew(object **ppObj);
 void obj_clean(object **ppObj);
 
 /**
- * Return the next object in the list (and expand it as necessary)
+ * Make this a "empty" object
  * 
- * @param ppObj The retrived object
+ * @param pObj The retrived object
  * @return GFraMe error code
  */
-GFraMe_ret objs_getNextObj(object **ppObj);
-
-/**
- * Update the list to account for the last object adition.
- * This function must be called after a objs_getNextObj call.
- */
-void objs_pushLastObj();
+GFraMe_ret obj_setZero(object *pObj);
 
 /**
  * Assign a object's dimension and position
@@ -59,7 +53,7 @@ void objs_pushLastObj();
  * @param w The object's width
  * @param h The object's height
  */
-void objs_setBounds(object *pObj, int x, int y, int w, int h);
+void obj_setBounds(object *pObj, int x, int y, int w, int h);
 
 /**
  * Assign an ID to this object
@@ -68,7 +62,23 @@ void objs_setBounds(object *pObj, int x, int y, int w, int h);
  * @param ID The ID
  * @return GFraMe error code
  */
-void objs_setID(object *pObj, int ID);
+void obj_setID(object *pObj, int ID);
+
+/**
+ * Get the object's ID
+ * 
+ * @param pID The ID
+ * @param pObj The object
+ */
+void obj_getID(int *pID, object *pObj);
+
+/**
+ * Set the object's current tile
+ * 
+ * @param pID The ID
+ * @param tile The tile
+ */
+void obj_setTile(object *pObj, int tile);
 
 /**
  * Set a common event to be run by this object
@@ -76,7 +86,7 @@ void objs_setID(object *pObj, int ID);
  * @param pObj The object
  * @param ce The common event
  */
-void objs_setCommonEvent(object *pObj, commonEvent ce);
+void obj_setCommonEvent(object *pObj, commonEvent ce);
 
 /**
  * Set an object's variable
@@ -85,28 +95,28 @@ void objs_setCommonEvent(object *pObj, commonEvent ce);
  * @param index The variable index (on the object)
  * @param var The actual variable
  */
-GFraMe_ret objs_setVar(object *pObj, int index, globalVar var);
+GFraMe_ret obj_setVar(object *pObj, int index, globalVar var);
+
+/**
+ * Get an object's variable
+ * 
+ * @param pGv The actual variable
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ */
+void obj_getVar(globalVar *pGv, object *pObj, int index);
 
 /**
  * Update every object
  * 
  * @param ms Time elapsed, in milliseconds, from last frame
  */
-void objs_update(int ms);
+void obj_update(object *pObj, int ms);
 
 /**
  * Draw every object
  */
-void objs_draw();
-
-/**
- * Retrieve a list with the actives objects bounds
- * 
- * @param ppObjs The list of objects
- * @param pLen How many objects there are in the list
- * @return GFraMe error code
- */
-GFraMe_ret objs_getCollideList(GFraMe_object **ppObjs, int *pLen);
+void obj_draw(object *pObj);
 
 #endif
 

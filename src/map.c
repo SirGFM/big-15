@@ -508,6 +508,13 @@ void map_update(map *pM, int ms) {
         
         i++;
     }
+    
+    // Update every object
+    i = 0;
+    while (i < pM->objsUsed) {
+        obj_update(pM->objs[i], ms);
+        i++;
+    }
 }
 
 /**
@@ -558,6 +565,13 @@ void map_draw(map *pM) {
         }
         if (y - cam_y > SCR_H)
             break;
+        i++;
+    }
+    
+    // Draw every object
+    i = 0;
+    while (i < pM->objsUsed) {
+        obj_draw(pM->objs[i]);
         i++;
     }
 }
