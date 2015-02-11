@@ -12,11 +12,19 @@
 
 #include "commonEvent.h"
 #include "event.h"
+#include "globalVar.h"
+
+/**
+ * Parse a global variable from a file
+ * 
+ * @param pGv Returns the parsed common event
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_globalVar(globalVar *pGv, FILE *fp);
 
 /**
  * Parse a common event from a file
- * When it's expected, it must simply be a string between double quotes, i.e.:
- * '"'[a-zA-Z]+'"'
  * 
  * @param pCe Returns the parsed common event
  * @param fp File pointer

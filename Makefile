@@ -19,7 +19,7 @@ CC=gcc
          $(OBJDIR)/globalVar.o   \
          $(OBJDIR)/main.o        \
          $(OBJDIR)/map.o         \
-         $(OBJDIR)/objects.o     \
+         $(OBJDIR)/object.o      \
          $(OBJDIR)/parser.o      \
          $(OBJDIR)/player.o      \
          $(OBJDIR)/playstate.o   \

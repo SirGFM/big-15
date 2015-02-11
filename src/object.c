@@ -1,5 +1,5 @@
 /**
- * @file src/objects.h
+ * @file src/object.h
  * 
  * Keep track of all active objects, updating and drawing then
  */
@@ -11,61 +11,56 @@
 #include "commonEvent.h"
 #include "global.h"
 #include "globalVar.h"
-#include "objects.h"
+#include "object.h"
 #include "types.h"
 
 struct stObject {
     GFraMe_sprite spr;  /** Event's sprite (for rendering and collision  */
     commonEvent ce;     /** Common event to be called every sprite frame */
-    globalVar local[4]; /** Each event has 4 local global variables      */
+    globalVar local[OBJ_VAR_MAX]; /** Each event has 4 local global variables      */
 };
 
-static object *pObjs = NULL;
-static int objsUsed = 0;
-static int objsLen = 0;
-static int didGetObj = 0;
-
 /**
- * Initialize this submodule
+ * Alloc a new object
  * 
+ * @param ppObj Returned object
  * @return GFraMe error code
  */
-GFraMe_ret objs_init() {
+GFraMe_ret obj_getNew(object **ppObj) {
     GFraMe_ret rv;
     
-    // Check that this module hasn't already been initialized
-    ASSERT(!pObjs, GFraMe_ret_ok);
+    // Sanitize parameters
+    GFraMe_assertRV(ppObj, "No container passed!", rv = GFraMe_ret_bad_param,
+        __ret);
+    GFraMe_assertRV(!*ppObj, "Event already alloced!", rv = GFraMe_ret_bad_param,
+        __ret);
     
-    // Alloc a initial list of objects
-    pObjs = (object*)malloc(sizeof(object)*4);
-    ASSERT(pObjs, GFraMe_ret_memory_error);
-    // And set its length
-    objsUsed = 0;
-    objsLen = 4;
+    // Alloc the event
+    *ppObj = (object*)malloc(sizeof(object));
+    GFraMe_assertRV(*ppObj, "Failed to alloc!", rv = GFraMe_ret_memory_error,
+        __ret);
     
-    // Set the return
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
 }
 
 /**
- * Clean up this submodule
+ * Clean up the object
+ * 
+ * @param ppObj The object
  */
-void objs_clean() {
-    // Check that the module was initialized
-    ASSERT_NR(pObjs);
+void obj_clean(object **ppObj) {
+    ASSERT_NR(ppObj);
+    ASSERT_NR(*ppObj);
     
-    // Clean up everything
-    free(pObjs);
-    pObjs = NULL;
-    objsUsed = 0;
-    objsLen = 0;
-    
+    free(*ppObj);
+    *ppObj = NULL;
 __ret:
     return;
 }
 
+#if 0
 /**
  * Return the next object in the list (and expand it as necessary)
  * 
@@ -97,17 +92,7 @@ GFraMe_ret objs_getNextObj(object **ppObj) {
 __ret:
     return rv;
 }
-
-/**
- * Update the list to account for the last object adition.
- * This function must be called after a objs_getNextObj call.
- */
-void objs_pushLastObj() {
-    // Check if an object was actually retrieved and push it
-    if (didGetObj)
-        objsUsed++;
-    didGetObj = 0;
-}
+#endif
 
 /**
  * Assign a object's dimension and position
@@ -148,7 +133,7 @@ void objs_setID(object *pObj, int ID) {
     ID |= ID_OBJ;
     
     // Set the ID
-    pObjs->spr.id = ID;
+    pObj->spr.id = ID;
 }
 
 /**
@@ -184,6 +169,7 @@ __ret:
     return rv;
 }
 
+#if 0
 /**
  * Update every object
  * 
@@ -230,4 +216,6 @@ void objs_draw() {
  * @return GFraMe error code
  */
 GFraMe_ret objs_getCollideList(GFraMe_object **ppObjs, int *pLen);
+
+#endif
 

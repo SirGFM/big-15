@@ -12,6 +12,7 @@
 #include <GFraMe/GFraMe_sprite.h>
 
 #include "event.h"
+#include "object.h"
 
 typedef struct stMap map;
 
@@ -54,6 +55,24 @@ GFraMe_ret map_getNextEvent(event **ppE, map *pM);
  * @param pM The map
  */
 void map_pushEvent(map *pM);
+
+/**
+ * Retrieve the next object on the map's list (recycled and expends as
+ * necessary) Note that the event must be pushed later
+ * 
+ * @param ppO Returns the object
+ * @param pM The map
+ * @return GFraMe error code
+ */
+GFraMe_ret map_getNextObject(object **ppO, map *pM);
+
+/**
+ * Actually push the last gotten object into the map. If no map_getNextObject
+ * was previously called, this function does nothing.
+ * 
+ * @param pM The map
+ */
+void map_pushObject(map *pM);
 
 /**
  * Get the current tilemap, if any

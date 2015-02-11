@@ -1,5 +1,5 @@
 /**
- * @file src/objects.h
+ * @file src/object.h
  * 
  * Keep track of all active objects, updating and drawing then
  */
@@ -11,19 +11,30 @@
 #include "commonEvent.h"
 #include "globalVar.h"
 
+enum {
+    OBJ_VAR1 = 0,
+    OBJ_VAR2,
+    OBJ_VAR3,
+    OBJ_VAR4,
+    OBJ_VAR_MAX
+};
+
 typedef struct stObject object;
 
 /**
- * Initialize this submodule
+ * Alloc a new object
  * 
+ * @param ppObj Returned object
  * @return GFraMe error code
  */
-GFraMe_ret objs_init();
+GFraMe_ret obj_getNew(object **ppObj);
 
 /**
- * Clean up this submodule
+ * Clean up the object
+ * 
+ * @param ppObj The object
  */
-void objs_clean();
+void obj_clean(object **ppObj);
 
 /**
  * Return the next object in the list (and expand it as necessary)

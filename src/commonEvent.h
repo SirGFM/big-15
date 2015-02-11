@@ -8,6 +8,7 @@
 
 typedef enum {
     CE_TEST_DOOR1,
+    CE_HANDLE_DOOR,
     CE_MAX
 } commonEvent;
 

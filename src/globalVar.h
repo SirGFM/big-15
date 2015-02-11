@@ -19,6 +19,7 @@ typedef enum {
     DOOR_X,    /** Entrance horizontal point on current map */
     DOOR_Y,    /** Entrance vertical point on current map   */
     ITEMS,     /** Flags for available items                */
+    TEST_DOOR, /** State of a test door                     */
     GV_MAX     /** Global var count                         */
 } globalVar;
 
@@ -90,6 +91,14 @@ int gv_isZero(globalVar gv);
  * return 1 on true, 0 on false
  */
 int gv_nIsZero(globalVar gv);
+
+/**
+ * Get a globalVar's name
+ * 
+ * @param gv The globalVar
+ * @return The global variable's name or NULL
+ */
+char* gv_getName(globalVar gv);
 
 #endif
 

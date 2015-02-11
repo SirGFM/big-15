@@ -16,8 +16,9 @@ enum {
     ID_PL1   = ID_PL  | 0x00000001,
     ID_PL2   = ID_PL  | 0x00000002,
     
-    ID_DOOR1 = ID_OBJ | 0x00000001,
-    ID_DOOR2 = ID_OBJ | 0x00000002,
+    ID_DOOR  = ID_OBJ | 0x00000001,
+    ID_DOOR1 = ID_OBJ | 0x00000002,
+    ID_DOOR2 = ID_OBJ | 0x00000004,
 };
 
 typedef enum {

@@ -3,6 +3,23 @@
  */
 #include "globalVar.h"
 
+static char *_gv_names[GV_MAX+1] = {
+    "pl1_hp",
+    "pl1_maxhp",
+    "pl1_item",
+    "pl1_death",
+    "pl2_hp",
+    "pl2_maxhp",
+    "pl2_item",
+    "pl2_death",
+    "map",
+    "door_x",
+    "door_y",
+    "items",
+    "test_door",
+    "gv_max"
+};
+
 /** Static array for global variables */
 static int _gv_arr[GV_MAX];
 
@@ -109,5 +126,16 @@ int gv_nIsZero(globalVar gv) {
     if (gv < GV_MAX)
         return _gv_arr[gv] != 0;
     return -1;
+}
+
+/**
+ * Get a globalVar's name
+ * 
+ * @param gv The globalVar
+ * @return The global variable's name or NULL
+ */
+char* gv_getName(globalVar gv) {
+    if (gv >= GV_MAX) return 0;
+    return _gv_names[gv];
 }
 

@@ -12,7 +12,9 @@
 #include "event.h"
 #include "global.h"
 #include "map.h"
+#include "object.h"
 #include "parser.h"
+#include "types.h"
 
 /**
  * Simply ignore every whitespace. Since this is only called internally, no
@@ -134,9 +136,61 @@ __ret:
 }
 
 /**
+ * Parse a global variable from a file
+ * 
+ * @param pGv Returns the parsed common event
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_globalVar(globalVar *pGv, FILE *fp) {
+    fpos_t pos;
+    GFraMe_ret rv;
+    globalVar gv;
+    int irv;
+    
+    // Sanitize parameters
+    ASSERT(pGv, GFraMe_ret_bad_param);
+    ASSERT(fp, GFraMe_ret_bad_param);
+    
+    // Get the current position, to "backtrack" on error
+    irv = fgetpos(fp, &pos);
+    ASSERT(irv == 0, GFraMe_ret_failed);
+    
+    // Check every globalVar (yay, dumb strats!)
+    gv = 0;
+    while (gv < GV_MAX) {
+        char *gvName;
+        
+        // Get the current globalVar's name
+        gvName = gv_getName(gv);
+        
+        // Try to match every other character to the current globalVar
+        rv = parsef_string(fp, gvName, strlen(gvName));
+        if (rv == GFraMe_ret_ok)
+            break;
+        
+        // Return to the string's begin
+        irv = fsetpos(fp, &pos);
+        ASSERT(irv == 0, GFraMe_ret_failed);
+        
+        gv++;
+    }
+    
+    // Get to the next valid character
+    parsef_ignoreWhitespace(fp, 1);
+    
+    *pGv = gv;
+    rv = GFraMe_ret_ok;
+__ret:
+    // Backtrack on error
+    if (rv != GFraMe_ret_ok && rv != GFraMe_ret_bad_param)
+        fsetpos(fp, &pos);
+    
+    return rv;
+}
+
+/**
  * Parse a common event from a file.
- * When it's expected, it must simply be a string between double quotes, i.e.:
- * '"'string'"'
  * 
  * @param pCe Returns the parsed common event
  * @param fp File pointer
@@ -160,24 +214,14 @@ GFraMe_ret parsef_commonEvent(commonEvent *pCe, FILE *fp) {
     ce = 0;
     while (ce < CE_MAX) {
         char *ceName;
-        int c;
         
         // Get the current event's name
         ceName = ce_getName(ce);
         
-        // Check that the first character is a '"'
-        c = fgetc(fp);
-        ASSERT(c != EOF, GFraMe_ret_failed);
-        ASSERT(c == '"', GFraMe_ret_failed);
-        
         // Try to match every other character to the current event
         rv = parsef_string(fp, ceName, strlen(ceName));
-        if (rv == GFraMe_ret_ok) {
-            c = fgetc(fp);
-            ASSERT(c != EOF, GFraMe_ret_failed);
-            if (c == '"')
-                break;
-        }
+        if (rv == GFraMe_ret_ok)
+            break;
         
         // Return to the string's begin
         irv = fsetpos(fp, &pos);
@@ -203,7 +247,7 @@ __ret:
 /**
  * Parse a event from a file
  * A event is described by following rule:
- * "e:" "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int
+ * "e:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int '}'
  * All the numbers are read as tiles (i.e., multiplied by 8)
  * 
  * @param pE Returns the parsed event
@@ -214,7 +258,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     commonEvent ce;
     fpos_t pos;
     GFraMe_ret rv;
-    int irv, h, w, x, y;
+    int c, irv, h, w, x, y;
     trigger t;
     
     // Sanitize parameters
@@ -229,6 +273,12 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     rv = parsef_string(fp, "e:", 2);
     ASSERT(rv == GFraMe_ret_ok, rv);
     
+    // Open a bracket =D
+    c = fgetc(fp);
+    ASSERT(c != EOF, GFraMe_ret_failed);
+    ASSERT(c == '{', GFraMe_ret_failed);
+    parsef_ignoreWhitespace(fp, 1);
+    
     // Get every parameter needed for the event, one at a time
     x = -1;
     y = -1;
@@ -236,7 +286,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     h = -1;
     t = 0;
     ce = CE_MAX;
-    while (x < 0 || y < 0 || w < 0 || h < 0 || t <= 0 || ce == CE_MAX) {
+    while (1) {
         if (parsef_string(fp, "x:", 2) == GFraMe_ret_ok) {
             rv = parsef_int(&x, fp);
             ASSERT(rv == GFraMe_ret_ok, rv);
@@ -266,9 +316,20 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
             ASSERT(rv == GFraMe_ret_ok, rv);
             ASSERT(ce < CE_MAX, GFraMe_ret_failed);
         }
-        else
-            ASSERT(0, GFraMe_ret_failed);
+        else {
+            // If nothing was found, expect a closing bracket and stop
+            c = fgetc(fp);
+            ASSERT(c != EOF, GFraMe_ret_failed);
+            ASSERT(c == '}', GFraMe_ret_failed);
+            break;
+        }
     }
+    ASSERT(x >= 0, GFraMe_ret_failed);
+    ASSERT(y >= 0, GFraMe_ret_failed);
+    ASSERT(w > 0, GFraMe_ret_failed);
+    ASSERT(h > 0, GFraMe_ret_failed);
+    ASSERT(t > 0, GFraMe_ret_failed);
+    ASSERT(ce != CE_MAX, GFraMe_ret_failed);
     
     // Create the event
     rv = event_setAll(pE, x*8, y*8, w*8, h*8, t, ce);
@@ -281,6 +342,112 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
 __ret:
     return rv;
 }
+
+
+/**
+ * Parse an object from a file
+ * A object is described by following rule:
+ * "obj:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "var":globalVarName '}'
+ * All the numbers are read as tiles (i.e., multiplied by 8)
+ * 
+ * @param pO Returns the parsed object
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_object(object *pO, FILE *fp) {
+    commonEvent ce;
+    fpos_t pos;
+    GFraMe_ret rv;
+    int c, irv, h, w, x, y, gvsUsed;
+    globalVar gvs[OBJ_VAR_MAX];
+    
+    // Sanitize parameters
+    ASSERT(pO, GFraMe_ret_bad_param);
+    ASSERT(fp, GFraMe_ret_bad_param);
+    
+    // Get the current position, to "backtrack" on error
+    irv = fgetpos(fp, &pos);
+    ASSERT(irv == 0, GFraMe_ret_failed);
+    
+    // Check that the next "token" must be an event
+    rv = parsef_string(fp, "obj:", 4);
+    ASSERT(rv == GFraMe_ret_ok, rv);
+    
+    // Open a bracket =D
+    c = fgetc(fp);
+    ASSERT(c != EOF, GFraMe_ret_failed);
+    ASSERT(c == '{', GFraMe_ret_failed);
+    parsef_ignoreWhitespace(fp, 1);
+    
+    // Get every parameter needed for the object, one at a time
+    x = -1;
+    y = -1;
+    w = -1;
+    h = -1;
+    gvsUsed = 0;
+    ce = CE_MAX;
+    //while (x < 0 || y < 0 || w < 0 || h < 0 || 0/* TODO ID */) {
+    while (1) {
+        if (parsef_string(fp, "x:", 2) == GFraMe_ret_ok) {
+            rv = parsef_int(&x, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        else if (parsef_string(fp, "y:", 2) == GFraMe_ret_ok) {
+            rv = parsef_int(&y, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        else if (parsef_string(fp, "w:", 2) == GFraMe_ret_ok) {
+            rv = parsef_int(&w, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        else if (parsef_string(fp, "h:", 2) == GFraMe_ret_ok) {
+            rv = parsef_int(&h, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        else if (parsef_string(fp, "ce:", 3) == GFraMe_ret_ok) {
+            rv = parsef_commonEvent(&ce, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            ASSERT(ce < CE_MAX, GFraMe_ret_failed);
+        }
+        else if (parsef_string(fp, "var:", 4) == GFraMe_ret_ok) {
+            ASSERT(gvsUsed < OBJ_VAR_MAX, GFraMe_ret_failed);
+            
+            rv = parsef_globalVar(&gvs[gvsUsed], fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            
+            gvsUsed++;
+        }
+        else {
+            // If nothing was found, expect a closing bracket and stop
+            c = fgetc(fp);
+            ASSERT(c != EOF, GFraMe_ret_failed);
+            ASSERT(c == '}', GFraMe_ret_failed);
+            break;
+        }
+    }
+    
+    // Create the object
+    objs_setBounds(pO, x*8, y*8, w*8, h*8);
+    // TODO actually get the ID
+    objs_setID(pO, ID_OBJ | ID_DOOR1);
+    objs_setCommonEvent(pO, ce);
+    while (gvsUsed > 0) {
+        gvsUsed--;
+        objs_setVar(pO, gvsUsed, gvs[gvsUsed]);
+    }
+    
+    // Get to the next valid character
+    parsef_ignoreWhitespace(fp, 1);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+
+
+
+
 
 /**
  * Set a tile into the buffer, expanding it if necessary
@@ -477,12 +644,15 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         unsigned char *pData;
         event *e;
         int c, h, len, w;
+        object *o;
         
         // Retrieve a event from map, in case it's parsed
         rv = map_getNextEvent(&e, pM);
         ASSERT(rv == GFraMe_ret_ok, rv);
         // Retrieve the current map's data, to recycle it
         rv = map_getTilemapData(&pData, &len, pM);
+        ASSERT(rv == GFraMe_ret_ok, rv);
+        rv = map_getNextObject(&o, pM);
         ASSERT(rv == GFraMe_ret_ok, rv);
         
         // Try to parse a event
@@ -495,6 +665,11 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         rv = parsef_tilemap(&pData, &len, &w, &h, fp);
         if (rv == GFraMe_ret_ok) {
             map_setTilemap(pM, pData, len, w, h);
+            continue;
+        }
+        rv = parsef_object(o, fp);
+        if (rv == GFraMe_ret_ok) {
+            map_pushObject(pM);
             continue;
         }
         // TODO parse other structures
