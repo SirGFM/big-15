@@ -130,6 +130,13 @@ void map_update(map *pM, int ms);
 void map_draw(map *pM);
 
 /**
+ * Render all the objects in the map
+ * 
+ * @param pM The map
+ */
+void map_drawObjs(map *pM);
+
+/**
  * Get a list of objects for the map's collideable area
  * 
  * @param ppObjs List of objects

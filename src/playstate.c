@@ -119,6 +119,7 @@ static void ps_draw() {
         map_draw(m);
         player_draw(p1);
         player_draw(p2);
+        map_drawObjs(m);
         ui_draw();
     GFraMe_event_draw_end();
 }
@@ -197,6 +198,10 @@ static void ps_update() {
                 i++;
             }
         }
+        
+        // Collide against every object on the map
+        map_collideObjects(m, pPlObj1);
+        map_collideObjects(m, pPlObj2);
         
         // Check if any event was triggered
         player_getSprite(&pSpr, p1);

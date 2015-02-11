@@ -126,14 +126,25 @@ void obj_getVar(globalVar *pGv, object *pObj, int index);
 /**
  * Update every object
  * 
+ * @param pObj The object
  * @param ms Time elapsed, in milliseconds, from last frame
  */
 void obj_update(object *pObj, int ms);
 
 /**
  * Draw every object
+ * 
+ * @param pObj The object
  */
 void obj_draw(object *pObj);
+
+/**
+ * Collide a object against this
+ * 
+ * @param pObj The object
+ * @param pGFMobj The other object
+ */
+void obj_collide(object *pObj, GFraMe_object *pGFMobj);
 
 #endif
 

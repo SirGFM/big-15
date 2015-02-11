@@ -215,6 +215,7 @@ void obj_getVar(globalVar *pGv, object *pObj, int index) {
 /**
  * Update every object
  * 
+ * @param pObj The object
  * @param ms Time elapsed, in milliseconds, from last frame
  */
 void obj_update(object *pObj, int ms) {
@@ -229,8 +230,32 @@ void obj_update(object *pObj, int ms) {
 
 /**
  * Draw every object
+ * 
+ * @param pObj The object
  */
 void obj_draw(object *pObj) {
     GFraMe_sprite_draw(&pObj->spr);
+}
+
+/**
+ * Collide a object against this
+ * 
+ * @param pObj The object
+ * @param pGFMobj The other object
+ */
+void obj_collide(object *pObj, GFraMe_object *pGFMobj) {
+    // Collide this object, but don't move it
+    if ((pObj->spr.id & ID_STATIC) == ID_STATIC) {
+        GFraMe_object *pO;
+        
+        pO = GFraMe_sprite_get_object(&pObj->spr);
+        GFraMe_object_overlap(pO, pGFMobj, GFraMe_first_fixed);
+    }
+    else if ((pObj->spr.id & ID_MOVABLE) == ID_MOVABLE) {
+        GFraMe_object *pO;
+        
+        pO = GFraMe_sprite_get_object(&pObj->spr);
+        GFraMe_object_overlap(pO, pGFMobj, GFraMe_second_fixed);
+    }
 }
 

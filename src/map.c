@@ -37,28 +37,28 @@ typedef struct {
 } animTile;
 
 struct stMap {
-    unsigned char *data;  /** Tilemap's data                               */
-    int dataLen;          /** Size of the tilemap's buffer                 */
-    int w;                /** Width of the tilemap, in tiles               */
-    int h;                /** Height of the tilemap, int tiles             */
+    unsigned char *data;     /** Tilemap's data                               */
+    int dataLen;             /** Size of the tilemap's buffer                 */
+    int w;                   /** Width of the tilemap, in tiles               */
+    int h;                   /** Height of the tilemap, int tiles             */
     
-    event **evs;          /** List of events                               */
-    int evsLen;           /** Size of the events list                      */
-    int evsUsed;          /** How many events are currently active         */
-    int didGetEvent;      /** Whether map_getNextEvent has been called     */
+    event **evs;             /** List of events                               */
+    int evsLen;              /** Size of the events list                      */
+    int evsUsed;             /** How many events are currently active         */
+    int didGetEvent;         /** Whether map_getNextEvent has been called     */
     
-    GFraMe_object *walls;  /** List of walls                               */
-    int wallsLen;          /** Size of the walls list                      */
-    int wallsUsed;         /** How many walls there are in the list        */
+    GFraMe_object *walls;    /** List of walls                                */
+    int wallsLen;            /** Size of the walls list                       */
+    int wallsUsed;           /** How many walls there are in the list         */
     
-    animTile *animTiles;  /** List of animated tiles in the tilemap's data */
-    int animTilesLen;     /** Size of the list of animated tiles           */
-    int animTilesUsed;    /** Number of animated tiles on the current      */
+    animTile *animTiles;     /** List of animated tiles in the tilemap's data */
+    int animTilesLen;        /** Size of the list of animated tiles           */
+    int animTilesUsed;       /** Number of animated tiles on the current      */
     
-    object **objs;        /** List of objects                              */
-    int objsLen;          /** Size of the list of objects                  */
-    int objsUsed;         /** Number of objects on the current map         */
-    int didGetObject;     /** Whether map_getNextObject has been called    */
+    object **objs;           /** List of objects                              */
+    int objsLen;             /** Size of the list of objects                  */
+    int objsUsed;            /** Number of objects on the current map         */
+    int didGetObject;        /** Whether map_getNextObject has been called    */
 };
 
 //============================================================================//
@@ -567,6 +567,15 @@ void map_draw(map *pM) {
             break;
         i++;
     }
+}
+
+/**
+ * Render all the objects in the map
+ * 
+ * @param pM The map
+ */
+void map_drawObjs(map *pM) {
+    int i;
     
     // Draw every object
     i = 0;
@@ -613,6 +622,23 @@ void map_checkEvents(map *pM, GFraMe_sprite *pSpr) {
     i = 0;
     while (i < pM->evsUsed) {
         event_check(pM->evs[i], pSpr);
+        i++;
+    }
+}
+
+/**
+ * Collide a object against every one in the map
+ * 
+ * @param pM The map
+ * @param pObj The object
+ */
+void map_collideObjects(map *pM, GFraMe_object *pObj) {
+    int i;
+    
+    // Simply check every event
+    i = 0;
+    while (i < pM->evsUsed) {
+        obj_collide(pM->objs[i], pObj);
         i++;
     }
 }
