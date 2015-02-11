@@ -14,6 +14,24 @@
 static ctr_mode _ctr_mode = CTR_1CTR;
 
 /**
+ * Change the current input scheme
+ * 
+ * @param mode The new controle mode
+ */
+void ctr_setMode(ctr_mode mode) {
+    if (mode == CTR_1CTR || mode == CTR_BOTH) {
+        if (GFraMe_controller_max >= 1)
+            _ctr_mode = mode;
+    }
+    else if (mode == CTR_2CTR) {
+        if (GFraMe_controller_max >= 2)
+            _ctr_mode = mode;
+    }
+    else
+        _ctr_mode = mode;
+}
+
+/**
  * Checks if the left button is pressed
  * 
  * @param ID ID of the player checking the button

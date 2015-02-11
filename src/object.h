@@ -10,6 +10,7 @@
 
 #include "commonEvent.h"
 #include "globalVar.h"
+#include "types.h"
 
 enum {
     OBJ_VAR1 = 0,
@@ -54,6 +55,22 @@ GFraMe_ret obj_setZero(object *pObj);
  * @param h The object's height
  */
 void obj_setBounds(object *pObj, int x, int y, int w, int h);
+
+/**
+ * Add a flag to the object
+ * 
+ * @param pObj The object
+ * @param f The flag
+ */
+void obj_addFlag(object *pObj, flag f);
+
+/**
+ * Remove a flag to the object
+ * 
+ * @param pObj The object
+ * @param f The flag
+ */
+void obj_rmFlag(object *pObj, flag f);
 
 /**
  * Assign an ID to this object

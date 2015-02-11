@@ -112,6 +112,26 @@ void obj_setBounds(object *pObj, int x, int y, int w, int h) {
 }
 
 /**
+ * Add a flag to the object
+ * 
+ * @param pObj The object
+ * @param f The flag
+ */
+void obj_addFlag(object *pObj, flag f) {
+    pObj->spr.id |= f;
+}
+
+/**
+ * Remove a flag to the object
+ * 
+ * @param pObj The object
+ * @param f The flag
+ */
+void obj_rmFlag(object *pObj, flag f) {
+    pObj->spr.id &= ~f;
+}
+
+/**
  * Assign an ID to this object
  * 
  * @param pObj The object

@@ -58,10 +58,14 @@ void ce_callEvent(commonEvent ce) {
             obj_getVar(&gv, pO, 0);
             val = gv_getValue(gv);
             
-            if (val == 0)
+            if (val == 0) {
+                obj_addFlag(pO, ID_STATIC);
                 obj_setTile(pO, 192);
-            else if (val == 2)
+            }
+            else if (val == 2) {
+                obj_rmFlag(pO, ID_STATIC);
                 obj_setTile(pO, 196);
+            }
             
         } break;
         // TODO implement every common event

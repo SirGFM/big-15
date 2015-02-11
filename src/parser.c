@@ -136,6 +136,56 @@ __ret:
 }
 
 /**
+ * Parse flags from a file
+ * flags - flagName ('|' flagName)*
+ * 
+ * @param pF Returns the parsed flags
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_flags(flag *pF, FILE *fp) {
+    flag f;
+    fpos_t pos;
+    GFraMe_ret rv;
+    int irv;
+    
+    // Sanitize parameters
+    ASSERT(pF, GFraMe_ret_bad_param);
+    ASSERT(fp, GFraMe_ret_bad_param);
+    
+    // Get the current position, to "backtrack" on error
+    irv = fgetpos(fp, &pos);
+    ASSERT(irv == 0, GFraMe_ret_failed);
+    
+    while (1) {
+        flag tmp;
+        
+        // Get the current flag
+        tmp = t_getFlagFromFile(fp);
+        ASSERT(tmp != 0, GFraMe_ret_failed);
+        parsef_ignoreWhitespace(fp, 1);
+        
+        // Add it to the current found ones
+        f |= tmp;
+        
+        // Check if another flag is expected
+        rv = parsef_string(fp, "|", 1);
+        if (rv != GFraMe_ret_ok)
+            break;
+    }
+    
+    // Set return variable
+    *pF = f;
+    rv = GFraMe_ret_ok;
+__ret:
+    // Backtrack on error
+    if (rv != GFraMe_ret_ok && rv != GFraMe_ret_bad_param)
+        fsetpos(fp, &pos);
+    
+    return rv;
+}
+
+/**
  * Parse a global variable from a file
  * 
  * @param pGv Returns the parsed common event
@@ -356,6 +406,7 @@ __ret:
  */
 GFraMe_ret parsef_object(object *pO, FILE *fp) {
     commonEvent ce;
+    flag f;
     fpos_t pos;
     GFraMe_ret rv;
     int c, irv, h, w, x, y, gvsUsed;
@@ -384,6 +435,7 @@ GFraMe_ret parsef_object(object *pO, FILE *fp) {
     y = -1;
     w = -1;
     h = -1;
+    f = 0;
     gvsUsed = 0;
     ce = CE_MAX;
     while (1) {
@@ -416,6 +468,11 @@ GFraMe_ret parsef_object(object *pO, FILE *fp) {
             
             gvsUsed++;
         }
+        else if (parsef_string(fp, "f:", 2) == GFraMe_ret_ok) {
+            rv = parsef_flags(&f, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            ASSERT(f != 0, GFraMe_ret_failed);
+        }
         else {
             // If nothing was found, expect a closing bracket and stop
             c = fgetc(fp);
@@ -428,12 +485,12 @@ GFraMe_ret parsef_object(object *pO, FILE *fp) {
     ASSERT(y >= 0, GFraMe_ret_failed);
     ASSERT(w > 0, GFraMe_ret_failed);
     ASSERT(h > 0, GFraMe_ret_failed);
+    ASSERT(f != 0, GFraMe_ret_failed);
     
     // Create the object
     obj_setZero(pO);
     obj_setBounds(pO, x*8, y*8, w*8, h*8);
-    // TODO actually get the ID
-    obj_setID(pO, ID_OBJ | ID_DOOR);
+    obj_setID(pO, f);
     obj_setCommonEvent(pO, ce);
     while (gvsUsed > 0) {
         gvsUsed--;

@@ -7,6 +7,15 @@
 #ifndef __CONTROLLER_H_
 #define __CONTROLLER_H_
 
+#include "types.h"
+
+/**
+ * Change the current input scheme
+ * 
+ * @param mode The new controle mode
+ */
+void ctr_setMode(ctr_mode mode);
+
 /**
  * Checks if the left button is pressed
  * 

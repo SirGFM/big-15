@@ -23,6 +23,7 @@ CC=gcc
          $(OBJDIR)/parser.o      \
          $(OBJDIR)/player.o      \
          $(OBJDIR)/playstate.o   \
+         $(OBJDIR)/types.o       \
          $(OBJDIR)/ui.o
 #==============================================================================
 

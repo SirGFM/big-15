@@ -13,6 +13,7 @@
 #include "commonEvent.h"
 #include "event.h"
 #include "globalVar.h"
+#include "types.h"
 
 /**
  * Parse a global variable from a file
@@ -22,6 +23,16 @@
  * @return GFraMe error code
  */
 GFraMe_ret parsef_globalVar(globalVar *pGv, FILE *fp);
+
+/**
+ * Parse flags from a file
+ * flags - flagName ('|' flagName)*
+ * 
+ * @param pF Returns the parsed flags
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_flags(flag *pF, FILE *fp);
 
 /**
  * Parse a common event from a file

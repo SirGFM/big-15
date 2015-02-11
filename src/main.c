@@ -10,8 +10,10 @@
 #include <GFraMe/GFraMe_screen.h>
 //#include <GFraMe/GFraMe_sprite.h>
 
+#include "controller.h"
 #include "global.h"
 #include "playstate.h"
+#include "types.h"
 
 int main(int argc, char *argv[]) {
     GFraMe_ret rv;
@@ -39,6 +41,8 @@ int main(int argc, char *argv[]) {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "global init failed", __ret);
     
     GFraMe_controller_init(1);
+    if (GFraMe_controller_max == 0)
+        ctr_setMode(CTR_KEYS);
 //    GFraMe_audio_player_play_bgm(gl_bgm, 0.60f);
     
     while (gl_running) {
