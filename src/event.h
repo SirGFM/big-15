@@ -11,6 +11,15 @@
 #include <GFraMe/GFraMe_sprite.h>
 
 #include "commonEvent.h"
+#include "globalVar.h"
+
+enum {
+    EV_VAR1 = 0,
+    EV_VAR2,
+    EV_VAR3,
+    EV_VAR4,
+    EV_VAR_MAX
+};
 
 /**
  * Possible triggers
@@ -80,6 +89,24 @@ void event_clean(event **ppEv);
  * @param spr The sprite to be tested
  */
 void event_check(event *ev, GFraMe_sprite *spr);
+
+/**
+ * Set an events's variable
+ * 
+ * @param pEv The event
+ * @param index The variable index (on the object)
+ * @param gv The actual variable
+ */
+GFraMe_ret event_setVar(event *pEv, int index, globalVar gv);
+
+/**
+ * Get an events's variable
+ * 
+ * @param pEv The event
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ */
+void event_getVar(globalVar *pGv, event *pEv, int index);
 
 #endif
 

@@ -223,7 +223,7 @@ GFraMe_ret obj_setVar(object *pObj, int index, globalVar gv) {
     
     // Sanitize parameters
     ASSERT(pObj, GFraMe_ret_bad_param);
-    ASSERT(index < 4, GFraMe_ret_bad_param);
+    ASSERT(index < OBJ_VAR_MAX, GFraMe_ret_bad_param);
     ASSERT(gv < GV_MAX, GFraMe_ret_bad_param);
     
     // Set the variable

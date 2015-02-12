@@ -7,8 +7,10 @@
 #define __COMMONEVENT_H_
 
 typedef enum {
-    CE_TEST_DOOR1,
-    CE_HANDLE_DOOR,
+    CE_OPEN_DOOR,   /**  ev ce; open a door                               */
+    CE_CLOSE_DOOR,  /**  ev ce; closes a door                             */
+    CE_SWITCH_DOOR, /**  ev ce; switch a door's state from open <-> close */
+    CE_HANDLE_DOOR, /** obj ce; handles displaying and animating a door   */
     CE_MAX
 } commonEvent;
 

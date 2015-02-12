@@ -10,13 +10,15 @@
 #include "controller.h"
 #include "event.h"
 #include "global.h"
+#include "globalVar.h"
 #include "types.h"
 
 struct stEvent {
-    GFraMe_object obj; /** Object for collision and positioning        */
-    commonEvent ce;    /** Common event called when the event triggers */
-    trigger t;         /** Trigger to start the event                  */
-    int active;        /** Whether the event can trigger               */
+    GFraMe_object obj;        /** Object for collision and positioning        */
+    commonEvent ce;           /** Common event called when the event triggers */
+    trigger t;                /** Trigger to start the event                  */
+    int active;               /** Whether the event can trigger               */
+    globalVar local[EV_VAR_MAX]; /** Local variables to be used on ce            */
 };
 
 /**
@@ -78,6 +80,10 @@ GFraMe_ret event_setAll(event *ev, int x, int y, int w, int h, trigger t,
     GFraMe_object_set_y(&ev->obj, y);
     GFraMe_hitbox_set(GFraMe_object_get_hitbox(&ev->obj),
         GFraMe_hitbox_upper_left, 0, 0, w, h);
+    ev->local[EV_VAR1] = GV_MAX;
+    ev->local[EV_VAR2] = GV_MAX;
+    ev->local[EV_VAR3] = GV_MAX;
+    ev->local[EV_VAR4] = GV_MAX;
     
     // Make sure that only players can start the event, if 'on_pressed' is set
     if (t & ON_PRESSED) {
@@ -171,5 +177,39 @@ __ret:
         obj->hit = last_col;
     
     return;
+}
+
+/**
+ * Set an events's variable
+ * 
+ * @param pEv The event
+ * @param index The variable index (on the object)
+ * @param gv The actual variable
+ */
+GFraMe_ret event_setVar(event *pEv, int index, globalVar gv) {
+    GFraMe_ret rv;
+    
+    // Sanitize parameters
+    ASSERT(pEv, GFraMe_ret_bad_param);
+    ASSERT(index < EV_VAR_MAX, GFraMe_ret_bad_param);
+    ASSERT(gv < GV_MAX, GFraMe_ret_bad_param);
+    
+    // Set the variable
+    pEv->local[index] = gv;
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Get an events's variable
+ * 
+ * @param pEv The event
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ */
+void event_getVar(globalVar *pGv, event *pEv, int index) {
+    *pGv = pEv->local[index];
 }
 

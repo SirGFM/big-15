@@ -4,15 +4,18 @@
 #include <GFraMe/GFraMe_error.h>
 
 #include "commonEvent.h"
+#include "event.h"
 #include "global.h"
 #include "globalVar.h"
 #include "object.h"
 #include "types.h"
 
 static char *_ce_names[CE_MAX+1] = {
-    "ce_test_door1",    /** CE_TEST_DOOR1 */
+    "ce_open_door",
+    "ce_close_door",
+    "ce_switch_door",
     "ce_handle_door",
-    "ce_max"            /** CE_MAX */
+    "ce_max"
 };
 
 /** Object that caused the event to be called */
@@ -29,12 +32,44 @@ void ce_callEvent(commonEvent ce) {
     GFraMe_assertRet(ce < CE_MAX, "Invalid common event!", __ret);
     
     switch (ce) {
-        case CE_TEST_DOOR1: {
+        case CE_OPEN_DOOR: {
+            event *pE;
             globalVar gv;
             int val;
             
-            gv = TEST_DOOR;
+            // Get the current event and the related var
+            pE = (event*)_ce_caller;
+            event_getVar(&gv, pE, 0);
             
+            // Switch the var's state
+            val = gv_getValue(gv);
+            if (val == CLOSED)
+                gv_setValue(gv, OPENING);
+        } break;
+        case CE_CLOSE_DOOR: {
+            event *pE;
+            globalVar gv;
+            int val;
+            
+            // Get the current event and the related var
+            pE = (event*)_ce_caller;
+            event_getVar(&gv, pE, 0);
+            
+            // Switch the var's state
+            val = gv_getValue(gv);
+            if (val == OPEN)
+                gv_setValue(gv, CLOSING);
+        } break;
+        case CE_SWITCH_DOOR: {
+            event *pE;
+            globalVar gv;
+            int val;
+            
+            // Get the current event and the related var
+            pE = (event*)_ce_caller;
+            event_getVar(&gv, pE, 0);
+            
+            // Switch the var's state
             val = gv_getValue(gv);
             if (val == OPEN)
                 gv_setValue(gv, CLOSING);
@@ -58,6 +93,7 @@ void ce_callEvent(commonEvent ce) {
             obj_getVar(&gv, pO, 0);
             val = gv_getValue(gv);
             
+            // Handle animation, collision and state
             if (val == CLOSED) {
                 obj_addFlag(pO, ID_STATIC);
                 obj_setTile(pO, 192);
@@ -80,7 +116,6 @@ void ce_callEvent(commonEvent ce) {
                 obj_rmFlag(pO, ID_STATIC);
                 obj_setTile(pO, 196);
             }
-            
         } break;
         // TODO implement every common event
         default: {}

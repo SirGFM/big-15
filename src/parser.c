@@ -308,7 +308,8 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     commonEvent ce;
     fpos_t pos;
     GFraMe_ret rv;
-    int c, irv, h, w, x, y;
+    globalVar gvs[EV_VAR_MAX];
+    int c, irv, gvsUsed, h, w, x, y;
     trigger t;
     
     // Sanitize parameters
@@ -335,6 +336,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     w = -1;
     h = -1;
     t = 0;
+    gvsUsed = 0;
     ce = CE_MAX;
     while (1) {
         if (parsef_string(fp, "x:", 2) == GFraMe_ret_ok) {
@@ -366,6 +368,17 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
             ASSERT(rv == GFraMe_ret_ok, rv);
             ASSERT(ce < CE_MAX, GFraMe_ret_failed);
         }
+        else if (parsef_string(fp, "var:", 4) == GFraMe_ret_ok) {
+            globalVar gv;
+            
+            ASSERT(gvsUsed < EV_VAR_MAX, GFraMe_ret_failed);
+            rv = parsef_globalVar(&gv, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            ASSERT(gv < GV_MAX, GFraMe_ret_failed);
+            
+            gvs[gvsUsed] = gv;
+            gvsUsed++;
+        }
         else {
             // If nothing was found, expect a closing bracket and stop
             c = fgetc(fp);
@@ -384,6 +397,12 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     // Create the event
     rv = event_setAll(pE, x*8, y*8, w*8, h*8, t, ce);
     ASSERT(rv == GFraMe_ret_ok, rv);
+    
+    // Add all local variables
+    while (gvsUsed > 0) {
+        gvsUsed--;
+        rv = event_setVar(pE, gvsUsed, gvs[gvsUsed]);
+    }
     
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);
