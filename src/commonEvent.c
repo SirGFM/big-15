@@ -1,4 +1,4 @@
-/**
+    /**
  * @file src/commonEvent.c
  */
 #include <GFraMe/GFraMe_error.h>
@@ -36,10 +36,10 @@ void ce_callEvent(commonEvent ce) {
             gv = TEST_DOOR;
             
             val = gv_getValue(gv);
-            if (val == 0)
-                gv_setValue(gv, 2);
-            else if (val == 2)
-                gv_setValue(gv, 0);
+            if (val == OPEN)
+                gv_setValue(gv, CLOSING);
+            else if (val == CLOSED)
+                gv_setValue(gv, OPENING);
         } break;
         case CE_HANDLE_DOOR: {
             globalVar gv;
@@ -58,11 +58,25 @@ void ce_callEvent(commonEvent ce) {
             obj_getVar(&gv, pO, 0);
             val = gv_getValue(gv);
             
-            if (val == 0) {
+            if (val == CLOSED) {
                 obj_addFlag(pO, ID_STATIC);
                 obj_setTile(pO, 192);
             }
-            else if (val == 2) {
+            else if (val == OPENING) {
+                if (obj_getAnim(pO) != OBJ_ANIM_OPEN_DOOR)
+                    obj_setAnim(pO, OBJ_ANIM_OPEN_DOOR);
+                else if (obj_animFinished(pO))
+                    gv_setValue(gv, OPEN);
+            }
+            else if (val == CLOSING) {
+                if (obj_getAnim(pO) != OBJ_ANIM_CLOSE_DOOR) {
+                    obj_addFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_CLOSE_DOOR);
+                }
+                else if (obj_animFinished(pO))
+                    gv_setValue(gv, CLOSED);
+            }
+            else if (val == OPEN) {
                 obj_rmFlag(pO, ID_STATIC);
                 obj_setTile(pO, 196);
             }

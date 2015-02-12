@@ -3,6 +3,7 @@
  * 
  * Keep track of all active objects, updating and drawing then
  */
+#include <GFraMe/GFraMe_animation.h>
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
 
@@ -17,8 +18,24 @@
 struct stObject {
     GFraMe_sprite spr;            /** Event's sprite (for rendering and collision  */
     commonEvent ce;               /** Common event to be called every sprite frame */
-    globalVar local[OBJ_VAR_MAX]; /** Each event has 4 local global variables */
+    globalVar local[OBJ_VAR_MAX]; /** Each event has 4 local global variables      */
+    objAnim anim;                 /** The object's current animation               */
 };
+
+static GFraMe_animation _obj_anim[OBJ_ANIM_MAX];
+/**
+ * Store the animation in the following manner:
+ *   _obj_animData[i][0] = FPS
+ *   _obj_animData[i][1] = data len
+ *   _obj_animData[i][2] = do loop
+ *   _obj_animData[i]+3  = actual data
+ */
+static int _obj_animData[] = {
+    8, 8, 0, 192,193,192,193,192,194,195,196,
+    8, 8, 0, 196,195,194,192,193,192,193,192,
+    0
+};
+static int _obj_animInit = 0;
 
 /**
  * Alloc a new object
@@ -39,6 +56,21 @@ GFraMe_ret obj_getNew(object **ppObj) {
     *ppObj = (object*)malloc(sizeof(object));
     GFraMe_assertRV(*ppObj, "Failed to alloc!", rv = GFraMe_ret_memory_error,
         __ret);
+    
+    if (!_obj_animInit) {
+        int i, *pData;
+        
+        // Setup every animation
+        i = 0;
+        pData = _obj_animData;
+        while (i < OBJ_ANIM_MAX) {
+            GFraMe_animation_init(&_obj_anim[i], pData[0], pData + 3, pData[1],
+                pData[2]);
+            pData += 3 + pData[1];
+            i++;
+        }
+        _obj_animInit = 1;
+    }
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -78,6 +110,7 @@ GFraMe_ret obj_setZero(object *pObj) {
     pObj->local[1] = GV_MAX;
     pObj->local[2] = GV_MAX;
     pObj->local[3] = GV_MAX;
+    pObj->anim = OBJ_ANIM_MAX;
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -257,5 +290,36 @@ void obj_collide(object *pObj, GFraMe_object *pGFMobj) {
         pO = GFraMe_sprite_get_object(&pObj->spr);
         GFraMe_object_overlap(pO, pGFMobj, GFraMe_second_fixed);
     }
+}
+
+/**
+ * Set an object's current animation
+ * 
+ * @param pObj The object
+ * @param anim The animation
+ */
+void obj_setAnim(object *pObj, objAnim anim) {
+    GFraMe_sprite_set_animation(&pObj->spr, &_obj_anim[anim], 0);
+    pObj->anim = anim;
+}
+
+/**
+ * Get an object's animation
+ * 
+ * @param pObj The object
+ * @return The current animation
+ */
+objAnim obj_getAnim(object *pObj) {
+    return pObj->anim;
+}
+
+/**
+ * Check whether the object's animation finished
+ * 
+ * @param pObj The object
+ * @return Whether it finished or not
+ */
+int obj_animFinished(object *pObj) {
+    return pObj->spr.anim == NULL;
 }
 

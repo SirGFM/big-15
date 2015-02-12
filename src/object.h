@@ -20,6 +20,12 @@ enum {
     OBJ_VAR_MAX
 };
 
+typedef enum {
+    OBJ_ANIM_OPEN_DOOR,
+    OBJ_ANIM_CLOSE_DOOR,
+    OBJ_ANIM_MAX
+} objAnim;
+
 typedef struct stObject object;
 
 /**
@@ -74,8 +80,7 @@ void obj_rmFlag(object *pObj, flag f);
 
 /**
  * Assign an ID to this object
- * 
- * @param pObj The object
+ * * @param pObj The object
  * @param ID The ID
  * @return GFraMe error code
  */
@@ -145,6 +150,30 @@ void obj_draw(object *pObj);
  * @param pGFMobj The other object
  */
 void obj_collide(object *pObj, GFraMe_object *pGFMobj);
+
+/**
+ * Set an object's current animation
+ * 
+ * @param pObj The object
+ * @param anim The animation
+ */
+void obj_setAnim(object *pObj, objAnim anim);
+
+/**
+ * Get an object's animation
+ * 
+ * @param pObj The object
+ * @return The current animation
+ */
+objAnim obj_getAnim(object *pObj);
+
+/**
+ * Check whether the object's animation finished
+ * 
+ * @param pObj The object
+ * @return Whether it finished or not
+ */
+int obj_animFinished(object *pObj);
 
 #endif
 

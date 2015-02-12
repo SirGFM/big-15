@@ -27,6 +27,13 @@ typedef enum {
     CTR_MAX
 } ctr_mode;
 
+enum {
+    CLOSED  = 0,
+    CLOSING = 1,
+    OPENING = 2,
+    OPEN    = 3,
+};
+
 //#  ifdef __PARSER_H_
 
 #include <stdio.h>

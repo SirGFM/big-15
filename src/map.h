@@ -153,5 +153,13 @@ GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM);
  */
 void map_checkEvents(map *pM, GFraMe_sprite *pSpr);
 
+/**
+ * Collide a object against every one in the map
+ * 
+ * @param pM The map
+ * @param pObj The object
+ */
+void map_collideObjects(map *pM, GFraMe_object *pObj);
+
 #endif
 
