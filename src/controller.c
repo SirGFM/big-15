@@ -104,7 +104,7 @@ int ctr_right(int ID) {
           switch (ID) {
             case ID_PL1: return GFraMe_controllers[0].right
                             || GFraMe_controllers[0].lx > 0.35;
-            case ID_PL2: return GFraMe_controllers[0].x
+            case ID_PL2: return GFraMe_controllers[0].b
                             || GFraMe_controllers[0].rx > 0.35;
             default: return 0;
           }
@@ -113,7 +113,7 @@ int ctr_right(int ID) {
           switch (ID) {
             case ID_PL1: return GFraMe_controllers[0].right
                             || GFraMe_controllers[0].lx > 0.35;
-            case ID_PL2: return GFraMe_controllers[1].left
+            case ID_PL2: return GFraMe_controllers[1].right
                             || GFraMe_controllers[1].lx > 0.35;
             default: return 0;
           }
