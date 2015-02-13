@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 
+#include "camera.h"
 #include "commonEvent.h"
 #include "global.h"
 #include "globalVar.h"
@@ -267,7 +268,8 @@ void obj_update(object *pObj, int ms) {
  * @param pObj The object
  */
 void obj_draw(object *pObj) {
-    GFraMe_sprite_draw(&pObj->spr);
+    //GFraMe_sprite_draw(&pObj->spr);
+    GFraMe_sprite_draw_camera(&pObj->spr, cam_x, cam_y, SCR_W, SCR_H);
 }
 
 /**

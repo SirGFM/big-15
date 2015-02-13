@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 
+#include "camera.h"
 #include "commonEvent.h"
 #include "event.h"
 #include "global.h"
@@ -523,25 +524,23 @@ void map_update(map *pM, int ms) {
  * @param pM The map
  */
 void map_draw(map *pM) {
-    int i, offset, x, y;
+    int firstTile, dX, i, iniX, offX, x, y;
     
-    // Remove this ifdef when camera is implemented (if ever)
-#if 0
     // Get the first tile position on screen
-    y = -(cam_y % TILE_HEIGHT);
+    iniX = -(cam_x % 8);
+    y = -(cam_y % 8);
     // Get the first tile position
-    offset = cam_y / TILE_HEIGHT * TILES_PER_LINE;
-#else
-    int cam_y;
-    
-    cam_y = 0;
-    y = 0;
-    offset = 0;
-#endif
+    firstTile = cam_x / 8 + cam_y / 8 * pM->w;
+    // Get how many tiles are skipped each row
+    dX = pM->w - SCR_W / 8;
+    // If the camera's pos doesn't match a tile, it will render 1 extra tile
+    if (iniX != 0)
+        dX--;
     
     // Loop through every tile
     i = 0;
-    x = 0;
+    x = iniX;
+    offX = 0;
     while (1) {
         // Check that the tile is still valid
         if (i >= pM->w * pM->h)
@@ -551,7 +550,7 @@ void map_draw(map *pM) {
         GFraMe_spriteset_draw
             (
              gl_sset8x8,
-             pM->data[offset + i],
+             pM->data[firstTile + offX + i],
              x,
              y,
              0 // flipped
@@ -560,10 +559,11 @@ void map_draw(map *pM) {
         // Updates the tile position
         x += 8;
         if (x >= SCR_W) {
-            x = 0;
+            x = iniX;
             y += 8;
+            offX += dX;
         }
-        if (y - cam_y > SCR_H)
+        if (y > SCR_H)
             break;
         i++;
     }

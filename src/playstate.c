@@ -9,6 +9,7 @@
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_util.h>
 
+#include "camera.h"
 #include "global.h"
 #include "map.h"
 #include "player.h"
@@ -91,7 +92,7 @@ static GFraMe_ret ps_init() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
     len = 128;
-	rv = GFraMe_assets_clean_filename(name, "maps/test_tm.txt", &len);
+	rv = GFraMe_assets_clean_filename(name, "maps/test_big_tm.txt", &len);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
     rv = map_loadf(m, name);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
@@ -208,6 +209,17 @@ static void ps_update() {
         map_checkEvents(m, pSpr);
         player_getSprite(&pSpr, p2);
         map_checkEvents(m, pSpr);
+        
+        // Update camera
+        // cam_setPosition(p1, p2);
+        if (GFraMe_keys.h)
+            cam_x--;
+        if (GFraMe_keys.j)
+            cam_y++;
+        if (GFraMe_keys.k)
+            cam_y--;
+        if (GFraMe_keys.l)
+            cam_x++;
     GFraMe_event_update_end();
 }
 

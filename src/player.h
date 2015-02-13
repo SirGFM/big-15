@@ -78,5 +78,14 @@ void player_setAnimation(player *pPl, int anim);
  */
 void player_getCarried(player *pPl, GFraMe_object *pObj);
 
+/**
+ * Get a player's center position
+ * 
+ * @param pX The central horizontal position
+ * @param pY The central vertical position
+ * @param pPl The player
+ */
+void player_getCenter(int *pX, int *pY, player *pPl);
+
 #endif
 

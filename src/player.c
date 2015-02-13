@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
 
+#include "camera.h"
 #include "controller.h"
 #include "global.h"
 #include "player.h"
@@ -179,7 +180,8 @@ void player_update(player *pPl, int ms) {
  * @param pPl The player
  */
 void player_draw(player *pPl) {
-    GFraMe_sprite_draw(&pPl->spr);
+    //GFraMe_sprite_draw(&pPl->spr);
+    GFraMe_sprite_draw_camera(&pPl->spr, cam_x, cam_y, SCR_W, SCR_H);
 }
 
 /**
@@ -252,5 +254,17 @@ void player_getCarried(player *pPl, GFraMe_object *pObj) {
     pThisObj->dy = pObj->dy - pHb->hh - pHb->cy;
     pThisObj->y = (int)pThisObj->dy;
     pPl->isBeingCarried = 1;
+}
+
+/**
+ * Get a player's center position
+ * 
+ * @param pX The central horizontal position
+ * @param pY The central vertical position
+ * @param pPl The player
+ */
+void player_getCenter(int *pX, int *pY, player *pPl) {
+    *pX = pPl->spr.obj.x + pPl->spr.obj.hitbox.cx;
+    *pY = pPl->spr.obj.y + pPl->spr.obj.hitbox.cy;
 }
 

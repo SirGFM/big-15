@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "camera.h"
 #include "commonEvent.h"
 #include "event.h"
 #include "global.h"
@@ -670,6 +671,9 @@ GFraMe_ret parsef_tilemap(unsigned char **ppData, int *pDataLen, int *pW,
     
     // Check that the tilemap indeed ended
     ASSERT(c == ']', GFraMe_ret_failed);
+    
+    // Set the camera's dimension
+    cam_setMapDimension(w * 8, h * 8);
     
     // Set the function's return
     *ppData = data;
