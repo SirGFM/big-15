@@ -211,15 +211,7 @@ static void ps_update() {
         map_checkEvents(m, pSpr);
         
         // Update camera
-        // cam_setPosition(p1, p2);
-        if (GFraMe_keys.h)
-            cam_x--;
-        if (GFraMe_keys.j)
-            cam_y++;
-        if (GFraMe_keys.k)
-            cam_y--;
-        if (GFraMe_keys.l)
-            cam_x++;
+        cam_setPosition(p1, p2);
     GFraMe_event_update_end();
 }
 

@@ -12,10 +12,6 @@
 extern int cam_x;
 /** Current camera's vertical position */
 extern int cam_y;
-/** Current map's width */
-extern int cam_map_w;
-/** Current map's height */
-extern int cam_map_h;
 
 /**
  * Try to center the camera on both players
