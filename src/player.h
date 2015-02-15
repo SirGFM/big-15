@@ -99,6 +99,7 @@ void player_setDestMap(player *pPl, int map, int x, int y);
 
 /**
  * Check if two players are trying to switch map, and to the same one
+ * Also, set the global variables with map info
  * 
  * @param pPl1 One player
  * @param pPl2 The other player

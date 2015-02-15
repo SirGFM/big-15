@@ -227,11 +227,7 @@ void ce_callEvent(commonEvent ce) {
             event_iGetVar(&map, pE, 0);
             event_iGetVar(&x, pE, 1);
             event_iGetVar(&y, pE, 2);
-            
             player_setDestMap(pPl, map, x, y);
-            gv_setValue(MAP, map);
-            gv_setValue(DOOR_X, x);
-            gv_setValue(DOOR_Y, y);
         } break;
         // TODO implement every common event
         default: {}

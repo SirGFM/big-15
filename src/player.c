@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "controller.h"
 #include "global.h"
+#include "globalVar.h"
 #include "player.h"
 #include "types.h"
 
@@ -299,6 +300,7 @@ void player_setDestMap(player *pPl, int map, int x, int y) {
 
 /**
  * Check if two players are trying to switch map, and to the same one
+ * Also, set the global variables with map info
  * 
  * @param pPl1 One player
  * @param pPl2 The other player
@@ -314,6 +316,10 @@ GFraMe_ret player_cmpDestMap(player *pPl1, player *pPl2) {
     ASSERT(pPl1->map == pPl2->map, GFraMe_ret_failed);
     ASSERT(pPl1->map_x == pPl2->map_x, GFraMe_ret_failed);
     ASSERT(pPl1->map_y == pPl2->map_y, GFraMe_ret_failed);
+    
+    gv_setValue(MAP, pPl1->map);
+    gv_setValue(DOOR_X, pPl1->map_x);
+    gv_setValue(DOOR_Y, pPl1->map_y);
     
     rv = GFraMe_ret_ok;
 __ret:
