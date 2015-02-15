@@ -92,7 +92,7 @@ static GFraMe_ret ps_init() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
     len = 128;
-	rv = GFraMe_assets_clean_filename(name, "maps/test_big_tm.txt", &len);
+	rv = GFraMe_assets_clean_filename(name, "maps/test_tm.txt", &len);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
     rv = map_loadf(m, name);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);

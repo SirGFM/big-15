@@ -25,6 +25,24 @@
 #define TILE_SHOCK_R2 129
 #define TILE_SHOCK_R3 130
 #define TILE_SHOCK_R4 131
+#define TILE_PC1_1 132
+#define TILE_PC2_1 133
+#define TILE_PC3_1 134
+#define TILE_PC4_1 164
+#define TILE_PC5_1 165
+#define TILE_PC6_1 166
+#define TILE_PC1_2 168
+#define TILE_PC2_2 169
+#define TILE_PC3_2 170
+#define TILE_PC4_2 200
+#define TILE_PC5_2 201
+#define TILE_PC6_2 202
+#define TILE_PC1_3 171
+#define TILE_PC2_3 172
+#define TILE_PC3_3 173
+#define TILE_PC4_3 203
+#define TILE_PC5_3 204
+#define TILE_PC6_3 205
 
 //============================================================================//
 //                                                                            //
@@ -665,6 +683,18 @@ static GFraMe_ret map_tileIsAnimated(int tile) {
         case TILE_SHOCK_R2:
         case TILE_SHOCK_R3:
         case TILE_SHOCK_R4:
+        case TILE_PC1_1:
+        case TILE_PC2_1:
+        case TILE_PC3_1:
+        case TILE_PC4_1:
+        case TILE_PC5_1:
+        case TILE_PC6_1:
+        case TILE_PC1_2:
+        case TILE_PC2_2:
+        case TILE_PC3_2:
+        case TILE_PC4_2:
+        case TILE_PC5_2:
+        case TILE_PC6_2:
             return GFraMe_ret_ok;
         default:
             return GFraMe_ret_failed;
@@ -715,6 +745,39 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
             if (pT->elapsed >= 83) {
                 tile = TILE_SHOCK_R1;
                 pT->elapsed -= 83;
+            }
+        } break;
+        case TILE_PC1_1:
+        case TILE_PC2_1:
+        case TILE_PC3_1:
+        case TILE_PC4_1:
+        case TILE_PC5_1:
+        case TILE_PC6_1: { // 6 fps
+            if (pT->elapsed >= 166) {
+                tile += TILE_PC1_2 - TILE_PC1_1;
+                pT->elapsed -= 166;
+            }
+        } break;
+        case TILE_PC1_2:
+        case TILE_PC2_2:
+        case TILE_PC3_2:
+        case TILE_PC4_2:
+        case TILE_PC5_2:
+        case TILE_PC6_2: { // 6 fps
+            if (pT->elapsed >= 166) {
+                tile += 3;
+                pT->elapsed -= 166;
+            }
+        } break;
+        case TILE_PC1_3:
+        case TILE_PC2_3:
+        case TILE_PC3_3:
+        case TILE_PC4_3:
+        case TILE_PC5_3:
+        case TILE_PC6_3: { // 6 fps
+            if (pT->elapsed >= 166) {
+                tile -= TILE_PC1_2 - TILE_PC1_1 + 3;
+                pT->elapsed -= 166;
             }
         } break;
         default: {}
