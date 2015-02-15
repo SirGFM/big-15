@@ -87,5 +87,24 @@ void player_getCarried(player *pPl, GFraMe_object *pObj);
  */
 void player_getCenter(int *pX, int *pY, player *pPl);
 
+/**
+ * Set a destination to this player
+ * 
+ * @param pPl The player
+ * @param map The map index
+ * @param x The horizontal position inside the new map
+ * @param y The vertical position inside the new map
+ */
+void player_setDestMap(player *pPl, int map, int x, int y);
+
+/**
+ * Check if two players are trying to switch map, and to the same one
+ * 
+ * @param pPl1 One player
+ * @param pPl2 The other player
+ * @return GFraMe error code
+ */
+GFraMe_ret player_cmpDestMap(player *pPl1, player *pPl2);
+
 #endif
 

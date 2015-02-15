@@ -215,17 +215,20 @@ void ce_callEvent(commonEvent ce) {
             int map, x, y;
             player *pPl;
             
+            // Get every parameter
             pE = (event*)_ce_caller;
             pPl = (player*)_ce_target;
-            
             player_getObject(&pO, pPl);
+            
+            // Make sure the player can't leave ("physically") through the exit
             event_separate(pE, pO);
             
+            // Set the player's destination
             event_iGetVar(&map, pE, 0);
             event_iGetVar(&x, pE, 1);
             event_iGetVar(&y, pE, 2);
             
-            gv_setValue(SWITCH_MAP, 1);
+            player_setDestMap(pPl, map, x, y);
             gv_setValue(MAP, map);
             gv_setValue(DOOR_X, x);
             gv_setValue(DOOR_Y, y);

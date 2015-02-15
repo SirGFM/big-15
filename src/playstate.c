@@ -228,6 +228,12 @@ static void ps_update() {
         
         // Update camera
         cam_setPosition(p1, p2);
+        
+        // If the player is trying to switch maps, do it
+        if (player_cmpDestMap(p1, p2) == GFraMe_ret_ok) {
+            gv_setValue(SWITCH_MAP, 1);
+            return;
+        }
     GFraMe_event_update_end();
 }
 

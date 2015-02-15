@@ -33,6 +33,11 @@ struct stPlayer {
     
     int curAnim;
     int isBeingCarried;
+    
+    // Info about the map the player is trying to move to
+    int map;
+    int map_x;
+    int map_y;
 };
 
 /**
@@ -84,6 +89,10 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     pPl->spr.id = ID;
     pPl->isBeingCarried = 0;
     
+    pPl->map = -1;
+    pPl->map_x = -1;
+    pPl->map_y = -1;
+    
     // Set the return variables
     *ppPl = pPl;
     rv = GFraMe_ret_ok;
@@ -120,9 +129,15 @@ void player_update(player *pPl, int ms) {
     GFraMe_object *obj;
     int isDown;
     
+    // Reset destiny map
+    pPl->map = -1;
+    pPl->map_x = -1;
+    pPl->map_y = -1;
+    
     obj = GFraMe_sprite_get_object(&pPl->spr);
     isDown = obj->hit & GFraMe_direction_down;
     
+    // Set player's horizontal speed
     if (ctr_left(pPl->spr.id)) {
         obj->vx = -PL_VX;
         pPl->spr.flipped = 1;
@@ -266,5 +281,42 @@ void player_getCarried(player *pPl, GFraMe_object *pObj) {
 void player_getCenter(int *pX, int *pY, player *pPl) {
     *pX = pPl->spr.obj.x + pPl->spr.obj.hitbox.cx;
     *pY = pPl->spr.obj.y + pPl->spr.obj.hitbox.cy;
+}
+
+/**
+ * Set a destination to this player
+ * 
+ * @param pPl The player
+ * @param map The map index
+ * @param x The horizontal position inside the new map
+ * @param y The vertical position inside the new map
+ */
+void player_setDestMap(player *pPl, int map, int x, int y) {
+    pPl->map = map;
+    pPl->map_x = x;
+    pPl->map_y = y;
+}
+
+/**
+ * Check if two players are trying to switch map, and to the same one
+ * 
+ * @param pPl1 One player
+ * @param pPl2 The other player
+ * @return GFraMe error code
+ */
+GFraMe_ret player_cmpDestMap(player *pPl1, player *pPl2) {
+    GFraMe_ret rv;
+    
+    // Check that at least one player is trying to switch maps
+    ASSERT(pPl1->map != -1, GFraMe_ret_failed);
+    
+    // Check that their destination is the same
+    ASSERT(pPl1->map == pPl2->map, GFraMe_ret_failed);
+    ASSERT(pPl1->map_x == pPl2->map_x, GFraMe_ret_failed);
+    ASSERT(pPl1->map_y == pPl2->map_y, GFraMe_ret_failed);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
