@@ -187,6 +187,57 @@ __ret:
 }
 
 /**
+ * Parse triggers from a file
+ * triggerss - triggerName ('|' triggerName)*
+ * 
+ * @param pT Returns the parsed triggers
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_triggers(trigger *pT, FILE *fp) {
+    fpos_t pos;
+    GFraMe_ret rv;
+    int irv;
+    trigger t;
+    
+    // Sanitize parameters
+    ASSERT(pT, GFraMe_ret_bad_param);
+    ASSERT(fp, GFraMe_ret_bad_param);
+    
+    // Get the current position, to "backtrack" on error
+    irv = fgetpos(fp, &pos);
+    ASSERT(irv == 0, GFraMe_ret_failed);
+    
+    t = 0;
+    while (1) {
+        trigger tmp;
+        
+        // Get the current flag
+        tmp = t_getTriggerFromFile(fp);
+        ASSERT(tmp != 0, GFraMe_ret_failed);
+        parsef_ignoreWhitespace(fp, 1);
+        
+        // Add it to the current found ones
+        t |= tmp;
+        
+        // Check if another flag is expected
+        rv = parsef_string(fp, "|", 1);
+        if (rv != GFraMe_ret_ok)
+            break;
+    }
+    
+    // Set return variable
+    *pT = t;
+    rv = GFraMe_ret_ok;
+__ret:
+    // Backtrack on error
+    if (rv != GFraMe_ret_ok && rv != GFraMe_ret_bad_param)
+        fsetpos(fp, &pos);
+    
+    return rv;
+}
+
+/**
  * Parse a global variable from a file
  * 
  * @param pGv Returns the parsed common event
@@ -298,7 +349,8 @@ __ret:
 /**
  * Parse a event from a file
  * A event is described by following rule:
- * "e:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int '}'
+ * "e:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int 
+ *          "var:"globalVarName "int:":int '}'
  * All the numbers are read as tiles (i.e., multiplied by 8)
  * 
  * @param pE Returns the parsed event
@@ -310,7 +362,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     fpos_t pos;
     GFraMe_ret rv;
     globalVar gvs[EV_VAR_MAX];
-    int c, irv, gvsUsed, h, w, x, y;
+    int c, irv, ivs[EV_VAR_MAX], ivsUsed, gvsUsed, h, w, x, y;
     trigger t;
     
     // Sanitize parameters
@@ -338,6 +390,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     h = -1;
     t = 0;
     gvsUsed = 0;
+    ivsUsed = 0;
     ce = CE_MAX;
     while (1) {
         if (parsef_string(fp, "x:", 2) == GFraMe_ret_ok) {
@@ -357,12 +410,8 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
             ASSERT(rv == GFraMe_ret_ok, rv);
         }
         else if (parsef_string(fp, "t:", 2) == GFraMe_ret_ok) {
-            int i;
-            
-            rv = parsef_int(&i, fp);
+            rv = parsef_triggers(&t, fp);
             ASSERT(rv == GFraMe_ret_ok, rv);
-            
-            t = (trigger)i;
         }
         else if (parsef_string(fp, "ce:", 3) == GFraMe_ret_ok) {
             rv = parsef_commonEvent(&ce, fp);
@@ -376,9 +425,17 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
             rv = parsef_globalVar(&gv, fp);
             ASSERT(rv == GFraMe_ret_ok, rv);
             ASSERT(gv < GV_MAX, GFraMe_ret_failed);
-            
             gvs[gvsUsed] = gv;
             gvsUsed++;
+        }
+        else if (parsef_string(fp, "int:", 4) == GFraMe_ret_ok) {
+            int i;
+            
+            ASSERT(ivsUsed < EV_VAR_MAX, GFraMe_ret_failed);
+            rv = parsef_int(&i, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            ivs[ivsUsed] = i;
+            ivsUsed++;
         }
         else {
             // If nothing was found, expect a closing bracket and stop
@@ -403,6 +460,10 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     while (gvsUsed > 0) {
         gvsUsed--;
         rv = event_setVar(pE, gvsUsed, gvs[gvsUsed]);
+    }
+    while (ivsUsed > 0) {
+        ivsUsed--;
+        rv = event_iSetVar(pE, ivsUsed, ivs[ivsUsed]);
     }
     
     // Get to the next valid character

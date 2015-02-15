@@ -20,6 +20,7 @@ typedef enum {
     DOOR_Y,    /** Entrance vertical point on current map   */
     ITEMS,     /** Flags for available items                */
     TEST_DOOR, /** State of a test door                     */
+    SWITCH_MAP,/** Whether the map should be switched       */
     GV_MAX     /** Global var count                         */
 } globalVar;
 

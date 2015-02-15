@@ -46,6 +46,10 @@ static void ps_update();
  * Handle every event
  */
 static void ps_event();
+/**
+ * Switch the current map
+ */
+static void ps_switchMap();
 
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
@@ -53,14 +57,19 @@ static void ps_event();
 void playstate() {
     GFraMe_ret rv;
     
+    gl_running = 0;
     rv = ps_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
+    gl_running = 1;
     while (gl_running) {
         ps_event();
-        ps_update();
+        if (gv_isZero(SWITCH_MAP))
+            ps_update();
+        else
+            ps_switchMap();
         ps_draw();
     }
     
@@ -123,6 +132,13 @@ static void ps_draw() {
         map_drawObjs(m);
         ui_draw();
     GFraMe_event_draw_end();
+}
+
+/**
+ * Switch the current map
+ */
+static void ps_switchMap() {
+    gv_setValue(SWITCH_MAP, 0);
 }
 
 /**

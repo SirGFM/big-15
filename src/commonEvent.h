@@ -11,6 +11,7 @@ typedef enum {
     CE_CLOSE_DOOR,  /**  ev ce; closes a door                             */
     CE_SWITCH_DOOR, /**  ev ce; switch a door's state from open <-> close */
     CE_HANDLE_DOOR, /** obj ce; handles displaying and animating a door   */
+    CE_SWITCH_MAP,  /**  ev ce: loads a new map                           */
     CE_MAX
 } commonEvent;
 

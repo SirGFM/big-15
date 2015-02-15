@@ -12,6 +12,7 @@
 
 #include "commonEvent.h"
 #include "globalVar.h"
+#include "types.h"
 
 enum {
     EV_VAR1 = 0,
@@ -20,35 +21,6 @@ enum {
     EV_VAR4,
     EV_VAR_MAX
 };
-
-/**
- * Possible triggers
- */
-typedef enum {
-    /** Whether a object just touched the event from the left */
-    ON_ENTER_LEFT  = 0x00000001,
-    /** Whether a object just touched the event from the right */
-    ON_ENTER_RIGHT = 0x00000002,
-    /** Whether a object just touched the event from bellow */
-    ON_ENTER_DOWN  = 0x00000004,
-    /** Whether a object just touched the event from above */
-    ON_ENTER_UP    = 0x00000008,
-    /** Whether the triggering obj must be a player */
-    IS_PLAYER     = 0x000000010,
-    /** Whether the triggering obj must be a mob */
-    IS_MOB        = 0x000000020,
-    /** Whether the triggering obj must be a object */
-    IS_OBJ        = 0x000000040,
-    /** Whether a player is over it and the action button was pressed */
-    ON_PRESSED     = 0x00000100,
-    /** Don't deactive the event on activation */
-    KEEP_ACTIVE    = 0x10000000,
-    /** Trigger count */
-    TRIGGER_MAX,
-    /** Whether any object just touched the event */
-    ON_ENTER          = ON_ENTER_LEFT | ON_ENTER_RIGHT | ON_ENTER_DOWN
-                        | ON_ENTER_UP
-} trigger;
 
 typedef struct stEvent event;
 
@@ -91,6 +63,14 @@ void event_clean(event **ppEv);
 void event_check(event *ev, GFraMe_sprite *spr);
 
 /**
+ * Move a object to stop touching this event
+ * 
+ * @param ev The event
+ * @param obj The object
+ */
+void event_separate(event *ev, GFraMe_object *obj);
+
+/**
  * Set an events's variable
  * 
  * @param pEv The event
@@ -107,6 +87,24 @@ GFraMe_ret event_setVar(event *pEv, int index, globalVar gv);
  * @param index The variable index (on the object)
  */
 void event_getVar(globalVar *pGv, event *pEv, int index);
+
+/**
+ * Set an events's integer variable
+ * 
+ * @param pEv The event
+ * @param index The variable index (on the event)
+ * @param val The value
+ */
+GFraMe_ret event_iSetVar(event *pEv, int index, int val);
+
+/**
+ * Get an events's integer variable
+ * 
+ * @param pVal The variable value
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ */
+void event_iGetVar(int *pVal, event *pEv, int index);
 
 #endif
 

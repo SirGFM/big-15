@@ -1,5 +1,7 @@
 /**
  * @file src/globalVar.c
+ * 
+ * Module for storing global variables, accessible anywhere in the game
  */
 #include "globalVar.h"
 
@@ -17,6 +19,7 @@ static char *_gv_names[GV_MAX+1] = {
     "door_y",
     "items",
     "test_door",
+    "switch_map",
     "gv_max"
 };
 

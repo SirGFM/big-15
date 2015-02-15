@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="8" tileheight="8" nextobjectid="7">
+ <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
+  <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="1025" name="atlas-8x32" tilewidth="8" tileheight="32">
+  <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="40" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20ND6AAAAAA4NcAEsAAAQ==
+  </data>
+ </layer>
+ <objectgroup name="Templates">
+  <object id="2" name="ev_template" type="event" x="177" y="66" width="79" height="32">
+   <properties>
+    <property name="ce" value="ce_max"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="t_max"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="3" name="door_template" type="obj" gid="1217" x="96" y="40" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_door"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

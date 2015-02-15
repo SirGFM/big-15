@@ -18,7 +18,8 @@ struct stEvent {
     commonEvent ce;           /** Common event called when the event triggers */
     trigger t;                /** Trigger to start the event                  */
     int active;               /** Whether the event can trigger               */
-    globalVar local[EV_VAR_MAX]; /** Local variables to be used on ce            */
+    globalVar local[EV_VAR_MAX]; /** Local variables to be used on ce         */
+    int iLocal[EV_VAR_MAX];   /** Local variables to be used on ce            */
 };
 
 /**
@@ -84,6 +85,10 @@ GFraMe_ret event_setAll(event *ev, int x, int y, int w, int h, trigger t,
     ev->local[EV_VAR2] = GV_MAX;
     ev->local[EV_VAR3] = GV_MAX;
     ev->local[EV_VAR4] = GV_MAX;
+    ev->iLocal[EV_VAR1] = -1;
+    ev->iLocal[EV_VAR2] = -1;
+    ev->iLocal[EV_VAR3] = -1;
+    ev->iLocal[EV_VAR4] = -1;
     
     // Make sure that only players can start the event, if 'on_pressed' is set
     if (t & ON_PRESSED) {
@@ -180,6 +185,16 @@ __ret:
 }
 
 /**
+ * Move a object to stop touching this event
+ * 
+ * @param ev The event
+ * @param obj The object
+ */
+void event_separate(event *ev, GFraMe_object *obj) {
+    GFraMe_object_overlap(&ev->obj, obj, GFraMe_first_fixed);
+}
+
+/**
  * Set an events's variable
  * 
  * @param pEv The event
@@ -211,5 +226,38 @@ __ret:
  */
 void event_getVar(globalVar *pGv, event *pEv, int index) {
     *pGv = pEv->local[index];
+}
+
+/**
+ * Set an events's integer variable
+ * 
+ * @param pEv The event
+ * @param index The variable index (on the event)
+ * @param val The value
+ */
+GFraMe_ret event_iSetVar(event *pEv, int index, int val) {
+    GFraMe_ret rv;
+    
+    // Sanitize parameters
+    ASSERT(pEv, GFraMe_ret_bad_param);
+    ASSERT(index < EV_VAR_MAX, GFraMe_ret_bad_param);
+    
+    // Set the variable
+    pEv->iLocal[index] = val;
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Get an events's integer variable
+ * 
+ * @param pVal The variable value
+ * @param pObj The object
+ * @param index The variable index (on the object)
+ */
+void event_iGetVar(int *pVal, event *pEv, int index) {
+    *pVal = pEv->iLocal[index];
 }
 

@@ -35,6 +35,16 @@ GFraMe_ret parsef_globalVar(globalVar *pGv, FILE *fp);
 GFraMe_ret parsef_flags(flag *pF, FILE *fp);
 
 /**
+ * Parse triggers from a file
+ * triggerss - triggerName ('|' triggerName)*
+ * 
+ * @param pT Returns the parsed triggers
+ * @param fp File pointer
+ * @return GFraMe error code
+ */
+GFraMe_ret parsef_triggers(trigger *pT, FILE *fp);
+
+/**
  * Parse a common event from a file
  * 
  * @param pCe Returns the parsed common event
@@ -46,7 +56,8 @@ GFraMe_ret parsef_commonEvent(commonEvent *pCe, FILE *fp);
 /**
  * Parse a event from a file
  * A event is described by following rule:
- * "e:" "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int
+ * "e:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int 
+ *          "var:"globalVarName "int:":int '}'
  * 
  * @param pE Returns the parsed event
  * @param fp File pointer

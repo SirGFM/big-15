@@ -774,10 +774,10 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
         case TILE_PC3_3:
         case TILE_PC4_3:
         case TILE_PC5_3:
-        case TILE_PC6_3: { // 6 fps
-            if (pT->elapsed >= 166) {
+        case TILE_PC6_3: { // 3 fps
+            if (pT->elapsed >= 333) {
                 tile -= TILE_PC1_2 - TILE_PC1_1 + 3;
-                pT->elapsed -= 166;
+                pT->elapsed -= 333;
             }
         } break;
         default: {}
