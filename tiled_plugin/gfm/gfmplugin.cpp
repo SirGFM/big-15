@@ -38,14 +38,28 @@
 using namespace Tiled;
 using namespace Gfm;
 
+typedef struct {
+    int x;
+    int y;
+    int w;
+    int h;
+} gfm_offset;
+
+static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer);
 #ifdef HAS_QSAVEFILE_SUPPORT
-static void writeTilemap(QSaveFile &file, const TileLayer *tileLayer);
-static void writeObject(QSaveFile &file, const MapObject *obj);
-static void writeEvent(QSaveFile &file, const MapObject *ev);
+static void writeTilemap(QSaveFile &file, const TileLayer *tileLayer,
+    gfm_offset *pOff);
+static void writeObject(QSaveFile &file, const MapObject *obj,
+    gfm_offset *pOff);
+static void writeEvent(QSaveFile &file, const MapObject *ev,
+    gfm_offset *pOff);
 #else
-static void writeTilemap(QFile &file, const TileLayer *tileLayer);
-static void writeObject(QFile &file, const MapObject *obj);
-static void writeEvent(QFile &file, const MapObject *ev);
+static void writeTilemap(QFile &file, const TileLayer *tileLayer,
+    gfm_offset *pOff);
+static void writeObject(QFile &file, const MapObject *obj,
+    gfm_offset *pOff);
+static void writeEvent(QFile &file, const MapObject *ev,
+    gfm_offset *pOff);
 #endif
 
 GfmPlugin::GfmPlugin()
@@ -54,17 +68,21 @@ GfmPlugin::GfmPlugin()
 
 bool GfmPlugin::write(const Map *map, const QString &fileName)
 {
+    gfm_offset off;
+    int foundTileLayer;
 #ifdef HAS_QSAVEFILE_SUPPORT
     QSaveFile file(fileName);
 #else
     QFile file(fileName);
 #endif
+    
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         mError = tr("Could not open file for writing.");
         return false;
     }
-
-
+    
+    foundTileLayer = 0;
+    
     // Write every layer
     foreach (const Layer *layer, map->layers()) {
         if (!layer->isVisible())
@@ -74,12 +92,25 @@ bool GfmPlugin::write(const Map *map, const QString &fileName)
         if (layer->layerType() == Layer::TileLayerType) {
             const TileLayer *tileLayer;
             
+            if (foundTileLayer == 1) {
+                mError = tr("Found more than one tilemap!");
+                return false;
+            }
+            
+            foundTileLayer = 1;
+            
             tileLayer = static_cast<const TileLayer*>(layer);
             
-            writeTilemap(file, tileLayer);
+            getTilemapBounds(&off, tileLayer);
+            writeTilemap(file, tileLayer, &off);
         }
         else if (layer->layerType() == Layer::ObjectGroupType) {
             const ObjectGroup *objectGroup;
+            
+            if (foundTileLayer == 0) {
+                mError = tr("First layer must be a tilemap!");
+                return false;
+            }
             
             objectGroup = static_cast<const ObjectGroup*>(layer);
             
@@ -88,9 +119,9 @@ bool GfmPlugin::write(const Map *map, const QString &fileName)
                     continue;
                 
                 if (obj->type() == "obj")
-                    writeObject(file, obj);
+                    writeObject(file, obj, &off);
                 else if (obj->type() == "event")
-                    writeEvent(file, obj);
+                    writeEvent(file, obj, &off);
                 else {
                     mError = "Invalid object type!";
                     return false;
@@ -128,16 +159,66 @@ QString GfmPlugin::errorString() const
 Q_EXPORT_PLUGIN2(Gfm, GfmPlugin)
 #endif
 
+static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer) {
+    int j, x, y, w, h;
+    
+    x = -1;
+    y = -1;
+    w = -1;
+    h = -1;
+    j = 0;
+    while (j < tileLayer->height()) {
+        int i;
+        
+        if (x == -1)
+            i = 0;
+        else
+            i = x;
+        while ((w == -1 && i < tileLayer->width()) || (w != -1 && i == 0)) {
+            const Tile *tile;
+            
+            tile = tileLayer->cellAt(i, j).tile;
+            if (x == -1 && tile) {
+                x = i;
+                y = j;
+            }
+            else if (x != -1 && w == -1 && !tile) {
+                w = i - x;
+            }
+            else if (x != -1 && w != -1 && h == -1 && !tile) {
+                h = j - y;
+                i = tileLayer->width();
+                j = tileLayer->height();
+            }
+            
+            i++;
+        }
+        
+        j++;
+    }
+    if (h == -1)
+        h = j - y;
+    
+    pOff->x = x;
+    pOff->y = y;
+    pOff->w = w;
+    pOff->h = h;
+}
+
 #ifdef HAS_QSAVEFILE_SUPPORT
-static void writeTilemap(QSaveFile &file, const TileLayer *tileLayer) {
+static void writeTilemap(QSaveFile &file, const TileLayer *tileLayer,
+    gfm_offset *pOff) {
 #else
-static void writeTilemap(QFile &file, const TileLayer *tileLayer) {
+static void writeTilemap(QFile &file, const TileLayer *tileLayer,
+    gfm_offset *pOff) {
 #endif
     // Write out the tilemap, by ID
     file.write("tm:[\n", 5);
-    for (int y = 0; y < tileLayer->height(); ++y) {
-        for (int x = 0; x < tileLayer->width(); ++x) {
-            const Cell &cell = tileLayer->cellAt(x, y);
+//    for (int y = 0; y < tileLayer->height(); ++y) {
+//        for (int x = 0; x < tileLayer->width(); ++x) {
+    for (int y = 0; y < pOff->h; y++) {
+        for (int x = 0; x < pOff->w; x++) {
+            const Cell &cell = tileLayer->cellAt(pOff->x + x, pOff->y + y);
             const Tile *tile = cell.tile;
             const int id = tile ? tile->id() : -1;
             file.write(QByteArray::number(id));
@@ -150,14 +231,16 @@ static void writeTilemap(QFile &file, const TileLayer *tileLayer) {
 }
 
 #ifdef HAS_QSAVEFILE_SUPPORT
-static void writeObjectBounds(QSaveFile &file, const MapObject *obj) {
+static void writeObjectBounds(QSaveFile &file, const MapObject *obj, 
+    gfm_offset *pOff) {
 #else
-static void writeObjectBounds(QFile &file, const MapObject *obj) {
+static void writeObjectBounds(QFile &file, const MapObject *obj, 
+    gfm_offset *pOff) {
 #endif
     int h, w, x, y;
     
-    x = ((int)obj->x()) / 8;
-    y = ((int)obj->y()) / 8;
+    x = ((int)obj->x()) / 8 - pOff->x;
+    y = ((int)obj->y()) / 8 - pOff->y;
     w = ((int)obj->width()) / 8;
     h = ((int)obj->height()) / 8;
     
@@ -172,13 +255,15 @@ static void writeObjectBounds(QFile &file, const MapObject *obj) {
 }
 
 #ifdef HAS_QSAVEFILE_SUPPORT
-static void writeObject(QSaveFile &file, const MapObject *obj) {
+static void writeObject(QSaveFile &file, const MapObject *obj,
+    gfm_offset *pOff) {
 #else
-static void writeObject(QFile &file, const MapObject *obj) {
+static void writeObject(QFile &file, const MapObject *obj,
+    gfm_offset *pOff) {
 #endif
     file.write("obj: {", 6);
     
-    writeObjectBounds(file, obj);
+    writeObjectBounds(file, obj, pOff);
     
     for (QMap<QString, QString>::const_iterator it = obj->properties().begin();
         it != obj->properties().end(); it++) {
@@ -192,13 +277,15 @@ static void writeObject(QFile &file, const MapObject *obj) {
 }
 
 #ifdef HAS_QSAVEFILE_SUPPORT
-static void writeEvent(QSaveFile &file, const MapObject *ev) {
+static void writeEvent(QSaveFile &file, const MapObject *ev,
+    gfm_offset *pOff) {
 #else
-static void writeEvent(QFile &file, const MapObject *ev) {
+static void writeEvent(QFile &file, const MapObject *ev,
+    gfm_offset *pOff) {
 #endif
     file.write("ev: {", 5);
     
-    writeObjectBounds(file, ev);
+    writeObjectBounds(file, ev, pOff);
     
     for (QMap<QString, QString>::const_iterator it = ev->properties().begin();
         it != ev->properties().end(); it++) {
