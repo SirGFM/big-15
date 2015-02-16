@@ -204,8 +204,11 @@ static void writeEvent(QFile &file, const MapObject *ev) {
         it != ev->properties().end(); it++) {
         file.write(" ", 1);
         if (it.key() == "var0" || it.key() == "var1" || it.key() == "var2"
-          || it.key() == "var3")
+          || it.key() == "var3" ) {
+            if (it.value() == "gv_max")
+                continue;
             file.write("var", 3);
+        }
         else if (it.key() == "int0" || it.key() == "int1" || it.key() == "int2"
           || it.key() == "int3")
             file.write("int", 3);
