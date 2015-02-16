@@ -18,6 +18,8 @@
 #include "types.h"
 #include "ui.h"
 
+#define PL_TWEEN_DELAY 1000
+
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
@@ -72,15 +74,9 @@ void playstate() {
         if (gv_isZero(SWITCH_MAP))
             ps_update();
         else {
-            int tmp;
-            
-            tmp = gl_running;
-            gl_running = 0;
-            
             rv = ps_switchMap();
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to switch maps",
                 __ret);
-            gl_running = tmp;
         }
         ps_draw();
     }
@@ -157,13 +153,22 @@ static void ps_draw() {
  */
 static GFraMe_ret ps_switchMap() {
     GFraMe_ret rv;
+    int tmp;
+    
+    // Store whether the game was running
+    tmp = gl_running;
+    // Make it stop on any error
+    gl_running = 0;
     
     switch (switchState) {
+        /** Simply start the transition */
         case 0: transition_initFadeOut(); switchState++; break;
+        /** Fade out */
         case 1: {
             if (transition_fadeOut(GFraMe_event_elapsed) == TR_COMPLETE)
                 switchState++;
         } break;
+        /** Load the map */
         case 2: {
             int map;
             map = gv_getValue(MAP);
@@ -173,26 +178,36 @@ static GFraMe_ret ps_switchMap() {
             
             switchState++;
         } break;
+        /** Tween players to their new position */
         case 3: {
             int x, y;
             
+            // Get their destiny position
             x = gv_getValue(DOOR_X) * 8;
             y = gv_getValue(DOOR_Y) * 8;
+            // Tween the players
+            rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+            rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+            // Update camera
+            cam_setPosition(p1, p2);
             
-            rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, 1000);
-            rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, 1000);
             if (rv == GFraMe_ret_ok)
                 switchState++;
         } break;
+        /** Init fade in animation */
         case 4: transition_initFadeIn(); switchState++; break;
+        /** Fade in */
         case 5: {
             if (transition_fadeIn(GFraMe_event_elapsed) == TR_COMPLETE)
                 switchState++;
         } break;
+        /** Finish the transition */
         default:
             gv_setValue(SWITCH_MAP, 0);
     }
     
+    // Set return variable
+    gl_running = tmp;
     rv = GFraMe_ret_ok;
 __ret:
     return rv;

@@ -24,6 +24,7 @@
 //============================================================================//
 
 #define TM_MAX 2
+/** Lookup table for tilemap files */
 char *_map_tms[TM_MAX] = {
     "maps/tm_000.gfm",
     "maps/test_tm.txt"

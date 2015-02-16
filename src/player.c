@@ -348,25 +348,31 @@ __ret:
 GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time) {
     GFraMe_object *pO;
     
+    // Get the player's object (to easily modify its position)
     pO = GFraMe_sprite_get_object(&pPl->spr);
     
+    // Set the original position, if not yet set
     if (pPl->tx == -1 && pPl->ty == -1) {
         pPl->tx = pO->x;
         pPl->ty = pO->y;
         pPl->tt = 0;
     }
     
+    // Update the time and tween to the new position
     pPl->tt += ms;
+    pO->dx = (pPl->tx * (time - pPl->tt) + x * pPl->tt) / (float)time;
+    pO->dy = (pPl->ty * (time - pPl->tt) + y * pPl->tt) / (float)time;
     
-    pO->dx = (pPl->tx * (time - pPl->tt) + x * pPl->tt) / 1000.0f;
-    pO->dy = (pPl->ty * (time - pPl->tt) + y * pPl->tt) / 1000.0f;
-    
+    // Set the drawing posititon
     pO->x = (int)pO->dx;
     pO->y = (int)pO->dy;
     
+    // If we reached the destination, corret the position and clear the tween
     if (pPl->tt >= time) {
         GFraMe_object_set_x(pO, x);
         GFraMe_object_set_y(pO, y);
+        pPl->tx = -1;
+        pPl->ty = -1;
         return GFraMe_ret_ok;
     }
     return GFraMe_ret_failed;
