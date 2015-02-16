@@ -56,7 +56,7 @@ GFraMe_ret parsef_commonEvent(commonEvent *pCe, FILE *fp);
 /**
  * Parse a event from a file
  * A event is described by following rule:
- * "e:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int 
+ * "ev:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int 
  *          "var:"globalVarName "int:":int '}'
  * 
  * @param pE Returns the parsed event

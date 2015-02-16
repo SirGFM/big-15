@@ -17,6 +17,24 @@
 #include "object.h"
 #include "parser.h"
 
+//============================================================================//
+//                                                                            //
+// Maps lookup table                                                          //
+//                                                                            //
+//============================================================================//
+
+#define TM_MAX 2
+char *_map_tms[TM_MAX] = {
+    "maps/tm_000.gfm",
+    "maps/test_tm.txt"
+};
+
+//============================================================================//
+//                                                                            //
+// Tiles definitions                                                          //
+//                                                                            //
+//============================================================================//
+
 #define TILE_SHOCK_L1 96
 #define TILE_SHOCK_L2 97
 #define TILE_SHOCK_L3 98
@@ -507,6 +525,38 @@ GFraMe_ret map_loadf(map *pM, char *fn) {
     
     return rv;
 }
+
+/**
+ * Load a indexed map
+ * 
+ * @param m The map
+ * @param i The map's index
+ * @return GFraMe error code
+ */
+GFraMe_ret map_loadi(map *m, int i) {
+    #define MAX_NAME_LEN 128
+    char name[MAX_NAME_LEN];
+    GFraMe_ret rv;
+    int len;
+    
+    // Check that the index is valid
+    GFraMe_assertRV(i < TM_MAX, "Invalid map index", rv = GFraMe_ret_failed,
+        __ret);
+    
+    // Retrive a valid asset filename
+    len = MAX_NAME_LEN;
+	rv = GFraMe_assets_clean_filename(name, _map_tms[i], &len);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load map", __ret);
+    
+    // Load the map
+    rv = map_loadf(m, name);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load map", __ret);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
 
 /**
  * Animate the map tiles

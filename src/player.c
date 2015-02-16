@@ -39,6 +39,11 @@ struct stPlayer {
     int map;
     int map_x;
     int map_y;
+    
+    // Tween rates
+    int tx;
+    int ty;
+    int tt;
 };
 
 /**
@@ -93,6 +98,10 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     pPl->map = -1;
     pPl->map_x = -1;
     pPl->map_y = -1;
+    
+    pPl->tx = -1;
+    pPl->ty = -1;
+    pPl->tt = -1;
     
     // Set the return variables
     *ppPl = pPl;
@@ -324,5 +333,42 @@ GFraMe_ret player_cmpDestMap(player *pPl1, player *pPl2) {
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
+}
+
+/**
+ * Moves the player to a new position
+ * 
+ * @param pPl The player
+ * @param x The horizontal position
+ * @param y The vertical position
+ * @param ms Time, in milliseconds, elapsed since the previous frame
+ * @param time How long the tween should last (in milliseconds)
+ * @return GFraMe_ret_ok, if the position was reached
+ */
+GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time) {
+    GFraMe_object *pO;
+    
+    pO = GFraMe_sprite_get_object(&pPl->spr);
+    
+    if (pPl->tx == -1 && pPl->ty == -1) {
+        pPl->tx = pO->x;
+        pPl->ty = pO->y;
+        pPl->tt = 0;
+    }
+    
+    pPl->tt += ms;
+    
+    pO->dx = (pPl->tx * (time - pPl->tt) + x * pPl->tt) / 1000.0f;
+    pO->dy = (pPl->ty * (time - pPl->tt) + y * pPl->tt) / 1000.0f;
+    
+    pO->x = (int)pO->dx;
+    pO->y = (int)pO->dy;
+    
+    if (pPl->tt >= time) {
+        GFraMe_object_set_x(pO, x);
+        GFraMe_object_set_y(pO, y);
+        return GFraMe_ret_ok;
+    }
+    return GFraMe_ret_failed;
 }
 

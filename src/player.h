@@ -107,5 +107,17 @@ void player_setDestMap(player *pPl, int map, int x, int y);
  */
 GFraMe_ret player_cmpDestMap(player *pPl1, player *pPl2);
 
+/**
+ * Moves the player to a new position
+ * 
+ * @param pPl The player
+ * @param x The horizontal position
+ * @param y The vertical position
+ * @param ms Time, in milliseconds, elapsed since the previous frame
+ * @param time How long the tween should last (in milliseconds)
+ * @return GFraMe_ret_ok, if the position was reached
+ */
+GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time);
+
 #endif
 

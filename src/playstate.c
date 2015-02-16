@@ -14,6 +14,7 @@
 #include "map.h"
 #include "player.h"
 #include "playstate.h"
+#include "transition.h"
 #include "types.h"
 #include "ui.h"
 
@@ -23,6 +24,8 @@ GFraMe_event_setup();
 map *m;     /** Game map */
 player *p1; /** First player */
 player *p2; /** Second player */
+
+int switchState;
 
 /**
  * Initialize the playstate
@@ -49,7 +52,7 @@ static void ps_event();
 /**
  * Switch the current map
  */
-static void ps_switchMap();
+static GFraMe_ret ps_switchMap();
 
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
@@ -68,8 +71,17 @@ void playstate() {
         ps_event();
         if (gv_isZero(SWITCH_MAP))
             ps_update();
-        else
-            ps_switchMap();
+        else {
+            int tmp;
+            
+            tmp = gl_running;
+            gl_running = 0;
+            
+            rv = ps_switchMap();
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to switch maps",
+                __ret);
+            gl_running = tmp;
+        }
         ps_draw();
     }
     
@@ -83,9 +95,6 @@ __ret:
  * @return GFraMe error code
  */
 static GFraMe_ret ps_init() {
-	char name[128];
-    int len;
-    
     GFraMe_ret rv;
     
     rv = ui_init();
@@ -100,11 +109,11 @@ static GFraMe_ret ps_init() {
     rv = player_init(&p2, ID_PL2, 240);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
-    len = 128;
-	rv = GFraMe_assets_clean_filename(name, "maps/test_tm.txt", &len);
+    rv = map_loadi(m, 0);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
-    rv = map_loadf(m, name);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
+    
+    switchState = 0;
+    transition_initFadeOut();
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -127,18 +136,66 @@ static void ps_clean() {
 static void ps_draw() {
     GFraMe_event_draw_begin();
         map_draw(m);
-        player_draw(p1);
-        player_draw(p2);
-        map_drawObjs(m);
-        ui_draw();
+        if (gv_isZero(SWITCH_MAP)) {
+            player_draw(p1);
+            player_draw(p2);
+            map_drawObjs(m);
+            ui_draw();
+        }
+        else {
+            map_drawObjs(m);
+            ui_draw();
+            transition_draw();
+            player_draw(p1);
+            player_draw(p2);
+        }
     GFraMe_event_draw_end();
 }
 
 /**
  * Switch the current map
  */
-static void ps_switchMap() {
-    gv_setValue(SWITCH_MAP, 0);
+static GFraMe_ret ps_switchMap() {
+    GFraMe_ret rv;
+    
+    switch (switchState) {
+        case 0: transition_initFadeOut(); switchState++; break;
+        case 1: {
+            if (transition_fadeOut(GFraMe_event_elapsed) == TR_COMPLETE)
+                switchState++;
+        } break;
+        case 2: {
+            int map;
+            map = gv_getValue(MAP);
+            
+            rv = map_loadi(m, map);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            
+            switchState++;
+        } break;
+        case 3: {
+            int x, y;
+            
+            x = gv_getValue(DOOR_X) * 8;
+            y = gv_getValue(DOOR_Y) * 8;
+            
+            rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, 1000);
+            rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, 1000);
+            if (rv == GFraMe_ret_ok)
+                switchState++;
+        } break;
+        case 4: transition_initFadeIn(); switchState++; break;
+        case 5: {
+            if (transition_fadeIn(GFraMe_event_elapsed) == TR_COMPLETE)
+                switchState++;
+        } break;
+        default:
+            gv_setValue(SWITCH_MAP, 0);
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
 /**

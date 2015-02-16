@@ -48,7 +48,7 @@ static void parsef_ignoreWhitespace(FILE *fp, int ignoreNewline) {
 static GFraMe_ret parsef_int(int *pI, FILE *fp) {
     fpos_t pos;
     GFraMe_ret rv;
-    int c, i, irv;
+    int c, i, irv, signal;
     
     // Sanitize parameters
     ASSERT(pI, GFraMe_ret_bad_param);
@@ -61,7 +61,17 @@ static GFraMe_ret parsef_int(int *pI, FILE *fp) {
     // Check that the first character is a digit
     c = fgetc(fp);
     ASSERT(c != EOF, GFraMe_ret_failed);
-    ASSERT(c >= '0' && c <= '9', GFraMe_ret_failed);
+    ASSERT((c >= '0' && c <= '9') || c == '-', GFraMe_ret_failed);
+    
+    // Set the varibles signal
+    if (c == '-') {
+        signal = -1;
+        c = fgetc(fp);
+        ASSERT(c != EOF, GFraMe_ret_failed);
+        ASSERT(c >= '0' && c <= '9', GFraMe_ret_failed);
+    }
+    else
+        signal = 1;
     
     // Parse the integer
     i = 0;
@@ -78,7 +88,7 @@ static GFraMe_ret parsef_int(int *pI, FILE *fp) {
     // Get to the next valid character
     parsef_ignoreWhitespace(fp, 1);
     
-    *pI = i;
+    *pI = i*signal;
     rv = GFraMe_ret_ok;
 __ret:
     // Backtrack on error
@@ -349,7 +359,7 @@ __ret:
 /**
  * Parse a event from a file
  * A event is described by following rule:
- * "e:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int 
+ * "ev:" '{' "x:"int "y:"int "w:"int "h:"int "ce:"commonEventName "t:"int 
  *          "var:"globalVarName "int:":int '}'
  * All the numbers are read as tiles (i.e., multiplied by 8)
  * 
@@ -374,7 +384,7 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
     ASSERT(irv == 0, GFraMe_ret_failed);
     
     // Check that the next "token" must be an event
-    rv = parsef_string(fp, "e:", 2);
+    rv = parsef_string(fp, "ev:", 3);
     ASSERT(rv == GFraMe_ret_ok, rv);
     
     // Open a bracket =D
@@ -732,6 +742,7 @@ GFraMe_ret parsef_tilemap(unsigned char **ppData, int *pDataLen, int *pW,
     
     // Check that the tilemap indeed ended
     ASSERT(c == ']', GFraMe_ret_failed);
+    parsef_ignoreWhitespace(fp, 1);
     
     // Set the camera's dimension
     cam_setMapDimension(w * 8, h * 8);

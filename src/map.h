@@ -115,6 +115,15 @@ GFraMe_ret map_loads(map *m, char *str, int len);
 GFraMe_ret map_loadf(map *m, char *fn);
 
 /**
+ * Load a indexed map
+ * 
+ * @param m The map
+ * @param i The map's index
+ * @return GFraMe error code
+ */
+GFraMe_ret map_loadi(map *m, int i);
+
+/**
  * Animate the map tiles
  * 
  * @param pM The map
