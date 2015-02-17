@@ -255,6 +255,34 @@ static void writeObjectBounds(QFile &file, const MapObject *obj,
 }
 
 #ifdef HAS_QSAVEFILE_SUPPORT
+static void writeString(QSaveFile &file, const QString &str) {
+#else
+static void writeString(QFile &file, const QString &str) {
+#endif
+    int i;
+    QStringList list = str.split("|");
+    
+    i = 0;
+    while (1) {
+        file.write("\"", 1);
+        file.write(list.at(i).toUtf8());
+        file.write("\"", 1);
+        
+        i++;
+        if (i >= list.count())
+            break;
+        file.write("|", 1);
+    }
+}
+
+#define isVar(it)\
+    (it.key() == "var" || it.key() == "var0" || it.key() == "var1" \
+        || it.key() == "var2" || it.key() == "var3" )
+#define isInt(it)\
+    (it.key() == "int" || it.key() == "int0" || it.key() == "int1" \
+        || it.key() == "int2" || it.key() == "int3" )
+
+#ifdef HAS_QSAVEFILE_SUPPORT
 static void writeObject(QSaveFile &file, const MapObject *obj,
     gfm_offset *pOff) {
 #else
@@ -268,9 +296,17 @@ static void writeObject(QFile &file, const MapObject *obj,
     for (QMap<QString, QString>::const_iterator it = obj->properties().begin();
         it != obj->properties().end(); it++) {
         file.write(" ", 1);
-        file.write(it.key().toUtf8());
+        if (isVar(it))
+            file.write("var", 3);
+        else
+            file.write(it.key().toUtf8());
+        
         file.write(":", 1);
-        file.write(it.value().toUtf8());
+        
+        if (!isInt(it))
+            writeString(file, it.value());
+        else
+            file.write(it.value().toUtf8());
     }
     
     file.write(" }\n", 3);
@@ -290,19 +326,22 @@ static void writeEvent(QFile &file, const MapObject *ev,
     for (QMap<QString, QString>::const_iterator it = ev->properties().begin();
         it != ev->properties().end(); it++) {
         file.write(" ", 1);
-        if (it.key() == "var0" || it.key() == "var1" || it.key() == "var2"
-          || it.key() == "var3" ) {
+        
+        if (isVar(it)) {
             if (it.value() == "gv_max")
                 continue;
             file.write("var", 3);
         }
-        else if (it.key() == "int0" || it.key() == "int1" || it.key() == "int2"
-          || it.key() == "int3")
+        else if (isInt(it))
             file.write("int", 3);
         else
             file.write(it.key().toUtf8());
+        
         file.write(":", 1);
-        file.write(it.value().toUtf8());
+        if (!isInt(it))
+            writeString(file, it.value());
+        else
+            file.write(it.value().toUtf8());
     }
     
     file.write(" }\n", 3);

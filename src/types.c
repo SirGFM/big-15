@@ -68,7 +68,7 @@ static trigger _t_triggers[TRIGGERS_MAX] = {
 flag t_getFlagFromFile(FILE *fp) {
     flag f;
     fpos_t pos;
-    int i, irv;
+    int c, i, irv;
     
     // Sanitize parameter
     GFraMe_assertRV(fp, "Invalid file!", f = 0, __ret);
@@ -82,6 +82,10 @@ flag t_getFlagFromFile(FILE *fp) {
     while (i < FLAGS_MAX) {
         int len, j;
         
+        c = fgetc(fp);
+        GFraMe_assertRV(c != EOF, "Reached end-of-file!", f = 0, __ret);
+        GFraMe_assertRV(c == '"', "Not a string!", f = 0, __ret);
+    
         // Try to read as many character as there are in the name
         len = strlen(_t_flagNames[i]);
         j = 0;
@@ -96,8 +100,14 @@ flag t_getFlagFromFile(FILE *fp) {
             j++;
         }
         // Stop, if a match was found
-        if (j == len)
-            break;
+        if (j == len) {
+            int c;
+            // Check that the string is finished by a '"'
+            c = fgetc(fp);
+            GFraMe_assertRV(c != EOF, "Reached end-of-file!", f = 0, __ret);
+            if (c == '"')
+                break;
+        }
 
         // Return to the string's begin
         irv = fsetpos(fp, &pos);
@@ -122,7 +132,7 @@ __ret:
  */
 trigger t_getTriggerFromFile(FILE *fp) {
     fpos_t pos;
-    int i, irv;
+    int c, i, irv;
     trigger t;
     
     // Sanitize parameter
@@ -137,6 +147,10 @@ trigger t_getTriggerFromFile(FILE *fp) {
     while (i < TRIGGERS_MAX) {
         int len, j;
         
+        c = fgetc(fp);
+        GFraMe_assertRV(c != EOF, "Reached end-of-file!", t = 0, __ret);
+        GFraMe_assertRV(c == '"', "Not a string!", t = 0, __ret);
+    
         // Try to read as many character as there are in the name
         len = strlen(_t_triggerNames[i]);
         j = 0;
@@ -151,8 +165,14 @@ trigger t_getTriggerFromFile(FILE *fp) {
             j++;
         }
         // Stop, if a match was found
-        if (j == len)
-            break;
+        if (j == len) {
+            int c;
+            // Check that the string is finished by a '"'
+            c = fgetc(fp);
+            GFraMe_assertRV(c != EOF, "Reached end-of-file!", t = 0, __ret);
+            if (c == '"')
+                break;
+        }
 
         // Return to the string's begin
         irv = fsetpos(fp, &pos);
@@ -166,6 +186,10 @@ trigger t_getTriggerFromFile(FILE *fp) {
     GFraMe_assertRV(i < TRIGGERS_MAX, "Failed to find type", t = 0, __ret);
     t = _t_triggers[i];
 __ret:
+    // Backtrack on error
+    if (t == 0)
+        fsetpos(fp, &pos);
+    
     return t;
 }
 

@@ -204,6 +204,7 @@ static GFraMe_ret ps_switchMap() {
         /** Finish the transition */
         default:
             gv_setValue(SWITCH_MAP, 0);
+            switchState = 0;
     }
     
     // Set return variable

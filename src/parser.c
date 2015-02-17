@@ -276,10 +276,16 @@ GFraMe_ret parsef_globalVar(globalVar *pGv, FILE *fp) {
         // Get the current globalVar's name
         gvName = gv_getName(gv);
         
+        rv = parsef_string(fp, "\"", 1);
+        ASSERT(rv == GFraMe_ret_ok, GFraMe_ret_failed);
+        
         // Try to match every other character to the current globalVar
         rv = parsef_string(fp, gvName, strlen(gvName));
-        if (rv == GFraMe_ret_ok)
-            break;
+        if (rv == GFraMe_ret_ok) {
+            rv = parsef_string(fp, "\"", 1);
+            if (rv == GFraMe_ret_ok)
+                break;
+        }
         
         // Return to the string's begin
         irv = fsetpos(fp, &pos);
@@ -327,13 +333,19 @@ GFraMe_ret parsef_commonEvent(commonEvent *pCe, FILE *fp) {
     while (ce < CE_MAX) {
         char *ceName;
         
+        rv = parsef_string(fp, "\"", 1);
+        ASSERT(rv == GFraMe_ret_ok, GFraMe_ret_failed);
+        
         // Get the current event's name
         ceName = ce_getName(ce);
         
         // Try to match every other character to the current event
         rv = parsef_string(fp, ceName, strlen(ceName));
-        if (rv == GFraMe_ret_ok)
-            break;
+        if (rv == GFraMe_ret_ok) {
+            rv = parsef_string(fp, "\"", 1);
+            if (rv == GFraMe_ret_ok)
+                break;
+        }
         
         // Return to the string's begin
         irv = fsetpos(fp, &pos);
@@ -455,8 +467,6 @@ GFraMe_ret parsef_event(event *pE, FILE *fp) {
             break;
         }
     }
-    ASSERT(x >= 0, GFraMe_ret_failed);
-    ASSERT(y >= 0, GFraMe_ret_failed);
     ASSERT(w > 0, GFraMe_ret_failed);
     ASSERT(h > 0, GFraMe_ret_failed);
     ASSERT(t > 0, GFraMe_ret_failed);

@@ -23,11 +23,12 @@
 //                                                                            //
 //============================================================================//
 
-#define TM_MAX 2
+#define TM_MAX 3
 /** Lookup table for tilemap files */
 char *_map_tms[TM_MAX] = {
-    "maps/tm_000.gfm",
-    "maps/test_tm.txt"
+    "maps/map000.gfm",
+    "maps/map001.gfm",
+    "maps/map002.gfm",
 };
 
 //============================================================================//
@@ -541,7 +542,7 @@ GFraMe_ret map_loadi(map *m, int i) {
     int len;
     
     // Check that the index is valid
-    GFraMe_assertRV(i < TM_MAX, "Invalid map index", rv = GFraMe_ret_failed,
+    GFraMe_assertRV(i >=0 && i < TM_MAX, "Invalid map index", rv = GFraMe_ret_failed,
         __ret);
     
     // Retrive a valid asset filename
