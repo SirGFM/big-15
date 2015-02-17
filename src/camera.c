@@ -31,13 +31,25 @@ static int last_x = 0;
  * @param pPl2 A player
  */
 void cam_setPosition(player *pPl1, player *pPl2) {
-    int cx, cy, x1, x2, y1, y2;
+    int cx, cy, n, x1, x2, y1, y2;
     
     // Get the point between both players
     player_getCenter(&x1, &y1, pPl1);
     player_getCenter(&x2, &y2, pPl2);
-    cx = (x1 + x2) / 2;
-    cy = (y1 + y2) / 2;
+    
+    n = 4;
+    if (y1 == y2) {
+        cx = (x1 + x2) / 2;
+        cy = (y1 + y2) / 2;
+    }
+    else if (y1 > y2) {
+        cx = (x1 + x2 * (n - 1)) / n;
+        cy = (y1 + y2 * (n - 1)) / n;
+    }
+    else {
+        cx = (x2 + x1 * (n - 1)) / n;
+        cy = (y2 + y1 * (n - 1)) / n;
+    }
     
     // Make sure this point is inside the horizontal deadzone
     if (cx < last_x && cx - cam_x < CAM_DEAD_X)
