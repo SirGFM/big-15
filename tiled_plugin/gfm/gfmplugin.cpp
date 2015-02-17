@@ -182,9 +182,8 @@ static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer) {
                 x = i;
                 y = j;
             }
-            else if (x != -1 && w == -1 && !tile) {
+            else if (x != -1 && w == -1 && !tile)
                 w = i - x;
-            }
             else if (x != -1 && w != -1 && h == -1 && !tile) {
                 h = j - y;
                 i = tileLayer->width();
@@ -193,6 +192,8 @@ static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer) {
             
             i++;
         }
+        if (w == -1)
+            w = i - x;
         
         j++;
     }

@@ -7,23 +7,25 @@
 #define __GLOBAL_VAR_H_
 
 typedef enum {
-    PL1_HP,      /** Player 1 current health                  */
-    PL1_MAXHP,   /** Player 1 maximum health                  */
-    PL1_ITEM,    /** Player 1 current item                    */
-    PL1_DEATH,   /** How many times player 1 died             */
-    PL2_HP,      /** Player 2 current health                  */
-    PL2_MAXHP,   /** Player 2 maximum health                  */
-    PL2_ITEM,    /** Player 2 current item                    */
-    PL2_DEATH,   /** How many times player 2 died             */
-    MAP,         /** Current map                              */
-    DOOR_X,      /** Entrance horizontal point on current map */
-    DOOR_Y,      /** Entrance vertical point on current map   */
-    ITEMS,       /** Flags for available items                */
-    SWITCH_MAP,  /** Whether the map should be switched       */
-    MAP001_DOOR, /** State of the only door on map 001        */
-    MAP002_DOOR, /** State of the only door on map 002        */
-    MAP003_DOOR, /** State of the only door on map 003        */
-    GV_MAX       /** Global var count                         */
+    PL1_HP,       /** Player 1 current health                  */
+    PL1_MAXHP,    /** Player 1 maximum health                  */
+    PL1_ITEM,     /** Player 1 current item                    */
+    PL1_DEATH,    /** How many times player 1 died             */
+    PL2_HP,       /** Player 2 current health                  */
+    PL2_MAXHP,    /** Player 2 maximum health                  */
+    PL2_ITEM,     /** Player 2 current item                    */
+    PL2_DEATH,    /** How many times player 2 died             */
+    MAP,          /** Current map                              */
+    DOOR_X,       /** Entrance horizontal point on current map */
+    DOOR_Y,       /** Entrance vertical point on current map   */
+    ITEMS,        /** Flags for available items                */
+    SWITCH_MAP,   /** Whether the map should be switched       */
+    MAP001_DOOR,  /** State of the only door on map 001        */
+    MAP002_DOOR,  /** State of the only door on map 002        */
+    MAP003_DOOR,  /** State of the only door on map 003        */
+    MAP004_DOOR1, /** State of a door on map 004              */
+    MAP004_DOOR2, /** State of the other door on map 004      */
+    GV_MAX        /** Global var count                         */
 } globalVar;
 
 /**
