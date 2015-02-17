@@ -22,6 +22,7 @@ typedef enum {
     SWITCH_MAP,  /** Whether the map should be switched       */
     MAP001_DOOR, /** State of the only door on map 001        */
     MAP002_DOOR, /** State of the only door on map 002        */
+    MAP003_DOOR, /** State of the only door on map 003        */
     GV_MAX       /** Global var count                         */
 } globalVar;
 

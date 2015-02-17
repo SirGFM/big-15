@@ -17,6 +17,7 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_close_door",
     "ce_switch_door",
     "ce_handle_door",
+    "ce_handle_notdoor",
     "ce_switch_map",
     "ce_max"
 };
@@ -168,9 +169,10 @@ void ce_callEvent(commonEvent ce) {
             else if (val == CLOSED)
                 gv_setValue(gv, OPENING);
         } break;
-        case CE_HANDLE_DOOR: {
+        case CE_HANDLE_DOOR:
+        case CE_HANDLE_NOTDOOR: {
             globalVar gv;
-            int ID, val;
+            int ID, val, not;
             object *pO;
             
             // Retrieve the reference
@@ -181,22 +183,25 @@ void ce_callEvent(commonEvent ce) {
             obj_getID(&ID, pO);
             ASSERT_NR((ID & ID_DOOR) == ID_DOOR);
             
+            // Whether everything should be negated or not
+            not = (ce == CE_HANDLE_NOTDOOR);
+            
             // Get the door's state
             obj_getVar(&gv, pO, 0);
             val = gv_getValue(gv);
             
             // Handle animation, collision and state
-            if (val == CLOSED) {
+            if ((!not && val == CLOSED) || (not && val == OPEN)) {
                 obj_addFlag(pO, ID_STATIC);
                 obj_setTile(pO, 192);
             }
-            else if (val == OPENING) {
+            else if ((!not && val == OPENING) || (not && val == CLOSING)) {
                 if (obj_getAnim(pO) != OBJ_ANIM_OPEN_DOOR)
                     obj_setAnim(pO, OBJ_ANIM_OPEN_DOOR);
                 else if (obj_animFinished(pO))
                     gv_setValue(gv, OPEN);
             }
-            else if (val == CLOSING) {
+            else if ((!not && val == CLOSING) || (not && val == OPENING)) {
                 if (obj_getAnim(pO) != OBJ_ANIM_CLOSE_DOOR) {
                     obj_addFlag(pO, ID_STATIC);
                     obj_setAnim(pO, OBJ_ANIM_CLOSE_DOOR);
@@ -204,7 +209,7 @@ void ce_callEvent(commonEvent ce) {
                 else if (obj_animFinished(pO))
                     gv_setValue(gv, CLOSED);
             }
-            else if (val == OPEN) {
+            else if ((!not && val == OPEN) || (not && val == CLOSED)) {
                 obj_rmFlag(pO, ID_STATIC);
                 obj_setTile(pO, 196);
             }

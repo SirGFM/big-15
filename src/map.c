@@ -23,12 +23,13 @@
 //                                                                            //
 //============================================================================//
 
-#define TM_MAX 3
+#define TM_MAX 4
 /** Lookup table for tilemap files */
 char *_map_tms[TM_MAX] = {
     "maps/map000.gfm",
     "maps/map001.gfm",
     "maps/map002.gfm",
+    "maps/map003.gfm",
 };
 
 //============================================================================//

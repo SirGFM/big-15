@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="30" tilewidth="8" tileheight="8" nextobjectid="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="30" tilewidth="8" tileheight="8" nextobjectid="43">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="96">
@@ -77,14 +77,15 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="maps_boundaries" visible="0" opacity="0.35">
+ <objectgroup name="maps_boundaries" opacity="0.35">
   <object id="8" name="   map_000" x="-8" y="-8" width="336" height="256"/>
   <object id="9" name="map_001" x="328" y="-8" width="336" height="256"/>
   <object id="16" name="map_002" x="664" y="-8" width="336" height="256"/>
+  <object id="32" name="map_003" x="1000" y="-8" width="488" height="256"/>
  </objectgroup>
- <layer name="world_map" width="320" height="30" visible="0">
+ <layer name="world_map" width="320" height="30">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="map000" width="320" height="30">
@@ -166,7 +167,7 @@
  </objectgroup>
  <layer name="map002" width="320" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt3UdOw0AYhuH/avTOHVhSIs7Agg7HoFyEcizGC0tJRJANzIzBzyN920jevDJuRPCbjga8ScbjBmg6c592M5DdxWwDAXJpGnOctjSQHYb+AWXoHzBW+geM1ZD6txb6B5QzpP6thv4B5egfMFb6B4zVUPrXXPtbCf0DyhlK/1bD+R9QVtu/87SLtMu0q9A/4P9r+/eQ9pj2lPYc+gf8f23/XtJe097S3qP/tbvlBVvv+Bv6B5TWfmdlu8N2YrZZu2l7U9uPz7umf8AQ9fkeVd/7JF362G4j3P8Fyurz/avbyHsNsGmg/gGl1H7+Zf4c8TT0Dyijdv/m5/wPKEX/gLEqcV1v0d+6n90PuY7Za44AudQ4x+v6TMxSxuMG0D9grH7asq3o9tz09Dshmz1+HyCX+d5Mv8t2kHYWX7/LNn+/4jeem9Y/oIQu7719tZPo9n/Mv/v7ALn0ef+txgByqd03/QNqqd03/QNqaa7N1W7cok0yHjf8RR+q1X7O
+   eJzt3UdOw0AYhuH/avTOHVjSxBlY0OEYlItQjsVYyFISEWQDM2Pw80jfNlI2rxy3RPCbDga844zfG6DpzF3a9UB2G9MNBMilacxh2sJAth/6B5Shf8BY6R8wVkPq30roH1DOkPq3HPoHlKN/wFjpHzBWbf8W01ajXvuac39LoX9AOZPHf8tR99jP8R9QUtu/s7TztIu0y9A/4P9r+3ef9pD2mPYUH7+HS/4m1j+gtLZ/z2kvaa9pbzHdpS7n7hbnrGs/9Q8orX3PymaHbcV0s7bTdia2G593Tf+AIerzPqq+98l06WO7tXD9Fyirz/uvbiLvOcCmgfoHlFL7/ufZY8ST0D+gjNr9m53jP6AU/QPGqsR5vXm/dT+7HnIV0+ccAXKpcYzX5zk7gFz0Dxirn7ZsI7rdNz35TMh6j88HyGW2N5PPsu2lncbXz7LNXq/4jfum9Q8ooctzb1/tKLr9j/l3Px8glz7Pv9UYQC61+6Z/QC21+6Z/QC3NubnajZu344zfG/6id6eyfuE=
   </data>
  </layer>
  <objectgroup name="map002_objs">
@@ -217,6 +218,97 @@
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map002_door"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="map003" width="320" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt3FlOwzAUhWFvjbbMsAgeGbIIHpgKLIPCRhiWxa2EpSvjOE5zHUPzf9KReKDB4uHIju06hym6+MNpjJ8FAJrvh2fJskCenF2HDQ0AaL4bLiU7BXLu6vUd/Qcghf4DMFX0H4Cpov8ATBX9B2Cq6D8AU1W6/x5cmXM1OQnP3gCAVrr/YtmVzCUzyV6Pzy16/p1w7gkAWo3+W/zkRnIruZPcZ36O/gNgpWb/vUhWklfJm+ueD9J/ACyV6L/1+nYWie8233/vkg/Jp+TLxTtOP8uvmc8k1667L+k/ACkl+k932KHkaIQcR8ZB/wFIye2/tjldLHP1s8X5l5zvZniMjJn+A5CS23993r3p37Xov/XYwl49yBgb/Qcgxbr/wvXulbPpv9QY6D8Am7DuvxL3Peg/ACWEa8ycd3o+sb0Ni/le2/pXr3m7+m/9vpL+A5AyZP431t3e2Nhy9pXDLgYAbena90/D/juRnKosR0psbJvcKwYAbZM93aFZGD9v3/0+Fx1bKwOANnb/9b3zaxkA0Mbuv/DOL/0HoJYh/efvhOh1Z9f3WcXu/NJ/AGro2kPdpgCAZnVG5T8EALTanUT/AaildifRfwBqaVz9XmqL5dgaq38YttI3jBpqdQ==
+  </data>
+ </layer>
+ <objectgroup name="map003_objs">
+  <object id="34" name="exit" type="event" x="1480" y="160" width="8" height="48">
+   <properties>
+    <property name="ce" value="ce_switch_map"/>
+    <property name="int0" value="4"/>
+    <property name="int1" value="1"/>
+    <property name="int2" value="23"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|keep_active"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="35" name="exit" type="event" x="1000" y="160" width="8" height="48">
+   <properties>
+    <property name="ce" value="ce_switch_map"/>
+    <property name="int0" value="2"/>
+    <property name="int1" value="38"/>
+    <property name="int2" value="23"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|keep_active"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="36" name="switch_door" type="event" x="1240" y="184" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_switch_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="map003_door"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="37" name="switch_door" type="event" x="1264" y="88" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_switch_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="map003_door"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="38" name="map003_door" type="obj" x="1112" y="168" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_door"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value="map003_door"/>
+   </properties>
+  </object>
+  <object id="39" name="map003_notdoor" type="obj" x="1216" y="72" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_notdoor"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value="map003_door"/>
+   </properties>
+  </object>
+  <object id="40" name="map003_notdoor" type="obj" x="1392" y="120" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_notdoor"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value="map003_door"/>
+   </properties>
+  </object>
+  <object id="41" name="map003_door" type="obj" x="1312" y="72" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_door"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value="map003_door"/>
    </properties>
   </object>
  </objectgroup>

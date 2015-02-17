@@ -8,6 +8,7 @@
 #include <GFraMe/GFraMe_sprite.h>
 
 #include <stdio.h>
+#include <string.h>
 
 #include "camera.h"
 #include "commonEvent.h"
@@ -21,6 +22,8 @@ struct stObject {
     commonEvent ce;               /** Common event to be called every sprite frame */
     globalVar local[OBJ_VAR_MAX]; /** Each event has 4 local global variables      */
     objAnim anim;                 /** The object's current animation               */
+    /** Every possible animation, so it won't overlap another object's */
+    GFraMe_animation obj_anim[OBJ_ANIM_MAX];
 };
 
 static GFraMe_animation _obj_anim[OBJ_ANIM_MAX];
@@ -72,6 +75,9 @@ GFraMe_ret obj_getNew(object **ppObj) {
         }
         _obj_animInit = 1;
     }
+    
+    // Assign the object its own animations
+    memcpy((*ppObj)->obj_anim, _obj_anim, sizeof(_obj_anim));
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -301,7 +307,7 @@ void obj_collide(object *pObj, GFraMe_object *pGFMobj) {
  * @param anim The animation
  */
 void obj_setAnim(object *pObj, objAnim anim) {
-    GFraMe_sprite_set_animation(&pObj->spr, &_obj_anim[anim], 0);
+    GFraMe_sprite_set_animation(&pObj->spr, &(pObj->obj_anim[anim]), 0);
     pObj->anim = anim;
 }
 
