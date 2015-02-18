@@ -37,16 +37,17 @@ void cam_setPosition(player *pPl1, player *pPl2) {
     player_getCenter(&x1, &y1, pPl1);
     player_getCenter(&x2, &y2, pPl2);
     
-    n = 4;
-    if (y1 == y2) {
+    if (y1 / 16 == y2 / 16) {
         cx = (x1 + x2) / 2;
         cy = (y1 + y2) / 2;
     }
     else if (y1 > y2) {
+        n = (y1 - y2) / 32 + 1;
         cx = (x1 + x2 * (n - 1)) / n;
         cy = (y1 + y2 * (n - 1)) / n;
     }
     else {
+        n = (y2 - y1) / 32 + 1;
         cx = (x2 + x1 * (n - 1)) / n;
         cy = (y2 + y1 * (n - 1)) / n;
     }

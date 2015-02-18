@@ -99,7 +99,7 @@ static GFraMe_ret ps_init() {
     rv = map_init(&m);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
     
-    rv = player_init(&p1, ID_PL1, 240);
+    rv = player_init(&p1, ID_PL1, 224);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
     rv = player_init(&p2, ID_PL2, 240);
@@ -133,8 +133,8 @@ static void ps_draw() {
     GFraMe_event_draw_begin();
         map_draw(m);
         if (gv_isZero(SWITCH_MAP)) {
-            player_draw(p1);
             player_draw(p2);
+            player_draw(p1);
             map_drawObjs(m);
             ui_draw();
         }
@@ -142,8 +142,8 @@ static void ps_draw() {
             map_drawObjs(m);
             ui_draw();
             transition_draw();
-            player_draw(p1);
             player_draw(p2);
+            player_draw(p1);
         }
     GFraMe_event_draw_end();
 }
