@@ -151,6 +151,7 @@ void map_drawObjs(map *pM);
  * @param ppObjs List of objects
  * @param pLen Number of valid objects on the list
  * @param pM The map
+ * @return GFraMe error code
  */
 GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM);
 
@@ -178,6 +179,14 @@ void map_collideObjects(map *pM, GFraMe_object *pObj);
  * @param pH The map's height
  */
 void map_getDimensions(map *pM, int *pW, int *pH);
+
+/**
+ * Add everything in the map to the quadtree
+ * 
+ * @param pM The map
+ * @return GFraMe error code
+ */
+GFraMe_ret map_addQt(map *pM);
 
 #endif
 

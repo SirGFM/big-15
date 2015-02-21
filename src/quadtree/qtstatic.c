@@ -5,13 +5,14 @@
  */
 #include <GFraMe/GFraMe_error.h>
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "qtnode.h"
 #include "qtstatic.h"
 #include "quadtree.h"
 
 #include "../global.h"
-
-#include <stdlib.h>
 
 //============================================================================//
 //                                                                            //
@@ -108,10 +109,23 @@ GFraMe_ret qt_getQuadtree(quadtree **ppQt) {
     
     // Check if there're enough quadtrees on the buffer
     if (qtsUsed >= qtsLen) {
+        quadtree *tmp;
+        int newLen;
+        
         // Alloc 4 more quadtrees
-        qtsLen += 4;
-        qts = (quadtree*)realloc(qts, sizeof(quadtree)*qtsLen);
-        ASSERT(qts, GFraMe_ret_memory_error);
+        newLen = qtsLen + 4;
+        tmp = (quadtree*)malloc(sizeof(quadtree)*newLen);
+        ASSERT(tmp, GFraMe_ret_memory_error);
+        // Clean up the new buffer
+        memset(tmp, 0x0, sizeof(quadtree)*newLen);
+        // And "assing it to the old one"
+        free(qts);
+        qts = tmp;
+        tmp = 0;
+        qtsLen = newLen;
+        
+        // Force collision to be restarted
+        ASSERT(0, GFraMe_ret_failed);
     }
     
     // Set the return variable
@@ -133,10 +147,23 @@ GFraMe_ret qt_getNode(qtNode **ppNode) {
     
     // Check if there're enough nodes on the buffer
     if (qtNodesUsed >= qtNodesLen) {
-        // Alloc 4 more quadtrees
-        qtNodesLen += NODES_MAX;
-        qtNodes = (qtNode*)realloc(qtNodes, sizeof(qtNode)*qtNodesLen);
-        ASSERT(qtNodes, GFraMe_ret_memory_error);
+        qtNode *tmp;
+        int newLen;
+        
+        // Alloc as many nodes as a new quadtree would need
+        newLen = qtNodesLen + NODES_MAX;
+        tmp = (qtNode*)malloc(sizeof(qtNode)*newLen);
+        ASSERT(tmp, GFraMe_ret_memory_error);
+        // Clean up the new buffer
+        memset(tmp, 0x0, sizeof(qtNode)*newLen);
+        // And "assing it to the old one"
+        free(qtNodes);
+        qtNodes = tmp;
+        tmp = 0;
+        qtNodesLen = newLen;
+        
+        // Force collision to be restarted
+        ASSERT(0, GFraMe_ret_failed);
     }
     
     // Set the return variable
@@ -167,10 +194,23 @@ GFraMe_ret qt_getNodeLL(struct stQTNodeLL **ppNodeLL) {
     
     // Check if there're enough nodes on the buffer
     if (qtNodeLLsUsed >= qtNodeLLsLen) {
-        // Alloc 4 more quadtrees
-        qtNodeLLsLen += NODES_MAX;
-        qtNodeLLs = (struct stQTNodeLL*)realloc(qtNodeLLs, sizeof(struct stQTNodeLL)*qtNodeLLsLen);
-        ASSERT(qtNodeLLs, GFraMe_ret_memory_error);
+        struct stQTNodeLL *tmp;
+        int newLen;
+        
+        // Alloc as many ll nodes as a new quadtree would need
+        newLen = qtNodeLLsLen + NODES_MAX;
+        tmp = (struct stQTNodeLL*)malloc(sizeof(struct stQTNodeLL)*newLen);
+        ASSERT(tmp, GFraMe_ret_memory_error);
+        // Clean up the new buffer
+        memset(tmp, 0x0, sizeof(struct stQTNodeLL)*newLen);
+        // And "assing it to the old one"
+        free(qtNodeLLs);
+        qtNodeLLs = tmp;
+        tmp = 0;
+        qtNodeLLsLen = newLen;
+        
+        // Force collision to be restarted
+        ASSERT(0, GFraMe_ret_failed);
     }
     
     // Set the return variable

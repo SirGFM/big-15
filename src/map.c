@@ -17,6 +17,8 @@
 #include "object.h"
 #include "parser.h"
 
+#include "quadtree/quadtree.h"
+
 //============================================================================//
 //                                                                            //
 // Maps lookup table                                                          //
@@ -1197,5 +1199,47 @@ __ret:
 void map_getDimensions(map *pM, int *pW, int *pH) {
     *pW = pM->w * 8;
     *pH = pM->h * 8;
+}
+
+/**
+ * Add everything in the map to the quadtree
+ * 
+ * @param pM The map
+ * @return GFraMe error code
+ */
+GFraMe_ret map_addQt(map *pM) {
+    GFraMe_ret rv;
+    int i;
+    
+    i = 0;
+    while (i < pM->objsUsed) {
+        rv = qt_addObj(pM->objs[i]);
+        ASSERT_NR(rv == GFraMe_ret_ok);
+//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding objects to quadtree",
+//            __ret);
+        i++;
+    }
+    
+    i = 0;
+    while (i < pM->evsUsed) {
+        rv = qt_addEv(pM->evs[i]);
+        ASSERT_NR(rv == GFraMe_ret_ok);
+//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding events to quadtree",
+//            __ret);
+        i++;
+    }
+    
+    i = 0;
+    while (i < pM->wallsUsed) {
+        rv = qt_addWall(&pM->walls[i]);
+        ASSERT_NR(rv == GFraMe_ret_ok);
+//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error walls events to quadtree",
+//            __ret);
+        i++;
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 

@@ -149,7 +149,8 @@ static void ps_draw() {
             player_draw(p1);
         }
         #ifdef QT_DEBUG_DRAW
-            if (GFraMe_keys.f1)
+            if (GFraMe_keys.f1 ||
+                (GFraMe_controller_max > 0 && GFraMe_controllers[0].l2))
                 qt_drawRootDebug();
         #endif 
     GFraMe_event_draw_end();
@@ -239,11 +240,27 @@ static void ps_update() {
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
         
-        map_getDimensions(m, &w, &h);
-        rv = qt_initCol(w, h);
-        if (rv == GFraMe_ret_ok) {
-            qt_addPl(p1);
-            qt_addPl(p2);
+        rv = GFraMe_ret_failed;
+        while (rv == GFraMe_ret_failed) {
+            map_getDimensions(m, &w, &h);
+            rv = qt_initCol(w, h);
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
+                __err_ret);
+            rv = qt_addPl(p1);
+            if (rv == GFraMe_ret_failed)
+                continue;
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
+                __err_ret);
+            rv = qt_addPl(p2);
+            if (rv == GFraMe_ret_failed)
+                continue;
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
+                __err_ret);
+            rv = map_addQt(m);
+            if (rv == GFraMe_ret_failed)
+                continue;
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
+                __err_ret);
         }
         
         // Collide every entity with the environment
@@ -255,7 +272,6 @@ static void ps_update() {
             GFraMe_object_overlap(&pWalls[i], pPlObj1, GFraMe_first_fixed);
             GFraMe_object_overlap(&pWalls[i], pPlObj2, GFraMe_first_fixed);
             
-            qt_addWall(&pWalls[i]);
             i++;
         }
         
@@ -324,6 +340,11 @@ static void ps_update() {
             return;
         }
     GFraMe_event_update_end();
+    
+    return;
+__err_ret:
+    gl_running = 0;
+    return;
 }
 
 /**

@@ -83,8 +83,9 @@ GFraMe_ret qt_initCol(int w, int h) {
     
     // Get the tree's root
     rv = qt_getNewRoot(&pRoot);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc quadtree's root",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc quadtree's root",
+//        __ret);
     // Init the root
     qt_init(pRoot, 0, QT_MAX);
     // Set its dimensions
@@ -111,14 +112,16 @@ GFraMe_ret qt_addPl(player *pPl) {
     
     // Get a new node with the player
     rv = qt_getPlNode(&pNode, pPl);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc player's node",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc player's node",
+//        __ret);
     // Get the tree's root
     qt_getRoot(&pRoot);
     // Add the node to the quadtree and collide against everything else
     rv = qt_addNodeCollide(pRoot, pNode);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert player into tree",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert player into tree",
+//        __ret);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -138,14 +141,16 @@ GFraMe_ret qt_addEv(event *pEv) {
     
     // Get a new node with the event
     rv = qt_getEvNode(&pNode, pEv);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc event's node",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc event's node",
+//        __ret);
     // Get the tree's root
     qt_getRoot(&pRoot);
     // Add the node to the quadtree and collide against everything else
     rv = qt_addNodeCollide(pRoot, pNode);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert event into tree",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert event into tree",
+//        __ret);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -165,14 +170,16 @@ GFraMe_ret qt_addObj(object *pObj) {
     
     // Get a new node with the object
     rv = qt_getObjNode(&pNode, pObj);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc object's node",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc object's node",
+//        __ret);
     // Get the tree's root
     qt_getRoot(&pRoot);
     // Add the node to the quadtree and collide against everything else
     rv = qt_addNodeCollide(pRoot, pNode);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert object into tree",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert object into tree",
+//        __ret);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -192,14 +199,16 @@ GFraMe_ret qt_addWall(GFraMe_object *pWall) {
     
     // Get a new node with the object
     rv = qt_getWallNode(&pNode, pWall);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc wall's node",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc wall's node",
+//        __ret);
     // Get the tree's root
     qt_getRoot(&pRoot);
     // Add the node to the quadtree and collide against everything else
     rv = qt_addNodeCollide(pRoot, pNode);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert wall into tree",
-        __ret);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+//    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert wall into tree",
+//        __ret);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -227,8 +236,9 @@ GFraMe_ret qt_addNodeCollide(quadtree *pQt, qtNode *pNode) {
         i = 0;
         while (i < QT_MAX) {
             rv = qt_addNodeCollide(pQt->children[i], pNode);
-            GFraMe_assertRet(rv == GFraMe_ret_ok,
-                "Failed to insert node into child", __ret);
+            ASSERT_NR(rv == GFraMe_ret_ok);
+//            GFraMe_assertRet(rv == GFraMe_ret_ok,
+//                "Failed to insert node into child", __ret);
             i++;
         }
     }
@@ -245,30 +255,42 @@ GFraMe_ret qt_addNodeCollide(quadtree *pQt, qtNode *pNode) {
             
             // Get a new subtree
             rv = qt_getQuadtree(&tmp);
-            GFraMe_assertRet(rv == GFraMe_ret_ok,
-                "Failed to alloc tree's child", __ret);
+            ASSERT_NR(rv == GFraMe_ret_ok);
+//            GFraMe_assertRet(rv == GFraMe_ret_ok,
+//                "Failed to alloc tree's child", __ret);
             // Initialize the child and add it
             qt_init(tmp, pQt, i);
             pQt->children[i] = tmp;
             
             i++;
         }
+        // Incremeant the child count
+        pQt->nodesCount++;
         // Add every node into the children
         tmp = pQt->nodes;
+        pQt->nodes = 0;
         while (tmp) {
             rv =  qt_addNodeCollide(pQt, tmp->self);
-            GFraMe_assertRet(rv == GFraMe_ret_ok,
-                "Failed to insert node into child", __ret);
+            ASSERT_NR(rv == GFraMe_ret_ok);
+//            GFraMe_assertRet(rv == GFraMe_ret_ok,
+//                "Failed to insert node into child", __ret);
             
             tmp = tmp->next;
         }
+        
+        // Add this object
+        rv =  qt_addNodeCollide(pQt, pNode);
+        ASSERT_NR(rv == GFraMe_ret_ok);
+//        GFraMe_assertRet(rv == GFraMe_ret_ok,
+//            "Failed to insert node into child", __ret);
     }
     else { // If the node will be added and collided
         struct stQTNodeLL *newNode, *tmp;
         
         // Get a new node, to add into
         rv = qt_getNodeLL(&newNode);
-        GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc LL node", __ret);
+        ASSERT_NR(rv == GFraMe_ret_ok);
+//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc LL node", __ret);
         // Initialize the node
         newNode->self = pNode;
         newNode->next = 0;
