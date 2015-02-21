@@ -106,5 +106,13 @@ GFraMe_ret event_iSetVar(event *pEv, int index, int val);
  */
 void event_iGetVar(int *pVal, event *pEv, int index);
 
+/**
+ * Get the event's object, for collision
+ * 
+ * @param ppObj Event's object
+ * @param pEv The event
+ */
+void event_getObject(GFraMe_object **ppObj, event *pEv);
+
 #endif
 

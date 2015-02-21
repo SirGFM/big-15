@@ -261,3 +261,13 @@ void event_iGetVar(int *pVal, event *pEv, int index) {
     *pVal = pEv->iLocal[index];
 }
 
+/**
+ * Get the event's object, for collision
+ * 
+ * @param ppObj Event's object
+ * @param pEv The event
+ */
+void event_getObject(GFraMe_object **ppObj, event *pEv) {
+    *ppObj = &pEv->obj;
+}
+

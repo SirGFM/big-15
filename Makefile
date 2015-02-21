@@ -11,22 +11,26 @@ CC=gcc
 #==============================================================================
 # Define every object required by compilation
 #==============================================================================
- OBJS =                          \
-         $(OBJDIR)/camera.o      \
-         $(OBJDIR)/commonEvent.o \
-         $(OBJDIR)/controller.o  \
-         $(OBJDIR)/event.o       \
-         $(OBJDIR)/global.o      \
-         $(OBJDIR)/globalVar.o   \
-         $(OBJDIR)/main.o        \
-         $(OBJDIR)/map.o         \
-         $(OBJDIR)/object.o      \
-         $(OBJDIR)/parser.o      \
-         $(OBJDIR)/player.o      \
-         $(OBJDIR)/playstate.o   \
-         $(OBJDIR)/transition.o  \
-         $(OBJDIR)/types.o       \
-         $(OBJDIR)/ui.o
+ OBJS =                                \
+         $(OBJDIR)/camera.o            \
+         $(OBJDIR)/commonEvent.o       \
+         $(OBJDIR)/controller.o        \
+         $(OBJDIR)/event.o             \
+         $(OBJDIR)/global.o            \
+         $(OBJDIR)/globalVar.o         \
+         $(OBJDIR)/main.o              \
+         $(OBJDIR)/map.o               \
+         $(OBJDIR)/object.o            \
+         $(OBJDIR)/parser.o            \
+         $(OBJDIR)/player.o            \
+         $(OBJDIR)/playstate.o         \
+         $(OBJDIR)/transition.o        \
+         $(OBJDIR)/types.o             \
+         $(OBJDIR)/ui.o                \
+         $(OBJDIR)/quadtree/qthitbox.o \
+         $(OBJDIR)/quadtree/qtnode.o   \
+         $(OBJDIR)/quadtree/qtstatic.o \
+         $(OBJDIR)/quadtree/quadtree.o
 #==============================================================================
 
 #==============================================================================
@@ -81,7 +85,7 @@ CC=gcc
 #==============================================================================
 # Define where source files can be found and where objects & binary are output
 #==============================================================================
- VPATH := src
+ VPATH := src:src/quadtree
  OBJDIR := obj
  BINDIR := bin
 #==============================================================================
@@ -112,6 +116,7 @@ MKDIRS: | $(OBJDIR) $(BINDIR)
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)/quadtree
 
 $(BINDIR):
 	@mkdir -p $(BINDIR)

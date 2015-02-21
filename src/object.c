@@ -331,3 +331,13 @@ int obj_animFinished(object *pObj) {
     return pObj->spr.anim == NULL;
 }
 
+/**
+ * Get the object's object, for collision
+ * 
+ * @param ppObj Object's object
+ * @param pObj The object
+ */
+void obj_getObject(GFraMe_object **ppObj, object *pObj) {
+    *ppObj = GFraMe_sprite_get_object(&pObj->spr);
+}
+

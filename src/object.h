@@ -175,5 +175,13 @@ objAnim obj_getAnim(object *pObj);
  */
 int obj_animFinished(object *pObj);
 
+/**
+ * Get the object's object, for collision
+ * 
+ * @param ppObj Object's object
+ * @param pObj The object
+ */
+void obj_getObject(GFraMe_object **ppObj, object *pObj);
+
 #endif
 
