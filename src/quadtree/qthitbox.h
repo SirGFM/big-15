@@ -25,9 +25,8 @@ int qtHbIntersect(qtHitbox *pHb1, qtHitbox *pHb2);
  * @param r Red color component
  * @param g Green color component
  * @param b Blue color component
- * @param a Alpha color component
  */
-void qt_drawHitboxDebug(qtHitbox *pHb, int r, int g, int b, int a);
+void qt_drawHitboxDebug(qtHitbox *pHb, int r, int g, int b);
 #  endif
 
 #endif

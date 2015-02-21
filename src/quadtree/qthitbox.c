@@ -51,9 +51,8 @@ extern SDL_Renderer *GFraMe_renderer;
  * @param r Red color component
  * @param g Green color component
  * @param b Blue color component
- * @param a Alpha color component
  */
-void qt_drawHitboxDebug(qtHitbox *pHb, int r, int g, int b, int a) {
+void qt_drawHitboxDebug(qtHitbox *pHb, int r, int g, int b) {
     // Create a SDL_Rect at its position
     SDL_Rect dbg_rect;
     dbg_rect.x = pHb->cx - pHb->hw - cam_x;
@@ -62,7 +61,7 @@ void qt_drawHitboxDebug(qtHitbox *pHb, int r, int g, int b, int a) {
     dbg_rect.h = pHb->hh * 2;
     
     // Render it to the screen, in green
-    SDL_SetRenderDrawColor(GFraMe_renderer, r, g, b, a);
+    SDL_SetRenderDrawColor(GFraMe_renderer, r, g, b, 0xff);
     SDL_RenderDrawRect(GFraMe_renderer, &dbg_rect);
 }
 

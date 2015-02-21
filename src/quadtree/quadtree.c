@@ -355,13 +355,17 @@ void qt_drawDebug(quadtree *pQt) {
         struct stQTNodeLL *tmp;
         
         // Render this subtree to the screen, in green
-        qt_drawHitboxDebug(&pQt->hb, 0x00, 0xff, 0x00, 0xff);
+        qt_drawHitboxDebug(&pQt->hb, 0x99, 0xe5, 0x50);
         
         // Loop through every node in this one
         tmp = pQt->nodes;
         while (tmp) {
-            // Render this node to the screen, in red
-            qt_drawHitboxDebug(&tmp->self->hb, 0xff, 0x00, 0x00, 0xff);
+            int b, g, r;
+            
+            // Get this node's color
+            qt_getTypeColor(tmp->self, &r, &g, &b);
+            // Render this node to the screen
+            qt_drawHitboxDebug(&tmp->self->hb, r, g, b);
             tmp = tmp->next;
         }
     }

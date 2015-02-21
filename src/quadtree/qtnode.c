@@ -139,3 +139,42 @@ __ret:
     return rv;
 }
 
+/**
+ * Get the color a given type should be rendered
+ * 
+ * @param ppNode The node
+ * @param r Red color component
+ * @param g Green color component
+ * @param b Blue color component
+ */
+void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB) {
+    switch (pNode->type) {
+        case QNT_PL: {
+            *pR = 0xd7;
+            *pG = 0x7b;
+            *pB = 0xba;
+        } break;
+        case QNT_WALL: {
+            *pR = 0x8f;
+            *pG = 0x56;
+            *pB = 0x3b;
+        } break;
+        case QNT_OBJ: {
+            *pR = 0xdf;
+            *pG = 0x71;
+            *pB = 0x26;
+        } break;
+        case QNT_EV: {
+            *pR = 0xfb;
+            *pG = 0xf2;
+            *pB = 0x36;
+        } break;
+        case QNT_MOB: {
+            *pR = 0xac;
+            *pG = 0x32;
+            *pB = 0x32;
+        } break;
+        default: {}
+    }
+}
+

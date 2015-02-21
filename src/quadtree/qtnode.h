@@ -66,5 +66,15 @@ GFraMe_ret qt_getObjNode(qtNode **ppNode, object *pObj);
  */
 GFraMe_ret qt_getWallNode(qtNode **ppNode, GFraMe_object *pWall);
 
+/**
+ * Get the color a given type should be rendered
+ * 
+ * @param ppNode The node
+ * @param r Red color component
+ * @param g Green color component
+ * @param b Blue color component
+ */
+void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB);
+
 #endif
 
