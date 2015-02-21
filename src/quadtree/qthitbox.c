@@ -6,6 +6,7 @@
 #include "qthitbox.h"
 #include "qtstatic.h"
 
+#include "../camera.h"
 #include "../global.h"
 
 /**
@@ -55,10 +56,10 @@ extern SDL_Renderer *GFraMe_renderer;
 void qt_drawHitboxDebug(qtHitbox *pHb, int r, int g, int b, int a) {
     // Create a SDL_Rect at its position
     SDL_Rect dbg_rect;
-    dbg_rect.x = hb->cx - hb->hw;
-    dbg_rect.y = hb->cy - hb.hh;
-    dbg_rect.w = hb->hw * 2;
-    dbg_rect.h = hb->hh * 2;
+    dbg_rect.x = pHb->cx - pHb->hw - cam_x;
+    dbg_rect.y = pHb->cy - pHb->hh - cam_y;
+    dbg_rect.w = pHb->hw * 2;
+    dbg_rect.h = pHb->hh * 2;
     
     // Render it to the screen, in green
     SDL_SetRenderDrawColor(GFraMe_renderer, r, g, b, a);

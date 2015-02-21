@@ -47,6 +47,9 @@ GFraMe_ret qt_getPlNode(qtNode **ppNode, player *pPl) {
     player_getObject(&pObj, pPl);
     qt_setNodeDimension(pNode, pObj);
     
+    // Set the return variable
+    *ppNode = pNode;
+    rv = GFraMe_ret_ok;
 __ret:
     return rv;
 }
@@ -73,6 +76,9 @@ GFraMe_ret qt_getEvNode(qtNode **ppNode, event *pEv) {
     event_getObject(&pObj, pEv);
     qt_setNodeDimension(pNode, pObj);
     
+    // Set the return variable
+    *ppNode = pNode;
+    rv = GFraMe_ret_ok;
 __ret:
     return rv;
 }
@@ -99,6 +105,9 @@ GFraMe_ret qt_getObjNode(qtNode **ppNode, object *pObj) {
     obj_getObject(&pGfmObj, pObj);
     qt_setNodeDimension(pNode, pGfmObj);
     
+    // Set the return variable
+    *ppNode = pNode;
+    rv = GFraMe_ret_ok;
 __ret:
     return rv;
 }
@@ -123,6 +132,9 @@ GFraMe_ret qt_getWallNode(qtNode **ppNode, GFraMe_object *pWall) {
     // Set the node's dimension
     qt_setNodeDimension(pNode, pWall);
     
+    // Set the return variable
+    *ppNode = pNode;
+    rv = GFraMe_ret_ok;
 __ret:
     return rv;
 }

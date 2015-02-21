@@ -91,11 +91,16 @@ GFraMe_ret qt_addNodeCollide(quadtree *pQt, qtNode *pNode);
 
 #  ifdef QT_DEBUG_DRAW
 /**
+ * Draw the root quadtree's (and its children's) bounding box
+ */
+void qt_drawRootDebug();
+
+/**
  * Draw a quadtree's (and its children's) bounding box
  * 
  * @param pQt The quadtree
  */
-void qt_drawDebug(quadtree *pQt)/
+void qt_drawDebug(quadtree *pQt);
 #  endif
 
 #endif

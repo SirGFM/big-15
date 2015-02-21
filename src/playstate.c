@@ -18,6 +18,8 @@
 #include "types.h"
 #include "ui.h"
 
+#include "quadtree/quadtree.h"
+
 #define PL_TWEEN_DELAY 1000
 
 // Initialize variables used by the event module
@@ -124,6 +126,7 @@ static void ps_clean() {
     map_clean(&m);
     player_clean(&p1);
     player_clean(&p2);
+    qt_clean();
 }
 
 /**
@@ -145,6 +148,10 @@ static void ps_draw() {
             player_draw(p2);
             player_draw(p1);
         }
+        #ifdef QT_DEBUG_DRAW
+            if (GFraMe_keys.f1)
+                qt_drawRootDebug();
+        #endif 
     GFraMe_event_draw_end();
 }
 
@@ -220,8 +227,9 @@ __ret:
 static void ps_update() {
     GFraMe_event_update_begin();
         GFraMe_object *pWalls, *pPlObj1, *pPlObj2, *pObj;
+        GFraMe_ret rv;
         GFraMe_sprite *pSpr;
-        int len, i;
+        int h, i, len, w;
         
         pObj = 0;
         
@@ -230,6 +238,13 @@ static void ps_update() {
         player_update(p1, GFraMe_event_elapsed);
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
+        
+        map_getDimensions(m, &w, &h);
+        rv = qt_initCol(w, h);
+        if (rv == GFraMe_ret_ok) {
+            qt_addPl(p1);
+            qt_addPl(p2);
+        }
         
         // Collide every entity with the environment
         player_getObject(&pPlObj1, p1);
@@ -240,6 +255,7 @@ static void ps_update() {
             GFraMe_object_overlap(&pWalls[i], pPlObj1, GFraMe_first_fixed);
             GFraMe_object_overlap(&pWalls[i], pPlObj2, GFraMe_first_fixed);
             
+            qt_addWall(&pWalls[i]);
             i++;
         }
         

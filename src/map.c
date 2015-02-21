@@ -1187,3 +1187,15 @@ __ret:
     return rv;
 }
 
+/**
+ * Get a map's dimensions (in pixels)
+ * 
+ * @param pM The map
+ * @param pW The map's width
+ * @param pH The map's height
+ */
+void map_getDimensions(map *pM, int *pW, int *pH) {
+    *pW = pM->w * 8;
+    *pH = pM->h * 8;
+}
+

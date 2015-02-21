@@ -170,5 +170,14 @@ void map_checkEvents(map *pM, GFraMe_sprite *pSpr);
  */
 void map_collideObjects(map *pM, GFraMe_object *pObj);
 
+/**
+ * Get a map's dimensions (in pixels)
+ * 
+ * @param pM The map
+ * @param pW The map's width
+ * @param pH The map's height
+ */
+void map_getDimensions(map *pM, int *pW, int *pH);
+
 #endif
 

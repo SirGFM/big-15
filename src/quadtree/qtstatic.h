@@ -79,12 +79,26 @@ struct stQT {
 //============================================================================//
 
 /**
+ * Clean up all memory allocated
+ */
+void qt_staticClean();
+
+/**
  * Get a valid quadtree structure for the root
  * 
  * @param ppQt The root quadtree
  * @return GFraMe error code
  */
-GFraMe_ret qt_getRoot(quadtree **ppQt);
+GFraMe_ret qt_getNewRoot(quadtree **ppQt);
+
+/**
+ * Get the current quadtree's root
+ * 
+ * @param ppQt The root quadtree
+ * @return GFraMe error code
+ */
+void qt_getRoot(quadtree **ppQt);
+
 
 /**
  * Get a valid quadtree structure

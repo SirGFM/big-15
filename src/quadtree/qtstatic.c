@@ -38,12 +38,36 @@ static int qtNodeLLsLen = 0;
 //============================================================================//
 
 /**
+ * Clean up all memory allocated
+ */
+void qt_staticClean() {
+    if (qts) {
+        free(qts);
+        qts = 0;
+        qtsUsed = 0;
+        qtsLen = 0;
+    }
+    if (qtNodes) {
+        free(qtNodes);
+        qtNodes = 0;
+        qtNodesUsed = 0;
+        qtNodesLen = 0;
+    }
+    if (qtNodeLLs) {
+        free(qtNodeLLs);
+        qtNodeLLs = 0;
+        qtNodeLLsUsed = 0;
+        qtNodeLLsLen = 0;
+    }
+}
+
+/**
  * Get a valid quadtree structure for the root
  * 
  * @param ppQt The root quadtree
  * @return GFraMe error code
  */
-GFraMe_ret qt_getRoot(quadtree **ppQt) {
+GFraMe_ret qt_getNewRoot(quadtree **ppQt) {
     GFraMe_ret rv;
     
     // Create the first few quadtrees, if necessary
@@ -62,6 +86,18 @@ __ret:
 }
 
 /**
+ * Get the current quadtree's root
+ * 
+ * @param ppQt The root quadtree
+ * @return GFraMe error code
+ */
+void qt_getRoot(quadtree **ppQt) {
+    // Set the return variable
+    *ppQt = &qts[0];
+}
+
+
+/**
  * Get a valid quadtree structure
  * 
  * @param ppQt The root quadtree
@@ -73,9 +109,9 @@ GFraMe_ret qt_getQuadtree(quadtree **ppQt) {
     // Check if there're enough quadtrees on the buffer
     if (qtsUsed >= qtsLen) {
         // Alloc 4 more quadtrees
-        qts = (quadtree*)realloc(qts, sizeof(quadtree)*(qtsLen + 4));
-        ASSERT(qts, GFraMe_ret_memory_error);
         qtsLen += 4;
+        qts = (quadtree*)realloc(qts, sizeof(quadtree)*qtsLen);
+        ASSERT(qts, GFraMe_ret_memory_error);
     }
     
     // Set the return variable
@@ -133,7 +169,7 @@ GFraMe_ret qt_getNodeLL(struct stQTNodeLL **ppNodeLL) {
     if (qtNodeLLsUsed >= qtNodeLLsLen) {
         // Alloc 4 more quadtrees
         qtNodeLLsLen += NODES_MAX;
-        qtNodeLLs = (struct stQTNodeLL*)realloc(qtNodeLLs, sizeof(struct stQTNodeLL)*qtNodesLen);
+        qtNodeLLs = (struct stQTNodeLL*)realloc(qtNodeLLs, sizeof(struct stQTNodeLL)*qtNodeLLsLen);
         ASSERT(qtNodeLLs, GFraMe_ret_memory_error);
     }
     
