@@ -264,10 +264,18 @@ static void ps_update() {
         }
         
         // Collide the carried player (if any) against the map
-        if (player_isBeingCarried(p1))
+        if (player_isBeingCarried(p1)) {
+            GFraMe_object *pObj2;
+            
             player_getObject(&pObj, p1);
+            
+            // Fix a bug that causes the player 1 to not me carried
+            player_getObject(&pObj2, p2);
+            player_getCarried(p1, pObj2);
+        }
         else if (player_isBeingCarried(p2))
             player_getObject(&pObj, p2);
+        // Fix a bug that would let players clip into ceilings
         if (pObj) {
             map_getWalls(&pWalls, &len, m);
             i = 0;
