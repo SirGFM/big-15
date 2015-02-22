@@ -8,6 +8,7 @@
 #include "qtstatic.h"
 #include "quadtree.h"
 
+#include "../collision.h"
 #include "../commonEvent.h"
 #include "../event.h"
 #include "../global.h"
@@ -300,9 +301,9 @@ GFraMe_ret qt_addNodeCollide(quadtree *pQt, qtNode *pNode) {
             tmp = pQt->nodes;
             while (1) {
                 // Check if this intersects the current node
-                if (qtHbIntersect(&pNode->hb, &tmp->self->hb)) {
-                    // TODO overlap/collide
-                }
+                if (qtHbIntersect(&pNode->hb, &tmp->self->hb))
+                    checkCollision(pNode, tmp->self);
+                
                 if (tmp->next) // Go to the next node
                     tmp = tmp->next;
                 else // Stop iterating

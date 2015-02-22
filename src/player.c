@@ -378,3 +378,12 @@ GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time) {
     return GFraMe_ret_failed;
 }
 
+/**
+ * Check if the player is being carried
+ * 
+ * @param pPl The player
+ */
+int player_isBeingCarried(player *pPl) {
+    return pPl->isBeingCarried;
+}
+

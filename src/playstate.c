@@ -227,10 +227,9 @@ __ret:
  */
 static void ps_update() {
     GFraMe_event_update_begin();
-        GFraMe_object *pWalls, *pPlObj1, *pPlObj2, *pObj;
+        GFraMe_object *pWalls, *pObj;
         GFraMe_ret rv;
-        GFraMe_sprite *pSpr;
-        int h, i, len, w;
+        int  h, i, len, w;
         
         pObj = 0;
         
@@ -240,11 +239,17 @@ static void ps_update() {
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
         
+        // Collide everythin against everything else
         rv = GFraMe_ret_failed;
         while (rv == GFraMe_ret_failed) {
             map_getDimensions(m, &w, &h);
             rv = qt_initCol(w, h);
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
+                __err_ret);
+            rv = map_addQt(m);
+            if (rv == GFraMe_ret_failed)
+                continue;
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
                 __err_ret);
             rv = qt_addPl(p1);
             if (rv == GFraMe_ret_failed)
@@ -256,80 +261,22 @@ static void ps_update() {
                 continue;
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
                 __err_ret);
-            rv = map_addQt(m);
-            if (rv == GFraMe_ret_failed)
-                continue;
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
-                __err_ret);
         }
         
-        // Collide every entity with the environment
-        player_getObject(&pPlObj1, p1);
-        player_getObject(&pPlObj2, p2);
-        map_getWalls(&pWalls, &len, m);
-        i = 0;
-        while (i < len) {
-            GFraMe_object_overlap(&pWalls[i], pPlObj1, GFraMe_first_fixed);
-            GFraMe_object_overlap(&pWalls[i], pPlObj2, GFraMe_first_fixed);
-            
-            i++;
-        }
-        
-        // Collide both players
-        {
-            GFraMe_ret rv;
-            int wasPl1Down, wasPl2Down, pl1Flags, pl2Flags;
-            
-            pl1Flags = pPlObj1->hit;
-            pl2Flags = pPlObj2->hit;
-            
-            pPlObj1->hit = 0;
-            pPlObj2->hit = 0;
-            
-            wasPl1Down = (pl1Flags & GFraMe_direction_down);
-            wasPl2Down = (pl2Flags & GFraMe_direction_down);
-            
-            rv = GFraMe_object_overlap(pPlObj1, pPlObj2, GFraMe_dont_collide);
-            if (rv == GFraMe_ret_ok) {
-                // If any player wasn't touching down but is now, then it's
-                // above the other one
-                if (pPlObj1->y == pPlObj2->y) {} // Do nothing if they are side-by-side
-                else if ((pl1Flags & GFraMe_direction_up)
-                    || (pl2Flags & GFraMe_direction_up)) {}
-                else if (!wasPl1Down && (pPlObj1->hit&GFraMe_direction_down)){
-                    player_getCarried(p1, pPlObj2);
-                    pl1Flags |= GFraMe_direction_down;
-                    pObj = pPlObj1;
-                }
-                else if (!wasPl2Down && (pPlObj2->hit&GFraMe_direction_down)){
-                    player_getCarried(p2, pPlObj1);
-                    pl2Flags |= GFraMe_direction_down;
-                    pObj = pPlObj2;
-                }
-            }
-            
-            pPlObj1->hit = pl1Flags;
-            pPlObj2->hit = pl2Flags;
-        }
-        
-        // Fix for a stupid bug
+        // Collide the carried player (if any) against the map
+        if (player_isBeingCarried(p1))
+            player_getObject(&pObj, p1);
+        else if (player_isBeingCarried(p2))
+            player_getObject(&pObj, p2);
         if (pObj) {
+            map_getWalls(&pWalls, &len, m);
             i = 0;
             while (i < len) {
                 GFraMe_object_overlap(&pWalls[i], pObj, GFraMe_first_fixed);
+            
                 i++;
             }
         }
-        
-        // Collide against every object on the map
-        map_collideObjects(m, pPlObj1);
-        map_collideObjects(m, pPlObj2);
-        
-        // Check if any event was triggered
-        player_getSprite(&pSpr, p1);
-        map_checkEvents(m, pSpr);
-        player_getSprite(&pSpr, p2);
-        map_checkEvents(m, pSpr);
         
         // Update camera
         cam_setPosition(p1, p2);

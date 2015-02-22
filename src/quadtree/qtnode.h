@@ -76,5 +76,17 @@ GFraMe_ret qt_getWallNode(qtNode **ppNode, GFraMe_object *pWall);
  */
 void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB);
 
+/**
+ * Get the node's referenced object
+ * 
+ * @param ppPl The player
+ * @param ppEv The event
+ * @param ppObj The object
+ * @param ppWall The wall
+ * @param pNode The node
+ */
+void qt_getRef(player **ppPl, event **ppEv, object **ppObj,
+    GFraMe_object **ppWall, qtNode *pNode);
+
 #endif
 

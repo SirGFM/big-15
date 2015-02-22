@@ -119,5 +119,12 @@ GFraMe_ret player_cmpDestMap(player *pPl1, player *pPl2);
  */
 GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time);
 
+/**
+ * Check if the player is being carried
+ * 
+ * @param pPl The player
+ */
+int player_isBeingCarried(player *pPl);
+
 #endif
 

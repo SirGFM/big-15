@@ -178,3 +178,37 @@ void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB) {
     }
 }
 
+/**
+ * Get the node's referenced object
+ * 
+ * @param ppPl The player
+ * @param ppEv The event
+ * @param ppObj The object
+ * @param ppWall The wall
+ * @param pNode The node
+ */
+void qt_getRef(player **ppPl, event **ppEv, object **ppObj,
+    GFraMe_object **ppWall, qtNode *pNode) {
+    *ppPl = 0;
+    *ppEv = 0;
+    *ppObj = 0;
+    *ppWall = 0;
+    switch (pNode ->type) {
+        case QNT_PL: {
+            *ppPl = pNode->self.pl;
+        }break;
+        case QNT_WALL: {
+            *ppWall = pNode->self.wall;
+        }break;
+        case QNT_OBJ: {
+            *ppObj = pNode->self.obj;
+        }break;
+        case QNT_EV: {
+            *ppEv = pNode->self.ev;
+        }break;
+        case QNT_MOB: {
+        }break;
+        default: {}
+    }
+}
+

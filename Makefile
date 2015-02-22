@@ -13,6 +13,7 @@ CC=gcc
 #==============================================================================
  OBJS =                                \
          $(OBJDIR)/camera.o            \
+         $(OBJDIR)/collision.o         \
          $(OBJDIR)/commonEvent.o       \
          $(OBJDIR)/controller.o        \
          $(OBJDIR)/event.o             \
