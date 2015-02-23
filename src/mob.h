@@ -8,11 +8,7 @@
 
 #include <GFraMe/GFraMe_error.h>
 
-typedef enum {
-    MOB_JUMPER,
-    MOB_EYE,
-    MOB_MAX
-} mobType;
+#include "types.h"
 
 typedef enum {
     MOB_STAND,
@@ -24,14 +20,11 @@ typedef enum {
 typedef struct stMob mob;
 
 /**
- * Instantiate a new mob of a given type
+ * Instantiate a new mob
  * 
  * @param ppMob The instantiated mob
- * @param x The mob's horizontal position (in pixels)
- * @param y The mob's vertical position (in pixels)
- * @param mobType The type of the mob
  */
-GFraMe_ret mob_init(mob **ppMob, int x, int y, mobType type);
+GFraMe_ret mob_getNew(mob **ppMob);
 
 /**
  * Clean up memory for this mob
@@ -39,6 +32,16 @@ GFraMe_ret mob_init(mob **ppMob, int x, int y, mobType type);
  * @param ppMob The mob
  */
 void mob_clean(mob **ppMob);
+
+/**
+ * Initialize a mob of a given type
+ * 
+ * @param pMob The mob
+ * @param x The mob's horizontal position (in pixels)
+ * @param y The mob's vertical position (in pixels)
+ * @param type The type of the mob
+ */
+GFraMe_ret mob_init(mob *pMob, int x, int y, flag type);
 
 /**
  * Updates the mob

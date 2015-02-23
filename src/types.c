@@ -10,7 +10,7 @@
 
 #include "types.h"
 
-#define FLAGS_MAX 5
+#define FLAGS_MAX 7
 
 static char *_t_flagNames[FLAGS_MAX] = {
     "static",
@@ -18,15 +18,24 @@ static char *_t_flagNames[FLAGS_MAX] = {
     
     "pl1",
     "pl2",
-    "door"
+    
+    "door",
+    
+    "jumper",
+    "eye"
 };
 
 static flag _t_flags[FLAGS_MAX] = {
     ID_STATIC,
     ID_MOVABLE,
+    
     ID_PL1,
     ID_PL2,
-    ID_DOOR
+    
+    ID_DOOR,
+    
+    ID_JUMPER,
+    ID_EYE
 };
 
 #define TRIGGERS_MAX 11

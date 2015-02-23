@@ -17,7 +17,6 @@
 
 struct stMob {
     GFraMe_sprite spr;       /** Mob's sprite (for rendering and collision)   */
-    mobType type;            /** The mob's type                               */
     int health;              /** How many hitpoints this mob has              */
     int damage;              /** How much damage this mob does on the player  */
     flag weakness;           /** IDs that can do damage to this mob           */

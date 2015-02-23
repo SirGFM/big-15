@@ -14,6 +14,7 @@
 #include "event.h"
 #include "global.h"
 #include "map.h"
+#include "mob.h"
 #include "object.h"
 #include "parser.h"
 
@@ -107,6 +108,10 @@ struct stMap {
     int objsLen;             /** Size of the list of objects                  */
     int objsUsed;            /** Number of objects on the current map         */
     int didGetObject;        /** Whether map_getNextObject has been called    */
+    
+    mob **mobs;              /** List of mobs                                  */
+    int mobsLen;             /** Size of the list of mobs                      */
+    int mobsUsed;            /** Number of mobs on the current map             */
 };
 
 //============================================================================//
@@ -206,6 +211,15 @@ static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len);
  */
 static GFraMe_ret map_setObjectsMinLength(map *pM, int len);
 
+/**
+ * Realloc the mobs buffer as to have at least 'len' members
+ * 
+ * @param pM The map
+ * @param len The new minimum length
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_setMobsMinLength(map *pM, int len);
+
 //============================================================================//
 //                                                                            //
 // Module implementation                                                      //
@@ -254,6 +268,9 @@ GFraMe_ret map_init(map **ppM) {
     pM->objs = NULL;
     pM->objsUsed = 0;
     pM->objsLen = 0;
+    pM->mobs = NULL;
+    pM->mobsUsed = 0;
+    pM->mobsLen = 0;
     
     // Initialize every struture it might use
     pM->w = 40;
@@ -277,6 +294,10 @@ GFraMe_ret map_init(map **ppM) {
     
     rv = map_setObjectsMinLength(pM, 8);
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init objs", rv = rv, __ret);
+    pM->objsUsed = 0;
+    
+    rv = map_setMobtsMinLength(pM, 8);
+    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init mobs", rv = rv, __ret);
     pM->objsUsed = 0;
     
     *ppM = pM;
@@ -323,6 +344,15 @@ void map_clean(map **ppM) {
             i++;
         }
         free((*ppM)->objs);
+    }
+    
+    if ((*ppM)->mobs) {
+        i = 0;
+        while (i < (*ppM)->mobsLen) {
+            mob_clean(&(*ppM)->mobs[i]);
+            i++;
+        }
+        free((*ppM)->mobs);
     }
     
     free(*ppM);
@@ -1181,6 +1211,40 @@ static GFraMe_ret map_setObjectsMinLength(map *pM, int len) {
         
         rv = obj_getNew(&pM->objs[i]);
         ASSERT(pM->objs[i], rv);
+        i++;
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Realloc the mobs buffer as to have at least 'len' members
+ * 
+ * @param pM The map
+ * @param len The new minimum length
+ * @return GFraMe error code
+ */
+static GFraMe_ret map_setMobsMinLength(map *pM, int len) {
+    GFraMe_ret rv;
+    int i;
+    
+    // Do nothing if the buffer is already big enough
+    ASSERT(pM->mobsLen < len, GFraMe_ret_ok);
+    
+    // Expand the buffer
+    i = pM->mojsLen;
+    pM->mobs = (mob**)realloc(pM->mobs, sizeof(mob*) * len);
+    ASSERT(pM->mobs, GFraMe_ret_memory_error);
+    pM->mobsLen = len;
+    
+    // Initialize every uninitialize mob
+    while (i < len) {
+        pM->mobs[i] = NULL;
+        
+        rv = obj_getNew(&pM->mobs[i]);
+        ASSERT(pM->mobs[i], rv);
         i++;
     }
     
