@@ -91,11 +91,6 @@ struct stMap {
     int w;                   /** Width of the tilemap, in tiles               */
     int h;                   /** Height of the tilemap, int tiles             */
     
-//    event **evs;             /** List of events                               */
-//    int evsLen;              /** Size of the events list                      */
-//    int evsUsed;             /** How many events are currently active         */
-//    int didGetEvent;         /** Whether map_getNextEvent has been called     */
-    
     GFraMe_object *walls;    /** List of walls                                */
     int wallsLen;            /** Size of the walls list                       */
     int wallsUsed;           /** How many walls there are in the list         */
@@ -103,15 +98,6 @@ struct stMap {
     animTile *animTiles;     /** List of animated tiles in the tilemap's data */
     int animTilesLen;        /** Size of the list of animated tiles           */
     int animTilesUsed;       /** Number of animated tiles on the current      */
-    
-//    object **objs;           /** List of objects                              */
-//    int objsLen;             /** Size of the list of objects                  */
-//    int objsUsed;            /** Number of objects on the current map         */
-//    int didGetObject;        /** Whether map_getNextObject has been called    */
-    
-//    mob **mobs;              /** List of mobs                                  */
-//    int mobsLen;             /** Size of the list of mobs                      */
-//    int mobsUsed;            /** Number of mobs on the current map             */
 };
 
 //============================================================================//
@@ -176,15 +162,6 @@ static void map_getWallBounds(int *pX, int *pY, int *pW, int *pH, map *pM,
 static GFraMe_ret map_genWalls(map *pM);
 
 /**
- * Realloc the evs buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setEventsMinLength(map *pM, int len);
-
-/**
  * Realloc the walls buffer as to have at least 'len' members
  * 
  * @param pM The map
@@ -201,24 +178,6 @@ static GFraMe_ret map_setWallsMinLength(map *pM, int len);
  * @return GFraMe error code
  */
 static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len);
-
-/**
- * Realloc the objs buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setObjectsMinLength(map *pM, int len);
-
-/**
- * Realloc the mobs buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setMobsMinLength(map *pM, int len);
 
 //============================================================================//
 //                                                                            //
@@ -255,22 +214,12 @@ GFraMe_ret map_init(map **ppM) {
     pM->dataLen = 0;
     pM->w = 0;
     pM->h = 0;
-//    pM->evs = NULL;
-//    pM->evsLen = 0;
-//    pM->evsUsed = 0;
-//    pM->didGetEvent = 0;
     pM->walls = NULL;
     pM->wallsLen = 0;
     pM->wallsUsed = 0;
     pM->animTiles = NULL;
     pM->animTilesLen = 0;
     pM->animTilesUsed = 0;
-//    pM->objs = NULL;
-//    pM->objsUsed = 0;
-//    pM->objsLen = 0;
-//    pM->mobs = NULL;
-//    pM->mobsUsed = 0;
-//    pM->mobsLen = 0;
     
     // Initialize every struture it might use
     pM->w = 40;
@@ -280,10 +229,6 @@ GFraMe_ret map_init(map **ppM) {
     GFraMe_assertRV(pM->data, "Failed to alloc!", rv = GFraMe_ret_memory_error,
         __ret);
     
-//    rv = map_setEventsMinLength(pM, 4);
-//    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init events", rv=rv, __ret);
-//    pM->evsUsed = 0;
-    
     rv = map_setWallsMinLength(pM, 4);
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init walls", rv = rv, __ret);
     pM->wallsUsed = 0;
@@ -291,14 +236,6 @@ GFraMe_ret map_init(map **ppM) {
     rv = map_setAnimTilesMinLength(pM, 8);
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init anim", rv = rv, __ret);
     pM->animTilesUsed = 0;
-    
-//    rv = map_setObjectsMinLength(pM, 8);
-//    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init objs", rv = rv, __ret);
-//    pM->objsUsed = 0;
-    
-//    rv = map_setMobsMinLength(pM, 8);
-//    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init mobs", rv = rv, __ret);
-//    pM->objsUsed = 0;
     
     *ppM = pM;
     rv = GFraMe_ret_ok;
@@ -315,8 +252,6 @@ __ret:
  * @param ppM The map
  */
 void map_clean(map **ppM) {
-//    int i;
-    
     // Sanitize parameters
     ASSERT_NR(ppM);
     ASSERT_NR(*ppM);
@@ -327,33 +262,6 @@ void map_clean(map **ppM) {
         free((*ppM)->walls);
     if ((*ppM)->animTiles)
         free((*ppM)->animTiles);
-    
-//    if ((*ppM)->evs) {
-//        i = 0;
-//        while (i < (*ppM)->evsLen) {
-//            event_clean(&(*ppM)->evs[i]);
-//            i++;
-//        }
-//        free((*ppM)->evs);
-//    }
-    
-//    if ((*ppM)->objs) {
-//        i = 0;
-//        while (i < (*ppM)->objsLen) {
-//            obj_clean(&(*ppM)->objs[i]);
-//            i++;
-//        }
-//        free((*ppM)->objs);
-//    }
-    
-//    if ((*ppM)->mobs) {
-//        i = 0;
-//        while (i < (*ppM)->mobsLen) {
-//            mob_clean(&(*ppM)->mobs[i]);
-//            i++;
-//        }
-//        free((*ppM)->mobs);
-//    }
     
     free(*ppM);
     *ppM = NULL;
@@ -371,110 +279,12 @@ void map_reset(map *pM) {
     
     pM->w = 0;
     pM->h = 0;
-//    pM->evsUsed = 0;
     pM->wallsUsed = 0;
     pM->animTilesUsed = 0;
-//    pM->objsUsed = 0;
     
 __ret:
     return;
 }
-
-/**
- * Retrieve the next event on the map's list (recycled and expends as necessary)
- * Note that the event must be pushed later
- * 
- * @param ppE Returns the event
- * @param ipM The map
- * @return GFraMe error code
- */
-//GFraMe_ret map_getNextEvent(event **ppE, map *pM) {
-//    GFraMe_ret rv;
-    
-    // Sanitize arguments
-//    ASSERT(ppE, GFraMe_ret_bad_param);
-//    ASSERT(pM, GFraMe_ret_bad_param);
-    
-    // Expand the buffer, if necessary
-//    if (pM->evsUsed >= pM->evsLen) {
-//        rv = map_setEventsMinLength(pM, pM->evsLen * 2);
-//        ASSERT(rv == GFraMe_ret_ok, rv);
-//    }
-    
-    // Get the next event and return
-//    *ppE = pM->evs[pM->evsUsed];
-//    pM->didGetEvent = 1;
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
-
-/**
- * Actually push the last gotten event into the map. If no map_getNextEvent was
- * previously called, this function does nothing.
- * 
- * @param pM The map
- */
-//void map_pushEvent(map *pM) {
-    // Sanitize parameters
-//    ASSERT_NR(pM);
-//    ASSERT_NR(pM->didGetEvent);
-    
-    // Increase the events in use
-//    pM->evsUsed++;
-//    pM->didGetEvent = 0;
-    
-//__ret:
-//    return;
-//}
-
-/**
- * Retrieve the next object on the map's list (recycled and expends as
- * necessary) Note that the event must be pushed later
- * 
- * @param ppO Returns the object
- * @param pM The map
- * @return GFraMe error code
- */
-//GFraMe_ret map_getNextObject(object **ppO, map *pM) {
-//    GFraMe_ret rv;
-    
-    // Sanitize arguments
-//    ASSERT(ppO, GFraMe_ret_bad_param);
-//    ASSERT(pM, GFraMe_ret_bad_param);
-    
-    // Expand the buffer, if necessary
-//    if (pM->objsUsed >= pM->objsLen) {
-//        rv = map_setWallsMinLength(pM, pM->objsLen * 2);
-//        ASSERT(rv == GFraMe_ret_ok, rv);
-//    }
-    
-    // Get the next event and return
-//    *ppO = pM->objs[pM->objsUsed];
-//    pM->didGetObject = 1;
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
-
-/**
- * Actually push the last gotten object into the map. If no map_getNextObject
- * was previously called, this function does nothing.
- * 
- * @param pM The map
- */
-//void map_pushObject(map *pM) {
-    // Sanitize parameters
-//    ASSERT_NR(pM);
-//    ASSERT_NR(pM->didGetObject);
-    
-    // Increase the objects in use
-//    pM->objsUsed++;
-//    pM->didGetObject = 0;
-    
-//__ret:
-//    return;
-//}
 
 /**
  * Get the current tilemap, if any
@@ -619,12 +429,6 @@ void map_update(map *pM, int ms) {
         i++;
     }
     
-    // Update every object
-//    i = 0;
-//    while (i < pM->objsUsed) {
-//        obj_update(pM->objs[i], ms);
-//        i++;
-//    }
 }
 
 /**
@@ -679,22 +483,6 @@ void map_draw(map *pM) {
 }
 
 /**
- * Render all the objects in the map
- * 
- * @param pM The map
- */
-//void map_drawObjs(map *pM) {
-//    int i;
-    
-    // Draw every object
-//    i = 0;
-//    while (i < pM->objsUsed) {
-//        obj_draw(pM->objs[i]);
-//        i++;
-//    }
-//}
-
-/**
  * Get a list of objects for the map's collideable area
  * 
  * @param ppObjs List of objects
@@ -717,40 +505,6 @@ GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM) {
 __ret:
     return rv;
 }
-
-/**
- * Check if a sprite triggered any event
- * 
- * @param pM The map
- * @param pSpr The sprite
- */
-//void map_checkEvents(map *pM, GFraMe_sprite *pSpr) {
-//    int i;
-    
-    // Simply check every event
-//    i = 0;
-//    while (i < pM->evsUsed) {
-//        event_check(pM->evs[i], pSpr);
-//        i++;
-//    }
-//}
-
-/**
- * Collide a object against every one in the map
- * 
- * @param pM The map
- * @param pObj The object
- */
-//void map_collideObjects(map *pM, GFraMe_object *pObj) {
-//    int i;
-    
-    // Simply check every event
-//    i = 0;
-//    while (i < pM->evsUsed) {
-//        obj_collide(pM->objs[i], pObj);
-//        i++;
-//    }
-//}
 
 //============================================================================//
 //                                                                            //
@@ -1106,40 +860,6 @@ __ret:
 }
 
 /**
- * Realloc the evs buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setEventsMinLength(map *pM, int len) {
-//    GFraMe_ret rv;
-//    int i;
-    
-    // Do nothing if the buffer is already big enough
-//    ASSERT(pM->evsLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-//    i = pM->evsLen;
-//    pM->evs = (event**)realloc(pM->evs, sizeof(event*) * len);
-//    ASSERT(pM->evs, GFraMe_ret_memory_error);
-//    pM->evsLen = len;
-    
-    // Initialize every uninitialize event
-//    while (i < len) {
-//        pM->evs[i] = NULL;
-        
-//        rv = event_getNew(&pM->evs[i]);
-//        ASSERT(pM->evs[i], rv);
-//        i++;
-//    }
-    
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
-
-/**
  * Realloc the walls buffer as to have at least 'len' members
  * 
  * @param pM The map
@@ -1186,74 +906,6 @@ __ret:
 }
 
 /**
- * Realloc the objs buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setObjectsMinLength(map *pM, int len) {
-//    GFraMe_ret rv;
-//    int i;
-    
-    // Do nothing if the buffer is already big enough
-//    ASSERT(pM->objsLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-//    i = pM->objsLen;
-//    pM->objs = (object**)realloc(pM->objs, sizeof(object*) * len);
-//    ASSERT(pM->objs, GFraMe_ret_memory_error);
-//    pM->objsLen = len;
-    
-    // Initialize every uninitialize event
-//    while (i < len) {
-//        pM->objs[i] = NULL;
-        
-//        rv = obj_getNew(&pM->objs[i]);
-//        ASSERT(pM->objs[i], rv);
-//        i++;
-//    }
-    
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
-
-/**
- * Realloc the mobs buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setMobsMinLength(map *pM, int len) {
-//    GFraMe_ret rv;
-//    int i;
-    
-    // Do nothing if the buffer is already big enough
-//    ASSERT(pM->mobsLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-//    i = pM->mobsLen;
-//    pM->mobs = (mob**)realloc(pM->mobs, sizeof(mob*) * len);
-//    ASSERT(pM->mobs, GFraMe_ret_memory_error);
-//    pM->mobsLen = len;
-    
-    // Initialize every uninitialize mob
-//    while (i < len) {
-//        pM->mobs[i] = NULL;
-        
-        //rv = obj_getNew(&pM->mobs[i]);
-        //ASSERT(pM->mobs[i], rv);
-//        i++;
-//    }
-    
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
-
-/**
  * Get a map's dimensions (in pixels)
  * 
  * @param pM The map
@@ -1274,22 +926,6 @@ void map_getDimensions(map *pM, int *pW, int *pH) {
 GFraMe_ret map_addQt(map *pM) {
     GFraMe_ret rv;
     int i;
-    
-//    i = 0;
-//    while (i < pM->objsUsed) {
-//        rv = qt_addObj(pM->objs[i]);
-//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding objects to quadtree",
-//            __ret);
-//        i++;
-//    }
-    
-//    i = 0;
-//    while (i < pM->evsUsed) {
-//        rv = qt_addEv(pM->evs[i]);
-//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding events to quadtree",
-//            __ret);
-//        i++;
-//    }
     
     i = 0;
     while (i < pM->wallsUsed) {

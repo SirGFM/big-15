@@ -39,42 +39,6 @@ void map_clean(map **ppM);
 void map_reset(map *pM);
 
 /**
- * Retrieve the next event on the map's list (recycled and expends as necessary)
- * Note that the event must be pushed later
- * 
- * @param ppE Returns the event
- * @param pM The map
- * @return GFraMe error code
- */
-GFraMe_ret map_getNextEvent(event **ppE, map *pM);
-
-/**
- * Actually push the last gotten event into the map. If no map_getNextEvent was
- * previously called, this function does nothing.
- * 
- * @param pM The map
- */
-void map_pushEvent(map *pM);
-
-/**
- * Retrieve the next object on the map's list (recycled and expends as
- * necessary) Note that the event must be pushed later
- * 
- * @param ppO Returns the object
- * @param pM The map
- * @return GFraMe error code
- */
-GFraMe_ret map_getNextObject(object **ppO, map *pM);
-
-/**
- * Actually push the last gotten object into the map. If no map_getNextObject
- * was previously called, this function does nothing.
- * 
- * @param pM The map
- */
-void map_pushObject(map *pM);
-
-/**
  * Get the current tilemap, if any
  * 
  * @param ppData Data retrieved or NULL
@@ -139,13 +103,6 @@ void map_update(map *pM, int ms);
 void map_draw(map *pM);
 
 /**
- * Render all the objects in the map
- * 
- * @param pM The map
- */
-void map_drawObjs(map *pM);
-
-/**
  * Get a list of objects for the map's collideable area
  * 
  * @param ppObjs List of objects
@@ -154,22 +111,6 @@ void map_drawObjs(map *pM);
  * @return GFraMe error code
  */
 GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM);
-
-/**
- * Check if a sprite triggered any event
- * 
- * @param pM The map
- * @param pSpr The sprite
- */
-void map_checkEvents(map *pM, GFraMe_sprite *pSpr);
-
-/**
- * Collide a object against every one in the map
- * 
- * @param pM The map
- * @param pObj The object
- */
-void map_collideObjects(map *pM, GFraMe_object *pObj);
 
 /**
  * Get a map's dimensions (in pixels)
