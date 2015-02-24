@@ -1278,27 +1278,24 @@ GFraMe_ret map_addQt(map *pM) {
     i = 0;
     while (i < pM->objsUsed) {
         rv = qt_addObj(pM->objs[i]);
-        ASSERT_NR(rv == GFraMe_ret_ok);
-//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding objects to quadtree",
-//            __ret);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding objects to quadtree",
+            __ret);
         i++;
     }
     
     i = 0;
     while (i < pM->evsUsed) {
         rv = qt_addEv(pM->evs[i]);
-        ASSERT_NR(rv == GFraMe_ret_ok);
-//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding events to quadtree",
-//            __ret);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding events to quadtree",
+            __ret);
         i++;
     }
     
     i = 0;
     while (i < pM->wallsUsed) {
         rv = qt_addWall(&pM->walls[i]);
-        ASSERT_NR(rv == GFraMe_ret_ok);
-//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error walls events to quadtree",
-//            __ret);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error walls events to quadtree",
+            __ret);
         i++;
     }
     

@@ -240,28 +240,23 @@ static void ps_update() {
         ui_update(GFraMe_event_elapsed);
         
         // Collide everythin against everything else
-        rv = GFraMe_ret_failed;
-        while (rv == GFraMe_ret_failed) {
-            map_getDimensions(m, &w, &h);
-            rv = qt_initCol(w, h);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
-                __err_ret);
-            rv = map_addQt(m);
-            if (rv == GFraMe_ret_failed)
-                continue;
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
-                __err_ret);
-            rv = qt_addPl(p1);
-            if (rv == GFraMe_ret_failed)
-                continue;
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
-                __err_ret);
-            rv = qt_addPl(p2);
-            if (rv == GFraMe_ret_failed)
-                continue;
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
-                __err_ret);
-        }
+        map_getDimensions(m, &w, &h);
+        
+        rv = qt_initCol(w, h);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
+            __err_ret);
+        
+        rv = map_addQt(m);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
+            __err_ret);
+        
+        rv = qt_addPl(p1);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
+            __err_ret);
+        
+        rv = qt_addPl(p2);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
+            __err_ret);
         
         // Collide the carried player (if any) against the map
         if (player_isBeingCarried(p1)) {
@@ -269,7 +264,7 @@ static void ps_update() {
             
             player_getObject(&pObj, p1);
             
-            // Fix a bug that causes the player 1 to not me carried
+            // Fix a bug that causes the player 1 to not be carried
             player_getObject(&pObj2, p2);
             player_getCarried(p1, pObj2);
         }
