@@ -11,10 +11,14 @@ typedef enum {
     PL1_MAXHP,    /** Player 1 maximum health                  */
     PL1_ITEM,     /** Player 1 current item                    */
     PL1_DEATH,    /** How many times player 1 died             */
+    PL1_CX,       /** Player 1 horizontal (world) position     */
+    PL1_CY,       /** Player 1 vertical (world) position       */
     PL2_HP,       /** Player 2 current health                  */
     PL2_MAXHP,    /** Player 2 maximum health                  */
     PL2_ITEM,     /** Player 2 current item                    */
     PL2_DEATH,    /** How many times player 2 died             */
+    PL2_CX,       /** Player 1 horizontal (world) position     */
+    PL2_CY,       /** Player 1 vertical (world) position       */
     MAP,          /** Current map                              */
     DOOR_X,       /** Entrance horizontal point on current map */
     DOOR_Y,       /** Entrance vertical point on current map   */

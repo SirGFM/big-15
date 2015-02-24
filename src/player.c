@@ -197,6 +197,16 @@ void player_update(player *pPl, int ms) {
     }
     
     GFraMe_sprite_update(&pPl->spr, ms);
+    
+    // Store the player's central position so it's easilly acessible
+    if ((pPl->spr.id & ID_PL1) == ID_PL1) {
+        gv_setValue(PL1_CX, pPl->spr.obj.x + pPl->spr.obj.hitbox.cx);
+        gv_setValue(PL1_CY, pPl->spr.obj.y + pPl->spr.obj.hitbox.cy);
+    }
+    else {
+        gv_setValue(PL2_CX, pPl->spr.obj.x + pPl->spr.obj.hitbox.cx);
+        gv_setValue(PL2_CY, pPl->spr.obj.y + pPl->spr.obj.hitbox.cy);
+    }
 }
 
 /**

@@ -13,7 +13,7 @@
 typedef enum {
     MOB_STAND,
     MOB_WALK,
-    MOB_ATTACK
+    MOB_ATTACK,
     MOB_ANIM_MAX
 } mobAnim;
 
@@ -57,6 +57,77 @@ void mob_update(mob *pMob, int ms);
  * @param pMob The mob
  */
 void mob_draw(mob *pMob);
+
+/**
+ * Get both horizontal and vertical distance from the closest player
+ * 
+ * @param pDx The horizontal distance
+ * @param pDy The vertical distance
+ * @param pMob The mob
+ */
+void mob_getClosestPlDist(int *pDx, int *pDy, mob *pMob);
+
+/**
+ * Get the horizontal distance from the closest player
+ * 
+ * @param pMob The mob
+ * @return The horizontal distance
+ */
+int mob_getClosetsPlHorDist(mob *pMob);
+
+/**
+ * Get the vertical distance from the closest player
+ * 
+ * @param pMob The mob
+ * @return The vertical distance
+ */
+int mob_getClosestPlVerDist(mob *pMob);
+
+/**
+ * Get both horizontal and vertical distance from the closest player
+ * 
+ * @param pDx The horizontal distance
+ * @param pDy The vertical distance
+ * @param pMob The mob
+ * @param plID The player's ID
+ */
+void mob_getPlDist(int *pDx, int *pDy, mob *pMob, flag plID);
+
+/**
+ * Get the horizontal distance from the closest player
+ * 
+ * @param pMob The mob
+ * @param plID The player's ID
+ * @return The horizontal distance
+ */
+int mob_getPlHorDist(mob *pMob, flag plID);
+
+/**
+ * Get the vertical distance from the closest player
+ * 
+ * @param pMob The mob
+ * @param plID The player's ID
+ * @return The vertical distance
+ */
+int mob_getPlVerDist(mob *pMob, flag plID);
+
+/**
+ * Try to hit a mob for some damage
+ * 
+ * @param pMob The mob
+ * @param dmg Amount of damage that should be done
+ * @param type Type of "hurting method"
+ * @return Whether the mob was damaged (GFraMe_ret_ok) or not
+ */
+GFraMe_ret mob_hit(mob *pMob, int dmg, flag type);
+
+/**
+ * Check whether the mob is alive or not
+ * 
+ * @param pMob The mob
+ * @return GFraMe_ret_ok if it's alive
+ */
+GFraMe_ret mob_isAlive(mob *pMob);
 
 #endif
 

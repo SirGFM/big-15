@@ -25,3 +25,4 @@ struct stMob {
     GFraMe_animation mob_anim[MOB_ANIM_MAX];
 };
 
+

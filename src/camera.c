@@ -5,7 +5,7 @@
  */
 #include "camera.h"
 #include "global.h"
-#include "player.h"
+#include "globalVar.h"
 
 #define CAM_DEAD_X 80
 #define CAM_DEAD_Y 32
@@ -30,12 +30,35 @@ static int last_x = 0;
  * @param pPl1 A player
  * @param pPl2 A player
  */
-void cam_setPosition(player *pPl1, player *pPl2) {
+void cam_setPositionSt(player *pPl1, player *pPl2) {
+    int x, y;
+    
+    // Store player_1's position
+    player_getCenter(&x, &y, pPl1);
+    gv_setValue(PL1_CX, x);
+    gv_setValue(PL1_CY, y);
+    
+    // Store player_2's position
+    player_getCenter(&x, &y, pPl2);
+    gv_setValue(PL2_CX, x);
+    gv_setValue(PL2_CY, y);
+    
+    // Actually center the camera
+    cam_setPosition();
+}
+
+/**
+ * Try to center the camera on both players
+ * It'll follow whichever player is to the right and/or above
+ */
+void cam_setPosition() {
     int cx, cy, n, x1, x2, y1, y2;
     
     // Get the point between both players
-    player_getCenter(&x1, &y1, pPl1);
-    player_getCenter(&x2, &y2, pPl2);
+    x1 = gv_getValue(PL1_CX);
+    y1 = gv_getValue(PL1_CY);
+    x2 = gv_getValue(PL2_CX);
+    y2 = gv_getValue(PL2_CY);
     
     if (y1 / 16 == y2 / 16) {
         cx = (x1 + x2) / 2;

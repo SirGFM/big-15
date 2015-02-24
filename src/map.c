@@ -296,7 +296,7 @@ GFraMe_ret map_init(map **ppM) {
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init objs", rv = rv, __ret);
     pM->objsUsed = 0;
     
-    rv = map_setMobtsMinLength(pM, 8);
+//    rv = map_setMobsMinLength(pM, 8);
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init mobs", rv = rv, __ret);
     pM->objsUsed = 0;
     
@@ -349,7 +349,7 @@ void map_clean(map **ppM) {
     if ((*ppM)->mobs) {
         i = 0;
         while (i < (*ppM)->mobsLen) {
-            mob_clean(&(*ppM)->mobs[i]);
+//            mob_clean(&(*ppM)->mobs[i]);
             i++;
         }
         free((*ppM)->mobs);
@@ -1234,7 +1234,7 @@ static GFraMe_ret map_setMobsMinLength(map *pM, int len) {
     ASSERT(pM->mobsLen < len, GFraMe_ret_ok);
     
     // Expand the buffer
-    i = pM->mojsLen;
+    i = pM->mobsLen;
     pM->mobs = (mob**)realloc(pM->mobs, sizeof(mob*) * len);
     ASSERT(pM->mobs, GFraMe_ret_memory_error);
     pM->mobsLen = len;
@@ -1243,8 +1243,8 @@ static GFraMe_ret map_setMobsMinLength(map *pM, int len) {
     while (i < len) {
         pM->mobs[i] = NULL;
         
-        rv = obj_getNew(&pM->mobs[i]);
-        ASSERT(pM->mobs[i], rv);
+        //rv = obj_getNew(&pM->mobs[i]);
+        //ASSERT(pM->mobs[i], rv);
         i++;
     }
     

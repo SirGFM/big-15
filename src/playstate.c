@@ -197,7 +197,7 @@ static GFraMe_ret ps_switchMap() {
             rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
             rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
             // Update camera
-            cam_setPosition(p1, p2);
+            cam_setPositionSt(p1, p2);
             
             if (rv == GFraMe_ret_ok)
                 switchState++;
@@ -287,7 +287,7 @@ static void ps_update() {
         }
         
         // Update camera
-        cam_setPosition(p1, p2);
+        cam_setPosition();
         
         // If the player is trying to switch maps, do it
         if (player_cmpDestMap(p1, p2) == GFraMe_ret_ok) {

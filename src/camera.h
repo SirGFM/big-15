@@ -20,7 +20,13 @@ extern int cam_y;
  * @param pPl1 A player
  * @param pPl2 A player
  */
-void cam_setPosition(player *pPl1, player *pPl2);
+void cam_setPositionSt(player *pPl1, player *pPl2);
+
+/**
+ * Try to center the camera on both players
+ * It'll follow whichever player is to the right and/or above
+ */
+void cam_setPosition();
 
 /**
  * Set the maximum world space for the camera
