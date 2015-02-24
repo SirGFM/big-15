@@ -184,16 +184,34 @@
  * Call something in every object int the buffer
  * 
  * @param TYPE The type
- * @param CALL_INI_ Initial portition of the calling function. It must expect a
- *                  following parameter of type TYPE
- * @param _CALL_END Final portition of the calling function. It must expect a
- *                  following parameter of type TYPE
+ * @param CALL_ Initial portition of the calling function. It must expect a
+ *              following parameter of type TYPE
+ * @param ... Any other required params
  */
-#define BUF_CALL_ALL(TYPE, CALL_INI_, _CALL_END) \
+#define BUF_CALL_ALL(TYPE, CALL, ...) \
     do { \
         int i = 0; \
         while (i < _##TYPE##_buf.used) { \
-            CALL_INI_##_##TYPE##_buf.arr[i]##_CALL_END ; \
+            CALL(_##TYPE##_buf.arr[i], ##__VA_ARGS__) ; \
+            i++; \
+        } \
+    } while (0)
+
+/**
+ * Call something in every object int the buffer and handle error
+ * 
+ * @param TYPE The type
+ * @param RET Variable to hold returned value (must be 0 for success)
+ * @param CALL_ Initial portition of the calling function. It must expect a
+ *              following parameter of type TYPE
+ * @param ... Any other required params
+ */
+#define BUF_CALL_ALL_RET(TYPE, RET, CALL, ...) \
+    do { \
+        int i = 0; \
+        while (i < _##TYPE##_buf.used) { \
+            RET = CALL(_##TYPE##_buf.arr[i], ##__VA_ARGS__) ; \
+            ASSERT(RET == 0, RET); \
             i++; \
         } \
     } while (0)

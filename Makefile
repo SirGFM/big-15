@@ -26,6 +26,7 @@ CC=gcc
          $(OBJDIR)/parser.o            \
          $(OBJDIR)/player.o            \
          $(OBJDIR)/playstate.o         \
+         $(OBJDIR)/registry.o          \
          $(OBJDIR)/transition.o        \
          $(OBJDIR)/types.o             \
          $(OBJDIR)/ui.o                \

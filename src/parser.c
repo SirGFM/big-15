@@ -15,6 +15,7 @@
 #include "map.h"
 #include "object.h"
 #include "parser.h"
+#include "registry.h"
 #include "types.h"
 
 /**
@@ -805,6 +806,7 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         ASSERT(rv == GFraMe_ret_ok, GFraMe_ret_memory_error);
     }
     map_reset(pM);
+    rg_reset();
     
     while (1) {
         unsigned char *pData;
@@ -813,18 +815,18 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         object *o;
         
         // Retrieve a event from map, in case it's parsed
-        rv = map_getNextEvent(&e, pM);
+        rv = rg_getNextEvent(&e);
         ASSERT(rv == GFraMe_ret_ok, rv);
         // Retrieve the current map's data, to recycle it
         rv = map_getTilemapData(&pData, &len, pM);
         ASSERT(rv == GFraMe_ret_ok, rv);
-        rv = map_getNextObject(&o, pM);
+        rv = rg_getNextObject(&o);
         ASSERT(rv == GFraMe_ret_ok, rv);
         
         // Try to parse a event
         rv = parsef_event(e, fp);
         if (rv == GFraMe_ret_ok) {
-            map_pushEvent(pM);
+            rg_pushEvent();
             continue;
         }
         // Try to parse a tilemap
@@ -835,7 +837,7 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         }
         rv = parsef_object(o, fp);
         if (rv == GFraMe_ret_ok) {
-            map_pushObject(pM);
+            rg_pushObject();
             continue;
         }
         // TODO parse other structures

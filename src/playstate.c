@@ -14,6 +14,7 @@
 #include "map.h"
 #include "player.h"
 #include "playstate.h"
+#include "registry.h"
 #include "transition.h"
 #include "types.h"
 #include "ui.h"
@@ -98,6 +99,9 @@ static GFraMe_ret ps_init() {
     rv = ui_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init ui", __ret);
     
+    rv = rg_init();
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to registry ui", __ret);
+    
     rv = map_init(&m);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
     
@@ -126,6 +130,7 @@ static void ps_clean() {
     map_clean(&m);
     player_clean(&p1);
     player_clean(&p2);
+    rg_clean();
     qt_clean();
 }
 
@@ -138,15 +143,15 @@ static void ps_draw() {
         if (gv_isZero(SWITCH_MAP)) {
             player_draw(p2);
             player_draw(p1);
-            map_drawObjs(m);
+            rg_drawObjects();
             ui_draw();
         }
         else {
-            map_drawObjs(m);
-            ui_draw();
+            rg_drawObjects();
             transition_draw();
             player_draw(p2);
             player_draw(p1);
+            ui_draw();
         }
         #ifdef QT_DEBUG_DRAW
             if (GFraMe_keys.f1 ||
@@ -235,6 +240,7 @@ static void ps_update() {
         
         // Update everything
         map_update(m, GFraMe_event_elapsed);
+        rg_updateObjects(GFraMe_event_elapsed);
         player_update(p1, GFraMe_event_elapsed);
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
@@ -248,6 +254,14 @@ static void ps_update() {
         
         rv = map_addQt(m);
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
+            __err_ret);
+        
+        rv = rg_qtAddObjects();
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding object to quadtree",
+            __err_ret);
+        
+        rv = rg_qtAddEvents();
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding events to quadtree",
             __err_ret);
         
         rv = qt_addPl(p1);
