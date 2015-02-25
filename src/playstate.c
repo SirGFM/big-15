@@ -252,7 +252,6 @@ static void ps_update() {
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
             __err_ret);
         
-//        rv = map_addQt(m);
         rv = rg_qtAddWalls();
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding map to collision",
             __err_ret);
@@ -288,14 +287,6 @@ static void ps_update() {
         // Fix a bug that would let players clip into ceilings
         if (pObj)
             rg_collideObjWall(pObj);
-//        if (pObj) {
-//            map_getWalls(&pWalls, &len, m);
-//            i = 0;
-//            while (i < len) {
-//                GFraMe_object_overlap(&pWalls[i], pObj, GFraMe_first_fixed);
-//                i++;
-//            }
-//        }
         
         // Update camera
         cam_setPosition();

@@ -92,10 +92,6 @@ struct stMap {
     int w;                   /** Width of the tilemap, in tiles               */
     int h;                   /** Height of the tilemap, int tiles             */
     
-//    GFraMe_object *walls;    /** List of walls                                */
-//    int wallsLen;            /** Size of the walls list                       */
-//    int wallsUsed;           /** How many walls there are in the list         */
-    
     animTile *animTiles;     /** List of animated tiles in the tilemap's data */
     int animTilesLen;        /** Size of the list of animated tiles           */
     int animTilesUsed;       /** Number of animated tiles on the current      */
@@ -163,15 +159,6 @@ static void map_getWallBounds(int *pX, int *pY, int *pW, int *pH, map *pM,
 static GFraMe_ret map_genWalls(map *pM);
 
 /**
- * Realloc the walls buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setWallsMinLength(map *pM, int len);
-
-/**
  * Realloc the animTiles buffer as to have at least 'len' members
  * 
  * @param pM The map
@@ -215,9 +202,6 @@ GFraMe_ret map_init(map **ppM) {
     pM->dataLen = 0;
     pM->w = 0;
     pM->h = 0;
-//    pM->walls = NULL;
-//    pM->wallsLen = 0;
-//    pM->wallsUsed = 0;
     pM->animTiles = NULL;
     pM->animTilesLen = 0;
     pM->animTilesUsed = 0;
@@ -229,10 +213,6 @@ GFraMe_ret map_init(map **ppM) {
     pM->data = (unsigned char*)malloc(pM->dataLen);
     GFraMe_assertRV(pM->data, "Failed to alloc!", rv = GFraMe_ret_memory_error,
         __ret);
-    
-//    rv = map_setWallsMinLength(pM, 4);
-//    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init walls", rv = rv, __ret);
-//    pM->wallsUsed = 0;
     
     rv = map_setAnimTilesMinLength(pM, 8);
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init anim", rv = rv, __ret);
@@ -259,8 +239,6 @@ void map_clean(map **ppM) {
     
     if ((*ppM)->data)
         free((*ppM)->data);
-//    if ((*ppM)->walls)
-//        free((*ppM)->walls);
     if ((*ppM)->animTiles)
         free((*ppM)->animTiles);
     
@@ -280,7 +258,6 @@ void map_reset(map *pM) {
     
     pM->w = 0;
     pM->h = 0;
-//    pM->wallsUsed = 0;
     pM->animTilesUsed = 0;
     
 __ret:
@@ -483,30 +460,6 @@ void map_draw(map *pM) {
     }
 }
 
-/**
- * Get a list of objects for the map's collideable area
- * 
- * @param ppObjs List of objects
- * @param pLen Number of valid objects on the list
- * @param pM The map
- */
-//GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM) {
-//    GFraMe_ret rv;
-    
-    // Sanitize parameters
-//    ASSERT(ppObjs, GFraMe_ret_bad_param);
-//    ASSERT(pLen, GFraMe_ret_bad_param);
-//    ASSERT(pM, GFraMe_ret_bad_param);
-    
-    // If there's a camera, return only the visible objects?
-//    *ppObjs = pM->walls;
-//    *pLen = pM->wallsUsed;
-    
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
-
 //============================================================================//
 //                                                                            //
 // Static functions implementation                                            //
@@ -689,13 +642,11 @@ static GFraMe_ret map_isTileInWall(map *pM, int pos) {
     // Check against every object
     i = 0;
     while (i < rg_getWallsUsed()) {
-//    while (i < pM->wallsUsed) {
         GFraMe_object *obj;
         GFraMe_hitbox *hb;
         int iniX, iniY, endX, endY;
         
         // Get both the object and the boundings
-//        obj = &pM->walls[i];
         obj = rg_getWall(i);
         hb = GFraMe_object_get_hitbox(obj);
         
@@ -838,14 +789,7 @@ static GFraMe_ret map_genWalls(map *pM) {
         
         // Otherwise, find the wall bounds...
         map_getWallBounds(&x, &y, &w, &h, pM, i);
-        
         // ... and add it
-//        if (pM->wallsUsed >= pM->wallsLen) {
-//            rv = map_setWallsMinLength(pM, pM->wallsLen * 2);
-//            ASSERT(rv == GFraMe_ret_ok, rv);
-//        }
-        
-//        obj = &pM->walls[pM->wallsUsed];
         rv = rg_getNextWall(&obj);
         ASSERT(rv == GFraMe_ret_ok, rv);
         
@@ -857,7 +801,6 @@ static GFraMe_ret map_genWalls(map *pM) {
         GFraMe_hitbox_set(hb, GFraMe_hitbox_upper_left, 0/*x*/, 0/*y*/, w, h);
         
         // Increase the objects count
-//        pM->wallsUsed++;
         rg_pushWall();
     }
     
@@ -865,29 +808,6 @@ static GFraMe_ret map_genWalls(map *pM) {
 __ret:
     return rv;
 }
-
-/**
- * Realloc the walls buffer as to have at least 'len' members
- * 
- * @param pM The map
- * @param len The new minimum length
- * @return GFraMe error code
- */
-//static GFraMe_ret map_setWallsMinLength(map *pM, int len) {
-//    GFraMe_ret rv;
-    
-    // Do nothing if the buffer is already big enough
-//    ASSERT(pM->wallsLen < len, GFraMe_ret_ok);
-    
-    // Expand the buffer
-//    pM->walls = (GFraMe_object*)realloc(pM->walls, sizeof(GFraMe_object) * len);
-//    ASSERT(pM->walls, GFraMe_ret_memory_error);
-//    pM->wallsLen = len;
-    
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
 
 /**
  * Realloc the animTiles buffer as to have at least 'len' members
@@ -923,27 +843,4 @@ void map_getDimensions(map *pM, int *pW, int *pH) {
     *pW = pM->w * 8;
     *pH = pM->h * 8;
 }
-
-/**
- * Add everything in the map to the quadtree
- * 
- * @param pM The map
- * @return GFraMe error code
- */
-//GFraMe_ret map_addQt(map *pM) {
-//    GFraMe_ret rv;
-//    int i;
-    
-//    i = 0;
-//    while (i < pM->wallsUsed) {
-//        rv = qt_addWall(&pM->walls[i]);
-//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error walls events to quadtree",
-//            __ret);
-//        i++;
-//    }
-    
-//    rv = GFraMe_ret_ok;
-//__ret:
-//    return rv;
-//}
 
