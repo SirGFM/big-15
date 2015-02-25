@@ -6,6 +6,9 @@
 #ifndef __REGISTRY_H_
 #define __REGISTRY_H_
 
+#include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_object.h>
+
 /**
  * Initialize every buffer
  * 
@@ -75,6 +78,49 @@ void rg_drawObjects();
  * @return GFraMe error code
  */
 GFraMe_ret rg_qtAddObjects();
+
+/**
+ * Retrieve the next valid wall (expanding the buffer as necessary)
+ * 
+ * @param ppWall Returns the wall
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_getNextWall(GFraMe_object **ppWall);
+
+/**
+ * Push the last wall (i.e, increase the counter)
+ */
+void rg_pushWall();
+
+/**
+ * Add every wall to the quadtree
+ * 
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_qtAddWalls();
+
+/**
+ * Return how many walls there currently is
+ * 
+ * @return Used wall objects
+ */
+int rg_getWallsUsed();
+
+/**
+ * Get a wall
+ * 
+ * @param num The wall's index
+ * @return The gotten wall
+ */
+GFraMe_object* rg_getWall(int num);
+
+/**
+ * Collide every wall against an object
+ * 
+ * @param pObj The colliding object
+ */
+void rg_collideObjWall(GFraMe_object *pObj);
+
 
 #endif
 

@@ -42,7 +42,7 @@ BUF_DEFINE(qtNodeLL);
 GFraMe_ret qt_initQt(quadtree **ppQt) {
     GFraMe_ret rv;
     
-    BUF_ALOC_OBJ(quadtree, ppQt, GFraMe_ret_memory_error);
+    BUF_ALLOC_OBJ(quadtree, ppQt, GFraMe_ret_memory_error);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -58,7 +58,7 @@ __ret:
 GFraMe_ret qt_initNode(qtNode **ppNode) {
     GFraMe_ret rv;
     
-    BUF_ALOC_OBJ(qtNode , ppNode, GFraMe_ret_memory_error);
+    BUF_ALLOC_OBJ(qtNode , ppNode, GFraMe_ret_memory_error);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -74,7 +74,7 @@ __ret:
 GFraMe_ret qt_initLL(struct stQTNodeLL **ppNodeLL) {
     GFraMe_ret rv;
     
-    BUF_ALOC_OBJ(qtNodeLL, ppNodeLL, GFraMe_ret_memory_error);
+    BUF_ALLOC_OBJ(qtNodeLL, ppNodeLL, GFraMe_ret_memory_error);
     
     rv = GFraMe_ret_ok;
 __ret:

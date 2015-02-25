@@ -232,9 +232,9 @@ __ret:
  */
 static void ps_update() {
     GFraMe_event_update_begin();
-        GFraMe_object *pWalls, *pObj;
+        GFraMe_object *pObj;
         GFraMe_ret rv;
-        int  h, i, len, w;
+        int  h, w;
         
         pObj = 0;
         
@@ -252,8 +252,9 @@ static void ps_update() {
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
             __err_ret);
         
-        rv = map_addQt(m);
-        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error during collision",
+//        rv = map_addQt(m);
+        rv = rg_qtAddWalls();
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding map to collision",
             __err_ret);
         
         rv = rg_qtAddObjects();
@@ -285,15 +286,16 @@ static void ps_update() {
         else if (player_isBeingCarried(p2))
             player_getObject(&pObj, p2);
         // Fix a bug that would let players clip into ceilings
-        if (pObj) {
-            map_getWalls(&pWalls, &len, m);
-            i = 0;
-            while (i < len) {
-                GFraMe_object_overlap(&pWalls[i], pObj, GFraMe_first_fixed);
-            
-                i++;
-            }
-        }
+        if (pObj)
+            rg_collideObjWall(pObj);
+//        if (pObj) {
+//            map_getWalls(&pWalls, &len, m);
+//            i = 0;
+//            while (i < len) {
+//                GFraMe_object_overlap(&pWalls[i], pObj, GFraMe_first_fixed);
+//                i++;
+//            }
+//        }
         
         // Update camera
         cam_setPosition();

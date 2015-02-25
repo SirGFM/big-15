@@ -1,5 +1,5 @@
 /**
- * 
+ * @file src/static_buffer.h
  * 
  * Defines macros to ease the creation of expandable static buffers
  * (that points to pointers)
@@ -82,7 +82,7 @@
  *            double pointer to TYPE
  * @param ERR_CODE Error code set by ASSERT, if allocation failed
  */
-#define BUF_ALOC_OBJ(TYPE, REF, ERR_CODE) \
+#define BUF_ALLOC_OBJ(TYPE, REF, ERR_CODE) \
     do { \
         /* Alloc the object */ \
         TYPE *tmp = (TYPE*)malloc(sizeof(TYPE)); \

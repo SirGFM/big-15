@@ -17,6 +17,7 @@
 #include "mob.h"
 #include "object.h"
 #include "parser.h"
+#include "registry.h"
 
 #include "quadtree/quadtree.h"
 
@@ -56,22 +57,22 @@ char *_map_tms[TM_MAX] = {
 #define TILE_SHOCK_R3 130
 #define TILE_SHOCK_R4 131
 #define TILE_PC1_1 132
-#define TILE_PC2_1 133
-#define TILE_PC3_1 134
-#define TILE_PC4_1 164
-#define TILE_PC5_1 165
-#define TILE_PC6_1 166
 #define TILE_PC1_2 168
-#define TILE_PC2_2 169
-#define TILE_PC3_2 170
-#define TILE_PC4_2 200
-#define TILE_PC5_2 201
-#define TILE_PC6_2 202
 #define TILE_PC1_3 171
+#define TILE_PC2_1 133
+#define TILE_PC2_2 169
 #define TILE_PC2_3 172
+#define TILE_PC3_1 134
+#define TILE_PC3_2 170
 #define TILE_PC3_3 173
+#define TILE_PC4_1 164
+#define TILE_PC4_2 200
 #define TILE_PC4_3 203
+#define TILE_PC5_1 165
+#define TILE_PC5_2 201
 #define TILE_PC5_3 204
+#define TILE_PC6_1 166
+#define TILE_PC6_2 202
 #define TILE_PC6_3 205
 
 //============================================================================//
@@ -91,9 +92,9 @@ struct stMap {
     int w;                   /** Width of the tilemap, in tiles               */
     int h;                   /** Height of the tilemap, int tiles             */
     
-    GFraMe_object *walls;    /** List of walls                                */
-    int wallsLen;            /** Size of the walls list                       */
-    int wallsUsed;           /** How many walls there are in the list         */
+//    GFraMe_object *walls;    /** List of walls                                */
+//    int wallsLen;            /** Size of the walls list                       */
+//    int wallsUsed;           /** How many walls there are in the list         */
     
     animTile *animTiles;     /** List of animated tiles in the tilemap's data */
     int animTilesLen;        /** Size of the list of animated tiles           */
@@ -168,7 +169,7 @@ static GFraMe_ret map_genWalls(map *pM);
  * @param len The new minimum length
  * @return GFraMe error code
  */
-static GFraMe_ret map_setWallsMinLength(map *pM, int len);
+//static GFraMe_ret map_setWallsMinLength(map *pM, int len);
 
 /**
  * Realloc the animTiles buffer as to have at least 'len' members
@@ -214,9 +215,9 @@ GFraMe_ret map_init(map **ppM) {
     pM->dataLen = 0;
     pM->w = 0;
     pM->h = 0;
-    pM->walls = NULL;
-    pM->wallsLen = 0;
-    pM->wallsUsed = 0;
+//    pM->walls = NULL;
+//    pM->wallsLen = 0;
+//    pM->wallsUsed = 0;
     pM->animTiles = NULL;
     pM->animTilesLen = 0;
     pM->animTilesUsed = 0;
@@ -229,9 +230,9 @@ GFraMe_ret map_init(map **ppM) {
     GFraMe_assertRV(pM->data, "Failed to alloc!", rv = GFraMe_ret_memory_error,
         __ret);
     
-    rv = map_setWallsMinLength(pM, 4);
-    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init walls", rv = rv, __ret);
-    pM->wallsUsed = 0;
+//    rv = map_setWallsMinLength(pM, 4);
+//    GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init walls", rv = rv, __ret);
+//    pM->wallsUsed = 0;
     
     rv = map_setAnimTilesMinLength(pM, 8);
     GFraMe_assertRV(rv == GFraMe_ret_ok, "Failed to init anim", rv = rv, __ret);
@@ -258,8 +259,8 @@ void map_clean(map **ppM) {
     
     if ((*ppM)->data)
         free((*ppM)->data);
-    if ((*ppM)->walls)
-        free((*ppM)->walls);
+//    if ((*ppM)->walls)
+//        free((*ppM)->walls);
     if ((*ppM)->animTiles)
         free((*ppM)->animTiles);
     
@@ -279,7 +280,7 @@ void map_reset(map *pM) {
     
     pM->w = 0;
     pM->h = 0;
-    pM->wallsUsed = 0;
+//    pM->wallsUsed = 0;
     pM->animTilesUsed = 0;
     
 __ret:
@@ -489,22 +490,22 @@ void map_draw(map *pM) {
  * @param pLen Number of valid objects on the list
  * @param pM The map
  */
-GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM) {
-    GFraMe_ret rv;
+//GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM) {
+//    GFraMe_ret rv;
     
     // Sanitize parameters
-    ASSERT(ppObjs, GFraMe_ret_bad_param);
-    ASSERT(pLen, GFraMe_ret_bad_param);
-    ASSERT(pM, GFraMe_ret_bad_param);
+//    ASSERT(ppObjs, GFraMe_ret_bad_param);
+//    ASSERT(pLen, GFraMe_ret_bad_param);
+//    ASSERT(pM, GFraMe_ret_bad_param);
     
     // If there's a camera, return only the visible objects?
-    *ppObjs = pM->walls;
-    *pLen = pM->wallsUsed;
+//    *ppObjs = pM->walls;
+//    *pLen = pM->wallsUsed;
     
-    rv = GFraMe_ret_ok;
-__ret:
-    return rv;
-}
+//    rv = GFraMe_ret_ok;
+//__ret:
+//    return rv;
+//}
 
 //============================================================================//
 //                                                                            //
@@ -687,13 +688,15 @@ static GFraMe_ret map_isTileInWall(map *pM, int pos) {
     
     // Check against every object
     i = 0;
-    while (i < pM->wallsUsed) {
+    while (i < rg_getWallsUsed()) {
+//    while (i < pM->wallsUsed) {
         GFraMe_object *obj;
         GFraMe_hitbox *hb;
         int iniX, iniY, endX, endY;
         
         // Get both the object and the boundings
-        obj = &pM->walls[i];
+//        obj = &pM->walls[i];
+        obj = rg_getWall(i);
         hb = GFraMe_object_get_hitbox(obj);
         
         iniX = obj->x / 8;
@@ -836,13 +839,16 @@ static GFraMe_ret map_genWalls(map *pM) {
         // Otherwise, find the wall bounds...
         map_getWallBounds(&x, &y, &w, &h, pM, i);
         
-        // ... and add it (but, first, expand the buffer as necessary)
-        if (pM->wallsUsed >= pM->wallsLen) {
-            rv = map_setWallsMinLength(pM, pM->wallsLen * 2);
-            ASSERT(rv == GFraMe_ret_ok, rv);
-        }
+        // ... and add it
+//        if (pM->wallsUsed >= pM->wallsLen) {
+//            rv = map_setWallsMinLength(pM, pM->wallsLen * 2);
+//            ASSERT(rv == GFraMe_ret_ok, rv);
+//        }
         
-        obj = &pM->walls[pM->wallsUsed];
+//        obj = &pM->walls[pM->wallsUsed];
+        rv = rg_getNextWall(&obj);
+        ASSERT(rv == GFraMe_ret_ok, rv);
+        
         hb = GFraMe_object_get_hitbox(obj);
         
         GFraMe_object_clear(obj);
@@ -851,7 +857,8 @@ static GFraMe_ret map_genWalls(map *pM) {
         GFraMe_hitbox_set(hb, GFraMe_hitbox_upper_left, 0/*x*/, 0/*y*/, w, h);
         
         // Increase the objects count
-        pM->wallsUsed++;
+//        pM->wallsUsed++;
+        rg_pushWall();
     }
     
     rv = GFraMe_ret_ok;
@@ -866,21 +873,21 @@ __ret:
  * @param len The new minimum length
  * @return GFraMe error code
  */
-static GFraMe_ret map_setWallsMinLength(map *pM, int len) {
-    GFraMe_ret rv;
+//static GFraMe_ret map_setWallsMinLength(map *pM, int len) {
+//    GFraMe_ret rv;
     
     // Do nothing if the buffer is already big enough
-    ASSERT(pM->wallsLen < len, GFraMe_ret_ok);
+//    ASSERT(pM->wallsLen < len, GFraMe_ret_ok);
     
     // Expand the buffer
-    pM->walls = (GFraMe_object*)realloc(pM->walls, sizeof(GFraMe_object) * len);
-    ASSERT(pM->walls, GFraMe_ret_memory_error);
-    pM->wallsLen = len;
+//    pM->walls = (GFraMe_object*)realloc(pM->walls, sizeof(GFraMe_object) * len);
+//    ASSERT(pM->walls, GFraMe_ret_memory_error);
+//    pM->wallsLen = len;
     
-    rv = GFraMe_ret_ok;
-__ret:
-    return rv;
-}
+//    rv = GFraMe_ret_ok;
+//__ret:
+//    return rv;
+//}
 
 /**
  * Realloc the animTiles buffer as to have at least 'len' members
@@ -923,20 +930,20 @@ void map_getDimensions(map *pM, int *pW, int *pH) {
  * @param pM The map
  * @return GFraMe error code
  */
-GFraMe_ret map_addQt(map *pM) {
-    GFraMe_ret rv;
-    int i;
+//GFraMe_ret map_addQt(map *pM) {
+//    GFraMe_ret rv;
+//    int i;
     
-    i = 0;
-    while (i < pM->wallsUsed) {
-        rv = qt_addWall(&pM->walls[i]);
-        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error walls events to quadtree",
-            __ret);
-        i++;
-    }
+//    i = 0;
+//    while (i < pM->wallsUsed) {
+//        rv = qt_addWall(&pM->walls[i]);
+//        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error walls events to quadtree",
+//            __ret);
+//        i++;
+//    }
     
-    rv = GFraMe_ret_ok;
-__ret:
-    return rv;
-}
+//    rv = GFraMe_ret_ok;
+//__ret:
+//    return rv;
+//}
 
