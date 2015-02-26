@@ -57,8 +57,9 @@ void mob_draw(mob *pMob);
  * 
  * @param pMob The mob
  * @param anim The new animation
+ * @param dontReset Whether the animation shouldn't be reset
  */
-void mob_setAnim(mob *pMob, int anim);
+void mob_setAnim(mob *pMob, int n, int dontReset);
 
 /**
  * Get both horizontal and vertical distance from the closest player
@@ -138,6 +139,14 @@ GFraMe_ret mob_isAlive(mob *pMob);
  * @param pMob The mob
  */
 void mob_getObject(GFraMe_object **ppObj, mob *pMob);
+
+/**
+ * Check if a mob animation finished playing
+ * 
+ * @param pMob The mob
+ * @return 1 if true, 0 if false
+ */
+int mob_didAnimFinish(mob *pMob);
 
 #endif
 

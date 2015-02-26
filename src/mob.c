@@ -18,11 +18,16 @@
 
 #define MOB_ANIM_MAX 4
 
+/** States for the jumper mob */
+enum {JUMPER_STAND = 0, JUMPER_PREJUMP, JUMPER_JUMP, JUMPER_LANDED };
+#define JUMPER_COUNTDOWN 1000
+
 struct stMob {
     GFraMe_sprite spr;       /** Mob's sprite (for rendering and collision)   */
     int health;              /** How many hitpoints this mob has              */
     int damage;              /** How much damage this mob does on the player  */
     flag weakness;           /** IDs that can do damage to this mob           */
+    int countdown;           /** Counter, in frames, for next action          */
     int anim;                /** The mob's current animation                  */
     int animLen;             /** How many animations this mob has             */
     /** Every possible animation, so it won't overlap another mob's */
@@ -37,10 +42,10 @@ struct stMob {
  *   _mob_*AnimData[i]+3  = actual data
  */
 static int _mob_jumperAnimData[] = {
-    1, 2, 1, 704, 705, /* stand */
-    2, 1, 0, 706,      /* pre-jump */
-    0, 1, 0, 707,      /* jump */
-    1, 1, 0, 705       /* after-jump */
+    2, 2, 1, 704, 705,      /* stand */
+    2, 1, 0, 706,           /* pre-jump */
+    0, 1, 0, 707,           /* jump */
+    6, 2, 0, 706, 705       /* after-jump */
 };
 
 /**
@@ -97,7 +102,6 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
     
     // Sanitize parameters
     ASSERT(pMob, GFraMe_ret_bad_param);
-    //ASSERT(type == ID_JUMPER || type == ID_EYE, GFraMe_ret_bad_param);
     
     // Initialize the mob
     animData = 0;
@@ -105,9 +109,12 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_JUMPER: {
             GFraMe_sprite_init(&pMob->spr, x, y, 6/*w*/, 6/*h*/, gl_sset8x8,
                 -1/*ox*/, -1/*oy*/);
+            
             pMob->spr.obj.ay = GRAVITY;
             pMob->health = 1;
             pMob->damage = 1;
+            pMob->countdown = JUMPER_COUNTDOWN;
+            
             animData = _mob_jumperAnimData;
             dataLen = sizeof(_mob_jumperAnimData) / sizeof(int);
         } break;
@@ -118,7 +125,6 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             pMob->damage = 1;
         } break;
         default: {
-            // Shouldn't happen!
             GFraMe_assertRV(0, "Invalid mob type!", rv = GFraMe_ret_failed,
                 __ret);
         }
@@ -147,38 +153,16 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             i += len + 3;
             j++;
         }
+        pMob->animLen = j;
     }
     
     // Set the mob animation
     pMob->anim = -1;
-    mob_setAnim(pMob, 0);
+    mob_setAnim(pMob, 0, 0);
     
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
-}
-
-/**
- * Updates the mob
- * 
- * @param pMob The mob
- * @param ms Time elapsed, in milliseconds, from the previous frame
- */
-void mob_update(mob *pMob, int ms) {
-    // Check that the mob is alive
-    ASSERT_NR(mob_isAlive(pMob) == GFraMe_ret_ok);
-    
-    // TODO add AI
-    if (pMob->spr.id != ID_EYE) {
-        if (pMob->spr.obj.hit & GFraMe_direction_down) {
-            pMob->spr.obj.vy = 32;
-        }
-    }
-    
-    GFraMe_sprite_update(&pMob->spr, ms);
-    
-__ret:
-    return;
 }
 
 /**
@@ -201,14 +185,16 @@ __ret:
  * 
  * @param pMob The mob
  * @param n The new animation
+ * @param dontReset Whether the animation shouldn't be reset
  */
-void mob_setAnim(mob *pMob, int n) {
+void mob_setAnim(mob *pMob, int n, int dontReset) {
     ASSERT_NR(n != pMob->anim);
     ASSERT_NR(n >= 0);
     ASSERT_NR(n < pMob->animLen);
     
-    GFraMe_sprite_set_animation(&pMob->spr, &pMob->mob_anim[n], 0);
+    GFraMe_sprite_set_animation(&pMob->spr, &pMob->mob_anim[n], dontReset);
     
+    pMob->anim = n;
 __ret:
     return;
 }
@@ -296,5 +282,73 @@ GFraMe_ret mob_isAlive(mob *pMob) {
  */
 void mob_getObject(GFraMe_object **ppObj, mob *pMob) {
     *ppObj = &pMob->spr.obj;
+}
+
+/**
+ * Check if a mob animation finished playing
+ * 
+ * @param pMob The mob
+ * @return 1 if true, 0 if false
+ */
+int mob_didAnimFinish(mob *pMob) {
+    return pMob->spr.anim == NULL;
+}
+
+/**
+ * Updates the mob
+ * 
+ * @param pMob The mob
+ * @param ms Time elapsed, in milliseconds, from the previous frame
+ */
+void mob_update(mob *pMob, int ms) {
+    int isDown;
+    
+    // Check that the mob is alive
+    ASSERT_NR(mob_isAlive(pMob) == GFraMe_ret_ok);
+    
+    isDown = pMob->spr.obj.hit & GFraMe_direction_down;
+    if (pMob->countdown > 0)
+        pMob->countdown -= ms;
+    
+    switch (pMob->spr.id) {
+        case ID_JUMPER: {
+            // Check if next action should be selected
+            if (pMob->anim == JUMPER_STAND && pMob->countdown <= 0) {
+                mob_setAnim(pMob, JUMPER_PREJUMP, 0);
+            }
+            else if (pMob->anim == JUMPER_PREJUMP && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, JUMPER_JUMP, 0);
+                // TODO check if tile beneath and change direction
+                if (pMob->spr.flipped)
+                    pMob->spr.obj.vx = 16;
+                else
+                    pMob->spr.obj.vx = -16;
+                pMob->spr.obj.vy = -GRAVITY / 4;
+            }
+            else if (pMob->anim == JUMPER_JUMP && isDown) {
+                mob_setAnim(pMob, JUMPER_LANDED, 0);
+                pMob->spr.obj.vx = 0;
+            }
+            else if (pMob->anim == JUMPER_LANDED && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, JUMPER_STAND, 0);
+                pMob->countdown += JUMPER_COUNTDOWN;
+            }
+            // Make sure the mob is always grounded
+            if (pMob->anim != JUMPER_JUMP && isDown)
+                pMob->spr.obj.vy = 32;
+        } break;
+        case ID_EYE: {
+        } break;
+        default: {
+            if (pMob->spr.obj.hit & GFraMe_direction_down) {
+                pMob->spr.obj.vy = 32;
+            }
+        }
+    }
+    
+    GFraMe_sprite_update(&pMob->spr, ms);
+    
+__ret:
+    return;
 }
 
