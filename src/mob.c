@@ -103,8 +103,9 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
     animData = 0;
     switch (type) {
         case ID_JUMPER: {
-            GFraMe_sprite_init(&pMob->spr, x, y, 6/*w*/, 5/*h*/, gl_sset8x8,
-                -1/*ox*/, -2/*oy*/);
+            GFraMe_sprite_init(&pMob->spr, x, y, 6/*w*/, 6/*h*/, gl_sset8x8,
+                -1/*ox*/, -1/*oy*/);
+            pMob->spr.obj.ay = GRAVITY;
             pMob->health = 1;
             pMob->damage = 1;
             animData = _mob_jumperAnimData;
@@ -122,6 +123,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
                 __ret);
         }
     }
+    pMob->spr.id = type;
     
     // Set all animations
     if (animData) {
@@ -167,6 +169,11 @@ void mob_update(mob *pMob, int ms) {
     ASSERT_NR(mob_isAlive(pMob) == GFraMe_ret_ok);
     
     // TODO add AI
+    if (pMob->spr.id != ID_EYE) {
+        if (pMob->spr.obj.hit & GFraMe_direction_down) {
+            pMob->spr.obj.vy = 32;
+        }
+    }
     
     GFraMe_sprite_update(&pMob->spr, ms);
     
@@ -197,6 +204,7 @@ __ret:
  */
 void mob_setAnim(mob *pMob, int n) {
     ASSERT_NR(n != pMob->anim);
+    ASSERT_NR(n >= 0);
     ASSERT_NR(n < pMob->animLen);
     
     GFraMe_sprite_set_animation(&pMob->spr, &pMob->mob_anim[n], 0);

@@ -49,12 +49,28 @@ void col_onPlObj(player *pPl, object *pObj);
 void col_onPlWall(player *pPl, GFraMe_object *pWall);
 
 /**
+ * Collid a player against a mob
+ * 
+ * @param pPl The player
+ * @param pMob The mob
+ */
+void col_onPlMob(player *pPl, mob *pMob);
+
+/**
  * Collide an event against an object
  * 
  * @param pEv The event
  * @param pObj The object
  */
 void col_onEvObj(event *pEv, object *pObj);
+
+/**
+ * Collide an event against a mob
+ * 
+ * @param pEv The event
+ * @param pMob The mob
+ */
+void col_onEvMob(event *pEv, mob *pMob);
 
 /**
  * Collide an object against an object
@@ -65,12 +81,36 @@ void col_onEvObj(event *pEv, object *pObj);
 void col_onObject(object *pObj1, object *pObj2);
 
 /**
+ * Collide an object against a mob
+ * 
+ * @param pObj The object
+ * @param pMob The mob
+ */
+void col_onObjMob(object *pObj, mob *pMob);
+
+/**
  * Collide an object against a wall
  * 
  * @param pObj The object
  * @param pWall The wall
  */
 void col_onObjWall(object *pObj, GFraMe_object *pWall);
+
+/**
+ * Collide a mob against a wall
+ * 
+ * @param pMob The mob
+ * @param pWall The wall
+ */
+void col_onMobWall(mob *pMob, GFraMe_object *pWall);
+
+/**
+ * Collide two mobs
+ * 
+ * @param pMob1 A mob
+ * @param pMob2 A mob
+ */
+void col_onMob(mob *pMob1, mob *pMob2);
 
 #endif 
 

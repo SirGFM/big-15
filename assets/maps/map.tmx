@@ -76,14 +76,14 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="53" name="mob_jumper" type="mob" x="201.727" y="186.091" width="8" height="8">
+  <object id="53" name="mob_jumper" type="mob" x="201.727" y="186.091" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="maps_boundaries" opacity="0.35">
-  <object id="8" name="   map_000" x="-8" y="-8" width="336" height="256"/>
+  <object id="8" name="   map_000" x="-9.375" y="-7.34375" width="336" height="256"/>
   <object id="9" name="map_001" x="328" y="-8" width="336" height="256"/>
   <object id="16" name="map_002" x="664" y="-8" width="336" height="256"/>
   <object id="32" name="map_003" x="1000" y="-8" width="496" height="256"/>
@@ -115,7 +115,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="59" name="mob_jumper" type="mob" x="232" y="192" width="8" height="8">
+  <object id="59" name="mob_jumper" type="mob" x="233" y="194" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>

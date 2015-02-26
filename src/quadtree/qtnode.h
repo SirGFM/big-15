@@ -93,10 +93,11 @@ void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB);
  * @param ppEv The event
  * @param ppObj The object
  * @param ppWall The wall
+ * @param ppMob The mob
  * @param pNode The node
  */
 void qt_getRef(player **ppPl, event **ppEv, object **ppObj,
-    GFraMe_object **ppWall, qtNode *pNode);
+    GFraMe_object **ppWall, mob **ppMob, qtNode *pNode);
 
 #endif
 
