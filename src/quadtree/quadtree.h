@@ -11,6 +11,7 @@
 
 #include "../commonEvent.h"
 #include "../event.h"
+#include "../mob.h"
 #include "../object.h"
 #include "../player.h"
 
@@ -78,6 +79,14 @@ GFraMe_ret qt_addObj(object *pObj);
  * @return GFraMe error code
  */
 GFraMe_ret qt_addWall(GFraMe_object *pWall);
+
+/**
+ * Adds a mob and collides against everything
+ * 
+ * @param pMob The mob
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_addMob(mob *pMob);
 
 /**
  * Add a new node to the quadtree, subdivide it as necessary and collide against

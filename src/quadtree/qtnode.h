@@ -8,6 +8,7 @@
 #include <GFraMe/GFraMe_object.h>
 
 #include "../event.h"
+#include "../mob.h"
 #include "../object.h"
 #include "../player.h"
 
@@ -65,6 +66,15 @@ GFraMe_ret qt_getObjNode(qtNode **ppNode, object *pObj);
  * @return GFraMe error code
  */
 GFraMe_ret qt_getWallNode(qtNode **ppNode, GFraMe_object *pWall);
+
+/**
+ * Get a node and assign it a mob
+ * 
+ * @param ppNode The node
+ * @param pMob The mob
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_getMobNode(qtNode **ppNode, mob *pMob);
 
 /**
  * Get the color a given type should be rendered

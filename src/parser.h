@@ -13,6 +13,7 @@
 #include "commonEvent.h"
 #include "event.h"
 #include "globalVar.h"
+#include "mob.h"
 #include "types.h"
 
 /**
@@ -98,7 +99,7 @@ GFraMe_ret parsef_map(map **ppM, char *fn);
  * @param fp File pointer
  * @return GFraMe error code
  */
-// GFraMe_ret parsef_mob(mob *pM, FILE *fp);
+GFraMe_ret parsef_mob(mob *pM, FILE *fp);
 
 /**
  * Parse a object from a file

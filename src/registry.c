@@ -20,8 +20,8 @@
 
 #define EVENT_INC 4
 #define OBJECT_INC 4
-#define MOB_INC 4
 #define WALL_INC 8
+#define MOB_INC 4
 
 typedef GFraMe_object wall;
 /**
@@ -41,7 +41,7 @@ static void rg_cleanGfmObj(GFraMe_object **ppObj);
 /** Define every variable buffer */
 BUF_DEFINE(event);
 BUF_DEFINE(object);
-//BUF_DEFINE(mob);
+BUF_DEFINE(mob);
 BUF_DEFINE(wall);
 
 /**
@@ -54,8 +54,8 @@ GFraMe_ret rg_init() {
     
     BUF_SET_MIN_SIZE(event, 4, GFraMe_ret_memory_error, event_getNew);
     BUF_SET_MIN_SIZE(object, 8, GFraMe_ret_memory_error, obj_getNew);
-//    BUF_SET_MIN_SIZE(mob, 4, GFraMe_ret_memory_error, mob_getNew);
     BUF_SET_MIN_SIZE(wall, 8, GFraMe_ret_memory_error, rg_getNewGfmObj);
+    BUF_SET_MIN_SIZE(mob, 4, GFraMe_ret_memory_error, mob_getNew);
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -68,8 +68,8 @@ __ret:
 void rg_clean() {
     BUF_CLEAN(event, event_clean);
     BUF_CLEAN(object, obj_clean);
-//    BUF_CLEAN(mob, mob_clean);
     BUF_CLEAN(wall, rg_cleanGfmObj);
+    BUF_CLEAN(mob, mob_clean);
 }
 
 /**
@@ -78,8 +78,8 @@ void rg_clean() {
 void rg_reset() {
     BUF_RESET(event);
     BUF_RESET(object);
-//    BUF_RESET(mob);
     BUF_RESET(wall);
+    BUF_RESET(mob);
 }
 
 /**
@@ -264,5 +264,60 @@ GFraMe_object* rg_getWall(int num) {
  */
 void rg_collideObjWall(GFraMe_object *pObj) {
     BUF_CALL_ALL(wall, GFraMe_object_overlap, pObj, GFraMe_first_fixed);
+}
+
+/**
+ * Retrieve the next mob (and expand the buffer as necessary)
+ * Note that the mob must be pushed later
+ * 
+ * @param ppE Returns the mob
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_getNextMob(mob **ppM) {
+    GFraMe_ret rv;
+    
+    BUF_GET_NEXT_REF(mob, MOB_INC, *ppM, GFraMe_ret_memory_error, mob_getNew);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Push the last mob (increasing its counter)
+ */
+void rg_pushMob() {
+    BUF_PUSH(mob);
+}
+
+/**
+ * Update every mob
+ * 
+ * @param ms Time elapse from the previous frame, in milliseconds
+ */
+void rg_updateMobs(int ms) {
+    BUF_CALL_ALL(mob, mob_update, ms);
+}
+
+/**
+ * Render every mob
+ */
+void rg_drawMobs() {
+    BUF_CALL_ALL(mob, mob_draw);
+}
+
+/**
+ * Add every mob to the quadtree
+ * 
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_qtAddMob() {
+    GFraMe_ret rv;
+    
+    BUF_CALL_ALL_RET(mob, rv, qt_addMob);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 

@@ -9,6 +9,7 @@
 
 #include "../event.h"
 #include "../global.h"
+#include "../mob.h"
 #include "../object.h"
 #include "../player.h"
 
@@ -131,6 +132,35 @@ GFraMe_ret qt_getWallNode(qtNode **ppNode, GFraMe_object *pWall) {
     pNode->type = QNT_WALL;
     // Set the node's dimension
     qt_setNodeDimension(pNode, pWall);
+    
+    // Set the return variable
+    *ppNode = pNode;
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Get a node and assign it a mob
+ * 
+ * @param ppNode The node
+ * @param pMob The mob
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_getMobNode(qtNode **ppNode, mob *pMob) {
+    GFraMe_object *pObj;
+    GFraMe_ret rv;
+    qtNode *pNode;
+    
+    // Get a new node
+    rv = qt_getNode(&pNode);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Set the node reference
+    pNode->self.mob= pMob;
+    pNode->type = QNT_MOB;
+    // Set the node's dimension
+    mob_getObject(&pObj, pMob);
+    qt_setNodeDimension(pNode, pObj);
     
     // Set the return variable
     *ppNode = pNode;

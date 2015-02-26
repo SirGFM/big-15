@@ -140,6 +140,7 @@ static void ps_clean() {
 static void ps_draw() {
     GFraMe_event_draw_begin();
         map_draw(m);
+        rg_drawMobs();
         if (gv_isZero(SWITCH_MAP)) {
             player_draw(p2);
             player_draw(p1);
@@ -240,6 +241,7 @@ static void ps_update() {
         
         // Update everything
         map_update(m, GFraMe_event_elapsed);
+        rg_updateMobs(GFraMe_event_elapsed);
         rg_updateObjects(GFraMe_event_elapsed);
         player_update(p1, GFraMe_event_elapsed);
         player_update(p2, GFraMe_event_elapsed);
@@ -258,6 +260,10 @@ static void ps_update() {
         
         rv = rg_qtAddObjects();
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding object to quadtree",
+            __err_ret);
+        
+        rv = rg_qtAddMob();
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding mob to quadtree",
             __err_ret);
         
         rv = rg_qtAddEvents();

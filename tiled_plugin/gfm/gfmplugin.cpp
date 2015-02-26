@@ -53,12 +53,16 @@ static void writeObject(QSaveFile &file, const MapObject *obj,
     gfm_offset *pOff);
 static void writeEvent(QSaveFile &file, const MapObject *ev,
     gfm_offset *pOff);
+static void writeMob(QSaveFile &file, const MapObject *obj,
+    gfm_offset *pOff);
 #else
 static void writeTilemap(QFile &file, const TileLayer *tileLayer,
     gfm_offset *pOff);
 static void writeObject(QFile &file, const MapObject *obj,
     gfm_offset *pOff);
 static void writeEvent(QFile &file, const MapObject *ev,
+    gfm_offset *pOff);
+static void writeMob(QFile &file, const MapObject *obj,
     gfm_offset *pOff);
 #endif
 
@@ -122,6 +126,8 @@ bool GfmPlugin::write(const Map *map, const QString &fileName)
                     writeObject(file, obj, &off);
                 else if (obj->type() == "event")
                     writeEvent(file, obj, &off);
+                else if (obj->type() == "mob")
+                    writeMob(file, obj, &off);
                 else {
                     mError = "Invalid object type!";
                     return false;
@@ -339,6 +345,40 @@ static void writeEvent(QFile &file, const MapObject *ev,
             file.write(it.key().toUtf8());
         
         file.write(":", 1);
+        if (!isInt(it))
+            writeString(file, it.value());
+        else
+            file.write(it.value().toUtf8());
+    }
+    
+    file.write(" }\n", 3);
+}
+
+#ifdef HAS_QSAVEFILE_SUPPORT
+static void writeMob(QSaveFile &file, const MapObject *obj,
+    gfm_offset *pOff) {
+#else
+static void writeMob(QFile &file, const MapObject *obj,
+    gfm_offset *pOff) {
+#endif
+    file.write("mob: {", 6);
+    
+    // Write the mob to its exact position
+    file.write(" x:", 3);
+    file.write(QByteArray::number(((int)obj->x()) - pOff->x));
+    file.write(" y:", 3);
+    file.write(QByteArray::number(((int)obj->y()) - pOff->x));
+    
+    for (QMap<QString, QString>::const_iterator it = obj->properties().begin();
+        it != obj->properties().end(); it++) {
+        file.write(" ", 1);
+        if (isVar(it))
+            file.write("var", 3);
+        else
+            file.write(it.key().toUtf8());
+        
+        file.write(":", 1);
+        
         if (!isInt(it))
             writeString(file, it.value());
         else

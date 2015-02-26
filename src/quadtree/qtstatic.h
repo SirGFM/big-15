@@ -11,8 +11,9 @@
 #include <GFraMe/GFraMe_object.h>
 
 #include "../event.h"
-#include "../player.h"
+#include "../mob.h"
 #include "../object.h"
+#include "../player.h"
 
 //============================================================================//
 //                                                                            //
@@ -50,6 +51,7 @@ struct stQTNode {
     union {
         player *pl;
         event *ev;
+        mob *mob;
         object *obj;
         GFraMe_object *wall;
     } self;

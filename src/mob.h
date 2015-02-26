@@ -7,15 +7,9 @@
 #define __MOB_H_
 
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_object.h>
 
 #include "types.h"
-
-typedef enum {
-    MOB_STAND,
-    MOB_WALK,
-    MOB_ATTACK,
-    MOB_ANIM_MAX
-} mobAnim;
 
 typedef struct stMob mob;
 
@@ -57,6 +51,14 @@ void mob_update(mob *pMob, int ms);
  * @param pMob The mob
  */
 void mob_draw(mob *pMob);
+
+/**
+ * Change the currently playing animation
+ * 
+ * @param pMob The mob
+ * @param anim The new animation
+ */
+void mob_setAnim(mob *pMob, int anim);
 
 /**
  * Get both horizontal and vertical distance from the closest player
@@ -128,6 +130,14 @@ GFraMe_ret mob_hit(mob *pMob, int dmg, flag type);
  * @return GFraMe_ret_ok if it's alive
  */
 GFraMe_ret mob_isAlive(mob *pMob);
+
+/**
+ * Get the mob's object, for collision
+ * 
+ * @param ppObj Mob's object
+ * @param pMob The mob
+ */
+void mob_getObject(GFraMe_object **ppObj, mob *pMob);
 
 #endif
 

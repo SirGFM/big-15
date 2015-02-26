@@ -9,6 +9,10 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
+#include "event.h"
+#include "mob.h"
+#include "object.h"
+
 /**
  * Initialize every buffer
  * 
@@ -121,6 +125,38 @@ GFraMe_object* rg_getWall(int num);
  */
 void rg_collideObjWall(GFraMe_object *pObj);
 
+/**
+ * Retrieve the next mob (and expand the buffer as necessary)
+ * Note that the mob must be pushed later
+ * 
+ * @param ppE Returns the mob
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_getNextMob(mob **ppM);
+
+/**
+ * Push the last mob (increasing its counter)
+ */
+void rg_pushMob();
+
+/**
+ * Update every mob
+ * 
+ * @param ms Time elapse from the previous frame, in milliseconds
+ */
+void rg_updateMobs(int ms);
+
+/**
+ * Render every mob
+ */
+void rg_drawMobs();
+
+/**
+ * Add every mob to the quadtree
+ * 
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_qtAddMob();
 
 #endif
 

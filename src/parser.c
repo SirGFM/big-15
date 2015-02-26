@@ -13,6 +13,7 @@
 #include "event.h"
 #include "global.h"
 #include "map.h"
+#include "mob.h"
 #include "object.h"
 #include "parser.h"
 #include "registry.h"
@@ -607,11 +608,6 @@ __ret:
     return rv;
 }
 
-
-
-
-
-
 /**
  * Set a tile into the buffer, expanding it if necessary
  * 
@@ -813,6 +809,7 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         event *e;
         int c, h, len, w;
         object *o;
+        mob *m;
         
         // Retrieve a event from map, in case it's parsed
         rv = rg_getNextEvent(&e);
@@ -822,6 +819,10 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         ASSERT(rv == GFraMe_ret_ok, rv);
         rv = rg_getNextObject(&o);
         ASSERT(rv == GFraMe_ret_ok, rv);
+        rv = rg_getNextMob(&m);
+        ASSERT(rv == GFraMe_ret_ok, rv);
+        
+        // Try to parse a event
         
         // Try to parse a event
         rv = parsef_event(e, fp);
@@ -838,6 +839,11 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
         rv = parsef_object(o, fp);
         if (rv == GFraMe_ret_ok) {
             rg_pushObject();
+            continue;
+        }
+        rv = parsef_mob(m, fp);
+        if (rv == GFraMe_ret_ok) {
+            rg_pushMob();
             continue;
         }
         // TODO parse other structures
@@ -866,14 +872,68 @@ __ret:
  * @param fp File pointer
  * @return GFraMe error code
  */
-// GFraMe_ret parsef_mob(mob *pM, FILE *fp);
-
-/**
- * Parse a object from a file
- * 
- * @param pO Returns the parsed object
- * @param fp File pointer
- * @return GFraMe error code
- */
-// GFraMe_ret parsef_obj(obj *pO, FILE *fp);
-
+GFraMe_ret parsef_mob(mob *pM, FILE *fp) {
+    flag f;
+    fpos_t pos;
+    GFraMe_ret rv;
+    int c, irv, x, y;
+    
+    // Sanitize parameters
+    ASSERT(pM, GFraMe_ret_bad_param);
+    ASSERT(fp, GFraMe_ret_bad_param);
+    
+    // Get the current position, to "backtrack" on error
+    irv = fgetpos(fp, &pos);
+    ASSERT(irv == 0, GFraMe_ret_failed);
+    
+    // Check that the next "token" must be an event
+    rv = parsef_string(fp, "mob:", 4);
+    ASSERT(rv == GFraMe_ret_ok, rv);
+    
+    // Open a bracket =D
+    c = fgetc(fp);
+    ASSERT(c != EOF, GFraMe_ret_failed);
+    ASSERT(c == '{', GFraMe_ret_failed);
+    parsef_ignoreWhitespace(fp, 1);
+    
+    // Get every parameter needed for the object, one at a time
+    x = -1;
+    y = -1;
+    f = 0;
+    while (1) {
+        if (parsef_string(fp, "x:", 2) == GFraMe_ret_ok) {
+            rv = parsef_int(&x, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        else if (parsef_string(fp, "y:", 2) == GFraMe_ret_ok) {
+            rv = parsef_int(&y, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+        }
+        else if (parsef_string(fp, "f:", 2) == GFraMe_ret_ok) {
+            rv = parsef_flags(&f, fp);
+            ASSERT(rv == GFraMe_ret_ok, rv);
+            ASSERT(f != 0, GFraMe_ret_failed);
+        }
+        else {
+            // If nothing was found, expect a closing bracket and stop
+            c = fgetc(fp);
+            ASSERT(c != EOF, GFraMe_ret_failed);
+            ASSERT(c == '}', GFraMe_ret_failed);
+            break;
+        }
+    }
+    ASSERT(x >= 0, GFraMe_ret_failed);
+    ASSERT(y >= 0, GFraMe_ret_failed);
+    ASSERT(f != 0, GFraMe_ret_failed);
+    
+    // Create the mob
+    rv = mob_init(pM, x, y, f);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    
+    // Get to the next valid character
+    parsef_ignoreWhitespace(fp, 1);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}

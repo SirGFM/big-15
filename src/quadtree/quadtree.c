@@ -12,6 +12,7 @@
 #include "../commonEvent.h"
 #include "../event.h"
 #include "../global.h"
+#include "../mob.h"
 #include "../object.h"
 #include "../player.h"
 
@@ -206,6 +207,34 @@ GFraMe_ret qt_addWall(GFraMe_object *pWall) {
 __ret:
     return rv;
 }
+
+/**
+ * Adds a mob and collides against everything
+ * 
+ * @param pMob The mob
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_addMob(mob *pMob) {
+    GFraMe_ret rv;
+    qtNode *pNode;
+    quadtree *pRoot;
+    
+    // Get a new node with the object
+    rv = qt_getMobNode(&pNode, pMob);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc mob's node",
+        __ret);
+    // Get the tree's root
+    qt_getRoot(&pRoot);
+    // Add the node to the quadtree and collide against everything else
+    rv = qt_addNodeCollide(pRoot, pNode);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert wall into tree",
+        __ret);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
 
 /**
  * Add a new node to the quadtree, subdivide it as necessary and collide against
