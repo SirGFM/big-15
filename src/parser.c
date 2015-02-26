@@ -170,6 +170,7 @@ GFraMe_ret parsef_flags(flag *pF, FILE *fp) {
     irv = fgetpos(fp, &pos);
     ASSERT(irv == 0, GFraMe_ret_failed);
     
+    f = 0;
     while (1) {
         flag tmp;
         

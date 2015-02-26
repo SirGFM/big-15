@@ -62,6 +62,8 @@ CC=gcc
 # Add debug flags
   ifneq ($(RELEASE), yes)
     CFLAGS := $(CFLAGS) -g -O0 -DDEBUG
+  else
+    CFLAGS := $(CFLAGS) -O1
   endif
 # Add quadtree debug
   ifeq ($(QTDBG), yes)

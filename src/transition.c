@@ -164,6 +164,7 @@ void transition_draw() {
     // Render it tile-by-tile
     i = 0;
     x = 0;
+    y = 0;
     while (i < DATA_LEN) {
         
         GFraMe_spriteset_draw
