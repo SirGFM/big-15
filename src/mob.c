@@ -18,11 +18,14 @@
 #include "registry.h"
 #include "types.h"
 
-#define MOB_ANIM_MAX 4
+#define MOB_ANIM_MAX 6
 
-/** States for the jumper mob */
+/** States for the 'jumper' mob */
 enum {JUMPER_STAND = 0, JUMPER_PREJUMP, JUMPER_JUMP, JUMPER_LANDED };
 #define JUMPER_COUNTDOWN 1000
+/** States for the wallee('eye') mob */
+enum {EYE_CLOSED = 0, EYE_OPENING, EYE_OPEN, EYE_FOCUSED, EYE_CLOSING, EYE_BLINK};
+#define EYE_COUNTDOWN 1500
 
 struct stMob {
     GFraMe_sprite spr;       /** Mob's sprite (for rendering and collision)   */
@@ -44,10 +47,20 @@ struct stMob {
  *   _mob_*AnimData[i]+3  = actual data
  */
 static int _mob_jumperAnimData[] = {
-    2, 2, 1, 704, 705,      /* stand */
-    2, 1, 0, 706,           /* pre-jump */
-    0, 1, 0, 707,           /* jump */
-    6, 2, 0, 706, 705       /* after-jump */
+/* fps len loop data...                       */
+    2 , 2 , 1  , 704, 705,      /* stand      */
+    6 , 1 , 0  , 706,           /* pre-jump   */
+    0 , 1 , 0  , 707,           /* jump       */
+    6 , 1 , 0  , 706            /* after-jump */
+};
+static int _mob_eyeAnimData[] = {
+/* fps len loop data...                    */
+    0 , 1 , 0  , 736,           /* closed  */
+    8 , 2 , 0  , 737, 738,      /* opening */
+    0 , 1 , 0  , 738,           /* open    */
+    4 , 1 , 0  , 737,           /* focused */
+    8 , 2 , 0  , 737, 736,      /* closing */
+   12 , 3 , 0  , 737, 736, 737  /* blink   */
 };
 
 /**
@@ -125,6 +138,10 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
                 0/*ox*/, 0/*oy*/);
             pMob->health = 1;
             pMob->damage = 1;
+            pMob->countdown = EYE_COUNTDOWN;
+            
+            animData = _mob_eyeAnimData;
+            dataLen = sizeof(_mob_eyeAnimData) / sizeof(int);
         } break;
         default: {
             GFraMe_assertRV(0, "Invalid mob type!", rv = GFraMe_ret_failed,
@@ -176,7 +193,23 @@ void mob_draw(mob *pMob) {
     // Check that the mob is alive
     ASSERT_NR(mob_isAlive(pMob) == GFraMe_ret_ok);
     
-    GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
+    switch (pMob->spr.id) {
+        case ID_EYE: {
+            int x, y;
+            
+            x = pMob->spr.obj.x - cam_x;
+            y = pMob->spr.obj.y - cam_y;
+            
+            // Render the eye ball
+            GFraMe_spriteset_draw(gl_sset4x4, 2951/*tile*/, x+4, y+3, 0);
+            // TODO Render the pupil
+            // Render the eyelid
+            GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
+        } break;
+        default: {
+            GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
+        }
+    }
     
 __ret:
     return;

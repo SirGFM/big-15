@@ -24,6 +24,7 @@ static int gl_isInit = 0;
 int gl_running;
 
 GFraMe_texture gl_tex;
+DECLARE_SSET(4, 4);
 DECLARE_SSET(8, 8);
 DECLARE_SSET(8, 16);
 DECLARE_SSET(8, 32);
@@ -54,6 +55,7 @@ GFraMe_ret gl_init() {
       gl_sset##W##x##H = &_glSset##W##x##H; \
       GFraMe_spriteset_init(gl_sset##W##x##H, &gl_tex, W, H)
     
+    INIT_SSET(4, 4);
     INIT_SSET(8, 8);
     INIT_SSET(8, 16);
     INIT_SSET(8, 32);

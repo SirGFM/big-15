@@ -42,6 +42,7 @@
 
 // Global variables
 extern int gl_running;                 /** Flag the game as running */
+extern GFraMe_spriteset *gl_sset4x4;   /** 4x4 pixels spriteset     */
 extern GFraMe_spriteset *gl_sset8x8;   /** 8x8 pixels spriteset     */
 extern GFraMe_spriteset *gl_sset8x16;  /** 8x16 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset8x32;  /** 8x16 pixels spriteset    */
