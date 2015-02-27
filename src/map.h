@@ -122,12 +122,14 @@ GFraMe_ret map_getWalls(GFraMe_object **ppObjs, int *pLen, map *pM);
 void map_getDimensions(map *pM, int *pW, int *pH);
 
 /**
- * Add everything in the map to the quadtree
+ * Check if a position (in pixels) is solid or not
  * 
  * @param pM The map
- * @return GFraMe error code
+ * @param x The horizontal position
+ * @param y The vertical position
+ * @return GFraMe_ret_ok on success
  */
-GFraMe_ret map_addQt(map *pM);
+GFraMe_ret map_isPixelSolid(map *pM, int x, int y);
 
 #endif
 

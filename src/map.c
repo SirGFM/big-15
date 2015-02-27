@@ -167,6 +167,14 @@ static GFraMe_ret map_genWalls(map *pM);
  */
 static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len);
 
+/**
+ * Check whether a tile is a wall
+ * 
+ * @param tile The tile
+ * @return GFraMe_ret_ok on sucess, GFraMe_ret_failed otherwise
+ */
+static GFraMe_ret map_isWall(unsigned char tile);
+
 //============================================================================//
 //                                                                            //
 // Module implementation                                                      //
@@ -458,6 +466,46 @@ void map_draw(map *pM) {
             break;
         i++;
     }
+}
+
+/**
+ * Get a map's dimensions (in pixels)
+ * 
+ * @param pM The map
+ * @param pW The map's width
+ * @param pH The map's height
+ */
+void map_getDimensions(map *pM, int *pW, int *pH) {
+    *pW = pM->w * 8;
+    *pH = pM->h * 8;
+}
+
+/**
+ * Check if a position (in pixels) is solid or not
+ * 
+ * @param pM The map
+ * @param x The horizontal position
+ * @param y The vertical position
+ * @return GFraMe_ret_ok on success
+ */
+GFraMe_ret map_isPixelSolid(map *pM, int x, int y) {
+    GFraMe_ret rv;
+    int tx, ty;
+    unsigned char tile;
+    
+    // Get the current tile
+    tx = x / 8;
+    ty = y / 8;
+    ASSERT(tx < pM->w, GFraMe_ret_failed);
+    ASSERT(tx >= 0, GFraMe_ret_failed);
+    ASSERT(ty < pM->h, GFraMe_ret_failed);
+    ASSERT(ty >= 0, GFraMe_ret_failed);
+    
+    // Get the tile and check it
+    tile = pM->data[tx + ty*pM->w];
+    rv = map_isWall(tile);
+__ret:
+    return rv;
 }
 
 //============================================================================//
@@ -830,17 +878,5 @@ static GFraMe_ret map_setAnimTilesMinLength(map *pM, int len) {
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
-}
-
-/**
- * Get a map's dimensions (in pixels)
- * 
- * @param pM The map
- * @param pW The map's width
- * @param pH The map's height
- */
-void map_getDimensions(map *pM, int *pW, int *pH) {
-    *pW = pM->w * 8;
-    *pH = pM->h * 8;
 }
 

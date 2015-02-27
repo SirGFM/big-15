@@ -13,7 +13,9 @@
 
 #include "camera.h"
 #include "global.h"
+#include "map.h"
 #include "mob.h"
+#include "registry.h"
 #include "types.h"
 
 #define MOB_ANIM_MAX 4
@@ -318,18 +320,50 @@ void mob_update(mob *pMob, int ms) {
             }
             else if (pMob->anim == JUMPER_PREJUMP && mob_didAnimFinish(pMob)) {
                 mob_setAnim(pMob, JUMPER_JUMP, 0);
-                // TODO check if tile beneath and change direction
+                
+                // Set the horizontal speed according to the mob direction
                 if (pMob->spr.flipped)
                     pMob->spr.obj.vx = 16;
                 else
                     pMob->spr.obj.vx = -16;
+                
                 pMob->spr.obj.vy = -GRAVITY / 4;
             }
             else if (pMob->anim == JUMPER_JUMP && isDown) {
+                GFraMe_object *pObj;
+                
+                // Set the new animation and stop the mob
                 mob_setAnim(pMob, JUMPER_LANDED, 0);
                 pMob->spr.obj.vx = 0;
+                
+                mob_getObject(&pObj, pMob);
+                
+                // If the mob is touching either side, make it move to the other one
+                if (pObj->hit & GFraMe_direction_left)
+                    pMob->spr.flipped = 1;
+                else if (pObj->hit & GFraMe_direction_right)
+                    pMob->spr.flipped = 0;
+                else {
+                    GFraMe_hitbox *pHb;
+                    GFraMe_ret rv;
+                    int speed;
+                    
+                    // Other wise, check if the next tile is solid
+                    if (pMob->spr.flipped)
+                        speed = 16;
+                    else
+                        speed = -16;
+                    
+                    pHb = GFraMe_object_get_hitbox(pObj);
+                
+                    rv = map_isPixelSolid(m, pObj->x + pHb->cx + speed / 2, pObj->y + pHb->cy + pHb->hh);
+                    if (rv != GFraMe_ret_ok) {
+                        pMob->spr.flipped = !pMob->spr.flipped;
+                    }
+                }
             }
             else if (pMob->anim == JUMPER_LANDED && mob_didAnimFinish(pMob)) {
+                // Set the new animation and update the countdown
                 mob_setAnim(pMob, JUMPER_STAND, 0);
                 pMob->countdown += JUMPER_COUNTDOWN;
             }

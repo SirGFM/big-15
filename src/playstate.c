@@ -26,7 +26,6 @@
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
-map *m;     /** Game map */
 player *p1; /** First player */
 player *p2; /** Second player */
 

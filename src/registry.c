@@ -10,6 +10,7 @@
 
 #include "event.h"
 #include "global.h"
+#include "map.h"
 #include "mob.h"
 #include "object.h"
 #include "player.h"
@@ -38,6 +39,8 @@ static GFraMe_ret rg_getNewGfmObj(GFraMe_object **ppObj);
  */
 static void rg_cleanGfmObj(GFraMe_object **ppObj);
 
+/** Define the map */
+map *m;
 /** Define every variable buffer */
 BUF_DEFINE(event);
 BUF_DEFINE(object);

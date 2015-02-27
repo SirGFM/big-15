@@ -10,8 +10,12 @@
 #include <GFraMe/GFraMe_object.h>
 
 #include "event.h"
+#include "map.h"
 #include "mob.h"
 #include "object.h"
+
+/** Game map */
+extern map *m;
 
 /**
  * Initialize every buffer
