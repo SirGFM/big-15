@@ -48,6 +48,12 @@ void gv_init() {
         _gv_arr[i] = 0;
         i++;
     }
+    
+    _gv_arr[PL1_MAXHP] = 3;
+    _gv_arr[PL1_HP] = 3;
+    _gv_arr[PL2_MAXHP] = 3;
+    _gv_arr[PL2_HP] = 3;
+    // TODO set DOOR_X & DOOR_Y
 }
 
 /**

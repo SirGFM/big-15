@@ -13,7 +13,6 @@
 #include "controller.h"
 #include "global.h"
 #include "playstate.h"
-#include "types.h"
 
 int main(int argc, char *argv[]) {
     GFraMe_ret rv;

@@ -7,7 +7,14 @@
 #ifndef __CONTROLLER_H_
 #define __CONTROLLER_H_
 
-#include "types.h"
+typedef enum {
+    CTR_KEYS,
+    CTR_BOTH,
+    CTR_1CTR,
+    CTR_2CTR,
+    CTR_MAX
+} ctr_mode;
+
 
 /**
  * Change the current input scheme

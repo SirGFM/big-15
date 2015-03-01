@@ -95,6 +95,8 @@ __ret:
 static GFraMe_ret ps_init() {
     GFraMe_ret rv;
     
+    gv_init();
+    
     rv = ui_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init ui", __ret);
     
@@ -148,10 +150,10 @@ static void ps_draw() {
         }
         else {
             rg_drawObjects();
+            ui_draw();
             transition_draw();
             player_draw(p2);
             player_draw(p1);
-            ui_draw();
         }
         #ifdef QT_DEBUG_DRAW
             if (GFraMe_keys.f1 ||

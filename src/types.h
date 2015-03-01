@@ -22,15 +22,9 @@ typedef enum {
     
     ID_JUMPER  = ID_MOB  | 0x00000001,
     ID_EYE     = ID_MOB  | 0x00000002,
+    
+    ID_HIGHJUMP = 0x00000001
 } flag;
-
-typedef enum {
-    CTR_KEYS,
-    CTR_BOTH,
-    CTR_1CTR,
-    CTR_2CTR,
-    CTR_MAX
-} ctr_mode;
 
 enum {
     CLOSED  = 0,
