@@ -166,10 +166,17 @@ void player_update(player *pPl, int ms) {
         obj->ay = GRAVITY;
     else {
         obj->ay = 0;
-        if (ctr_jump(pPl->spr.id))
-            obj->vy = -PL_JUMPS;
-        else
+        if (ctr_jump(pPl->spr.id)) {
+            if ((pPl->spr.id == ID_PL1 && gv_getValue(PL1_ITEM) == ID_HIGHJUMP) ||
+                (pPl->spr.id == ID_PL2 && gv_getValue(PL2_ITEM) == ID_HIGHJUMP))
+                obj->vy = -PL_HIGHJUMPS;
+            else
+                obj->vy = -PL_JUMPS;
+        }
+        else if (!pPl->isBeingCarried)
             obj->vy = 32;
+        else
+            obj->ay = GRAVITY;
     }
     
     // Check current state and play the apropriate animation
@@ -190,8 +197,6 @@ void player_update(player *pPl, int ms) {
             obj->vx -= PL_VX;
         else if (ctr_right(otherID))
             obj->vx += PL_VX;
-        if (obj->vy >= 0)
-            obj->vy = PL_JUMPS;
         
         pPl->isBeingCarried = 0;
     }
@@ -269,6 +274,10 @@ __ret:
     return;
 }
 
+#include "registry.h"
+
+static int dbg_value = 0;
+
 /**
  * Position the player (and set it to be moved) as being carried by another
  * player
@@ -279,6 +288,7 @@ __ret:
 void player_getCarried(player *pPl, GFraMe_object *pObj) {
     GFraMe_hitbox *pHb;
     GFraMe_object *pThisObj;
+    int isHJ, otherID, vy, maxvy;
     
     // Get the required Framework's object
     pThisObj = GFraMe_sprite_get_object(&pPl->spr);
@@ -289,6 +299,55 @@ void player_getCarried(player *pPl, GFraMe_object *pObj) {
     pThisObj->dy = pObj->dy - pHb->hh - pHb->cy;
     pThisObj->y = (int)pThisObj->dy;
     pPl->isBeingCarried = 1;
+    
+    // Check if the other player has the high jump boots equipped
+    otherID = ID_PL2 - pPl->spr.id % ID_PL1;
+    isHJ = (otherID == ID_PL1 && gv_getValue(PL1_ITEM) == ID_HIGHJUMP)
+            || (otherID == ID_PL2 && gv_getValue(PL2_ITEM) == ID_HIGHJUMP);
+    
+    // Get the carrying player vertical speed
+    vy = pObj->vy;
+    // Modify the speeds if the high jump boots are on
+    if (isHJ) {
+        if (vy < 0 && vy > -PL_JUMPS) {
+            maxvy = 0;
+        }
+        else if (vy > 0 && vy < PL_JUMPS) {
+            //GFraMe_log("hey!! - vy:%i", (int)vy);
+            maxvy = 0;
+        }
+        else
+            maxvy = 64;
+    }
+    else if (!isHJ)
+        maxvy = 16;
+    // Modify the player's VY
+    if (vy < -maxvy && !ctr_jump(pPl->spr.id)) {
+        //GFraMe_log("  up1-1: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+        pThisObj->vy = vy + maxvy;
+        //GFraMe_log("  up1-2: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+    }
+    else if (vy > maxvy && !ctr_jump(pPl->spr.id)) {
+        //GFraMe_log("down1-1: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+        pThisObj->vy = vy + maxvy;
+        //GFraMe_log("down1-2: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+    }
+    else if (pObj->vy < 0) {
+        //GFraMe_log("  up2-1: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+        if (isHJ)
+            pThisObj->vy = 0;
+        else
+            pThisObj->vy = maxvy;
+        //GFraMe_log("  up2-2: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+    }
+    else {
+        //GFraMe_log("down2-1: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+        if (isHJ)
+            pThisObj->vy = maxvy + 1;
+        else
+            pThisObj->vy = maxvy*2;
+        //GFraMe_log("down2-2: p1.vy=%i p2.vy=%i", (int)p1->spr.obj.vy, (int)p2->spr.obj.vy);
+    }
 }
 
 /**

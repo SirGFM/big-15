@@ -26,9 +26,6 @@
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
-player *p1; /** First player */
-player *p2; /** Second player */
-
 int switchState;
 
 /**

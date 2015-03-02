@@ -8,6 +8,7 @@
 
 #define HEART_ON   92
 #define HEART_OFF 124
+#define HJBOOT    154
 
 /** Simple structure to help passing parameters */
 struct stHeartArray {
@@ -199,6 +200,13 @@ static void ui_drawItemBox(int item, int x, int y) {
  * @param y The box's vertical position
  */
 static void ui_drawItem(int item, int x, int y) {
-    // TODO Render item
+    int tile;
+    
+    switch (item) {
+        case ID_HIGHJUMP: tile = HJBOOT; break;
+        // TODO Render item
+        default: return;
+    }
+    GFraMe_spriteset_draw(gl_sset8x8, tile, x, y, 0/*flip*/);
 }
 

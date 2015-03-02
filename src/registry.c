@@ -39,6 +39,11 @@ static GFraMe_ret rg_getNewGfmObj(GFraMe_object **ppObj);
  */
 static void rg_cleanGfmObj(GFraMe_object **ppObj);
 
+/** First player */
+player *p1;
+/** Second player */
+player *p2;
+
 /** Define the map */
 map *m;
 /** Define every variable buffer */

@@ -13,7 +13,12 @@
 #include "map.h"
 #include "mob.h"
 #include "object.h"
+#include "player.h"
 
+/** First player */
+extern player *p1;
+/** Second player */
+extern player *p2;
 /** Game map */
 extern map *m;
 

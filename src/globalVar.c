@@ -4,6 +4,7 @@
  * Module for storing global variables, accessible anywhere in the game
  */
 #include "globalVar.h"
+#include "types.h"
 
 static char *_gv_names[GV_MAX+1] = {
     "pl1_hp",
@@ -53,6 +54,8 @@ void gv_init() {
     _gv_arr[PL1_HP] = 3;
     _gv_arr[PL2_MAXHP] = 3;
     _gv_arr[PL2_HP] = 3;
+    //_gv_arr[ITEMS] = ID_HIGHJUMP;
+    //_gv_arr[PL1_ITEM] = ID_HIGHJUMP;
     // TODO set DOOR_X & DOOR_Y
 }
 
