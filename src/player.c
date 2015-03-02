@@ -274,9 +274,7 @@ __ret:
     return;
 }
 
-#include "registry.h"
-
-static int dbg_value = 0;
+//#include "registry.h"
 
 /**
  * Position the player (and set it to be moved) as being carried by another
@@ -454,5 +452,14 @@ GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time) {
  */
 int player_isBeingCarried(player *pPl) {
     return pPl->isBeingCarried;
+}
+
+/**
+ * Get the player's ID
+ * 
+ * @param pPl The player
+ */
+flag player_getID(player *pPl) {
+    return pPl->spr.id;
 }
 

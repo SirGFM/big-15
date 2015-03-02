@@ -33,3 +33,4 @@ tm:[
 ev: { x:40 y:20 w:1 h:6 ce:"ce_switch_map" int:1 int:1 int:23 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 mob: { x:233 y:194 f:"jumper" }
 mob: { x:9 y:112 f:"eye" }
+ev: { x:23 y:24 w:2 h:1 ce:"ce_get_item" int:1 int:-1 int:-1 int:-1 t:"is_player"     }

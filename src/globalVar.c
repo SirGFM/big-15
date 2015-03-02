@@ -54,8 +54,6 @@ void gv_init() {
     _gv_arr[PL1_HP] = 3;
     _gv_arr[PL2_MAXHP] = 3;
     _gv_arr[PL2_HP] = 3;
-    //_gv_arr[ITEMS] = ID_HIGHJUMP;
-    //_gv_arr[PL1_ITEM] = ID_HIGHJUMP;
     // TODO set DOOR_X & DOOR_Y
 }
 
@@ -68,6 +66,17 @@ void gv_init() {
 void gv_setValue(globalVar gv, int val) {
     if (gv < GV_MAX)
         _gv_arr[gv] = val;
+}
+
+/**
+ * Set a single bit
+ * 
+ * @param gv The global variable
+ * @param val The new value
+ */
+void gv_setBit(globalVar gv, int bit) {
+    if (gv < GV_MAX)
+        _gv_arr[gv] |= bit;
 }
 
 /**

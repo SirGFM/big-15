@@ -19,6 +19,7 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_handle_door",
     "ce_handle_notdoor",
     "ce_switch_map",
+    "ce_get_item",
     "ce_max"
 };
 
@@ -233,6 +234,24 @@ void ce_callEvent(commonEvent ce) {
             event_iGetVar(&x, pE, 1);
             event_iGetVar(&y, pE, 2);
             player_setDestMap(pPl, map, x, y);
+        } break;
+        case CE_GET_ITEM: {
+            event *pE;
+            int item;
+            player *pPl;
+            
+            // Get every parameter
+            pE = (event*)_ce_caller;
+            pPl = (player*)_ce_target;
+            
+            // Set the item as gotten
+            event_iGetVar(&item, pE, 0);
+            gv_setBit(ITEMS, item);
+            // And Equip the player
+            if (player_getID(pPl) == ID_PL1)
+                gv_setValue(PL1_ITEM, item);
+            else if (player_getID(pPl) == ID_PL2)
+                gv_setValue(PL2_ITEM, item);
         } break;
         // TODO implement every common event
         default: {}

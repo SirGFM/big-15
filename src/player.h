@@ -7,6 +7,8 @@
 #ifndef __PLAYER_H_
 #define __PLAYER_H_
 
+#include "types.h"
+
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
@@ -125,6 +127,13 @@ GFraMe_ret player_tweenTo(player *pPl, int x, int y, int ms, int time);
  * @param pPl The player
  */
 int player_isBeingCarried(player *pPl);
+
+/**
+ * Get the player's ID
+ * 
+ * @param pPl The player
+ */
+flag player_getID(player *pPl);
 
 #endif
 
