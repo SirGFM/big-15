@@ -9,6 +9,11 @@
 #define HEART_ON   92
 #define HEART_OFF 124
 #define HJBOOT    154
+#define TELEP     186
+#define SIGNL     218
+
+/** Global timer used to animate ui graphics */
+static int _ui_globalTime;
 
 /** Simple structure to help passing parameters */
 struct stHeartArray {
@@ -56,6 +61,8 @@ static void ui_drawItem(int item, int x, int y);
 GFraMe_ret ui_init() {
     GFraMe_ret rv;
     
+    _ui_globalTime = 0;
+    
     rv = GFraMe_ret_ok;
 //__ret:
     return rv;
@@ -74,7 +81,7 @@ void ui_clean() {
  * @param ms Time, in milliseconds, elapsed from last frame
  */
 void ui_update(int ms) {
-    
+    _ui_globalTime += ms;
 }
 
 /**
@@ -146,10 +153,14 @@ void ui_draw() {
     y = 7;
     while (items) {
         int item;
-        if ((items & ID_HIGHJUMP) == ID_HIGHJUMP)
-            item = ID_HIGHJUMP;
+        #define SET_ITEM(ITEM_ID) if (!item && (items & ITEM_ID) == ITEM_ID) item = ITEM_ID
+        
+        item = 0;
+        SET_ITEM(ID_HIGHJUMP);
+        SET_ITEM(ID_TELEPORT);
+        SET_ITEM(ID_SIGNALER);
         // TODO check for more items
-        else {
+        if (item == 0) {
             // Shouldn't happen, but just in case...
             GFraMe_log("No more items to be drawn!");
             break;
@@ -160,6 +171,8 @@ void ui_draw() {
         items ^= item;
         // Set the next item position
         x += 8;
+        
+        #undef SET_ITEM
     }
 }
 
@@ -204,6 +217,30 @@ static void ui_drawItem(int item, int x, int y) {
     
     switch (item) {
         case ID_HIGHJUMP: tile = HJBOOT; break;
+        case ID_TELEPORT: {
+            int frame;
+            
+            frame = (_ui_globalTime / 66) % 14;
+            switch (frame) {
+                case 0: case  1: case 2: case  3: tile = TELEP;     break;
+                case 4: case 13:                  tile = TELEP + 1; break;
+                case 5: case 12:                  tile = TELEP + 2; break;
+                case 6: case 11:                  tile = TELEP + 3; break;
+                case 7: case  8: case 9: case 10: tile = TELEP + 4; break;
+            }
+        } break;
+        case ID_SIGNALER: {
+            int frame;
+            
+            frame = (_ui_globalTime / 66) % 14;
+            switch (frame) {
+                case 0: case  1: case 2: case  3: tile = SIGNL;     break;
+                case 4: case 13:                  tile = SIGNL + 1; break;
+                case 5: case 12:                  tile = SIGNL + 2; break;
+                case 6: case 11:                  tile = SIGNL + 3; break;
+                case 7: case  8: case 9: case 10: tile = SIGNL + 4; break;
+            }
+        } break;
         // TODO Render item
         default: return;
     }

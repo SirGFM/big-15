@@ -23,7 +23,9 @@ typedef enum {
     ID_JUMPER  = ID_MOB  | 0x00000001,
     ID_EYE     = ID_MOB  | 0x00000002,
     
-    ID_HIGHJUMP = 0x00000001
+    ID_HIGHJUMP = 0x00000001,
+    ID_TELEPORT = 0x00000002,
+    ID_SIGNALER = 0x00000004
 } flag;
 
 enum {
