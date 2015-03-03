@@ -19,6 +19,8 @@ typedef enum {
     PL2_DEATH,    /** How many times player 2 died             */
     PL2_CX,       /** Player 1 horizontal (world) position     */
     PL2_CY,       /** Player 1 vertical (world) position       */
+    SIGL_X,       /** Signaler horizontal position             */
+    SIGL_Y,       /** Signaler vertical position             */
     MAP,          /** Current map                              */
     DOOR_X,       /** Entrance horizontal point on current map */
     DOOR_Y,       /** Entrance vertical point on current map   */

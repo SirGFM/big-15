@@ -135,5 +135,12 @@ int player_isBeingCarried(player *pPl);
  */
 flag player_getID(player *pPl);
 
+/**
+ * Checks if the player should teleport and setup everything
+ * 
+ * @param pPl The player
+ */
+void player_checkTeleport(player *pPl);
+
 #endif
 

@@ -34,6 +34,7 @@ struct stPlayer {
     
     int curAnim;
     int isBeingCarried;
+    int didTeleport;
     
     // Info about the map the player is trying to move to
     int map;
@@ -94,6 +95,7 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     
     pPl->spr.id = ID;
     pPl->isBeingCarried = 0;
+    pPl->didTeleport = 0;
     
     pPl->map = -1;
     pPl->map_x = -1;
@@ -423,5 +425,68 @@ int player_isBeingCarried(player *pPl) {
  */
 flag player_getID(player *pPl) {
     return pPl->spr.id;
+}
+
+/**
+ * Checks if the player should teleport and setup everything
+ * 
+ * @param pPl The player
+ */
+void player_checkTeleport(player *pPl) {
+    GFraMe_object *pObj;
+    int item, otherItem, x, y;
+    
+    // Get both players' items
+    if (pPl->spr.id == ID_PL1) {
+        item = gv_getValue(PL1_ITEM);
+        otherItem = gv_getValue(PL2_ITEM);
+    }
+    else {
+        item = gv_getValue(PL2_ITEM);
+        otherItem = gv_getValue(PL1_ITEM);
+    }
+    // Check whether teleporting is possible
+    ASSERT_NR(item == ID_TELEPORT);
+    if (otherItem != ID_SIGNALER) {
+        // TODO play failure sound
+        ASSERT_NR(0);
+    }
+    // Check that it was triggered
+    ASSERT_NR(ctr_item(pPl->spr.id));
+    ASSERT_NR(!pPl->didTeleport);
+    pPl->didTeleport = 1;
+    
+    pObj = GFraMe_sprite_get_object(&pPl->spr);
+    // Find the destination position
+    x = gv_getValue(SIGL_X);
+    y = gv_getValue(SIGL_Y);
+    if (x == -1 || y == -1) {
+        // If the signaler isn't set, teleport to the other player
+        if (pPl->spr.id == ID_PL1) {
+            x = gv_getValue(PL2_CX);
+            y = gv_getValue(PL2_CY);
+        }
+        else {
+            x = gv_getValue(PL1_CX);
+            y = gv_getValue(PL1_CY);
+        }
+        x -= pObj->hitbox.hw;
+        y -= pObj->hitbox.hh;
+        gv_setValue(SIGL_X, x);
+        gv_setValue(SIGL_Y, y);
+    }
+    // TODO player some animation before teleporting it
+    pObj->dx = x;
+    pObj->dy = y;
+    
+__ret:
+    if (!ctr_item(pPl->spr.id)) {
+        pPl->didTeleport = 0;
+        gv_setValue(SIGL_X, -1);
+        gv_setValue(SIGL_Y, -1);
+        // TODO remove signal from map
+    }
+    
+    return;
 }
 

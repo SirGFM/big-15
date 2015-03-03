@@ -245,6 +245,10 @@ static void ps_update() {
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
         
+        // Check if any player should teleport
+        player_checkTeleport(p1);
+        player_checkTeleport(p2);
+        
         // Collide everythin against everything else
         map_getDimensions(m, &w, &h);
         

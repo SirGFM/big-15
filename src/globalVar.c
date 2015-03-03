@@ -19,6 +19,8 @@ static char *_gv_names[GV_MAX+1] = {
     "pl2_death",
     "pl2_x",
     "pl2_y",
+    "sigl_x",
+    "sigl_y",
     "map",
     "door_x",
     "door_y",
@@ -54,7 +56,13 @@ void gv_init() {
     _gv_arr[PL1_HP] = 3;
     _gv_arr[PL2_MAXHP] = 3;
     _gv_arr[PL2_HP] = 3;
+    _gv_arr[SIGL_X] = -1;
+    _gv_arr[SIGL_Y] = -1;
     // TODO set DOOR_X & DOOR_Y
+    
+    //_gv_arr[ITEMS] = ID_HIGHJUMP | ID_TELEPORT | ID_SIGNALER;
+    //_gv_arr[PL1_ITEM] = ID_TELEPORT;
+    //_gv_arr[PL2_ITEM] = ID_SIGNALER;
 }
 
 /**
