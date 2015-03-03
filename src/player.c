@@ -37,6 +37,7 @@ struct stPlayer {
     int isBeingCarried;
     int pressedTeleport;
     int isTeleporting;
+    int lastItemSwitch;
     
     // Info about the map the player is trying to move to
     int map;
@@ -99,6 +100,7 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     pPl->isBeingCarried = 0;
     pPl->pressedTeleport = 0;
     pPl->isTeleporting = 0;
+    pPl->lastItemSwitch = 0;
     
     pPl->map = -1;
     pPl->map_x = -1;
@@ -148,6 +150,10 @@ void player_update(player *pPl, int ms) {
     pPl->map = -1;
     pPl->map_x = -1;
     pPl->map_y = -1;
+    
+    // Decrease item switch cooldown
+    if (pPl->lastItemSwitch > 0)
+        pPl->lastItemSwitch -= ms;
     
     // Check if the player should teleport
     if (pPl->isTeleporting) {
@@ -507,6 +513,57 @@ __ret:
         gv_setValue(SIGL_X, -1);
         gv_setValue(SIGL_Y, -1);
     }
+    
+    return;
+}
+
+/**
+ * Checks and change a player's item
+ * 
+ * @param pPl The player */
+void player_changeItem(player *pPl) {
+    int curItem, i, items, otherItem;
+    
+    // Check if it's actually changing it
+    ASSERT_NR(ctr_switchItem(pPl->spr.id));
+    ASSERT_NR(pPl->lastItemSwitch <= 0);
+    
+    // Get all enabled items (and the current ones)
+    items = gv_getValue(ITEMS);
+    if (pPl->spr.id == ID_PL1) {
+        curItem = gv_getValue(PL1_ITEM);
+        otherItem = gv_getValue(PL2_ITEM);
+    }
+    else if (pPl->spr.id == ID_PL2) {
+        curItem = gv_getValue(PL2_ITEM);
+        otherItem = gv_getValue(PL1_ITEM);
+    }
+    
+    if (curItem)
+        i = curItem << 1;
+    else
+        i = 1;
+    while (1) {
+        if ((items & i) && otherItem != i)
+            break;
+        
+        if (i == ID_LASTITEM) {
+            i = 0;
+            break;
+        }
+        i <<= 1;
+    }
+    if (pPl->spr.id == ID_PL1)
+        gv_setValue(PL1_ITEM, i);
+    else if (pPl->spr.id == ID_PL2)
+        gv_setValue(PL2_ITEM, i);
+    
+    // Set the cooldown
+    pPl->lastItemSwitch += 300;
+__ret:
+    // Reset if the button was released
+    if (!ctr_switchItem(pPl->spr.id))
+        pPl->lastItemSwitch = 0;
     
     return;
 }

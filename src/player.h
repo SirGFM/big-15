@@ -142,5 +142,12 @@ flag player_getID(player *pPl);
  */
 void player_checkTeleport(player *pPl);
 
+/**
+ * Checks and change a player's item
+ * 
+ * @param pPl The player
+ */
+void player_changeItem(player *pPl);
+
 #endif
 

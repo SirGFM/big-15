@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_object.h>
 
 #include "collision.h"
+#include "controller.h"
 #include "event.h"
 #include "mob.h"
 #include "object.h"
@@ -87,6 +88,9 @@ void col_onPlayer(player *pPl1, player *pPl2) {
     // Try to collide them
     rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
     if (rv == GFraMe_ret_ok) {
+        // Check if they are changing itens
+        player_changeItem(pPl1);
+        player_changeItem(pPl2);
         // If any player wasn't touching down but is now, then it's
         // above the other one
         if (pObj1->y == pObj2->y) {} // Do nothing if they are side-by-side

@@ -9,6 +9,8 @@
 #define HEART_ON   92
 #define HEART_OFF 124
 #define HJBOOT    154
+#define P_ONE     155
+#define P_TWO     156
 #define TELEP     186
 #define SIGNL     218
 
@@ -88,7 +90,7 @@ void ui_update(int ms) {
  * Draw the ui to the screen
  */
 void ui_draw() {
-    int i, x, y, items;
+    int i, x, y, items, pl1Item, pl2Item;
     struct stHeartArray data;
     
     // Setup rendering of player 1 lives
@@ -146,8 +148,8 @@ void ui_draw() {
     // Get every found item
     items = gv_getValue(ITEMS);
     // Removes both players items from the pool
-    items ^= gv_getValue(PL1_ITEM);
-    items ^= gv_getValue(PL2_ITEM);
+    pl1Item = gv_getValue(PL1_ITEM);
+    pl2Item = gv_getValue(PL2_ITEM);
     // Draw every enabled item
     x = 72;
     y = 7;
@@ -165,8 +167,13 @@ void ui_draw() {
             GFraMe_log("No more items to be drawn!");
             break;
         }
+        if (item == pl1Item)
+            ui_drawItem(ID_PL1ITEM, x, y);
+        else if (item == pl2Item)
+            ui_drawItem(ID_PL2ITEM, x, y);
+        else
+            ui_drawItem(item, x, y);
         // Draw the current item
-        ui_drawItem(item, x, y);
         // Clean up this item flag
         items ^= item;
         // Set the next item position
@@ -241,6 +248,8 @@ static void ui_drawItem(int item, int x, int y) {
                 case 7: case  8: case 9: case 10: tile = SIGNL + 4; break;
             }
         } break;
+        case ID_PL1ITEM: tile = P_ONE; break;
+        case ID_PL2ITEM: tile = P_TWO; break;
         // TODO Render item
         default: return;
     }
