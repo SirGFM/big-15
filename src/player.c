@@ -12,6 +12,7 @@
 #include "global.h"
 #include "globalVar.h"
 #include "player.h"
+#include "registry.h"
 #include "types.h"
 
 #include <stdio.h>
@@ -34,7 +35,8 @@ struct stPlayer {
     
     int curAnim;
     int isBeingCarried;
-    int didTeleport;
+    int pressedTeleport;
+    int isTeleporting;
     
     // Info about the map the player is trying to move to
     int map;
@@ -95,7 +97,8 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     
     pPl->spr.id = ID;
     pPl->isBeingCarried = 0;
-    pPl->didTeleport = 0;
+    pPl->pressedTeleport = 0;
+    pPl->isTeleporting = 0;
     
     pPl->map = -1;
     pPl->map_x = -1;
@@ -145,6 +148,20 @@ void player_update(player *pPl, int ms) {
     pPl->map = -1;
     pPl->map_x = -1;
     pPl->map_y = -1;
+    
+    // Check if the player should teleport
+    if (pPl->isTeleporting) {
+        int x, y;
+        
+        x = gv_getValue(TELP_X);
+        y = gv_getValue(TELP_Y);
+        
+        pPl->spr.obj.dx = x;
+        pPl->spr.obj.dy = y;
+        pPl->isTeleporting = 0;
+        
+        return;
+    }
     
     obj = GFraMe_sprite_get_object(&pPl->spr);
     isDown = obj->hit & GFraMe_direction_down;
@@ -435,26 +452,33 @@ flag player_getID(player *pPl) {
 void player_checkTeleport(player *pPl) {
     GFraMe_object *pObj;
     int item, otherItem, x, y;
+    int isSide;
     
     // Get both players' items
     if (pPl->spr.id == ID_PL1) {
         item = gv_getValue(PL1_ITEM);
         otherItem = gv_getValue(PL2_ITEM);
+        isSide = p2->spr.obj.hit & (GFraMe_direction_left | GFraMe_direction_right);
     }
-    else {
+    else if (pPl->spr.id == ID_PL2) {
         item = gv_getValue(PL2_ITEM);
         otherItem = gv_getValue(PL1_ITEM);
+        isSide = p1->spr.obj.hit & (GFraMe_direction_left | GFraMe_direction_right);
     }
-    // Check whether teleporting is possible
+    else {
+        ASSERT_NR(0);
+    }
+    // Check (and set) whether the player is teleporting
     ASSERT_NR(item == ID_TELEPORT);
-    if (otherItem != ID_SIGNALER) {
+    ASSERT_NR(!pPl->pressedTeleport);
+    pPl->pressedTeleport = 1;
+    // Check whether teleporting is possible
+    if (otherItem != ID_SIGNALER || isSide) {
         // TODO play failure sound
         ASSERT_NR(0);
     }
     // Check that it was triggered
     ASSERT_NR(ctr_item(pPl->spr.id));
-    ASSERT_NR(!pPl->didTeleport);
-    pPl->didTeleport = 1;
     
     pObj = GFraMe_sprite_get_object(&pPl->spr);
     // Find the destination position
@@ -472,19 +496,16 @@ void player_checkTeleport(player *pPl) {
         }
         x -= pObj->hitbox.hw;
         y -= pObj->hitbox.hh;
-        gv_setValue(SIGL_X, x);
-        gv_setValue(SIGL_Y, y);
     }
-    // TODO player some animation before teleporting it
-    pObj->dx = x;
-    pObj->dy = y;
+    gv_setValue(TELP_X, x);
+    gv_setValue(TELP_Y, y);
     
+    pPl->isTeleporting = 1;
 __ret:
     if (!ctr_item(pPl->spr.id)) {
-        pPl->didTeleport = 0;
+        pPl->pressedTeleport = 0;
         gv_setValue(SIGL_X, -1);
         gv_setValue(SIGL_Y, -1);
-        // TODO remove signal from map
     }
     
     return;

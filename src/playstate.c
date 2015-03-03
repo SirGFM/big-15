@@ -10,6 +10,7 @@
 #include <GFraMe/GFraMe_util.h>
 
 #include "camera.h"
+#include "collision.h"
 #include "global.h"
 #include "map.h"
 #include "player.h"
@@ -237,6 +238,10 @@ static void ps_update() {
         
         pObj = 0;
         
+        // Check if any player should teleport
+        player_checkTeleport(p1);
+        player_checkTeleport(p2);
+        
         // Update everything
         map_update(m, GFraMe_event_elapsed);
         rg_updateMobs(GFraMe_event_elapsed);
@@ -244,10 +249,6 @@ static void ps_update() {
         player_update(p1, GFraMe_event_elapsed);
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
-        
-        // Check if any player should teleport
-        player_checkTeleport(p1);
-        player_checkTeleport(p2);
         
         // Collide everythin against everything else
         map_getDimensions(m, &w, &h);
@@ -280,16 +281,12 @@ static void ps_update() {
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding player to quadtree",
             __err_ret);
         
+        // Collide both players, manually
+        col_onPlayer(p1, p2);
+        
         // Collide the carried player (if any) against the map
-        if (player_isBeingCarried(p1)) {
-            GFraMe_object *pObj2;
-            
+        if (player_isBeingCarried(p1))
             player_getObject(&pObj, p1);
-            
-            // Fix a bug that causes the player 1 to not be carried
-            player_getObject(&pObj2, p2);
-            player_getCarried(p1, pObj2);
-        }
         else if (player_isBeingCarried(p2))
             player_getObject(&pObj, p2);
         // Fix a bug that would let players clip into ceilings

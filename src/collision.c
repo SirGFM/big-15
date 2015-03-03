@@ -32,7 +32,7 @@ void checkCollision(qtNode *n1, qtNode *n2) {
     qt_getRef(&pPl2, &pEv2, &pObj2, &pWall2, &pMob2, n2);
     
     // Collide it accordingly
-    if      (pPl1   && pPl2  ) col_onPlayer (pPl1,  pPl2);
+    if      (pPl1   && pPl2  ) {}
     else if (pPl1   && pEv2  ) col_onPlEv   (pPl1,  pEv2);
     else if (pPl1   && pObj2 ) col_onPlObj  (pPl1,  pObj2);
     else if (pPl1   && pMob2 ) col_onPlMob  (pPl1,  pMob2);

@@ -21,6 +21,8 @@ static char *_gv_names[GV_MAX+1] = {
     "pl2_y",
     "sigl_x",
     "sigl_y",
+    "telp_x",
+    "telp_y",
     "map",
     "door_x",
     "door_y",
