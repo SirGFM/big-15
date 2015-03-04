@@ -16,6 +16,7 @@
 #include "player.h"
 #include "playstate.h"
 #include "registry.h"
+#include "signal.h"
 #include "transition.h"
 #include "types.h"
 #include "ui.h"
@@ -112,6 +113,8 @@ static GFraMe_ret ps_init() {
     
     rv = map_loadi(m, 0);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
+
+    signal_init();
     
     switchState = 0;
     transition_initFadeOut();
@@ -143,10 +146,12 @@ static void ps_draw() {
         if (gv_isZero(SWITCH_MAP)) {
             player_draw(p2);
             player_draw(p1);
+            signal_draw();
             rg_drawObjects();
             ui_draw();
         }
         else {
+            signal_draw();
             rg_drawObjects();
             ui_draw();
             transition_draw();
@@ -215,9 +220,11 @@ static GFraMe_ret ps_switchMap() {
                 switchState++;
         } break;
         /** Finish the transition */
-        default:
+        default: {
             gv_setValue(SWITCH_MAP, 0);
             switchState = 0;
+            signal_release();
+        }
     }
     
     // Set return variable
@@ -249,6 +256,7 @@ static void ps_update() {
         player_update(p1, GFraMe_event_elapsed);
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
+        signal_update(GFraMe_event_elapsed);
         
         // Collide everythin against everything else
         map_getDimensions(m, &w, &h);

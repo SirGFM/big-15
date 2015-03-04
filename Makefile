@@ -27,6 +27,7 @@ CC=gcc
          $(OBJDIR)/player.o            \
          $(OBJDIR)/playstate.o         \
          $(OBJDIR)/registry.o          \
+         $(OBJDIR)/signal.o            \
          $(OBJDIR)/transition.o        \
          $(OBJDIR)/types.o             \
          $(OBJDIR)/ui.o                \

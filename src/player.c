@@ -13,6 +13,7 @@
 #include "globalVar.h"
 #include "player.h"
 #include "registry.h"
+#include "signal.h"
 #include "types.h"
 
 #include <stdio.h>
@@ -171,6 +172,28 @@ void player_update(player *pPl, int ms) {
     
     obj = GFraMe_sprite_get_object(&pPl->spr);
     isDown = obj->hit & GFraMe_direction_down;
+    
+    // Check if the player just set the signaler
+    if (!pPl->pressedTeleport && ctr_item(pPl->spr.id)) {
+        int item;
+        
+        if (pPl->spr.id == ID_PL1)
+            item = gv_getValue(PL1_ITEM);
+        else if (pPl->spr.id == ID_PL2)
+            item = gv_getValue(PL2_ITEM);
+        
+        if (item == ID_SIGNALER) {
+            int cx, cy;
+            
+            // Set the signaler position
+            cx = obj->dx + obj->hitbox.cx;
+            cy = obj->dy + obj->hitbox.cy;
+            signal_setPos(cx, cy);
+            
+            pPl->pressedTeleport = 1;
+        }
+    }
+    
     
     // Set player's horizontal speed
     if (ctr_left(pPl->spr.id)) {
@@ -478,11 +501,6 @@ void player_checkTeleport(player *pPl) {
     ASSERT_NR(item == ID_TELEPORT);
     ASSERT_NR(!pPl->pressedTeleport);
     pPl->pressedTeleport = 1;
-    // Check whether teleporting is possible
-    if (otherItem != ID_SIGNALER || isSide) {
-        // TODO play failure sound
-        ASSERT_NR(0);
-    }
     // Check that it was triggered
     ASSERT_NR(ctr_item(pPl->spr.id));
     
@@ -491,6 +509,9 @@ void player_checkTeleport(player *pPl) {
     x = gv_getValue(SIGL_X);
     y = gv_getValue(SIGL_Y);
     if (x == -1 || y == -1) {
+        // Check whether teleporting is possible
+        ASSERT_NR(otherItem == ID_SIGNALER && !isSide);
+        
         // If the signaler isn't set, teleport to the other player
         if (pPl->spr.id == ID_PL1) {
             x = gv_getValue(PL2_CX);
@@ -507,11 +528,14 @@ void player_checkTeleport(player *pPl) {
     gv_setValue(TELP_Y, y);
     
     pPl->isTeleporting = 1;
+    signal_release();
 __ret:
     if (!ctr_item(pPl->spr.id)) {
         pPl->pressedTeleport = 0;
-        gv_setValue(SIGL_X, -1);
-        gv_setValue(SIGL_Y, -1);
+    }
+    else if (pPl->pressedTeleport) {
+        // TODO fix this check
+        // TODO play failure sound
     }
     
     return;
