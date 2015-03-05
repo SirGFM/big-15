@@ -25,7 +25,7 @@ enum {JUMPER_STAND = 0, JUMPER_PREJUMP, JUMPER_JUMP, JUMPER_LANDED };
 #define JUMPER_COUNTDOWN 1000
 /** States for the wallee('eye') mob */
 enum {EYE_CLOSED = 0, EYE_OPENING, EYE_OPEN, EYE_FOCUSED, EYE_CLOSING, EYE_BLINK};
-#define EYE_COUNTDOWN 1500
+#define EYE_COUNTDOWN  500
 
 struct stMob {
     GFraMe_sprite spr;       /** Mob's sprite (for rendering and collision)   */
@@ -47,14 +47,14 @@ struct stMob {
  *   _mob_*AnimData[i]+3  = actual data
  */
 static int _mob_jumperAnimData[] = {
-/* fps len loop data...                       */
+/* fps,len,loop,data...                       */
     2 , 2 , 1  , 704, 705,      /* stand      */
     6 , 1 , 0  , 706,           /* pre-jump   */
     0 , 1 , 0  , 707,           /* jump       */
     6 , 1 , 0  , 706            /* after-jump */
 };
 static int _mob_eyeAnimData[] = {
-/* fps len loop data...                    */
+/* fps,len,loop,data...                    */
     0 , 1 , 0  , 736,           /* closed  */
     8 , 2 , 0  , 737, 738,      /* opening */
     0 , 1 , 0  , 738,           /* open    */
@@ -241,7 +241,27 @@ __ret:
  * @param pDy The vertical distance
  * @param pMob The mob
  */
-void mob_getClosestPlDist(int *pDx, int *pDy, mob *pMob);
+void mob_getClosestPlDist(int *pDx, int *pDy, mob *pMob) {
+    GFraMe_object *pObj;
+    int p1X, p1Y, p2X, p2Y;
+    
+    mob_getObject(&pObj, pMob);
+    // Get both player positions (relative to the mob)
+    p1X = gv_getValue(PL1_CX) - pObj->x - pObj->hitbox.cx;
+    p1Y = gv_getValue(PL1_CY) - pObj->y - pObj->hitbox.cy;
+    p2X = gv_getValue(PL2_CX) - pObj->x - pObj->hitbox.cx;
+    p2Y = gv_getValue(PL2_CY) - pObj->y - pObj->hitbox.cy;
+    
+    // Return the closest player position
+    if (p1X*p1X + p1Y*p1Y < p2X*p2X + p2Y*p2Y) {
+        *pDx = p1X;
+        *pDy = p1Y;
+    }
+    else {
+        *pDx = p2X;
+        *pDy = p2Y;
+    }
+}
 
 /**
  * Get the horizontal distance from the closest player
@@ -403,9 +423,49 @@ void mob_update(mob *pMob, int ms) {
             // Make sure the mob is always grounded
             if (pMob->anim != JUMPER_JUMP && isDown)
                 pMob->spr.obj.vy = 32;
-        } break;
+        } break; /* ID_JUMPER */
         case ID_EYE: {
-        } break;
+            if (pMob->anim == EYE_CLOSED && pMob->countdown <= 0) {
+                int x, y;
+                // Get the closest player's position
+                mob_getClosestPlDist(&x, &y, pMob);
+                // Check if any player is at least 8 tiles close
+                if (x*x + y*y <= 64*64) {
+                    // Set the new animation
+                    mob_setAnim(pMob, EYE_OPENING, 0);
+                }
+            }
+            else if (pMob->anim == EYE_OPENING && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, EYE_OPEN, 0);
+                pMob->countdown += EYE_COUNTDOWN;
+            }
+            else if (pMob->anim == EYE_OPEN && pMob->countdown <= 0) {
+                int x, y;
+                // Get the closest player's position
+                mob_getClosestPlDist(&x, &y, pMob);
+                // If the player got 11 tiles away, stop following
+                if (x*x + y*y > 96*96) {
+                    // Set the new animation
+                    mob_setAnim(pMob, EYE_CLOSING, 0);
+                }
+                else {
+                    mob_setAnim(pMob, EYE_BLINK, 0);
+                }
+            }
+            else if (pMob->anim == EYE_CLOSING && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, EYE_CLOSED, 0);
+                pMob->countdown += EYE_COUNTDOWN;
+            }
+            else if (pMob->anim == EYE_BLINK && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, EYE_FOCUSED, 0);
+                pMob->countdown += EYE_COUNTDOWN;
+                // TODO SHOOT!
+            }
+            else if (pMob->anim == EYE_FOCUSED && pMob->countdown <= 0) {
+                mob_setAnim(pMob, EYE_OPEN, 0);
+                pMob->countdown += EYE_COUNTDOWN * 2;
+            }
+        } break; /* ID_EYE */
         default: {
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
                 pMob->spr.obj.vy = 32;
