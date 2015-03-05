@@ -26,6 +26,8 @@ enum {JUMPER_STAND = 0, JUMPER_PREJUMP, JUMPER_JUMP, JUMPER_LANDED };
 /** States for the wallee('eye') mob */
 enum {EYE_CLOSED = 0, EYE_OPENING, EYE_OPEN, EYE_FOCUSED, EYE_CLOSING, EYE_BLINK};
 #define EYE_COUNTDOWN  500
+#define EYE_MINDIST 64
+#define EYE_MAXDIST 96
 
 struct stMob {
     GFraMe_sprite spr;       /** Mob's sprite (for rendering and collision)   */
@@ -197,12 +199,22 @@ void mob_draw(mob *pMob) {
         case ID_EYE: {
             int x, y;
             
+            // TODO render EYE facing left
             x = pMob->spr.obj.x - cam_x;
             y = pMob->spr.obj.y - cam_y;
             
-            // Render the eye ball
-            GFraMe_spriteset_draw(gl_sset4x4, 2951/*tile*/, x+4, y+3, 0);
-            // TODO Render the pupil
+            if (pMob->anim != EYE_CLOSED) {
+                int pX, pY;
+                // Render the eye ball
+                GFraMe_spriteset_draw(gl_sset4x4, 2951/*tile*/, x+4, y+3, 0);
+                // Get the closest player's position
+                mob_getClosestPlDist(&pX, &pY, pMob);
+                pX = pX / (float)(EYE_MAXDIST) * 2.0f + 1;
+                pY = pY / (float)(EYE_MAXDIST) * 3.0f + 1;
+                // Render the pupil
+                GFraMe_spriteset_draw(gl_sset4x4, 2950/*tile*/, x + 4 + pX,
+                    y + 3 + pY, 0);
+            }
             // Render the eyelid
             GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
         } break;
@@ -430,7 +442,7 @@ void mob_update(mob *pMob, int ms) {
                 // Get the closest player's position
                 mob_getClosestPlDist(&x, &y, pMob);
                 // Check if any player is at least 8 tiles close
-                if (x*x + y*y <= 64*64) {
+                if (x*x + y*y <= EYE_MINDIST*EYE_MINDIST) {
                     // Set the new animation
                     mob_setAnim(pMob, EYE_OPENING, 0);
                 }
@@ -444,7 +456,7 @@ void mob_update(mob *pMob, int ms) {
                 // Get the closest player's position
                 mob_getClosestPlDist(&x, &y, pMob);
                 // If the player got 11 tiles away, stop following
-                if (x*x + y*y > 96*96) {
+                if (x*x + y*y > EYE_MAXDIST*EYE_MAXDIST) {
                     // Set the new animation
                     mob_setAnim(pMob, EYE_CLOSING, 0);
                 }
