@@ -5,6 +5,7 @@
  */
 #include <GFraMe/GFraMe_spriteset.h>
 
+#include "camera.h"
 #include "global.h"
 #include "globalVar.h"
 #include "signal.h"
@@ -133,8 +134,10 @@ void signal_update(int ms) {
 static void signal_intDraw(stSignal *sg) {
     ASSERT_NR(sg->state != SGNL_NONE);
     // Draw the signal's frame (mirroring it to the right"
-    GFraMe_spriteset_draw(gl_sset8x16, sg->frame, sg->x    , sg->y, 0/*flip*/);
-    GFraMe_spriteset_draw(gl_sset8x16, sg->frame, sg->x + 8, sg->y, 1/*flip*/);
+    GFraMe_spriteset_draw(gl_sset8x16, sg->frame, sg->x     - cam_x,
+        sg->y - cam_y, 0/*flip*/);
+    GFraMe_spriteset_draw(gl_sset8x16, sg->frame, sg->x + 8 - cam_x,
+        sg->y - cam_y, 1/*flip*/);
 __ret:
     return;
 }

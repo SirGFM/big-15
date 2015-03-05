@@ -80,8 +80,14 @@ CC=gcc
 # Add dependencies
  ifeq ($(OS), Win)
    LFLAGS := -L./lib/GFraMe/bin/Win -lmingw32 $(LFLAGS) -lSDL2main
+   ifeq ($(USE_OPENGL), yes)
+     LFLAGS := $(LFLAGS) -lopengl32
+   endif
  else
    LFLAGS := -L./lib/GFraMe/bin/Linux $(LFLAGS)
+   ifeq ($(USE_OPENGL), yes)
+     LFLAGS := $(LFLAGS) -lGL
+   endif
  endif
  LFLAGS := $(LFLAGS) -lSDL2
 #==============================================================================
@@ -120,7 +126,7 @@ $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(LIB):
-	make static --directory=./lib/GFraMe/
+	make static --directory=./lib/GFraMe/ USE_OPENGL=$(USE_OPENGL)
 
 MKDIRS: | $(OBJDIR) $(BINDIR)
 
@@ -135,10 +141,11 @@ $(BINDIR):
 
 clean:
 	@rm -f $(OBJS)
-	@rm -rf $(OBJDIR)
-	@rm -rf $(BINDIR)
+	@rm -f $(BINDIR)/$(TARGET)
 
 mostlyclean:
 	@make clean
+	@rm -rf $(OBJDIR)
+	@rm -rf $(BINDIR)
 	@make clean --directory=./lib/GFraMe/
 

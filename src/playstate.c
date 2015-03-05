@@ -9,6 +9,10 @@
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_util.h>
 
+#ifdef DEBUG
+#  include <SDL2/SDL_timer.h>
+#endif
+
 #include "camera.h"
 #include "collision.h"
 #include "global.h"
@@ -57,6 +61,13 @@ static void ps_event();
  */
 static GFraMe_ret ps_switchMap();
 
+#ifdef DEBUG
+static int _updCalls;
+static int _drwCalls;
+static unsigned int _time;
+static unsigned int _ltime;
+#endif
+
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
@@ -71,6 +82,10 @@ void playstate() {
     
     gl_running = 1;
     while (gl_running) {
+#ifdef DEBUG
+        unsigned int t;
+#endif
+        
         ps_event();
         if (gv_isZero(SWITCH_MAP))
             ps_update();
@@ -80,6 +95,18 @@ void playstate() {
                 __ret);
         }
         ps_draw();
+        
+#ifdef DEBUG
+        t = SDL_GetTicks();
+        if (t >= _time) {
+            GFraMe_log("t=%04i, U=%03i/%03i D=%03i/%03i", _time - _ltime,
+                _updCalls, GAME_UFPS, _drwCalls, GAME_DFPS);
+            _updCalls = 0;
+            _drwCalls = 0;
+            _ltime = _time;
+            _time = SDL_GetTicks() + 1000;
+        }
+#endif
     }
     
 __ret:
@@ -119,6 +146,13 @@ static GFraMe_ret ps_init() {
     switchState = 0;
     transition_initFadeOut();
     
+#ifdef DEBUG
+    _updCalls = 0;
+    _drwCalls = 0;
+    _time = 0;
+    _ltime = 0;
+#endif
+    
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
@@ -141,6 +175,9 @@ static void ps_clean() {
  */
 static void ps_draw() {
     GFraMe_event_draw_begin();
+#ifdef DEBUG
+        _drwCalls++;
+#endif
         map_draw(m);
         rg_drawMobs();
         if (gv_isZero(SWITCH_MAP)) {
@@ -243,6 +280,9 @@ static void ps_update() {
         GFraMe_ret rv;
         int  h, w;
         
+#ifdef DEBUG
+        _updCalls++;
+#endif
         pObj = 0;
         
         // Check if any player should teleport

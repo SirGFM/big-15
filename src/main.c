@@ -16,6 +16,13 @@
 
 int main(int argc, char *argv[]) {
     GFraMe_ret rv;
+    GFraMe_wndext ext;
+    
+    ext.atlas = "atlas";
+    ext.atlasWidth = 256;
+    ext.atlasHeight = 256;
+    ext.flags = GFraMe_wndext_none;
+	//ext.flags = GFraMe_wndext_scanline;
     
     rv = GFraMe_init
             (
@@ -26,7 +33,7 @@ int main(int argc, char *argv[]) {
              ORG,
              NAME,
              GFraMe_window_none, // GFraMe_window_fullscreen
-             0, // No extensions
+             &ext,
              FPS,
              0, // Log to file
              0  // Log append
