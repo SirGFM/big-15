@@ -149,6 +149,44 @@
     } while (0)
 
 /**
+ * Recycle a reference to a object (but expand the buffer, if necessary)
+ * 
+ * @param TYPE The type
+ * @param INC By how much should the buffer expand, if necessary
+ * @param REF Variable's name where the reference will be returned. Must be a
+ *            pointer to TYPE
+ * @param ERR_CODE Error code set by ASSERT, if allocation failed
+ * @param IS_VALID_FUNC Function to validate a referece. It must taken a pointer
+ *                      to TYPE and, if valid, must return 1
+ * @param INI_FUNC Function to be called for newly instantiated stuff (e.g., if
+ *                 type is an pointer and must be allocated). Make sure its only
+ *                 parameter is a pointer to TYPE
+ */
+#define BUF_RECYCLE_REF(TYPE, INC, REF, ERR_CODE, IS_VALID_FUNC, INI_FUNC) \
+    do { \
+        /* Search for a valid object */ \
+        int i = 0, found = 0; \
+        while (i < _##TYPE##_buf.used) { \
+            if (IS_VALID_FUNC(_##TYPE##_buf.arr[i])) { \
+                REF = _##TYPE##_buf.arr[i]; \
+                found = 1; \
+                break; \
+            } \
+            i++; \
+        } \
+        /* If coudln't find, get one from the buffer */ \
+        if (!found) {\
+            /* Check if the buffer must be expanded */ \
+            if (_##TYPE##_buf.used >= _##TYPE##_buf.len) { \
+                BUF_SET_MIN_SIZE(TYPE, _##TYPE##_buf.len + INC, ERR_CODE, INI_FUNC); \
+            } \
+            /* Get a valid new reference */ \
+            REF = _##TYPE##_buf.arr[_##TYPE##_buf.used]; \
+            BUF_PUSH(TYPE); \
+        } \
+    } while (0)
+
+/**
  * Validate a previous "BUF_GET_NEXT_REF" by increasing the amount of used items
  * 
  * @param TYPE The type
