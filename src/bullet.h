@@ -12,7 +12,7 @@
 #include "type.h"
 
 /** Export the bullet's type */
-typedef stBullet bullet;
+typedef struct stBullet bullet;
 
 /**
  * Alloc a new bullet
