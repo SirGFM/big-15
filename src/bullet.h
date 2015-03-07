@@ -9,7 +9,7 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
-#include "type.h"
+#include "types.h"
 
 /** Export the bullet's type */
 typedef struct stBullet bullet;
@@ -38,8 +38,9 @@ void bullet_clean(bullet **ppBul);
  * @param cy Center's vertical position (in world space/pixels)
  * @param dstCX Destination's horizontal position (in world space/pixels)
  * @param dstCY Destination's vertical position (in world space/pixels)
+ * @return GFraMe error code
  */
-void bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int dstCY);
+GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int dstCY);
 
 /**
  * Explodes a bullet and deactivate it
@@ -73,11 +74,19 @@ void bullet_getID(flag *pID, bullet *pBul);
 int bullet_isAlive(bullet *pBul);
 
 /**
+ * Switch the bullet's animation
+ * 
+ * @param pBul The bullet
+ * @param anim Animation to be played
+ */
+void bullet_setAnim(bullet *pBul, int anim);
+
+/**
  * Draw a bullet
  * 
  * @param pBul The bullet
  */
-void bullet_draw(buleet *pBul);
+void bullet_draw(bullet *pBul);
 
 /**
  * Updates a bullet

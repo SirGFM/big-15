@@ -12,6 +12,7 @@ CC=gcc
 # Define every object required by compilation
 #==============================================================================
  OBJS =                                \
+         $(OBJDIR)/bullet.o            \
          $(OBJDIR)/camera.o            \
          $(OBJDIR)/collision.o         \
          $(OBJDIR)/commonEvent.o       \
