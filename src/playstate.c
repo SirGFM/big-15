@@ -213,64 +213,66 @@ static void ps_draw() {
  */
 static GFraMe_ret ps_switchMap() {
     GFraMe_ret rv;
-    int tmp;
-    
-    // Store whether the game was running
-    tmp = gl_running;
-    // Make it stop on any error
-    gl_running = 0;
-    
-    switch (switchState) {
-        /** Simply start the transition */
-        case 0: transition_initFadeOut(); switchState++; break;
-        /** Fade out */
-        case 1: {
-            if (transition_fadeOut(GFraMe_event_elapsed) == TR_COMPLETE)
+    GFraMe_event_update_begin();
+        int tmp;
+       
+        // Store whether the game was running
+        tmp = gl_running;
+        // Make it stop on any error
+        gl_running = 0;
+        
+        switch (switchState) {
+            /** Simply start the transition */
+            case 0: transition_initFadeOut(); switchState++; break;
+            /** Fade out */
+            case 1: {
+                if (transition_fadeOut(GFraMe_event_elapsed) == TR_COMPLETE)
+                    switchState++;
+            } break;
+            /** Load the map */
+            case 2: {
+                int map;
+                map = gv_getValue(MAP);
+                
+                rv = map_loadi(m, map);
+                ASSERT(rv == GFraMe_ret_ok, rv);
+                
                 switchState++;
-        } break;
-        /** Load the map */
-        case 2: {
-            int map;
-            map = gv_getValue(MAP);
-            
-            rv = map_loadi(m, map);
-            ASSERT(rv == GFraMe_ret_ok, rv);
-            
-            switchState++;
-        } break;
-        /** Tween players to their new position */
-        case 3: {
-            int x, y;
-            
-            // Get their destiny position
-            x = gv_getValue(DOOR_X) * 8;
-            y = gv_getValue(DOOR_Y) * 8;
-            // Tween the players
-            rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
-            rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
-            // Update camera
-            cam_setPositionSt(p1, p2);
-            
-            if (rv == GFraMe_ret_ok)
-                switchState++;
-        } break;
-        /** Init fade in animation */
-        case 4: transition_initFadeIn(); switchState++; break;
-        /** Fade in */
-        case 5: {
-            if (transition_fadeIn(GFraMe_event_elapsed) == TR_COMPLETE)
-                switchState++;
-        } break;
-        /** Finish the transition */
-        default: {
-            gv_setValue(SWITCH_MAP, 0);
-            switchState = 0;
-            signal_release();
+            } break;
+            /** Tween players to their new position */
+            case 3: {
+                int x, y;
+                
+                // Get their destiny position
+                x = gv_getValue(DOOR_X) * 8;
+                y = gv_getValue(DOOR_Y) * 8;
+                // Tween the players
+                rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+                rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+                // Update camera
+                cam_setPositionSt(p1, p2);
+                
+                if (rv == GFraMe_ret_ok)
+                    switchState++;
+            } break;
+            /** Init fade in animation */
+            case 4: transition_initFadeIn(); switchState++; break;
+            /** Fade in */
+            case 5: {
+                if (transition_fadeIn(GFraMe_event_elapsed) == TR_COMPLETE)
+                    switchState++;
+            } break;
+            /** Finish the transition */
+            default: {
+                gv_setValue(SWITCH_MAP, 0);
+                switchState = 0;
+                signal_release();
+            }
         }
-    }
-    
-    // Set return variable
-    gl_running = tmp;
+        
+        // Set return variable
+        gl_running = tmp;
+    GFraMe_event_update_end();
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
