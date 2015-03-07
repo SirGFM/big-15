@@ -229,37 +229,6 @@ static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer) {
             break;
         j++;
     }
-/*
-        if (x == -1)
-            i = 0;
-        else
-            i = x;
-        while ((w == -1 && i < tileLayer->width()) || (w != -1 && i == 0)) {
-            const Tile *tile;
-            
-            tile = tileLayer->cellAt(i, j).tile;
-            if (x == -1 && tile) {
-                x = i;
-                y = j;
-            }
-            else if (x != -1 && w == -1 && !tile)
-                w = i - x;
-            else if (x != -1 && w != -1 && h == -1 && !tile) {
-                h = j - y;
-                i = tileLayer->width();
-                j = tileLayer->height();
-            }
-            
-            i++;
-        }
-        if (w == -1)
-            w = i - x;
-        
-        j++;
-    }
-    if (h == -1)
-        h = j - y;
-*/
     
     pOff->x = x;
     pOff->y = y;
