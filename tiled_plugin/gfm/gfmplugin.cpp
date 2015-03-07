@@ -174,8 +174,62 @@ static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer) {
     h = -1;
     j = 0;
     while (j < tileLayer->height()) {
-        int i;
-        
+        // Search for the first tile
+        if (x == -1 && y == -1) {
+            int i;
+            
+            i = 0;
+            while (i < tileLayer->width()) {
+                const Tile *tile;
+                
+                tile = tileLayer->cellAt(i, j).tile;
+                if (tile && tile->id() != -1) {
+                    x = i;
+                    y = j;
+                    break;
+                }
+                i++;
+            }
+        }
+        // Now, calculate the width
+        if (x != -1 && y != -1 && w == -1) {
+            int i;
+            
+            i = x;
+            while (i < tileLayer->width()) {
+                const Tile *tile;
+                
+                tile = tileLayer->cellAt(i, j).tile;
+                if (!tile || tile->id() == -1) {
+                    w = i - x;
+                    break;
+                }
+                i++;
+            }
+        }
+        // Finally, search for the height
+        if (x != -1 && y != -1 && w != -1 && h == -1) {
+            j = y;
+            while (j < tileLayer->height()) {
+                const Tile *tile;
+                
+                tile = tileLayer->cellAt(x, j).tile;
+                if (!tile || tile->id() == -1) {
+                    h = j - y;
+                    break;
+                }
+                j++;
+            }
+            if (h == -1)
+                h = j - y;
+            break;
+        }
+        // Shouldn't happen, but just in case...
+        if (x != -1 && y != -1 && w != -1 && h != -1)
+            break;
+        j++;
+    }
+/*
         if (x == -1)
             i = 0;
         else
@@ -205,6 +259,7 @@ static void getTilemapBounds(gfm_offset *pOff, const TileLayer *tileLayer) {
     }
     if (h == -1)
         h = j - y;
+*/
     
     pOff->x = x;
     pOff->y = y;
