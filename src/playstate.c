@@ -7,6 +7,9 @@
 #include <GFraMe/GFraMe_hitbox.h>
 #include <GFraMe/GFraMe_keys.h>
 #include <GFraMe/GFraMe_object.h>
+#ifdef DEBUG
+#  include <GFraMe/GFraMe_pointer.h>
+#endif
 #include <GFraMe/GFraMe_util.h>
 
 #ifdef DEBUG
@@ -370,9 +373,11 @@ __err_ret:
 static void ps_event() {
     GFraMe_event_begin();
         GFraMe_event_on_timer();
-//        GFraMe_event_on_mouse_up();
-//        GFraMe_event_on_mouse_down();
-//        GFraMe_event_on_mouse_moved();
+#ifdef DEBUG
+        GFraMe_event_on_mouse_up();
+        GFraMe_event_on_mouse_down();
+        GFraMe_event_on_mouse_moved();
+#endif
 //        GFraMe_event_on_finger_down();
 //        GFraMe_event_on_finger_up();
 //        GFraMe_event_on_bg();

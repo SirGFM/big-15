@@ -5,6 +5,9 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_hitbox.h>
 #include <GFraMe/GFraMe_object.h>
+#ifdef DEBUG
+#  include <GFraMe/GFraMe_pointer.h>
+#endif
 #include <GFraMe/GFraMe_sprite.h>
 
 #include "camera.h"
@@ -165,6 +168,12 @@ void player_update(player *pPl, int ms) {
     pPl->map = -1;
     pPl->map_x = -1;
     pPl->map_y = -1;
+    
+#ifdef DEBUG
+    if (GFraMe_pointer_pressed) {
+        GFraMe_object_set_pos(&pPl->spr.obj, GFraMe_pointer_x, GFraMe_pointer_y);
+    }
+#endif
     
     // Decrease item switch cooldown
     if (pPl->lastItemSwitch > 0)
