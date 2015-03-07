@@ -29,7 +29,8 @@ typedef enum {
     ITEMS,        /** Flags for available items                */
     SWITCH_MAP,   /** Whether the map should be switched       */
     MAP001_DOOR,  /** State of the only door on map 001        */
-    MAP002_DOOR,  /** State of the only door on map 002        */
+    MAP002_DOOR1, /** State of the only door on map 002        */
+    MAP002_DOOR2, /** State of the only door on map 002        */
     MAP003_DOOR,  /** State of the only door on map 003        */
     MAP004_DOOR1, /** State of a door on map 004              */
     MAP004_DOOR2, /** State of the other door on map 004      */

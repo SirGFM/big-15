@@ -32,3 +32,5 @@ tm:[
 ]
 ev: { x:40 y:20 w:1 h:6 ce:"ce_switch_map" int:2 int:1 int:7 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 ev: { x:-1 y:20 w:1 h:6 ce:"ce_switch_map" int:0 int:38 int:23 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+obj: { x:37 y:21 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map001_door" }
+ev: { x:28 y:17 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map001_door"    }
