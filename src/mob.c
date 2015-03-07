@@ -194,7 +194,7 @@ __ret:
  */
 void mob_draw(mob *pMob) {
     // Check that the mob is alive
-    ASSERT_NR(mob_isAlive(pMob) == GFraMe_ret_ok);
+    ASSERT_NR(mob_isAlive(pMob));
     
     switch (pMob->spr.id) {
         case ID_EYE: {
@@ -331,15 +331,23 @@ int mob_getPlVerDist(mob *pMob, flag plID);
 GFraMe_ret mob_hit(mob *pMob, int dmg, flag type);
 
 /**
+ * Get how much damage the mob deal on touch
+ * 
+ * @param pMob The mob
+ * @return The damage
+ */
+int mob_getDamage(mob *pMob) {
+    return pMob->damage;
+}
+
+/**
  * Check whether the mob is alive or not
  * 
  * @param pMob The mob
- * @return GFraMe_ret_ok if it's alive
+ * @return 1 it's alive, 0 otherwise
  */
-GFraMe_ret mob_isAlive(mob *pMob) {
-    if (pMob->health > 0)
-        return GFraMe_ret_ok;
-    return GFraMe_ret_failed;
+int mob_isAlive(mob *pMob) {
+    return pMob->health > 0;
 }
 
 /**
@@ -372,7 +380,7 @@ void mob_update(mob *pMob, int ms) {
     int isDown;
     
     // Check that the mob is alive
-    ASSERT_NR(mob_isAlive(pMob) == GFraMe_ret_ok);
+    ASSERT_NR(mob_isAlive(pMob));
     
     isDown = pMob->spr.obj.hit & GFraMe_direction_down;
     if (pMob->countdown > 0)

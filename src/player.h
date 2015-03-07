@@ -149,5 +149,14 @@ void player_checkTeleport(player *pPl);
  */
 void player_changeItem(player *pPl);
 
+/**
+ * Deal some damage to a player and play an animation
+ * 
+ * @param pPl The player
+ * @param dmg How much damage should be dealt
+ * @param dir Direction the player was hit from
+ */
+void player_hurt(player *pPl, int dmg, GFraMe_direction dir);
+
 #endif
 

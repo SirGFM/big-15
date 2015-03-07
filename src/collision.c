@@ -157,6 +157,30 @@ void col_onPlObj(player *pPl, object *pObj) {
  * @param pMob The mob
  */
 void col_onPlMob(player *pPl, mob *pMob) {
+    GFraMe_object *pObj1, *pObj2;
+    GFraMe_ret rv;
+    int plFlags;
+    
+    ASSERT_NR(mob_isAlive(pMob));
+    
+    // Get both player objects
+    player_getObject(&pObj1, pPl);
+    mob_getObject(&pObj2, pMob);
+    
+    // Get their collision flags
+    plFlags = pObj1->hit;
+    // Clean their previous state
+    pObj1->hit = 0;
+    // Try to collide them
+    rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
+    if (rv == GFraMe_ret_ok) {
+        player_hurt(pPl, mob_getDamage(pMob), pObj1->hit);
+    }
+    // Restore the collision flags
+    pObj1->hit = plFlags;
+    
+__ret:
+    return;
 }
 
 /**
@@ -249,6 +273,34 @@ void col_onMob(mob *pMob1, mob *pMob2) {
  * @param pBul The bullet
  */
 void col_onPlBul(player *pPl, bullet *pBul) {
+    flag id;
+    GFraMe_object *pObj1, *pObj2;
+    GFraMe_ret rv;
+    int plFlags;
+    
+    ASSERT_NR(bullet_isAlive(pBul));
+    bullet_getID(&id, pBul) ;
+    ASSERT_NR((id & ID_PL) == 0);
+    
+    // Get both player objects
+    player_getObject(&pObj1, pPl);
+    bullet_getObject(&pObj2, pBul);
+    
+    // Get their collision flags
+    plFlags = pObj1->hit;
+    // Clean their previous state
+    pObj1->hit = 0;
+    // Try to collide them
+    rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
+    if (rv == GFraMe_ret_ok) {
+        player_hurt(pPl, 1, pObj1->hit);
+        bullet_explode(pBul);
+    }
+    // Restore the collision flags
+    pObj1->hit = plFlags;
+    
+__ret:
+    return;
 }
 
 /**

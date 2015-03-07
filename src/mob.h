@@ -125,12 +125,20 @@ int mob_getPlVerDist(mob *pMob, flag plID);
 GFraMe_ret mob_hit(mob *pMob, int dmg, flag type);
 
 /**
+ * Get how much damage the mob deal on touch
+ * 
+ * @param pMob The mob
+ * @return The damage
+ */
+int mob_getDamage(mob *pMob);
+
+/**
  * Check whether the mob is alive or not
  * 
  * @param pMob The mob
- * @return GFraMe_ret_ok if it's alive
+ * @return 1 it's alive, 0 otherwise
  */
-GFraMe_ret mob_isAlive(mob *pMob);
+int mob_isAlive(mob *pMob);
 
 /**
  * Get the mob's object, for collision

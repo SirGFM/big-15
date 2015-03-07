@@ -22,7 +22,8 @@ enum {
     PL_STAND,
     PL_WALK,
     PL_JUMP,
-    PL_FALL
+    PL_FALL,
+    PL_HURT
 };
 
 struct stPlayer {
@@ -33,6 +34,9 @@ struct stPlayer {
     
     GFraMe_animation walkAnim;
     int walkData[8];
+    
+    GFraMe_animation hurtAnim;
+    int hurtData[8];
     
     int curAnim;
     int isBeingCarried;
@@ -77,6 +81,16 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     ASSERT(pPl, GFraMe_ret_memory_error);
     
     // Create every animation
+    pPl->hurtData[0] = firstTile + 9;
+    pPl->hurtData[1] = firstTile + 10;
+    pPl->hurtData[2] = firstTile + 9;
+    pPl->hurtData[3] = firstTile + 10;
+    pPl->hurtData[4] = firstTile + 9;
+    pPl->hurtData[5] = firstTile + 10;
+    pPl->hurtData[6] = firstTile + 9;
+    pPl->hurtData[7] = firstTile + 10;
+    GFraMe_animation_init(&pPl->hurtAnim, 12, pPl->hurtData, 8, 0);
+    
     pPl->standData[0] = firstTile;
     GFraMe_animation_init(&pPl->standAnim, 0, pPl->standData, 1, 0);
     
@@ -155,6 +169,9 @@ void player_update(player *pPl, int ms) {
     // Decrease item switch cooldown
     if (pPl->lastItemSwitch > 0)
         pPl->lastItemSwitch -= ms;
+    
+    // Do nothing while the player is hurting
+    ASSERT_NR(pPl->curAnim != PL_HURT || !pPl->spr.anim);
     
     // Check if the player should teleport
     if (pPl->isTeleporting) {
@@ -249,6 +266,7 @@ void player_update(player *pPl, int ms) {
         pPl->isBeingCarried = 0;
     }
     
+__ret:
     GFraMe_sprite_update(&pPl->spr, ms);
     
     // Store the player's central position so it's easilly acessible
@@ -315,6 +333,8 @@ void player_setAnimation(player *pPl, int anim) {
             /* TODO play jump anim */ break;
         case PL_FALL:
             /* TODO play fall anim */ break;
+        case PL_HURT:
+            GFraMe_sprite_set_animation(&pPl->spr, &pPl->hurtAnim, 0); break;
     }
     pPl->curAnim = anim;
     
@@ -589,6 +609,37 @@ __ret:
     if (!ctr_switchItem(pPl->spr.id))
         pPl->lastItemSwitch = 0;
     
+    return;
+}
+
+/**
+ * Deal some damage to a player and play an animation
+ * 
+ * @param pPl The player
+ * @param dmg How much damage should be dealt
+ * @param dir Direction the player was hit from
+ */
+void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
+    // Check that the player isn't "hurting"
+    ASSERT_NR(pPl->curAnim != PL_HURT);
+    
+    // Decreate the health
+    if (pPl->spr.id == ID_PL1)
+        gv_sub(PL1_HP, dmg);
+    else if (pPl->spr.id == ID_PL2)
+        gv_sub(PL2_HP, dmg);
+    
+    // Push back the player
+    if (dir == GFraMe_direction_left)
+        pPl->spr.obj.vx = 16;
+    else if (dir == GFraMe_direction_right)
+        pPl->spr.obj.vx = -16;
+    else
+        pPl->spr.obj.vx = 8;
+    pPl->spr.obj.vy = 0;
+    // Play the 'hurt' animation
+    player_setAnimation(pPl, PL_HURT);
+__ret:
     return;
 }
 
