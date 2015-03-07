@@ -9,6 +9,7 @@
 
 #include "qtnode.h"
 
+#include "../bullet.h"
 #include "../commonEvent.h"
 #include "../event.h"
 #include "../mob.h"
@@ -87,6 +88,14 @@ GFraMe_ret qt_addWall(GFraMe_object *pWall);
  * @return GFraMe error code
  */
 GFraMe_ret qt_addMob(mob *pMob);
+
+/**
+ * Adds a bullet and collides against everything
+ * 
+ * @param pBul The bullet
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_addBul(bullet *pBul);
 
 /**
  * Add a new node to the quadtree, subdivide it as necessary and collide against

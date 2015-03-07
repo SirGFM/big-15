@@ -9,6 +9,7 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
+#include "bullet.h"
 #include "event.h"
 #include "map.h"
 #include "mob.h"
@@ -166,6 +167,33 @@ void rg_drawMobs();
  * @return GFraMe error code
  */
 GFraMe_ret rg_qtAddMob();
+
+/**
+ * Recycle a bullet (and expand the buffer as necessary)
+ * 
+ * @param ppB Returns the bullet
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_recycleBullet(bullet **ppB);
+
+/**
+ * Update every bullet
+ * 
+ * @param ms Time elapsed from the previous frame, in milliseconds
+ */
+void rg_updateBullets(int ms);
+
+/**
+ * Render every bullet
+ */
+void rg_drawBullets();
+
+/**
+ * Add every bullet to the quadtree
+ * 
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_qtAddBullets();
 
 #endif
 

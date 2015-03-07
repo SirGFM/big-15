@@ -6,6 +6,14 @@
 #ifndef __COLLISION_H_
 #define __COLLISION_H_
 
+#include <GFraMe/GFraMe_object.h>
+
+#include "bullet.h"
+#include "event.h"
+#include "mob.h"
+#include "object.h"
+#include "player.h"
+
 #include "quadtree/qtnode.h"
 
 /**
@@ -111,6 +119,54 @@ void col_onMobWall(mob *pMob, GFraMe_object *pWall);
  * @param pMob2 A mob
  */
 void col_onMob(mob *pMob1, mob *pMob2);
+
+/**
+ * Collide a player against a bullet
+ * 
+ * @param pPl The player
+ * @param pBul The bullet
+ */
+void col_onPlBul(player *pPl, bullet *pBul);
+
+/**
+ * Collide an event against a bullet
+ * 
+ * @param pEv The event
+ * @param pBul The bullet
+ */
+void col_onEvBul(event *pEv, bullet *pBul);
+
+/**
+ * Collide an object against a bullet
+ * 
+ * @param pObj The object
+ * @param pBul The bullet
+ */
+void col_onObjBul(object *pObj, bullet *pBul);
+
+/**
+ * Collide a mob against a bullet
+ * 
+ * @param pMob The mob
+ * @param pBul The wall
+ */
+void col_onMobBul(mob *pMob, bullet *pBul);
+
+/**
+ * Collide a bullet against a wall
+ * 
+ * @param pWall The wall
+ * @param pBul The bullet
+ */
+void col_onBulWall(bullet *pBul, GFraMe_object *pWall);
+
+/**
+ * Collide two bullets
+ * 
+ * @param pBul1 The bullet
+ * @param pBul2 The bullet
+ */
+void col_onBul(bullet *pBul1, bullet *pBul2);
 
 #endif 
 

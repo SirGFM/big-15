@@ -13,6 +13,7 @@
 #  include <SDL2/SDL_timer.h>
 #endif
 
+#include "bullet.h"
 #include "camera.h"
 #include "collision.h"
 #include "global.h"
@@ -180,6 +181,7 @@ static void ps_draw() {
 #endif
         map_draw(m);
         rg_drawMobs();
+        rg_drawBullets();
         if (gv_isZero(SWITCH_MAP)) {
             player_draw(p2);
             player_draw(p1);
@@ -293,6 +295,7 @@ static void ps_update() {
         map_update(m, GFraMe_event_elapsed);
         rg_updateMobs(GFraMe_event_elapsed);
         rg_updateObjects(GFraMe_event_elapsed);
+        rg_updateBullets(GFraMe_event_elapsed);
         player_update(p1, GFraMe_event_elapsed);
         player_update(p2, GFraMe_event_elapsed);
         ui_update(GFraMe_event_elapsed);
@@ -319,6 +322,10 @@ static void ps_update() {
         
         rv = rg_qtAddEvents();
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding events to quadtree",
+            __err_ret);
+        
+        rv = rg_qtAddBullets();
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error adding bullets to quadtree",
             __err_ret);
         
         rv = qt_addPl(p1);

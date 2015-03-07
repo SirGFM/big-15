@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
+#include "../bullet.h"
 #include "../event.h"
 #include "../mob.h"
 #include "../object.h"
@@ -18,6 +19,7 @@ typedef enum {
     QNT_OBJ,
     QNT_EV,
     QNT_MOB,
+    QNT_BUL,
     QNT_MAX
 } nodeType;
 
@@ -77,6 +79,15 @@ GFraMe_ret qt_getWallNode(qtNode **ppNode, GFraMe_object *pWall);
 GFraMe_ret qt_getMobNode(qtNode **ppNode, mob *pMob);
 
 /**
+ * Get a node and assign it a bullet
+ * 
+ * @param ppNode The node
+ * @param pBul The bullet
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_getBulNode(qtNode **ppNode, bullet *pBul);
+
+/**
  * Get the color a given type should be rendered
  * 
  * @param ppNode The node
@@ -94,10 +105,11 @@ void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB);
  * @param ppObj The object
  * @param ppWall The wall
  * @param ppMob The mob
+ * @param ppBul The bullet
  * @param pNode The node
  */
 void qt_getRef(player **ppPl, event **ppEv, object **ppObj,
-    GFraMe_object **ppWall, mob **ppMob, qtNode *pNode);
+    GFraMe_object **ppWall, mob **ppMob, bullet **ppBul, qtNode *pNode);
 
 #endif
 

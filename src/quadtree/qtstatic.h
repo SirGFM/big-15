@@ -10,6 +10,7 @@
 
 #include <GFraMe/GFraMe_object.h>
 
+#include "../bullet.h"
 #include "../event.h"
 #include "../mob.h"
 #include "../object.h"
@@ -49,11 +50,12 @@ struct stQTNode {
     nodeType type;
     /** Pointer to the object */
     union {
-        player *pl;
+        bullet *bul;
         event *ev;
+        GFraMe_object *wall;
         mob *mob;
         object *obj;
-        GFraMe_object *wall;
+        player *pl;
     } self;
     // TODO create a list of already collided nodes?
 };

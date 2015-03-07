@@ -6,9 +6,11 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
+#include "bullet.h"
 #include "collision.h"
 #include "controller.h"
 #include "event.h"
+#include "global.h"
 #include "mob.h"
 #include "object.h"
 #include "player.h"
@@ -22,15 +24,16 @@
  * @param n2 A node
  */
 void checkCollision(qtNode *n1, qtNode *n2) {
-    player *pPl1, *pPl2;
+    bullet *pBul1, *pBul2;
     event *pEv1, *pEv2;
+    GFraMe_object *pWall1, *pWall2;
     mob *pMob1, *pMob2;
     object *pObj1, *pObj2;
-    GFraMe_object *pWall1, *pWall2;
+    player *pPl1, *pPl2;
     
     // Get the actual object in both nodes
-    qt_getRef(&pPl1, &pEv1, &pObj1, &pWall1, &pMob1, n1);
-    qt_getRef(&pPl2, &pEv2, &pObj2, &pWall2, &pMob2, n2);
+    qt_getRef(&pPl1, &pEv1, &pObj1, &pWall1, &pMob1, &pBul1, n1);
+    qt_getRef(&pPl2, &pEv2, &pObj2, &pWall2, &pMob2, &pBul2, n2);
     
     // Collide it accordingly
     if      (pPl1   && pPl2  ) {}
@@ -38,26 +41,37 @@ void checkCollision(qtNode *n1, qtNode *n2) {
     else if (pPl1   && pObj2 ) col_onPlObj  (pPl1,  pObj2);
     else if (pPl1   && pMob2 ) col_onPlMob  (pPl1,  pMob2);
     else if (pPl1   && pWall2) col_onPlWall (pPl1,  pWall2);
+    else if (pPl1   && pBul2)  col_onPlBul  (pPl1,  pBul2);
     else if (pEv1   && pPl2  ) col_onPlEv   (pPl2,  pEv1);
     else if (pEv1   && pEv2  ) {}
     else if (pEv1   && pObj2 ) col_onEvObj  (pEv1,  pObj2);
     else if (pEv1   && pMob2 ) col_onEvMob  (pEv1,  pMob2);
     else if (pEv1   && pWall2) {}
+    else if (pEv1   && pBul2 ) col_onEvBul  (pEv1,  pBul2);
     else if (pObj1  && pPl2  ) col_onPlObj  (pPl2,  pObj1);
     else if (pObj1  && pEv2  ) col_onEvObj  (pEv2,  pObj1);
     else if (pObj1  && pObj2 ) col_onObject (pObj1, pObj2);
     else if (pObj1  && pMob2 ) col_onObjMob (pObj1, pMob2);
     else if (pObj1  && pWall2) col_onObjWall(pObj1, pWall2);
+    else if (pObj1  && pBul2)  col_onObjBul (pObj1, pBul2);
     else if (pMob1  && pPl2  ) col_onPlMob  (pPl2,  pMob1);
     else if (pMob1  && pEv2  ) col_onEvMob  (pEv2,  pMob1);
     else if (pMob1  && pObj2 ) col_onObjMob (pObj2, pMob1);
     else if (pMob1  && pMob2 ) col_onMob    (pMob1, pMob2);
     else if (pMob1  && pWall2) col_onMobWall(pMob1, pWall2);
+    else if (pMob1  && pBul2)  col_onMobBul (pMob1, pBul2);
     else if (pWall1 && pPl2  ) col_onPlWall (pPl2,  pWall1);
     else if (pWall1 && pEv2  ) {}
     else if (pWall1 && pObj2 ) col_onObjWall(pObj2, pWall1);
     else if (pWall1 && pMob2 ) col_onMobWall(pMob2, pWall1);
     else if (pWall1 && pWall2) {}
+    else if (pWall1 && pBul2 ) col_onBulWall(pBul2, pWall1);
+    else if (pBul1  && pPl2  ) col_onPlBul  (pPl2,  pBul1);
+    else if (pBul1  && pEv2  ) col_onEvBul  (pEv2,  pBul1);
+    else if (pBul1  && pObj2 ) col_onObjBul (pObj2, pBul1);
+    else if (pBul1  && pMob2 ) col_onMobBul (pMob2, pBul1);
+    else if (pBul1  && pWall2) col_onBulWall(pBul1, pWall2);
+    else if (pBul1  && pBul2 ) col_onBul    (pBul1, pBul2);
     else                       GFraMe_log   ("Couldn't collide!");
 }
 
@@ -226,5 +240,70 @@ void col_onMobWall(mob *pMob, GFraMe_object *pWall) {
  * @param pMob2 A mob
  */
 void col_onMob(mob *pMob1, mob *pMob2) {
+}
+
+/**
+ * Collide a player against a bullet
+ * 
+ * @param pPl The player
+ * @param pBul The bullet
+ */
+void col_onPlBul(player *pPl, bullet *pBul) {
+}
+
+/**
+ * Collide an event against a bullet
+ * 
+ * @param pEv The event
+ * @param pBul The bullet
+ */
+void col_onEvBul(event *pEv, bullet *pBul) {
+}
+
+/**
+ * Collide an object against a bullet
+ * 
+ * @param pObj The object
+ * @param pBul The bullet
+ */
+void col_onObjBul(object *pObj, bullet *pBul) {
+}
+
+/**
+ * Collide a mob against a bullet
+ * 
+ * @param pMob The mob
+ * @param pBul The wall
+ */
+void col_onMobBul(mob *pMob, bullet *pBul) {
+}
+
+/**
+ * Collide a bullet against a wall
+ * 
+ * @param pWall The wall
+ * @param pBul The bullet
+ */
+void col_onBulWall(bullet *pBul, GFraMe_object *pWall) {
+    GFraMe_object *pObj;
+    GFraMe_ret rv;
+    
+    ASSERT_NR(bullet_isAlive(pBul));
+    
+    bullet_getObject(&pObj, pBul);
+    rv = GFraMe_object_overlap(pWall, pObj, GFraMe_first_fixed);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    bullet_explode(pBul);
+__ret:
+    return;
+}
+
+/**
+ * Collide two bullets
+ * 
+ * @param pBul1 The bullet
+ * @param pBul2 The bullet
+ */
+void col_onBul(bullet *pBul1, bullet *pBul2) {
 }
 

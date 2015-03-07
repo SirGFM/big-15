@@ -37,7 +37,7 @@ static int _bul_EnAnimData[] = {
 /* fps,len,loop,data...                    */
    15 , 1 , 0  , 805,                    /* PROJ_INIT */
     8 , 2 , 1  , 806, 807,               /* PROJ_DEF  */
-   10 , 5 , 0  , 808, 809, 810, 811, 812 /* PROJ_NONE */
+   16 , 5 , 0  , 808, 809, 810, 811, 812 /* PROJ_NONE */
 };
 
 /**
@@ -94,7 +94,7 @@ __ret:
  * @return GFraMe error code
  */
 GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int dstCY) {
-    //GFraMe_object *pObj;
+    GFraMe_object *pObj;
     GFraMe_ret rv;
     GFraMe_sprite *pSpr;
     int *pData, len;
@@ -104,7 +104,7 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
     
     // Get the bullet's sprite and object
     pSpr = &pBul->spr;
-    //pObj = spr->obj;
+    pObj = &pSpr->obj;
     
     // Initialize the bullet, according to its type
     pData = 0;
@@ -115,6 +115,9 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
                 -2/*ox*/, -2/*oy*/);
             pData = _bul_EnAnimData;
             len = sizeof(_bul_EnAnimData) / sizeof(int);
+            
+            pObj->vx = dstCX - cx;
+            pObj->vy = dstCY - cy;
         } break;
         default: {}
     }
@@ -192,7 +195,7 @@ void bullet_getID(flag *pID, bullet *pBul) {
  * @return 1 on success, 0 otherwise
  */
 int bullet_isAlive(bullet *pBul) {
-    return pBul->state != PROJ_EXPLODE;
+    return pBul->state < PROJ_EXPLODE;
 }
 
 /**

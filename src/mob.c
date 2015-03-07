@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
+#include "bullet.h"
 #include "camera.h"
 #include "global.h"
 #include "map.h"
@@ -469,9 +470,24 @@ void mob_update(mob *pMob, int ms) {
                 pMob->countdown += EYE_COUNTDOWN;
             }
             else if (pMob->anim == EYE_BLINK && mob_didAnimFinish(pMob)) {
+                bullet *pBul;
+                GFraMe_ret rv;
+                int cx, cy, dx, dy;
+                
+                // Get the closest player's position
+                mob_getClosestPlDist(&dx, &dy, pMob);
+                cx = pMob->spr.obj.x + 12;
+                cy = pMob->spr.obj.y + 4;
+                
                 mob_setAnim(pMob, EYE_FOCUSED, 0);
                 pMob->countdown += EYE_COUNTDOWN;
-                // TODO SHOOT!
+                
+                // Recycle a bullet
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // SHOOT!
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx+dx, cy+dy);
+                ASSERT_NR(rv == GFraMe_ret_ok);
             }
             else if (pMob->anim == EYE_FOCUSED && pMob->countdown <= 0) {
                 mob_setAnim(pMob, EYE_OPEN, 0);

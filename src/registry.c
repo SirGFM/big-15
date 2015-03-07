@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 
+#include "bullet.h"
 #include "event.h"
 #include "global.h"
 #include "map.h"
@@ -19,6 +20,7 @@
 
 #include "quadtree/quadtree.h"
 
+#define BULLET_INC 8
 #define EVENT_INC 4
 #define OBJECT_INC 4
 #define WALL_INC 8
@@ -47,6 +49,7 @@ player *p2;
 /** Define the map */
 map *m;
 /** Define every variable buffer */
+BUF_DEFINE(bullet);
 BUF_DEFINE(event);
 BUF_DEFINE(object);
 BUF_DEFINE(mob);
@@ -60,6 +63,7 @@ BUF_DEFINE(wall);
 GFraMe_ret rg_init() {
     GFraMe_ret rv;
     
+    BUF_SET_MIN_SIZE(bullet, 8, GFraMe_ret_memory_error, bullet_getNew);
     BUF_SET_MIN_SIZE(event, 4, GFraMe_ret_memory_error, event_getNew);
     BUF_SET_MIN_SIZE(object, 8, GFraMe_ret_memory_error, obj_getNew);
     BUF_SET_MIN_SIZE(wall, 8, GFraMe_ret_memory_error, rg_getNewGfmObj);
@@ -74,6 +78,7 @@ __ret:
  * Clean up every buffer
  */
 void rg_clean() {
+    BUF_CLEAN(bullet, bullet_clean);
     BUF_CLEAN(event, event_clean);
     BUF_CLEAN(object, obj_clean);
     BUF_CLEAN(wall, rg_cleanGfmObj);
@@ -84,6 +89,7 @@ void rg_clean() {
  * Reset every buffer
  */
 void rg_reset() {
+    BUF_RESET(bullet);
     BUF_RESET(event);
     BUF_RESET(object);
     BUF_RESET(wall);
@@ -323,6 +329,53 @@ GFraMe_ret rg_qtAddMob() {
     GFraMe_ret rv;
     
     BUF_CALL_ALL_RET(mob, rv, qt_addMob);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Recycle a bullet (and expand the buffer as necessary)
+ * 
+ * @param ppB Returns the bullet
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_recycleBullet(bullet **ppB) {
+    GFraMe_ret rv;
+    
+    BUF_RECYCLE_REF(bullet, BULLET_INC, *ppB, GFraMe_ret_memory_error, !bullet_isAlive, bullet_getNew);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
+ * Update every bullet
+ * 
+ * @param ms Time elapsed from the previous frame, in milliseconds
+ */
+void rg_updateBullets(int ms) {
+    BUF_CALL_ALL(bullet, bullet_update, ms);
+}
+
+/**
+ * Render every bullet
+ */
+void rg_drawBullets() {
+    BUF_CALL_ALL(bullet, bullet_draw);
+}
+
+/**
+ * Add every bullet to the quadtree
+ * 
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_qtAddBullets() {
+    GFraMe_ret rv;
+    
+    BUF_CALL_ALL_RET(bullet, rv, qt_addBul);
     
     rv = GFraMe_ret_ok;
 __ret:

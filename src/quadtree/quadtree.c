@@ -235,6 +235,32 @@ __ret:
     return rv;
 }
 
+/**
+ * Adds a bullet and collides against everything
+ * 
+ * @param pBul The bullet
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_addBul(bullet *pBul) {
+    GFraMe_ret rv;
+    qtNode *pNode;
+    quadtree *pRoot;
+    
+    // Get a new node with the object
+    rv = qt_getBulNode(&pNode, pBul);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to alloc bullet's node",
+        __ret);
+    // Get the tree's root
+    qt_getRoot(&pRoot);
+    // Add the node to the quadtree and collide against everything else
+    rv = qt_addNodeCollide(pRoot, pNode);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to insert bullet into tree",
+        __ret);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
 
 /**
  * Add a new node to the quadtree, subdivide it as necessary and collide against

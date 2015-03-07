@@ -7,6 +7,7 @@
 #include "qtnode.h"
 #include "qtstatic.h"
 
+#include "../bullet.h"
 #include "../event.h"
 #include "../global.h"
 #include "../mob.h"
@@ -170,6 +171,35 @@ __ret:
 }
 
 /**
+ * Get a node and assign it a bullet
+ * 
+ * @param ppNode The node
+ * @param pBul The bullet
+ * @return GFraMe error code
+ */
+GFraMe_ret qt_getBulNode(qtNode **ppNode, bullet *pBul) {
+    GFraMe_object *pObj;
+    GFraMe_ret rv;
+    qtNode *pNode;
+    
+    // Get a new node
+    rv = qt_getNode(&pNode);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Set the node reference
+    pNode->self.bul = pBul;
+    pNode->type = QNT_BUL;
+    // Set the node's dimension
+    bullet_getObject(&pObj, pBul);
+    qt_setNodeDimension(pNode, pObj);
+    
+    // Set the return variable
+    *ppNode = pNode;
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
  * Get the color a given type should be rendered
  * 
  * @param ppNode The node
@@ -204,6 +234,11 @@ void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB) {
             *pG = 0x32;
             *pB = 0x32;
         } break;
+        case QNT_BUL: {
+            *pR = 0xac;
+            *pG = 0x32;
+            *pB = 0x32;
+        } break;
         default: {}
     }
 }
@@ -216,15 +251,17 @@ void qt_getTypeColor(qtNode *pNode, int *pR, int *pG, int *pB) {
  * @param ppObj The object
  * @param ppWall The wall
  * @param ppMob The mob
+ * @param ppBul The bullet
  * @param pNode The node
  */
 void qt_getRef(player **ppPl, event **ppEv, object **ppObj,
-    GFraMe_object **ppWall, mob **ppMob, qtNode *pNode) {
+    GFraMe_object **ppWall, mob **ppMob, bullet **ppBul, qtNode *pNode) {
     *ppPl = 0;
     *ppEv = 0;
     *ppObj = 0;
     *ppMob = 0;
     *ppWall = 0;
+    *ppBul = 0;
     switch (pNode ->type) {
         case QNT_PL: {
             *ppPl = pNode->self.pl;
@@ -240,6 +277,9 @@ void qt_getRef(player **ppPl, event **ppEv, object **ppObj,
         }break;
         case QNT_MOB: {
             *ppMob = pNode->self.mob;
+        }break;
+        case QNT_BUL: {
+            *ppBul = pNode->self.bul;
         }break;
         default: {}
     }
