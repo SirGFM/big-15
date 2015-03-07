@@ -7,23 +7,24 @@
 #define __TYPES_H_
 
 typedef enum {
-    ID_PL      = 0x10000000,
-    ID_MOB     = 0x20000000,
-    ID_OBJ     = 0x40000000,
-    ID_PROJ    = 0x80000000,
+    ID_PL       = 0x10000000,
+    ID_MOB      = 0x20000000,
+    ID_OBJ      = 0x40000000,
+    ID_PROJ     = 0x80000000,
     
-    ID_STATIC  = 0x01000000,
-    ID_MOVABLE = 0x02000000,
+    ID_STATIC   = 0x01000000,
+    ID_MOVABLE  = 0x02000000,
     
-    ID_PL1     = ID_PL   | 0x00000001,
-    ID_PL2     = ID_PL   | 0x00000002,
+    ID_PL1      = ID_PL   | 0x00000001,
+    ID_PL2      = ID_PL   | 0x00000002,
     
-    ID_DOOR    = ID_OBJ  | 0x00000001,
+    ID_DOOR     = ID_OBJ  | 0x00000001,
     
-    ID_JUMPER  = ID_MOB  | 0x00000001,
-    ID_EYE     = ID_MOB  | 0x00000002,
+    ID_JUMPER   = ID_MOB  | 0x00000001,
+    ID_EYE      = ID_MOB  | 0x00000002,
+    ID_EYE_LEFT = ID_MOB  | 0x00000004,
     
-    ID_ENEPROJ = ID_PROJ | 0x00000001,
+    ID_ENEPROJ  = ID_PROJ | 0x00000001,
     
     ID_HIGHJUMP = 0x00000001,
     ID_TELEPORT = 0x00000002,

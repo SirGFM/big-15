@@ -35,4 +35,5 @@ mob: { x:233 y:194 f:"jumper" }
 mob: { x:9 y:112 f:"eye" }
 mob: { x:9 y:128 f:"eye" }
 mob: { x:9 y:144 f:"eye" }
+mob: { x:295 y:144 f:"eyel" }
 ev: { x:23 y:24 w:2 h:1 ce:"ce_get_item" int:1 int:-1 int:-1 int:-1 t:"is_player"     }

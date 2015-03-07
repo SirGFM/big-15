@@ -136,12 +136,18 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             animData = _mob_jumperAnimData;
             dataLen = sizeof(_mob_jumperAnimData) / sizeof(int);
         } break;
+        case ID_EYE_LEFT:
         case ID_EYE: {
             GFraMe_sprite_init(&pMob->spr, x, y, 8/*w*/, 8/*h*/, gl_sset8x8,
                 0/*ox*/, 0/*oy*/);
             pMob->health = 1;
             pMob->damage = 1;
             pMob->countdown = EYE_COUNTDOWN;
+            
+            if (type == ID_EYE_LEFT) {
+                pMob->spr.flipped= 1;
+                type = ID_EYE;
+            }
             
             animData = _mob_eyeAnimData;
             dataLen = sizeof(_mob_eyeAnimData) / sizeof(int);
@@ -200,21 +206,27 @@ void mob_draw(mob *pMob) {
         case ID_EYE: {
             int x, y;
             
-            // TODO render EYE facing left
             x = pMob->spr.obj.x - cam_x;
             y = pMob->spr.obj.y - cam_y;
             
             if (pMob->anim != EYE_CLOSED) {
                 int pX, pY;
                 // Render the eye ball
-                GFraMe_spriteset_draw(gl_sset4x4, 2951/*tile*/, x+4, y+3, 0);
+                if (pMob->spr.flipped)
+                    GFraMe_spriteset_draw(gl_sset4x4, 2951/*tile*/, x  , y+3, 1);
+                else
+                    GFraMe_spriteset_draw(gl_sset4x4, 2951/*tile*/, x+4, y+3, 0);
                 // Get the closest player's position
                 mob_getClosestPlDist(&pX, &pY, pMob);
                 pX = pX / (float)(EYE_MAXDIST) * 2.0f + 1;
                 pY = pY / (float)(EYE_MAXDIST) * 3.0f + 1;
                 // Render the pupil
-                GFraMe_spriteset_draw(gl_sset4x4, 2950/*tile*/, x + 4 + pX,
-                    y + 3 + pY, 0);
+                if (pMob->spr.flipped)
+                    GFraMe_spriteset_draw(gl_sset4x4, 2950/*tile*/, x - 2 + pX,
+                        y + 3 + pY, 1);
+                else
+                    GFraMe_spriteset_draw(gl_sset4x4, 2950/*tile*/, x + 4 + pX,
+                        y + 3 + pY, 0);
             }
             // Render the eyelid
             GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
@@ -484,8 +496,13 @@ void mob_update(mob *pMob, int ms) {
                 
                 // Get the closest player's position
                 mob_getClosestPlDist(&dx, &dy, pMob);
-                cx = pMob->spr.obj.x + 12;
-                cy = pMob->spr.obj.y + 4;
+                if (pMob->spr.flipped) {
+                    cx = pMob->spr.obj.x - 2;
+                    dx += 4;
+                }
+                else
+                    cx = pMob->spr.obj.x + 12;
+                cy = pMob->spr.obj.y + 8;
                 
                 mob_setAnim(pMob, EYE_FOCUSED, 0);
                 pMob->countdown += EYE_COUNTDOWN;
