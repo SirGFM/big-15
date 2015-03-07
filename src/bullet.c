@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
+#include <GFraMe/GFraMe_util.h>
 
 #include <stdlib.h>
 
@@ -35,7 +36,7 @@ struct stBullet {
  */
 static int _bul_EnAnimData[] = {
 /* fps,len,loop,data...                    */
-   15 , 1 , 0  , 805,                    /* PROJ_INIT */
+   20 , 1 , 0  , 805,                    /* PROJ_INIT */
     8 , 2 , 1  , 806, 807,               /* PROJ_DEF  */
    16 , 5 , 0  , 808, 809, 810, 811, 812 /* PROJ_NONE */
 };
@@ -111,13 +112,19 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
     len = 0;
     switch (type) {
         case ID_ENEPROJ: {
+            double d, vx, vy;
+            
             GFraMe_sprite_init(pSpr, cx - 4, cy - 4, 6/*w*/, 6/*h*/, gl_sset8x8,
                 -2/*ox*/, -2/*oy*/);
             pData = _bul_EnAnimData;
             len = sizeof(_bul_EnAnimData) / sizeof(int);
             
-            pObj->vx = dstCX - cx;
-            pObj->vy = dstCY - cy;
+            vx = dstCX - cx;
+            vy = dstCY - cy;
+            d = 100 / GFraMe_util_sqrtd(vx*vx + vy*vy);
+            
+            pObj->vx = vx * d;
+            pObj->vy = vy * d;
         } break;
         default: {}
     }
