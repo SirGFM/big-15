@@ -389,9 +389,9 @@ static void writeMob(QFile &file, const MapObject *obj,
     
     // Write the mob to its exact position
     file.write(" x:", 3);
-    file.write(QByteArray::number(((int)obj->x()) - pOff->x));
+    file.write(QByteArray::number(((int)obj->x()) - pOff->x * 8));
     file.write(" y:", 3);
-    file.write(QByteArray::number(((int)obj->y()) - pOff->x));
+    file.write(QByteArray::number(((int)obj->y()) - pOff->y * 8));
     
     for (QMap<QString, QString>::const_iterator it = obj->properties().begin();
         it != obj->properties().end(); it++) {
