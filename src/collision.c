@@ -319,6 +319,18 @@ void col_onEvBul(event *pEv, bullet *pBul) {
  * @param pBul The bullet
  */
 void col_onObjBul(object *pObj, bullet *pBul) {
+    GFraMe_object *pObj1, *pObj2;
+    GFraMe_ret rv;
+    
+    // Get both objects
+    obj_getObject(&pObj1, pObj);
+    bullet_getObject(&pObj2, pBul);
+    
+    // Try to collide them
+    rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
+    if (rv == GFraMe_ret_ok) {
+        bullet_explode(pBul);
+    }
 }
 
 /**

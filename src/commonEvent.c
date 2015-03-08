@@ -182,7 +182,9 @@ void ce_callEvent(commonEvent ce) {
             
             // Check that the object is actually a door
             obj_getID(&ID, pO);
-            ASSERT_NR((ID & ID_DOOR) == ID_DOOR);
+            ID &= ID_DOOR | ID_DOOR_HOR;
+            ASSERT_NR(ID == ID_DOOR || ID == ID_DOOR_HOR);
+            //ASSERT_NR((ID & ID_DOOR) == ID_DOOR);
             
             // Whether everything should be negated or not
             not = (ce == CE_HANDLE_NOTDOOR);
@@ -191,28 +193,59 @@ void ce_callEvent(commonEvent ce) {
             obj_getVar(&gv, pO, 0);
             val = gv_getValue(gv);
             
-            // Handle animation, collision and state
-            if ((!not && val == CLOSED) || (not && val == OPEN)) {
-                obj_addFlag(pO, ID_STATIC);
-                obj_setTile(pO, 192);
+            // OPEN
+            if ((not && val == CLOSED) || (!not && val == OPEN)) {
+                if (ID == ID_DOOR) {
+                    obj_rmFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_OPEN);
+                }
+                else if (ID == ID_DOOR_HOR) {
+                    obj_rmFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_HOR_OPEN);
+                }
             }
+            // OPENING
             else if ((!not && val == OPENING) || (not && val == CLOSING)) {
-                if (obj_getAnim(pO) != OBJ_ANIM_OPEN_DOOR)
-                    obj_setAnim(pO, OBJ_ANIM_OPEN_DOOR);
+                // Vertical door
+                if (ID == ID_DOOR && obj_getAnim(pO) != OBJ_ANIM_DOOR_OPENING) {
+                    obj_addFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_OPENING);
+                }
+                // Horizontal door
+                else if (ID == ID_DOOR_HOR && obj_getAnim(pO) != OBJ_ANIM_DOOR_HOR_OPENING) {
+                    obj_addFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_HOR_OPENING);
+                }
+                // Both
                 else if (obj_animFinished(pO))
                     gv_setValue(gv, OPEN);
             }
+            // CLOSING
             else if ((!not && val == CLOSING) || (not && val == OPENING)) {
-                if (obj_getAnim(pO) != OBJ_ANIM_CLOSE_DOOR) {
+                // Vertical door
+                if (ID == ID_DOOR && obj_getAnim(pO) != OBJ_ANIM_DOOR_CLOSING) {
                     obj_addFlag(pO, ID_STATIC);
-                    obj_setAnim(pO, OBJ_ANIM_CLOSE_DOOR);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_CLOSING);
                 }
+                // Horizontal door
+                else if (ID == ID_DOOR_HOR && obj_getAnim(pO) != OBJ_ANIM_DOOR_HOR_CLOSING) {
+                    obj_addFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_HOR_CLOSING);
+                }
+                // Both
                 else if (obj_animFinished(pO))
                     gv_setValue(gv, CLOSED);
             }
-            else if ((!not && val == OPEN) || (not && val == CLOSED)) {
-                obj_rmFlag(pO, ID_STATIC);
-                obj_setTile(pO, 196);
+            // CLOSED
+            else if ((not && val == OPEN) || (!not && val == CLOSED)) {
+                if (ID == ID_DOOR) {
+                    obj_addFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_CLOSED);
+                }
+                else if (ID == ID_DOOR_HOR) {
+                    obj_addFlag(pO, ID_STATIC);
+                    obj_setAnim(pO, OBJ_ANIM_DOOR_HOR_CLOSED);
+                }
             }
         } break;
         case CE_SWITCH_MAP: {

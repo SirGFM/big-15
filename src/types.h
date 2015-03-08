@@ -19,6 +19,7 @@ typedef enum {
     ID_PL2      = ID_PL   | 0x00000002,
     
     ID_DOOR     = ID_OBJ  | 0x00000001,
+    ID_DOOR_HOR = ID_OBJ  | 0x00000002,
     
     ID_JUMPER   = ID_MOB  | 0x00000001,
     ID_EYE      = ID_MOB  | 0x00000002,
@@ -39,6 +40,7 @@ enum {
     CLOSING = 1,
     OPENING = 2,
     OPEN    = 3,
+    NONE    = 4,
 };
 
 /**

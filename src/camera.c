@@ -52,7 +52,8 @@ void cam_setPositionSt(player *pPl1, player *pPl2) {
  * It'll follow whichever player is to the right and/or above
  */
 void cam_setPosition() {
-    int cx, cy, n, x1, x2, y1, y2;
+    //int cx, cy, n, x1, x2, y1, y2;
+    int cx, cy, x1, x2, y1, y2;
     
     // Get the point between both players
     x1 = gv_getValue(PL1_CX);
@@ -60,6 +61,9 @@ void cam_setPosition() {
     x2 = gv_getValue(PL2_CX);
     y2 = gv_getValue(PL2_CY);
     
+    cx = (x1 + x2) / 2;
+    cy = (y1 + y2) / 2;
+/*
     if (y1 / 16 == y2 / 16) {
         cx = (x1 + x2) / 2;
         cy = (y1 + y2) / 2;
@@ -74,6 +78,7 @@ void cam_setPosition() {
         cx = (x2 + x1 * (n - 1)) / n;
         cy = (y2 + y1 * (n - 1)) / n;
     }
+*/
     
     // Make sure this point is inside the horizontal deadzone
     if (cx < last_x && cx - cam_x < CAM_DEAD_X)

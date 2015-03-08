@@ -213,6 +213,7 @@ static void ps_draw() {
  */
 static GFraMe_ret ps_switchMap() {
     GFraMe_ret rv;
+#if !defined(DEBUG) || !defined(FAST_TRANSITION)
     GFraMe_event_update_begin();
         int tmp;
        
@@ -267,12 +268,45 @@ static GFraMe_ret ps_switchMap() {
                 gv_setValue(SWITCH_MAP, 0);
                 switchState = 0;
                 signal_release();
+#  if defined(DEBUG) && defined(RESET_GV)
+                gv_init();
+#  endif /* RESET_GV */
             }
         }
-        
-        // Set return variable
         gl_running = tmp;
     GFraMe_event_update_end();
+#else /* FAST_TRANSITION */
+    int tmp, x, y;
+    int map;
+    
+    // Store whether the game was running
+    tmp = gl_running;
+    // Make it stop on any error
+    gl_running = 0;
+    
+    map = gv_getValue(MAP);
+    
+    rv = map_loadi(m, map);
+    ASSERT(rv == GFraMe_ret_ok, rv);
+    
+    // Get their destiny position
+    x = gv_getValue(DOOR_X) * 8;
+    y = gv_getValue(DOOR_Y) * 8;
+    // Tween the players
+    rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+    rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+    // Update camera
+    cam_setPositionSt(p1, p2);
+    
+    gv_setValue(SWITCH_MAP, 0);
+#  ifdef RESET_GV
+    gv_init();
+#  endif /* RESET_GV */
+        
+    gl_running = tmp;
+#endif /* FAST_TRANSITION */
+    
+    // Set return variable
     rv = GFraMe_ret_ok;
 __ret:
     return rv;

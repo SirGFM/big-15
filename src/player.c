@@ -209,7 +209,9 @@ void player_update(player *pPl, int ms) {
             item = gv_getValue(PL2_ITEM);
         else item = 0; // Screw warnings!
         
-        if (item == ID_SIGNALER) {
+       
+        if (item == ID_SIGNALER &&
+            !(obj->hit & (GFraMe_direction_left | GFraMe_direction_right))) {
             int cx, cy;
             
             // Set the signaler position

@@ -33,6 +33,9 @@ typedef enum {
     MAP002_DOOR2, /** State of the only door on map 002        */
     MAP003_DOOR,  /** State of the only door on map 003        */
     MAP005_DOOR,  /** State of a door on map 005              */
+    MAP006_DOOR_A,/** State of a door on map 005              */
+    MAP006_DOOR_B,/** State of a door on map 005              */
+    MAP006_DOOR_C,/** State of a door on map 005              */
     GV_MAX        /** Global var count                         */
 } globalVar;
 

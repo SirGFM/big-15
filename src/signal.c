@@ -11,7 +11,7 @@
 #include "signal.h"
 
 /** List of possible frames */
-enum { SGNL_FRAME0 = 421, SGNL_FRAME1, SGNL_FRAME2, SGNL_FRAME3, SGNL_FRAME4,
+enum { SGNL_FRAME0 = 425, SGNL_FRAME1, SGNL_FRAME2, SGNL_FRAME3, SGNL_FRAME4,
     SGNL_FRAME5, SGNL_FRAME_MAX };
 /** List of states */
 typedef enum { SGNL_NONE, SGNL_BEGIN, SGNL_ACTIVE, SGNL_END } sgnlState;
@@ -44,7 +44,7 @@ void signal_init() {
  */
 void signal_setPos(int cx, int cy) {
     // Set the teleport position
-    gv_setValue(SIGL_X, cx);
+    gv_setValue(SIGL_X, cx - 4);
     gv_setValue(SIGL_Y, cy);
     // Copy the current state, to properly finish it
     if (cur.state != SGNL_NONE) {
@@ -55,7 +55,7 @@ void signal_setPos(int cx, int cy) {
         tmp.time = cur.time;
     }
     // Init the new signal
-    cur.x = cx - 4;
+    cur.x = cx - 8;
     cur.y = cy - 8;
     cur.frame = SGNL_FRAME0;
     cur.time = 0;
@@ -72,7 +72,8 @@ void signal_release() {
         cur.x = gv_getValue(TELP_X) - 4;
         cur.y = gv_getValue(TELP_Y);
     }
-    cur.state = SGNL_END;
+    else
+        cur.state = SGNL_END;
     gv_setValue(SIGL_X, -1);
     gv_setValue(SIGL_Y, -1);
 }

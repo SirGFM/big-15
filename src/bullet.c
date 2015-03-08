@@ -36,9 +36,9 @@ struct stBullet {
  */
 static int _bul_EnAnimData[] = {
 /* fps,len,loop,data...                    */
-   20 , 1 , 0  , 805,                    /* PROJ_INIT */
-    8 , 2 , 1  , 806, 807,               /* PROJ_DEF  */
-   16 , 5 , 0  , 808, 809, 810, 811, 812 /* PROJ_NONE */
+   20 , 1 , 0  , 809,                    /* PROJ_INIT */
+    8 , 2 , 1  , 810, 811,               /* PROJ_DEF  */
+   16 , 5 , 0  , 812, 813, 814, 815, 816 /* PROJ_NONE */
 };
 
 /**

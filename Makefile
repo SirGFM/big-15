@@ -64,6 +64,12 @@ CC=gcc
 # Add debug flags
   ifneq ($(RELEASE), yes)
     CFLAGS := $(CFLAGS) -g -O0 -DDEBUG
+    ifeq ($(FAST), yes)
+      CFLAGS := $(CFLAGS) -DFAST_TRANSITION
+    endif
+    ifeq ($(RESETGV), yes)
+      CFLAGS := $(CFLAGS) -DRESET_GV
+    endif
   else
     CFLAGS := $(CFLAGS) -O1
   endif

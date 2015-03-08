@@ -35,8 +35,14 @@ static GFraMe_animation _obj_anim[OBJ_ANIM_MAX];
  *   _obj_animData[i]+3  = actual data
  */
 static int _obj_animData[] = {
-    8, 8, 0, 192,193,192,193,192,194,195,196,
-    8, 8, 0, 196,195,194,192,193,192,193,192,
+    0, 1, 0, 200,                             /* OBJ_ANIM_DOOR_OPEN    */
+    0, 1, 0, 192,                             /* OBJ_ANIM_DOOR_CLOSED  */
+    8, 8, 0, 192,193,192,193,192,194,195,200, /* OBJ_ANIM_DOOR_OPENING */
+    8, 8, 0, 200,195,194,192,193,192,193,192, /* OBJ_ANIM_DOOR_CLOSING */
+    0, 1, 0, 217,                             /* OBJ_ANIM_DOOR_HOR_OPEN    */
+    0, 1, 0, 185,                             /* OBJ_ANIM_DOOR_HOR_CLOSED  */
+    8, 8, 0, 185,193,185,193,185,201,209,217, /* OBJ_ANIM_DOOR_HOR_OPENING */
+    8, 8, 0, 217,209,201,185,193,185,193,183, /* OBJ_ANIM_DOOR_HOR_CLOSING */
     0
 };
 static int _obj_animInit = 0;
@@ -145,6 +151,8 @@ void obj_setBounds(object *pObj, int x, int y, int w, int h) {
         pSset = gl_sset8x32;
     else if (w == 16 && h == 16)
         pSset = gl_sset16x16;
+    else if (w == 32 && h == 8)
+        pSset = gl_sset32x8;
     else
         pSset = NULL;
     
