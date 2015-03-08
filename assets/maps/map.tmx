@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="146">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="287">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="96">
@@ -63,21 +63,21 @@
  </tileset>
  <layer name="bg" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="world_map" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="map000" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt3EtKxFAQhtG7NZ+Iu3Boi4tw6DJ8bMTHwqweZNJid+imUsE6B/5ZEsjkI3AhYwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwhE3sIXa2wt0nvjeA/gFd6R/Qlf4BXU39ux71vdM/YElT/y5Hfe/0D1iS/gFd6R/Qlf4BXekf0JX+AV3pH9CV/gFd6R/Qlf4BXekf0JX+AV3pH9DV1L+L2Pkfq/o3jP4BmeZ8/1V9G+ofkGnq381YX/+eE98bYM7/n/f17yX2GnuLvR94zjH3A2Q5tX8fsc/YV+z7wHOOuR8gy6n9yx5Alt3+XY3f57+7Z8NzzoO3z7mLPc28Xv+ApW379xi7XekAsmxWPoAs1X3TP6BKdd/0D6hS3Tf9AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4n34APKZfcw==
+   eJzt3EtKxFAQhtG7NZ+Iu3Boi4tw6DJ8bMTHwqweZNKiHTpUKlDnwD9LApl8BC5kDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKCrXewhdrbB3Se+N4D+AV3pH9CV/gFdTf27HvW90z9gTVP/Lkd97/QPWJP+AV3pH9CV/gFd6R/Qlf4BXekf0JX+AV3pH9CV/gFd6R/Qlf4BXekf0NXUv4vY+R+r+jeM/gGZ5nz/VX0b6h+Qaerfzdhe/54T3xtgzv+f/+vfS+w19hZ7P/KcU+4HyLK0fx+xz9hX7PvIc065HyDL0v5lDyDLYf+uxu/z38Oz4Tnnwfvn3MWeZl6vf8Da9v17jN1udABZdhsfQJbqvukfUKW6b/oHVKnum/4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMByP+owX3M=
   </data>
  </layer>
  <objectgroup name="map000_objs" visible="0">
-  <object id="65" name="exit" type="event" x="320" y="904" width="8" height="48">
+  <object id="240" name="exit" type="event" x="656" y="920" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="1"/>
@@ -94,11 +94,11 @@
  </objectgroup>
  <layer name="map001" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt2FlKw1AYhuGztdqqtQ578NJpEV44r8NhIw7L8g9YEmKjp5Ykwnke+LBgLHjzck5SAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDaWWzyj3YSO20MoC/6B5RK/4BS6R9QKv0DSqV/QKn0DyiV/gGl0j+gVPoHlEr/gFLpH1Aq/QNKpX9AqfQPKJX+AaUasn9XsevYTey24xn9A4ZS9W8rcztps/49xp5iz7GXjmf0DxjKOue/WePzduw4dpnyu/gae4u9xz46ntE/YCh/7d9ebPG1/Yy/PYgdtnaUvp8r9Q8YykP6W/+ancpt6G6qz4zzju+9i903BtCX3PZV991pqt8Ftvu3yXvCWcfnSY//N0Buo5r33Wrnqe7fRet3OffhVf2rGjtP+gcMI7dR7fdyPy3nPly1bnlenDZ+ts+OAH0Zun/L7q16/zdL7r/AcBaZa953f1v7PrzJAPqS27SxBtCXsfumf8BYxu6b/gFjGbtv+gcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsJ5P4UxrPQ==
+   eJzt2FlKA0EYhdHaWjROcdiDj06L8MF5HQ4bcViWf4MhTZvW0tDVgToHLgZsA758VHVKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOvtLDZZo53ETlsDGIr+AbXSP6BW+gfUSv+AWukfUCv9A2qlf0Ct9A+olf4BtdI/oFb6B9RK/4Ba6R9QK/0DaqV/QK1K9u8qdh27id32PKN/QClN/zYyt51W699j7Cn2HHvpeUb/gFL+cv6btj5vxY5jlym/i6+xt9h77KPnGf0DSvlv//Zis6/tZ/ztQeyws6P0/Vypf0ApD+l//Wt3KrehO2lxZtzt+d672H1rAEPJbV9z391Mi3eB3f6t8p5w2vN5MuD/DZDbqPZ9t9l5WvTvovO7nPvwsv41jd1N+geUkduo7nu5n5ZzH25aNz8vbrZ+ds+OAEMp3b9595a9/5sm91+gnFnm2vfd39a9D68ygKHkNm2sAQxl7L7pHzCWsfumf8BYxu6b/gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsM4+Aebzaz0=
   </data>
  </layer>
  <objectgroup name="map001_objs" visible="0">
-  <object id="66" name="exit" type="event" x="656" y="904" width="8" height="48">
+  <object id="241" name="exit" type="event" x="992" y="920" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="2"/>
@@ -112,7 +112,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="67" name="exit" type="event" x="328" y="904" width="8" height="48">
+  <object id="242" name="exit" type="event" x="664" y="920" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="0"/>
@@ -126,14 +126,14 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="89" name="door" type="obj" x="632" y="912" width="8" height="32">
+  <object id="243" name="door" type="obj" x="968" y="928" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map001_door"/>
    </properties>
   </object>
-  <object id="94" name="open_door" type="event" x="560" y="880" width="16" height="16">
+  <object id="244" name="open_door" type="event" x="896" y="896" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -150,11 +150,11 @@
  </objectgroup>
  <layer name="map002" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map002_objs" visible="0">
-  <object id="68" name="exit" type="event" x="992" y="1040" width="8" height="48">
+  <object id="245" name="exit" type="event" x="1328" y="1056" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="3"/>
@@ -168,7 +168,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="69" name="exit" type="event" x="664" y="904" width="8" height="48">
+  <object id="246" name="exit" type="event" x="1000" y="920" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="1"/>
@@ -182,21 +182,21 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="90" name="door" type="obj" x="840" y="1048" width="8" height="32">
+  <object id="247" name="door" type="obj" x="1176" y="1064" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map002-1_door"/>
    </properties>
   </object>
-  <object id="91" name="door" type="obj" x="952" y="1048" width="8" height="32">
+  <object id="248" name="door" type="obj" x="1288" y="1064" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map002-2_door"/>
    </properties>
   </object>
-  <object id="95" name="open_door" type="event" x="960" y="928" width="16" height="16">
+  <object id="249" name="open_door" type="event" x="1296" y="944" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -210,7 +210,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="96" name="open_door" type="event" x="800" y="1064" width="16" height="16">
+  <object id="250" name="open_door" type="event" x="1136" y="1080" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -227,11 +227,11 @@
  </objectgroup>
  <layer name="map003" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map003_objs" visible="0">
-  <object id="77" name="exit" type="event" x="1000" y="1040" width="8" height="48">
+  <object id="251" name="exit" type="event" x="1336" y="1056" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="2"/>
@@ -245,7 +245,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="80" name="exit" type="event" x="1328" y="1120" width="8" height="48">
+  <object id="252" name="exit" type="event" x="1664" y="1136" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="4"/>
@@ -259,39 +259,39 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="81" name="mob_jumper" type="mob" x="1248" y="1034" width="6" height="6">
+  <object id="253" name="mob_jumper" type="mob" x="1584" y="1050" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="82" name="mob_jumper" type="mob" x="1136" y="1058" width="6" height="6">
+  <object id="254" name="mob_jumper" type="mob" x="1472" y="1074" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="83" name="mob_jumper" type="mob" x="1128" y="994" width="6" height="6">
+  <object id="255" name="mob_jumper" type="mob" x="1464" y="1010" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="84" name="mob_jumper" type="mob" x="1200" y="1154" width="6" height="6">
+  <object id="256" name="mob_jumper" type="mob" x="1536" y="1170" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="85" name="mob_jumper" type="mob" x="1256" y="1154" width="6" height="6">
+  <object id="257" name="mob_jumper" type="mob" x="1592" y="1170" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="92" name="door" type="obj" x="1288" y="976" width="8" height="32">
+  <object id="258" name="door" type="obj" x="1624" y="992" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map003_door"/>
    </properties>
   </object>
-  <object id="97" name="open_door" type="event" x="1024" y="976" width="16" height="16">
+  <object id="259" name="open_door" type="event" x="1360" y="992" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -305,7 +305,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="105" name="exit" type="event" x="1328" y="968" width="8" height="48">
+  <object id="260" name="exit" type="event" x="1664" y="984" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="100"/>
@@ -322,11 +322,11 @@
  </objectgroup>
  <layer name="map004" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map004_objs" visible="0">
-  <object id="98" name="exit" type="event" x="1336" y="1120" width="8" height="48">
+  <object id="261" name="exit" type="event" x="1672" y="1136" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="3"/>
@@ -340,7 +340,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="99" name="exit" type="event" x="1664" y="1120" width="8" height="48">
+  <object id="262" name="exit" type="event" x="2000" y="1136" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="10"/>
@@ -354,7 +354,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="100" name="exit" type="event" x="1336" y="1272" width="8" height="48">
+  <object id="263" name="exit" type="event" x="1672" y="1288" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="5"/>
@@ -368,17 +368,17 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="101" name="mob_jumper" type="mob" x="1472" y="1154" width="6" height="6">
+  <object id="264" name="mob_jumper" type="mob" x="1808" y="1170" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="102" name="mob_jumper" type="mob" x="1552" y="1154" width="6" height="6">
+  <object id="265" name="mob_jumper" type="mob" x="1888" y="1170" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="104" name="mob_jumper" type="mob" x="1432" y="1306" width="6" height="6">
+  <object id="266" name="mob_jumper" type="mob" x="1768" y="1322" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
@@ -386,11 +386,11 @@
  </objectgroup>
  <layer name="map005" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map005_objs" visible="0">
-  <object id="106" name="exit" type="event" x="1328" y="1248" width="8" height="72">
+  <object id="267" name="exit" type="event" x="1664" y="1264" width="8" height="72">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="4"/>
@@ -404,7 +404,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="107" name="exit" type="event" x="944" y="1552" width="8" height="48">
+  <object id="268" name="exit" type="event" x="1280" y="1568" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="6"/>
@@ -418,14 +418,14 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="108" name="door" type="obj" x="1112" y="1280" width="8" height="32">
+  <object id="269" name="door" type="obj" x="1448" y="1296" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map005_door"/>
    </properties>
   </object>
-  <object id="109" name="open_door" type="event" x="968" y="1296" width="16" height="16">
+  <object id="270" name="open_door" type="event" x="1304" y="1312" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -439,72 +439,72 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="110" name="mob_eye" type="mob" x="1137" y="1416" width="8" height="8">
+  <object id="271" name="mob_eye" type="mob" x="1473" y="1432" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="111" name="mob_eye_left" type="mob" x="1311" y="1464" width="8" height="8">
+  <object id="272" name="mob_eye_left" type="mob" x="1647" y="1480" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="113" name="mob_eye_left" type="mob" x="1311" y="1344" width="8" height="8">
+  <object id="273" name="mob_eye_left" type="mob" x="1647" y="1360" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="114" name="mob_eye" type="mob" x="1137" y="1488" width="8" height="8">
+  <object id="274" name="mob_eye" type="mob" x="1473" y="1504" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="115" name="mob_jumper" type="mob" x="1208" y="1514" width="6" height="6">
+  <object id="275" name="mob_jumper" type="mob" x="1544" y="1530" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="116" name="mob_jumper" type="mob" x="1176" y="1586" width="6" height="6">
+  <object id="276" name="mob_jumper" type="mob" x="1512" y="1602" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="117" name="mob_jumper" type="mob" x="1088" y="1586" width="6" height="6">
+  <object id="277" name="mob_jumper" type="mob" x="1424" y="1602" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="118" name="mob_eye_left" type="mob" x="1311" y="1496" width="8" height="8">
+  <object id="278" name="mob_eye_left" type="mob" x="1647" y="1512" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="119" name="mob_eye_left" type="mob" x="1311" y="1560" width="8" height="8">
+  <object id="279" name="mob_eye_left" type="mob" x="1647" y="1576" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="120" name="mob_eye_left" type="mob" x="1103" y="1496" width="8" height="8">
+  <object id="280" name="mob_eye_left" type="mob" x="1439" y="1512" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="121" name="mob_eye_left" type="mob" x="1103" y="1400" width="8" height="8">
+  <object id="281" name="mob_eye_left" type="mob" x="1439" y="1416" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="122" name="mob_eye" type="mob" x="953" y="1272" width="8" height="8">
+  <object id="282" name="mob_eye" type="mob" x="1289" y="1288" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="123" name="mob_eye" type="mob" x="993" y="1352" width="8" height="8">
+  <object id="283" name="mob_eye" type="mob" x="1329" y="1368" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="124" name="mob_eye" type="mob" x="993" y="1448" width="8" height="8">
+  <object id="284" name="mob_eye" type="mob" x="1329" y="1464" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
@@ -512,11 +512,11 @@
  </objectgroup>
  <layer name="map006" width="320" height="320">
   <data encoding="base64" compression="zlib">
-   eJzt3ElOwzAUgOFcjSVwEqZjMJThGAwXYTgWrthUVdqkthOHvu+T3q6mURe/sJK46wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgjas0J0c2F1V/IeBY6R8Qlf4BUekfEJX+AVHpHxCV/gFR6R8Qlf4BUekfEJX+AVHpHxCV/gFR5fTvNM1Z4znfc336B4yR0791Xy7TvKR5zJjnCuv3Xbf+AWOU9C9371xjvf4BpXIatOr+/g97ylirf8BStLj/oX/AEpT27zbNXZr7NA8j1+gfsASl/XtN85bmPc3HyDU19s/6B5Qq7d9nmq8032l+Cv+W/gFzmuL5v33P5uXM9h5b/4AaSp5/2TW176ls77H1D6jhP/Rve4+tf0ANU/Tvpqv3TlvfXvt64Lr1Dxhjiv7lTt+17Pou/QNKtXj/d9f0PQ+zOuCzm2sAhrR4/3eOARiif0BU+gdEpX9AVK37N9VZ0gBDcs4gKD2/oK+ltQdgSOt9qv4Brczdu76zDPQPaGHu/vWdZaB/QAtz96/vLAP9A1qY4t7rIbM+y0D/gBamaM8SBmBI607pHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACM8wv4Wox9
+   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
   </data>
  </layer>
  <objectgroup name="map006_objs">
-  <object id="126" name="exit" type="event" x="936" y="1552" width="8" height="48">
+  <object id="220" name="exit" type="event" x="1272" y="1568" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="5"/>
@@ -530,21 +530,21 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="127" name="door" type="obj" x="768" y="1560" width="8" height="32">
+  <object id="221" name="door" type="obj" x="1104" y="1576" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map006-a_door"/>
    </properties>
   </object>
-  <object id="128" name="door" type="obj" x="744" y="1504" width="8" height="32">
+  <object id="222" name="door" type="obj" x="1080" y="1520" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map006-b_door"/>
    </properties>
   </object>
-  <object id="129" name="open_door" type="event" x="840" y="1520" width="16" height="16">
+  <object id="223" name="open_door" type="event" x="1176" y="1536" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -558,7 +558,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="130" name="open_door" type="event" x="736" y="1616" width="16" height="16">
+  <object id="224" name="open_door" type="event" x="1072" y="1632" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -572,42 +572,42 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="132" name="mob_eye_left" type="mob" x="863" y="1496" width="8" height="8">
+  <object id="225" name="mob_eye_left" type="mob" x="1199" y="1512" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="133" name="mob_eye_left" type="mob" x="759" y="1600" width="8" height="8">
+  <object id="226" name="mob_eye_left" type="mob" x="1095" y="1616" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="134" name="mob_eye" type="mob" x="753" y="1488" width="8" height="8">
+  <object id="227" name="mob_eye" type="mob" x="1089" y="1504" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="135" name="mob_eye" type="mob" x="625" y="1568" width="8" height="8">
+  <object id="228" name="mob_eye" type="mob" x="961" y="1608" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="136" name="mob_eye" type="mob" x="505" y="1488" width="8" height="8">
+  <object id="229" name="mob_eye" type="mob" x="841" y="1504" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="137" name="mob_eye" type="mob" x="673" y="1520" width="8" height="8">
+  <object id="230" name="mob_eye" type="mob" x="1009" y="1536" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="138" name="mob_eye_left" type="mob" x="735" y="1480" width="8" height="8">
+  <object id="231" name="mob_eye_left" type="mob" x="1071" y="1496" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="139" name="open_door" type="event" x="640" y="1496" width="16" height="16">
+  <object id="232" name="open_door" type="event" x="976" y="1512" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -621,21 +621,21 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="140" name="door" type="obj" x="616" y="1480" width="8" height="32">
+  <object id="233" name="door" type="obj" x="952" y="1496" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map006-c_door"/>
    </properties>
   </object>
-  <object id="141" name="door" type="obj" x="616" y="1608" width="8" height="32">
+  <object id="234" name="door" type="obj" x="952" y="1624" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map006-c_door"/>
    </properties>
   </object>
-  <object id="142" name="open_door" type="event" x="640" y="1496" width="16" height="16">
+  <object id="235" name="open_door" type="event" x="976" y="1512" width="16" height="16">
    <properties>
     <property name="ce" value="ce_close_door"/>
     <property name="int0" value="-1"/>
@@ -649,16 +649,75 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="145" name="door-hor" type="obj" x="792" y="1544" width="32" height="8">
+  <object id="236" name="door-hor" type="obj" x="1128" y="1560" width="32" height="8">
    <properties>
     <property name="ce" value="ce_handle_notdoor"/>
     <property name="f" value="door-hor|static"/>
     <property name="var" value="map006-a_door"/>
    </properties>
   </object>
+  <object id="237" name="exit" type="event" x="832" y="1616" width="8" height="48">
+   <properties>
+    <property name="ce" value="ce_switch_map"/>
+    <property name="int0" value="7"/>
+    <property name="int1" value="38"/>
+    <property name="int2" value="13"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|keep_active"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="238" name="exit" type="event" x="832" y="1424" width="8" height="48">
+   <properties>
+    <property name="ce" value="ce_switch_map"/>
+    <property name="int0" value="9"/>
+    <property name="int1" value="1"/>
+    <property name="int2" value="40"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|keep_active"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
+ <layer name="map007" width="320" height="320">
+  <data encoding="base64" compression="zlib">
+   eJzt27sNwkAQRdFtjRCoxHwKQTQNBezK0TBG7xzp5bPJjewxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADiK+3eng24rfDeA/gGp9A9IpX9AKv0DUukfkEr/gFT6B6TSPyCV/gGp3qO/c6u9Ct8N0N24vQFU6e6b/gFduvumf0CX7r7pH9DlMtl1/L5z58UtAFVuk3V8E7MtbgGoon9AKv0DUukfkEr/gFT6B6TSPyCV/gGp9A9INWvOc8z/xajcY3ELQJVZc440gCrdfdM/oEt33/QP6NLdN/0DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPg/Hxq7Yss=
+  </data>
+ </layer>
+ <objectgroup name="map007_objs">
+  <object id="239" name="exit" type="event" x="824" y="1616" width="8" height="48">
+   <properties>
+    <property name="ce" value="ce_switch_map"/>
+    <property name="int0" value="6"/>
+    <property name="int1" value="2"/>
+    <property name="int2" value="34"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|keep_active"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="map008" width="320" height="320" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt1DENADAMwLBSG39Sw7Cr0mIjyJUZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAN2c7AGCJ/wFV/gdU+R9Q5X9Alf8BVf4HVPkfUOV/QJX/AVX+B1T5H1Dlf0CV/wFV/gdU+R9Q5X9Alf8BVf4HVPkfUOV/QJX/AVX+B1T5H1Dlf0CV/wFV/gdU+R9Q5X9Alf8BVf4HVPkfUOV/QJX/AVX+B1T5HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAHy7gQQkl
+  </data>
+ </layer>
+ <layer name="map009" width="320" height="320" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt1MEJACAMBMG05tfSrNpvEFKA3AxsC1sFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPCH0wJIsloASfwPSOV/QCr/AxLtJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYXG75BdM=
+  </data>
+ </layer>
  <objectgroup name="Templates" visible="0">
-  <object id="2" name="ev_template" type="event" x="177" y="66" width="79" height="32">
+  <object id="212" name="ev_template" type="event" x="193" y="82" width="79" height="32">
    <properties>
     <property name="ce" value="ce_max"/>
     <property name="int0" value="-1"/>
@@ -672,22 +731,22 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="53" name="mob_jumper" type="mob" x="201.727" y="186.091" width="6" height="6">
+  <object id="213" name="mob_jumper" type="mob" x="217.727" y="202.091" width="6" height="6">
    <properties>
     <property name="f" value="jumper"/>
    </properties>
   </object>
-  <object id="60" name="mob_eye" type="mob" x="9" y="112" width="8" height="8">
+  <object id="214" name="mob_eye" type="mob" x="25" y="128" width="8" height="8">
    <properties>
     <property name="f" value="eye"/>
    </properties>
   </object>
-  <object id="63" name="mob_eye_left" type="mob" x="55.875" y="111.75" width="8" height="8">
+  <object id="215" name="mob_eye_left" type="mob" x="71.875" y="127.75" width="8" height="8">
    <properties>
     <property name="f" value="eyel"/>
    </properties>
   </object>
-  <object id="64" name="exit" type="event" x="475" y="361" width="8" height="48">
+  <object id="216" name="exit" type="event" x="491" y="377" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="1"/>
@@ -701,14 +760,14 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="88" name="door" type="obj" x="974" y="240.667" width="8" height="32">
+  <object id="217" name="door" type="obj" x="990" y="256.667" width="8" height="32">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map002_door"/>
    </properties>
   </object>
-  <object id="93" name="open_door" type="event" x="705" y="377" width="16" height="16">
+  <object id="218" name="open_door" type="event" x="721" y="393" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -722,7 +781,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="143" name="door-hor" type="obj" x="978.5" y="244.5" width="32" height="8">
+  <object id="219" name="door-hor" type="obj" x="994.5" y="260.5" width="32" height="8">
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door-hor|static"/>
