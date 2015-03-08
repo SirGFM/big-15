@@ -309,7 +309,7 @@ static void ps_update() {
         // Collide everythin against everything else
         map_getDimensions(m, &w, &h);
         
-        rv = qt_initCol(w, h);
+        rv = qt_initCol(-8, -8, w + 16, h + 16);
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error initializing collision",
             __err_ret);
         

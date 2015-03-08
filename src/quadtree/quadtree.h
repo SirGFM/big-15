@@ -43,11 +43,13 @@ void qt_init(quadtree *pQt, quadtree *pParent, qtPosition pos);
 /**
  * Initialize the quadtree for collision
  * 
+ * @param ox Horizontal offset from the center
+ * @param oy Vertical offset from the center
  * @param w World's width
  * @param h World's height
  * @return GFraMe error code
  */
-GFraMe_ret qt_initCol(int w, int h);
+GFraMe_ret qt_initCol(int ox, int oy, int w, int h);
 
 /**
  * Adds a player and collides against everything else

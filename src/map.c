@@ -27,14 +27,12 @@
 //                                                                            //
 //============================================================================//
 
-#define TM_MAX 4
+#define TM_MAX 10
 /** Lookup table for tilemap files */
 char *_map_tms[TM_MAX] = {
     "maps/map000.gfm",
     "maps/map001.gfm",
     "maps/map002.gfm",
-    "maps/map003.gfm"
-/*
     "maps/map003.gfm",
     "maps/map004.gfm",
     "maps/map005.gfm",
@@ -42,7 +40,6 @@ char *_map_tms[TM_MAX] = {
     "maps/map007.gfm",
     "maps/map008.gfm",
     "maps/map009.gfm"
-*/
 };
 //============================================================================//
 //                                                                            //
@@ -499,9 +496,10 @@ GFraMe_ret map_isPixelSolid(map *pM, int x, int y) {
     tx = x / 8;
     ty = y / 8;
     ASSERT(tx < pM->w, GFraMe_ret_failed);
-    ASSERT(tx >= 0, GFraMe_ret_failed);
     ASSERT(ty < pM->h, GFraMe_ret_failed);
-    ASSERT(ty >= 0, GFraMe_ret_failed);
+    // Use the pixel position to account for [-7, -1] values
+    ASSERT(x >= 0, GFraMe_ret_failed);
+    ASSERT(y >= 0, GFraMe_ret_failed);
     
     // Get the tile and check it
     tile = pM->data[tx + ty*pM->w];

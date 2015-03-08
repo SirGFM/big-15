@@ -72,11 +72,13 @@ void qt_init(quadtree *pQt, quadtree *pParent, qtPosition pos) {
 /**
  * Initialize the quadtree for collision
  * 
+ * @param ox Horizontal offset from the center
+ * @param oy Vertical offset from the center
  * @param w World's width
  * @param h World's height
  * @return GFraMe error code
  */
-GFraMe_ret qt_initCol(int w, int h) {
+GFraMe_ret qt_initCol(int ox, int oy, int w, int h) {
     GFraMe_ret rv;
     quadtree *pRoot;
     
@@ -90,8 +92,8 @@ GFraMe_ret qt_initCol(int w, int h) {
     // Init the root
     qt_init(pRoot, 0, QT_MAX);
     // Set its dimensions
-    pRoot->hb.cx = w / 2;
-    pRoot->hb.cy = h / 2;
+    pRoot->hb.cx = w / 2 + ox;
+    pRoot->hb.cy = h / 2 + oy;
     pRoot->hb.hw = w / 2;
     pRoot->hb.hh = h / 2;
     
