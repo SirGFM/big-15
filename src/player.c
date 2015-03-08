@@ -171,7 +171,7 @@ void player_update(player *pPl, int ms) {
     
 #ifdef DEBUG
     if (GFraMe_pointer_pressed) {
-        GFraMe_object_set_pos(&pPl->spr.obj, GFraMe_pointer_x, GFraMe_pointer_y);
+        GFraMe_object_set_pos(&pPl->spr.obj, GFraMe_pointer_x + cam_x, GFraMe_pointer_y + cam_y);
     }
 #endif
     
@@ -207,6 +207,7 @@ void player_update(player *pPl, int ms) {
             item = gv_getValue(PL1_ITEM);
         else if (pPl->spr.id == ID_PL2)
             item = gv_getValue(PL2_ITEM);
+        else item = 0; // Screw warnings!
         
         if (item == ID_SIGNALER) {
             int cx, cy;
@@ -382,6 +383,7 @@ void player_getCarried(player *pPl, GFraMe_object *pObj) {
         maxvy = 0.99 * vy;
     else if (vy > 0)
         maxvy = 1.01 * vy;
+    else maxvy = vy; // Screw warnings
     // Modify the player's VY
     if (!ctr_jump(pPl->spr.id))
         pThisObj->vy = maxvy;
@@ -590,6 +592,11 @@ void player_changeItem(player *pPl) {
     else if (pPl->spr.id == ID_PL2) {
         curItem = gv_getValue(PL2_ITEM);
         otherItem = gv_getValue(PL1_ITEM);
+    }
+    else {
+        // Screw warnings
+        curItem = 0;
+        otherItem = 0;
     }
     
     if (curItem)

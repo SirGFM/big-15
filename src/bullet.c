@@ -101,7 +101,7 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
     int *pData, len;
     
     // Sanitize input
-    ASSERT_NR(type & ID_PROJ);
+    ASSERT(type & ID_PROJ, GFraMe_ret_bad_param);
     
     // Get the bullet's sprite and object
     pSpr = &pBul->spr;

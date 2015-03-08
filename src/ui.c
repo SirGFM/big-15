@@ -234,6 +234,7 @@ static void ui_drawItem(int item, int x, int y) {
                 case 5: case 12:                  tile = TELEP + 2; break;
                 case 6: case 11:                  tile = TELEP + 3; break;
                 case 7: case  8: case 9: case 10: tile = TELEP + 4; break;
+                default: return;
             }
         } break;
         case ID_SIGNALER: {
@@ -246,6 +247,7 @@ static void ui_drawItem(int item, int x, int y) {
                 case 5: case 12:                  tile = SIGNL + 2; break;
                 case 6: case 11:                  tile = SIGNL + 3; break;
                 case 7: case  8: case 9: case 10: tile = SIGNL + 4; break;
+                default: return;
             }
         } break;
         case ID_PL1ITEM: tile = P_ONE; break;
