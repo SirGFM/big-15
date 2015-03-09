@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="294">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="295">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="96">
@@ -534,12 +534,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map006" width="320" height="320">
+ <layer name="map006" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt3Vlu1DAABuBcDWYo2yl4AKksh+CBpSyHoKzXYOdYOFIjGeMknsRpRs33Sb9aNJNk1Idf9sQxTQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA51HItSuW06p/IeCq0n/AVuk/YKv0H7BV+g/YKv0HbJX+A7ZK/wFb9bpZv6/0H7CGtbtK/wFrWaujboRcT3JS6dz6Dyhx2R3X9dw+875dU6cL9R9Qola/3Qt52vR3XJx98to++dmedzdwXv0H1HAnyd3m/7FaOo67nTnustN+Tv0HzPEwSbseJu66XfPvvLTN6cV734a8mpA3FY7vPmduPKj/gBJpB6XrYW42/f03tnawb/6bHp/Of7vrtte6H/Lg4vdb0fHpsfoPOFQ63sul650uZ02+K6f0X3zfI73O0PxW/wFzLfn8RzeGS5P2X2nv6T+gprn99yzkeciLkJeFx5TOn/UfsKS5/fcx5FPI55AvhceUzp/H+i+eO58krwOMmdt/P0N+hfwO+TPzXHPGf/vkdYAxU/pvbP3f0Nq8KUnn2LnxX3yPWv8BJab0X/f9XV9q31NJ59i58V98r0X/ASWW7r/22ZFuDd/UZ3rTObb7H0ANS/Tfk6beM225ufbjZnjtjP4DSizRf1OT+yx91xr63PoPKDGn/6Y+v9uX3HqYswPeGx8DMGZO/8XHxutQcmtS5mTK+QDG6D9gq+b2X7xPVnc/Ym7/pfsNHro/gv4DStQa/8Xr76b0VW681/dv/QfUUKv/pvbVUntJA4zJ3Ud9F3Ie8j7kQ+b1sf0LDum/pdbSAIzJddLXkG8h30N+9LznkPmr/gOO0ZTv58YSfxeYPvOW28tA/wFrWKL/hsaCub0M9B+whhodl65Xif/PonR/0txeBvoPWMMS914PSbuXgf4D1rBE9xxDAMas3VP6DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Rn8BneSUnQ==
   </data>
  </layer>
- <objectgroup name="map006_objs">
+ <objectgroup name="map006_objs" visible="0">
   <object id="220" name="exit" type="event" x="1272" y="1568" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -704,12 +704,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map007" width="320" height="320">
+ <layer name="map007" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt3Ftu01AUhtE9NSBQKKPoI5cOggfuYhhcJsJlGgUkGAbbClYjy0axmu1j5LWkX81Tqr58OoldRwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa/Ykd2vBPco9njGAKvoHbJX+AVulf8BW6R+wVfoHbJX+AVulf8BWVffvee5F7mXuVegfsB7V/Xuf+5D7mPsU+gesx9uo7d/n3Jfc19y30D9gPSrb9yB3PtjT0D9gHSr79zr35oYDqFLZv7Pc7dxF7tnf1/dnvgdAlcr+nWIAVYbfz3V7GO27p39AtbFrDt09Mfeiffv0D6g01b9dLNu5sWvF54V/N8Bh997F/pprd0/gndhfr1jiHHg3pu8LBKgyPPf1TdoNflau+x36ByztsDWXcX39oz//zb1fRf+A/8Wpvv+7yv3I/Yz9cw70D1i7qf7NPfd9z/3K/Y79cw6O/d6vO2N2Z039A5Y21b+5n2GHzzk49tzn/Ae0cor+jd27MnUPdX/m6899zn9AK//qX9+qi7j+/93+fpjD5o090+Uyxlu4G3nt/Ae0MNacw3ZNbc5zrG7yfgBVjm1YqwFUad03/QNaad03/QMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAdfsDmQ2F4w==
   </data>
  </layer>
- <objectgroup name="map007_objs">
+ <objectgroup name="map007_objs" visible="0">
   <object id="239" name="exit" type="event" x="824" y="1616" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -763,8 +763,8 @@
    <properties>
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="8"/>
-    <property name="int1" value="2"/>
-    <property name="int2" value="34"/>
+    <property name="int1" value="38"/>
+    <property name="int2" value="37"/>
     <property name="int3" value="-1"/>
     <property name="t" value="is_player|on_enter|keep_active"/>
     <property name="var0" value="gv_max"/>
@@ -776,15 +776,31 @@
  </objectgroup>
  <layer name="map008" width="320" height="320">
   <data encoding="base64" compression="zlib">
-   eJzt3TERhAAQBEGskeLkpYBqNHy0VUy3go2mLrvjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+M9vPQBgRP+AKv0DqvQPqLrXAwBGzvUAgBH9A6r0D6jSP6DqWg8AGHH/AVX6B1TpH1Clf0CV/gFV+gdU6R9QpX9Alf4BVfoHVOkfUKV/QJX+AVX6B1TpH1Clf0DVsx4AMOL+A6r0D6jSP6BK/4Aq/9+AKvcfUKV/QJX+AVX6BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwDS+ILwpo
+   eJzt3dmtFDEQQFGnxidrHsBDRMG+ZMGSCEtYGAlLLYuZcY+6yg98jlTf/XflmbbdpQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3gyME/r3Emax92zAaLoH7Aq/QNWNbt/L+q8rPOqzuuif0Ce2f37VOdznS91vhb9A/LM7t+3Ot/r/Kjzs+gfkCejf3fr3Bucm6J/QI6M/vVruj0DECWjf2/qvB2c90X/gByz//+7tFYEiKJ/wKr0D1hV68yHcvo/uXclr3/9f4UAUWas8fYMQJRt//qzaLPbp39ApG3/+rNos9unf0Ckbf/6s2iz26d/QKTWv2dl/Iza/RLXu/6sHECUa86kRb4rae9/2zkQgCgj+19m7Idp+wABoty2/S/t92+7BwYgym3rn/MfQBb9A1alf8Cq9vTv3D3OR+2J0T8gy57+nbvH+aj1o/4BWfQPWFXrzMc6D//MoxLXvwcXnqN/QBbrP2BV+ges6lK/tr9Xnxf9A/4fe9d/p84JH3UmWP+ALHv7F71PWv+ALPoHrGrv/peR/l3a43JufP8NyHLb1n/9AETRP2BV+gesau/+v+zvBANEuWb9F/mdYN9/A7Jc07/I7wTb/wJkaec5Rs5v/G7T6HeCr70PVf+ALHveZ5y7/+Co88D6B2Rp67mR9VpE/7bvV/52xwJAlKPuv7L+A/41e3rVn007N9feB6N/QJbR/X97z/FeO/oHZNn2L3Nfc5v+mfoHZNn2L3Jf86npn6l/QJZt/yL3NZ+a/pn6B2RpnRnd1xw9N0X/gByj+1lmDUCU2X3TP2CW2X3TPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgCL8ATxK3aw==
   </data>
  </layer>
- <layer name="map009" width="320" height="320">
+ <objectgroup name="map008_objs">
+  <object id="294" name="exit" type="event" x="488" y="1600" width="8" height="48">
+   <properties>
+    <property name="ce" value="ce_switch_map"/>
+    <property name="int0" value="7"/>
+    <property name="int1" value="1"/>
+    <property name="int2" value="13"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|keep_active"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="map009" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt2kFqwkAYhuFcrVqNeIsu2oW3cOupO0KGDiFGN+MXyvPAzwgZxt3LBDIMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8N5eND0Av6b7pH5CS7pv+ASnpvukfkJLum/4BKem+6R+Qku6b/gEp6b7pH5CS7pv+ASnpvukfkJLum/4BKem+6R+Qku6b/gEp6b7pH5CS7pv+ASnpvukfkJLum/4BKem+6R+Qku6b/gEpt40PQC8fC/NZZiyzL7Ob1tODvc9mnM74LvMz/T42/9OuSwPQy1qz2v4dH+x9ZQ7TObuFc+/rWlsBelnrVns/W7ujPWtf7dy8f6/cKQF6aTv1VeY6/HWq9qntX7tvfiec3/Nq62rv6v6xeV7fi+sZ8zMBejlvfAB6SX/f4vsXICXdN/0DUtJ90z8gJd03/QNS0n3TPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID3+QXjW9lG
   </data>
  </layer>
- <objectgroup name="map009_objs">
+ <objectgroup name="map009_objs" visible="0">
   <object id="291" name="exit" type="event" x="824" y="1424" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>

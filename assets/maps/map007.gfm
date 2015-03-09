@@ -34,4 +34,4 @@ ev: { x:40 y:12 w:1 h:6 ce:"ce_switch_map" int:6 int:2 int:34 int:-1 t:"is_playe
 ev: { x:25 y:9 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map007_door"    }
 ev: { x:19 y:22 w:2 h:2 ce:"ce_get_item" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed"     }
 obj: { x:4 y:19 w:4 h:1 ce:"ce_handle_notdoor" f:"door-hor"|"static" var:"map007_door" }
-ev: { x:-1 y:10 w:1 h:6 ce:"ce_switch_map" int:8 int:2 int:34 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:10 w:1 h:6 ce:"ce_switch_map" int:8 int:38 int:37 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
