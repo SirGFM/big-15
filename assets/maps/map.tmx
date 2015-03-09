@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="287">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="291">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="96">
@@ -58,6 +58,30 @@
     <frame tileid="166" duration="166"/>
     <frame tileid="202" duration="166"/>
     <frame tileid="205" duration="333"/>
+   </animation>
+  </tile>
+  <tile id="226">
+   <animation>
+    <frame tileid="226" duration="83"/>
+    <frame tileid="228" duration="83"/>
+   </animation>
+  </tile>
+  <tile id="227">
+   <animation>
+    <frame tileid="227" duration="83"/>
+    <frame tileid="229" duration="83"/>
+   </animation>
+  </tile>
+  <tile id="230">
+   <animation>
+    <frame tileid="230" duration="83"/>
+    <frame tileid="232" duration="83"/>
+   </animation>
+  </tile>
+  <tile id="231">
+   <animation>
+    <frame tileid="231" duration="83"/>
+    <frame tileid="233" duration="83"/>
    </animation>
   </tile>
  </tileset>
@@ -510,12 +534,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map006" width="320" height="320">
+ <layer name="map006" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt3VlOwzAUQNFsjU9gJUzLYIZlMGyEYVkYiUooShs3dvICPkd6fzVEfFzJ1HW7DgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICNszQH/2xOqv6FgP9K/4BW6R/QKv0DWqV/QKv0D2iV/gGt0j+gVfddfK/0D4gQ3Sr9A6JEt0r/gCjRrdI/IEp0q/QPiHLUm+NuvC+HA+uWnl3PqX9AjtPe5JyHOfl57WOauwnzUGH9rufUPyBHv0E552E2/Zt6drDGev0DSk1p0G2X30r9A9Yq4vMf+gesQWn/LtNcpblOc5O5Rv+ANSjt31Oa5zQvaV4z19TYP+sfUKq0f29p3tN8pPks/Fn6ByxpSv/Gzv/lnCHcZ/p7bP0DapjSv83/77ZN7fdU+nts/QNq+Av96++x9Q+oYY7+XXT1PtM2tNc+H3lu/QNyzNG/qTP0LNt+l/4BpUr6N/Xzu9tm6DzM7R6v/b0GYExJ/9b83SEAY/QPaJX+Aa3SP6BV0f2b6y5pgDFT7iAovb9gqKW1B2BM9D5V/4AoS/du6C4D/QMiLN2/obsM9A+IsHT/hu4y0D8gwhzvve4z33cZ6B8QYY72rGEAxkR3Sv8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDX6AvrGjeQ=
   </data>
  </layer>
- <objectgroup name="map006_objs">
+ <objectgroup name="map006_objs" visible="0">
   <object id="220" name="exit" type="event" x="1272" y="1568" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -661,7 +685,7 @@
     <property name="ce" value="ce_switch_map"/>
     <property name="int0" value="7"/>
     <property name="int1" value="38"/>
-    <property name="int2" value="13"/>
+    <property name="int2" value="15"/>
     <property name="int3" value="-1"/>
     <property name="t" value="is_player|on_enter|keep_active"/>
     <property name="var0" value="gv_max"/>
@@ -687,7 +711,7 @@
  </objectgroup>
  <layer name="map007" width="320" height="320">
   <data encoding="base64" compression="zlib">
-   eJzt27sNwkAQRdFtjRCoxHwKQTQNBezK0TBG7xzp5bPJjewxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADiK+3eng24rfDeA/gGp9A9IpX9AKv0DUukfkEr/gFT6B6TSPyCV/gGp3qO/c6u9Ct8N0N24vQFU6e6b/gFduvumf0CX7r7pH9DlMtl1/L5z58UtAFVuk3V8E7MtbgGoon9AKv0DUukfkEr/gFT6B6TSPyCV/gGp9A9INWvOc8z/xajcY3ELQJVZc440gCrdfdM/oEt33/QP6NLdN/0DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPg/Hxq7Yss=
+   eJzt3NlJBEEUhtFKzUfHSNzCcMcwXBJxScMFNAyvzEsz9IDt9O0qqHPgfxXm5UO6iioFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGjZcWxvwR3GjiYMIIv+Ab3SP6BX+gf0Sv+AXukf0Cv9A3qlf0Cvsvt3FjuPXcQui/4B7cju313sPvYQeyz6B7TjpuT27yn2HHuJvRb9A9qR2b792GpjJ0X/gDZk9u8qdr3jALJk9m+OAWSp3Tf9A2rZ/D73u4NSv3v6B2QbO3NY+k60/gE1tNK/sbPiVeLvBhh277asz1yz7wSObdu9QIAstf/v0z+glmFrTku98w/9A5Y21/e/t9hH7LOs3znQP6B1c/XvPfYV+y7rdw70D2jdXP3bfOdA/4DWzdG/sbsrU78h6h+wtP/2b9i8sTddTsu0FuofsLSx5gzbtW1T3rHa5e8BZPlrw2oNIEvtvukfUEvtvukfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALTtB1xwhLE=
   </data>
  </layer>
  <objectgroup name="map007_objs">
@@ -703,6 +727,41 @@
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="288" name="open_door" type="event" x="704" y="1592" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_open_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="map007_door"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="289" name="get_highjump" type="event" x="656" y="1696" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_get_item"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="290" name="door-hor" type="obj" x="536" y="1672" width="32" height="8">
+   <properties>
+    <property name="ce" value="ce_handle_notdoor"/>
+    <property name="f" value="door-hor|static"/>
+    <property name="var" value="map007_door"/>
    </properties>
   </object>
  </objectgroup>

@@ -315,8 +315,10 @@ void obj_collide(object *pObj, GFraMe_object *pGFMobj) {
  * @param anim The animation
  */
 void obj_setAnim(object *pObj, objAnim anim) {
-    GFraMe_sprite_set_animation(&pObj->spr, &(pObj->obj_anim[anim]), 0);
-    pObj->anim = anim;
+    if (pObj->anim != anim) {
+        GFraMe_sprite_set_animation(&pObj->spr, &(pObj->obj_anim[anim]), 0);
+        pObj->anim = anim;
+    }
 }
 
 /**

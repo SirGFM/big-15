@@ -217,8 +217,10 @@ void ce_callEvent(commonEvent ce) {
                     obj_setAnim(pO, OBJ_ANIM_DOOR_HOR_OPENING);
                 }
                 // Both
-                else if (obj_animFinished(pO))
+                else if (obj_animFinished(pO) && !not)
                     gv_setValue(gv, OPEN);
+                else if (obj_animFinished(pO) && not)
+                    gv_setValue(gv, CLOSED);
             }
             // CLOSING
             else if ((!not && val == CLOSING) || (not && val == OPENING)) {
@@ -233,8 +235,10 @@ void ce_callEvent(commonEvent ce) {
                     obj_setAnim(pO, OBJ_ANIM_DOOR_HOR_CLOSING);
                 }
                 // Both
-                else if (obj_animFinished(pO))
+                else if (obj_animFinished(pO) && !not)
                     gv_setValue(gv, CLOSED);
+                else if (obj_animFinished(pO) && not)
+                    gv_setValue(gv, OPEN);
             }
             // CLOSED
             else if ((not && val == OPEN) || (!not && val == CLOSED)) {
@@ -270,21 +274,24 @@ void ce_callEvent(commonEvent ce) {
         } break;
         case CE_GET_ITEM: {
             event *pE;
-            int item;
+            int item, prevItems;
             player *pPl;
             
             // Get every parameter
             pE = (event*)_ce_caller;
             pPl = (player*)_ce_target;
             
+            prevItems = gv_getValue(ITEMS);
             // Set the item as gotten
             event_iGetVar(&item, pE, 0);
             gv_setBit(ITEMS, item);
             // And Equip the player
-            if (player_getID(pPl) == ID_PL1)
-                gv_setValue(PL1_ITEM, item);
-            else if (player_getID(pPl) == ID_PL2)
-                gv_setValue(PL2_ITEM, item);
+            if ((prevItems & item) == 0) {
+                if (player_getID(pPl) == ID_PL1)
+                    gv_setValue(PL1_ITEM, item);
+                else if (player_getID(pPl) == ID_PL2)
+                    gv_setValue(PL2_ITEM, item);
+            }
         } break;
         // TODO implement every common event
         default: {}

@@ -36,6 +36,7 @@ static char *_gv_names[GV_MAX+1] = {
     "map006-a_door",
     "map006-b_door",
     "map006-c_door",
+    "map007_door",
     "gv_max"
 };
 

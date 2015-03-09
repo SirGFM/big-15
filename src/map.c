@@ -74,6 +74,15 @@ char *_map_tms[TM_MAX] = {
 #define TILE_PC6_2 202
 #define TILE_PC6_3 205
 
+#define TILE_JB1_1 226
+#define TILE_JB1_2 228
+#define TILE_JB2_1 227
+#define TILE_JB2_2 229
+#define TILE_JB3_1 230
+#define TILE_JB3_2 232
+#define TILE_JB4_1 231
+#define TILE_JB4_2 233
+
 //============================================================================//
 //                                                                            //
 // Structs                                                                    //
@@ -542,6 +551,14 @@ static GFraMe_ret map_tileIsAnimated(int tile) {
         case TILE_PC4_2:
         case TILE_PC5_2:
         case TILE_PC6_2:
+        case TILE_JB1_1:
+        case TILE_JB1_2:
+        case TILE_JB2_1:
+        case TILE_JB2_2:
+        case TILE_JB3_1:
+        case TILE_JB3_2:
+        case TILE_JB4_1:
+        case TILE_JB4_2:
             return GFraMe_ret_ok;
         default:
             return GFraMe_ret_failed;
@@ -625,6 +642,24 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
             if (pT->elapsed >= 333) {
                 tile -= TILE_PC1_2 - TILE_PC1_1 + 3;
                 pT->elapsed -= 333;
+            }
+        } break;
+        case TILE_JB1_1:
+        case TILE_JB2_1:
+        case TILE_JB3_1:
+        case TILE_JB4_1: { // 12 fps
+            if (pT->elapsed >= 83) {
+                tile += TILE_JB1_2 - TILE_JB1_1;
+                pT->elapsed -= 83;
+            }
+        } break;
+        case TILE_JB1_2:
+        case TILE_JB2_2:
+        case TILE_JB3_2:
+        case TILE_JB4_2: { // 12 fps
+            if (pT->elapsed >= 83) {
+                tile -= TILE_JB1_2 - TILE_JB1_1;
+                pT->elapsed -= 83;
             }
         } break;
         default: {}
