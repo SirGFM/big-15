@@ -24,6 +24,7 @@
 /** States for the seifer('charger') mob */
 enum {CHARGER_STAND = 0, CHARGER_FLOAT, CHARGER_CHARGE};
 #define CHARGER_COUNTDOWN 1500
+#define CHARGER_DIST 80
 /** States for the 'jumper' mob */
 enum {JUMPER_STAND = 0, JUMPER_PREJUMP, JUMPER_JUMP, JUMPER_LANDED };
 #define JUMPER_COUNTDOWN 1000
@@ -552,17 +553,33 @@ void mob_update(mob *pMob, int ms) {
             }
         } break; /* ID_EYE */
         case ID_CHARGER: {
-            pMob->spr.obj.ay = GRAVITY;
-            if (pMob->spr.obj.hit & GFraMe_direction_down) {
-                pMob->spr.obj.vy = 32;
+            GFraMe_object *pObj;
+            GFraMe_hitbox *pHb;
+            
+            mob_getObject(&pObj, pMob);
+            pHb = GFraMe_object_get_hitbox(pObj);
+            
+            pObj->ay = GRAVITY;
+            if (pObj->hit & GFraMe_direction_down) {
+                pObj->vy = 32;
             }
-            if (pMob->spr.obj.hit & GFraMe_direction_left) {
+            if ((pObj->hit & GFraMe_direction_left) && pObj->vx < 0) {
                 pMob->spr.flipped = 0;
-                mob_setAnim(pMob, CHARGER_STAND, 1);
+                pObj->vx *= -1;
             }
-            else if (pMob->spr.obj.hit & GFraMe_direction_right) {
+            else if ((pObj->hit & GFraMe_direction_right) && pObj->vx > 0) {
                 pMob->spr.flipped = 1;
-                mob_setAnim(pMob, CHARGER_STAND, 1);
+                pObj->vx *= -1;
+            }
+            else if ((!pMob->spr.flipped && map_isPixelSolid(m,
+                pObj->x + pHb->cx + pHb->hw,
+                pObj->y + pHb->cy + pHb->hh) != GFraMe_ret_ok)
+                || (pMob->spr.flipped && map_isPixelSolid(m,
+                pObj->x + pHb->cx - pHb->hw,
+                pObj->y + pHb->cy + pHb->hh) != GFraMe_ret_ok))
+                {
+                pMob->spr.flipped = !pMob->spr.flipped;
+                pObj->vx *= -1;
             }
             
             
@@ -570,16 +587,27 @@ void mob_update(mob *pMob, int ms) {
                 mob_setAnim(pMob, CHARGER_FLOAT, 0);
                 pMob->countdown += CHARGER_COUNTDOWN;
                 if (pMob->spr.flipped)
-                    pMob->spr.obj.vx = -120;
+                    pObj->vx = -120;
                 else
-                    pMob->spr.obj.vx = 120;
+                    pObj->vx = 120;
             }
-            else if (pMob->anim == CHARGER_FLOAT && pMob->countdown <= 0) {
+            else if (pMob->anim == CHARGER_FLOAT && pMob->countdown > 0) {
+                int x, y;
+                
+                // Get the closest player's position
+                mob_getClosestPlDist(&x, &y, pMob);
+                
+                if (x*x + y*y <= CHARGER_DIST*CHARGER_DIST) {
+                    mob_setAnim(pMob, CHARGER_CHARGE, 0);
+                    pMob->countdown += CHARGER_COUNTDOWN;
+                    pObj->vx *= 2.5;
+                }
+            }
+            else if (pMob->anim != CHARGER_STAND && pMob->countdown <= 0) {
                 mob_setAnim(pMob, CHARGER_STAND, 0);
                 pMob->countdown += CHARGER_COUNTDOWN;
-                pMob->spr.obj.vx = 0;
+                pObj->vx = 0;
             }
-            // TODO
         } break; /* ID_CHARGER */
         default: {
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
