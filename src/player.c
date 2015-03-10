@@ -298,8 +298,29 @@ __ret:
  * @param pPl The player
  */
 void player_draw(player *pPl) {
-    //GFraMe_sprite_draw(&pPl->spr);
-    GFraMe_sprite_draw_camera(&pPl->spr, cam_x, cam_y, SCR_W, SCR_H);
+    int x, y;
+    
+    // Check if the player is inside the camera
+    x = pPl->spr.obj.x - cam_x;
+    y = pPl->spr.obj.y - cam_y;
+    if (x >= 0 && x <= SCR_W && y >= 0 && y <= SCR_H)
+        GFraMe_sprite_draw_camera(&pPl->spr, cam_x, cam_y, SCR_W, SCR_H);
+    else {
+        if (x < 0)
+            x = 0;
+        else if (x + 8 > SCR_W)
+            x = SCR_W - 8;
+        if (y < 0)
+            y = 0;
+        else if (y + 8 > SCR_H)
+            y = SCR_H - 8;
+        if (pPl->spr.id == ID_PL1) {
+            GFraMe_spriteset_draw(gl_sset8x8, 157/*tile*/, x, y, pPl->spr.flipped);
+        }
+        else if (pPl->spr.id == ID_PL2) {
+            GFraMe_spriteset_draw(gl_sset8x8, 158/*tile*/, x, y, pPl->spr.flipped);
+        }
+    }
 }
 
 /**
