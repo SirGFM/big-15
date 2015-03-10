@@ -21,6 +21,9 @@
 
 #define MOB_ANIM_MAX 6
 
+/** States for the seifer('charger') mob */
+enum {CHARGER_STAND = 0, CHARGER_FLOAT, CHARGER_CHARGE};
+#define CHARGER_COUNTDOWN 1500
 /** States for the 'jumper' mob */
 enum {JUMPER_STAND = 0, JUMPER_PREJUMP, JUMPER_JUMP, JUMPER_LANDED };
 #define JUMPER_COUNTDOWN 1000
@@ -64,6 +67,12 @@ static int _mob_eyeAnimData[] = {
     4 , 1 , 0  , 737,           /* focused */
     8 , 2 , 0  , 737, 736,      /* closing */
    12 , 3 , 0  , 737, 736, 737  /* blink   */
+};
+static int _mob_chargerAnimData[] = {
+/* fps,len,loop,data...                    */
+    6 , 2 , 1  , 201, 217,      /* stand   */
+    0 , 1 , 0  , 202,           /* float   */
+    0 , 1 , 0  , 218            /* charge  */
 };
 
 /**
@@ -152,6 +161,16 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             animData = _mob_eyeAnimData;
             dataLen = sizeof(_mob_eyeAnimData) / sizeof(int);
         } break;
+        case ID_CHARGER: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 10/*w*/, 12/*h*/, gl_sset16x16,
+                -4/*ox*/, -4/*oy*/);
+            pMob->health = 1;
+            pMob->damage = 1;
+            pMob->countdown = CHARGER_COUNTDOWN;
+            
+            animData = _mob_chargerAnimData;
+            dataLen = sizeof(_mob_chargerAnimData) / sizeof(int);
+        } break;
         default: {
             GFraMe_assertRV(0, "Invalid mob type!", rv = GFraMe_ret_failed,
                 __ret);
@@ -229,6 +248,19 @@ void mob_draw(mob *pMob) {
                         y + 3 + pY, 0);
             }
             // Render the eyelid
+            GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
+        } break;
+        case ID_CHARGER: {
+            if (pMob->anim != CHARGER_STAND) {
+                int x, y;
+                
+                // Draw an after effect based on the velocity
+                x = pMob->spr.obj.x - cam_x + pMob->spr.offset_x;
+                x -= pMob->spr.obj.vx / 20;
+                y = pMob->spr.obj.y - cam_y + pMob->spr.offset_x;
+                GFraMe_spriteset_draw(gl_sset16x16, pMob->spr.cur_tile + 1, x,
+                    y, pMob->spr.flipped); 
+            }
             GFraMe_sprite_draw_camera(&pMob->spr, cam_x, cam_y, SCR_W, SCR_H);
         } break;
         default: {
@@ -519,6 +551,36 @@ void mob_update(mob *pMob, int ms) {
                 pMob->countdown += EYE_COUNTDOWN * 2;
             }
         } break; /* ID_EYE */
+        case ID_CHARGER: {
+            pMob->spr.obj.ay = GRAVITY;
+            if (pMob->spr.obj.hit & GFraMe_direction_down) {
+                pMob->spr.obj.vy = 32;
+            }
+            if (pMob->spr.obj.hit & GFraMe_direction_left) {
+                pMob->spr.flipped = 0;
+                mob_setAnim(pMob, CHARGER_STAND, 1);
+            }
+            else if (pMob->spr.obj.hit & GFraMe_direction_right) {
+                pMob->spr.flipped = 1;
+                mob_setAnim(pMob, CHARGER_STAND, 1);
+            }
+            
+            
+            if (pMob->anim == CHARGER_STAND && pMob->countdown <= 0) {
+                mob_setAnim(pMob, CHARGER_FLOAT, 0);
+                pMob->countdown += CHARGER_COUNTDOWN;
+                if (pMob->spr.flipped)
+                    pMob->spr.obj.vx = -120;
+                else
+                    pMob->spr.obj.vx = 120;
+            }
+            else if (pMob->anim == CHARGER_FLOAT && pMob->countdown <= 0) {
+                mob_setAnim(pMob, CHARGER_STAND, 0);
+                pMob->countdown += CHARGER_COUNTDOWN;
+                pMob->spr.obj.vx = 0;
+            }
+            // TODO
+        } break; /* ID_CHARGER */
         default: {
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
                 pMob->spr.obj.vy = 32;
