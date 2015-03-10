@@ -10,6 +10,7 @@
 #include "globalVar.h"
 #include "object.h"
 #include "player.h"
+#include "registry.h"
 #include "types.h"
 
 static char *_ce_names[CE_MAX+1] = {
@@ -20,6 +21,7 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_handle_notdoor",
     "ce_switch_map",
     "ce_get_item",
+    "ce_hidden_path",
     "ce_max"
 };
 
@@ -292,6 +294,91 @@ void ce_callEvent(commonEvent ce) {
                 else if (player_getID(pPl) == ID_PL2)
                     gv_setValue(PL2_ITEM, item);
             }
+        } break;
+        case CE_HIDDEN_PATH: {
+            event *pE;
+            GFraMe_object *pObj;
+            GFraMe_ret rv;
+            int i, ini, j, len, lx, ly, x, y, w, h;
+            unsigned char *pData;
+            
+            map_getDimensions(m, &w, &h);
+            w /= 8;
+            h /= 8;
+            // Get every parameter
+            pE = (event*)_ce_caller;
+            event_getObject(&pObj, pE);
+            // Get the initial tile and dimensions
+            x = pObj->x / 8;
+            y = pObj->y / 8;
+            ly = pObj->hitbox.hh * 2 / 8;
+            lx = pObj->hitbox.hw * 2 / 8;
+            ini = x + y * w;
+            // Get the map's data
+            rv = map_getTilemapData(&pData, &len, m);
+            ASSERT_NR(rv == GFraMe_ret_ok);
+            // Check that the event is inbounds
+            ASSERT_NR(x + y*w < len);
+            ASSERT_NR(x + lx + y*w < len);
+            ASSERT_NR(x + (y + ly)*w < len);
+            // Actually set the data
+            j = 0;
+            // Set both walls and the empty space
+            while (++j < ly) {
+                i = ini;
+                // Set the left wall
+                if (map_isTileSolid(m, x - 1, y + j) == GFraMe_ret_ok)
+                    pData[i + j*w] = 106;
+                else
+                    pData[i + j*w] = 64;
+                // Set the walkable space
+                while (++i < ini + lx - 1)
+                    pData[i + j*w] = 64;
+                // Set the right wall
+                if (map_isTileSolid(m, x + lx, y + j) == GFraMe_ret_ok)
+                    pData[i + j*w] = 104;
+                else
+                    pData[i + j*w] = 64;
+            }
+            // Set both ceiling and floor
+            i = ini;
+            while (++i < ini + lx) {
+                if (map_isTileSolid(m, x, y-1) == GFraMe_ret_ok)
+                    pData[i] = 137;
+                if (map_isTileSolid(m, x, y+ly) == GFraMe_ret_ok)
+                    pData[i + (ly-1)*w] = 73;
+            }
+            // Set all corners
+            //if (map_isTileSolid(m, x, y) == GFraMe_ret_ok
+            //    && map_isTileSolid(m, x-1, y) == GFraMe_ret_ok
+              if (map_isTileSolid(m, x-1, y) == GFraMe_ret_ok
+                && map_isTileSolid(m, x, y-1) == GFraMe_ret_ok)
+                pData[x + y * w] = 140;
+            else
+                pData[x + y * w] = 136;
+            
+            if (map_isTileSolid(m, x+lx-1, y) == GFraMe_ret_ok
+                && map_isTileSolid(m, x+lx, y) == GFraMe_ret_ok
+                && map_isTileSolid(m, x+lx-1, y-1) == GFraMe_ret_ok)
+                pData[x+lx-1 + y * w] = 139;
+            else
+                pData[x+lx-1 + y * w] = 138;
+            
+            if (map_isTileSolid(m, x, y+ly-1) == GFraMe_ret_ok
+                && map_isTileSolid(m, x-1, y+ly-1) == GFraMe_ret_ok
+                && map_isTileSolid(m, x, y+ly) == GFraMe_ret_ok)
+                pData[x + (y+ly-1) * w] = 108;
+            else
+                pData[x + (y+ly-1) * w] = 72;
+            
+            if (map_isTileSolid(m, x+lx-1, y+ly-1) == GFraMe_ret_ok
+                && map_isTileSolid(m, x+lx, y+ly-1) == GFraMe_ret_ok
+                && map_isTileSolid(m, x+lx-1, y+ly) == GFraMe_ret_ok)
+                pData[x+lx-1 + (y+ly-1) * w] = 107;
+            else
+                pData[x+lx-1 + (y+ly-1) * w] = 74;
+            
+            map_setTilemap(m, pData, len, w, h);
         } break;
         // TODO implement every common event
         default: {}

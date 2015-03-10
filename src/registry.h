@@ -94,6 +94,11 @@ void rg_drawObjects();
 GFraMe_ret rg_qtAddObjects();
 
 /**
+ * Reset the wall buffer
+ */
+void rg_resetWall();
+
+/**
  * Retrieve the next valid wall (expanding the buffer as necessary)
  * 
  * @param ppWall Returns the wall

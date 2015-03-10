@@ -99,6 +99,7 @@ struct stMap {
     int dataLen;             /** Size of the tilemap's buffer                 */
     int w;                   /** Width of the tilemap, in tiles               */
     int h;                   /** Height of the tilemap, int tiles             */
+    int doReset;             /** Whether the walls should be reset            */
     
     animTile *animTiles;     /** List of animated tiles in the tilemap's data */
     int animTilesLen;        /** Size of the list of animated tiles           */
@@ -218,6 +219,7 @@ GFraMe_ret map_init(map **ppM) {
     pM->dataLen = 0;
     pM->w = 0;
     pM->h = 0;
+    pM->doReset = 0;
     pM->animTiles = NULL;
     pM->animTilesLen = 0;
     pM->animTilesUsed = 0;
@@ -334,10 +336,7 @@ void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h) {
     ASSERT_NR(rv == GFraMe_ret_ok);
     // TODO return the error
     
-    rv = map_genWalls(pM);
-    ASSERT_NR(rv == GFraMe_ret_ok);
-    // TODO return the error
-    
+    pM->doReset = 1;
 __ret:
     return;
 }
@@ -412,6 +411,16 @@ __ret:
 void map_update(map *pM, int ms) {
     int i;
     
+    if (pM->doReset) {
+        GFraMe_ret rv;
+        
+        rg_resetWall();
+        rv = map_genWalls(pM);
+        ASSERT_NR(rv == GFraMe_ret_ok);
+        // TODO return the error
+        
+        pM->doReset = 0;
+    }
     // Update every animated tile
     i = 0;
     while (i < pM->animTilesUsed) {
@@ -423,6 +432,8 @@ void map_update(map *pM, int ms) {
         i++;
     }
     
+__ret:
+    return;
 }
 
 /**
@@ -516,6 +527,30 @@ GFraMe_ret map_isPixelSolid(map *pM, int x, int y) {
 __ret:
     return rv;
 }
+
+/**
+ * Check if a position (in tiles) is solid or not
+ * 
+ * @param pM The map
+ * @param i The horizontal position
+ * @param j The vertical position
+ * @return GFraMe_ret_ok on success
+ */
+GFraMe_ret map_isTileSolid(map *pM, int i, int j) {
+    GFraMe_ret rv;
+    unsigned char tile;
+    
+    // Check that it's inbound
+    ASSERT(i < pM->w, GFraMe_ret_failed);
+    ASSERT(j < pM->h, GFraMe_ret_failed);
+    
+    // Get the tile and check it
+    tile = pM->data[i + j*pM->w];
+    rv = map_isWall(tile);
+__ret:
+    return rv;
+}
+
 
 //============================================================================//
 //                                                                            //

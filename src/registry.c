@@ -215,6 +215,13 @@ static void rg_cleanGfmObj(GFraMe_object **ppObj) {
 }
 
 /**
+ * Reset the wall buffer
+ */
+void rg_resetWall() {
+    BUF_RESET(wall);
+}
+
+/**
  * Retrieve the next valid wall (expanding the buffer as necessary)
  * 
  * @param ppWall Returns the wall

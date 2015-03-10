@@ -179,6 +179,8 @@ void player_update(player *pPl, int ms) {
     if (pPl->lastItemSwitch > 0)
         pPl->lastItemSwitch -= ms;
     
+    obj = GFraMe_sprite_get_object(&pPl->spr);
+    
     // Do nothing while the player is hurting
     ASSERT_NR(pPl->curAnim != PL_HURT || !pPl->spr.anim);
     
@@ -196,7 +198,6 @@ void player_update(player *pPl, int ms) {
         return;
     }
     
-    obj = GFraMe_sprite_get_object(&pPl->spr);
     isDown = obj->hit & GFraMe_direction_down;
     
     // Check if the player just set the signaler
@@ -280,6 +281,10 @@ void player_update(player *pPl, int ms) {
     
 __ret:
     GFraMe_sprite_update(&pPl->spr, ms);
+    // Damage boost through stuff!! (horizontal only!)
+    if (pPl->curAnim == PL_HURT && pPl->spr.anim) {
+        GFraMe_object_set_x(obj, obj->dx);
+    }
     
     // Store the player's central position so it's easilly acessible
     if ((pPl->spr.id & ID_PL1) == ID_PL1) {

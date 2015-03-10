@@ -131,5 +131,15 @@ void map_getDimensions(map *pM, int *pW, int *pH);
  */
 GFraMe_ret map_isPixelSolid(map *pM, int x, int y);
 
+/**
+ * Check if a position (in tiles) is solid or not
+ * 
+ * @param pM The map
+ * @param i The horizontal position
+ * @param j The vertical position
+ * @return GFraMe_ret_ok on success
+ */
+GFraMe_ret map_isTileSolid(map *pM, int i, int j);
+
 #endif
 

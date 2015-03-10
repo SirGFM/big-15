@@ -14,6 +14,7 @@ typedef enum {
     CE_HANDLE_NOTDOOR, /** obj ce; handles displaying and animating a ~door   */
     CE_SWITCH_MAP,     /**  ev ce: loads a new map                            */
     CE_GET_ITEM,       /**  ev ce: get an item equip it to the current player */
+    CE_HIDDEN_PATH,    /**  ev ce: change a part of the map into a corridor   */
     CE_MAX
 } commonEvent;
 

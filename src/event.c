@@ -106,6 +106,14 @@ GFraMe_ret event_setAll(event *ev, int x, int y, int w, int h, trigger t,
     ev->ce = ce;
     ev->active = 1;
     
+    // Ugly fix (but I don't care anymore)
+    if (ce == CE_HIDDEN_PATH) {
+        GFraMe_object_set_x(&ev->obj, x-2);
+        GFraMe_object_set_y(&ev->obj, y-2);
+        GFraMe_hitbox_set(GFraMe_object_get_hitbox(&ev->obj),
+            GFraMe_hitbox_upper_left, 0, 0, w+4, h+4);
+    }
+    
     rv = GFraMe_ret_ok;
 __ret:
     return rv;
@@ -166,6 +174,14 @@ void event_check(event *ev, GFraMe_sprite *spr) {
         || ((ev->t & ON_ENTER_DOWN) && (obj->hit & GFraMe_direction_down))) {
         // Restore the previous state (before calling the callback)
         obj->hit = last_col;
+        
+        // Ugly fix (but I don't care anymore)
+        if (ev->ce == CE_HIDDEN_PATH) {
+            GFraMe_object_set_x(&ev->obj, ev->obj.x+2);
+            GFraMe_object_set_y(&ev->obj, ev->obj.y+2);
+            GFraMe_hitbox_set(GFraMe_object_get_hitbox(&ev->obj),
+                GFraMe_hitbox_upper_left, 0, 0, ev->obj.hitbox.hw*2 - 4, ev->obj.hitbox.hh*2 - 4);
+        }
         
         // Set the caller and the target and call the callback
         ce_setParam(CE_CALLER, ev);
