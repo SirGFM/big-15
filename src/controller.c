@@ -56,10 +56,8 @@ int ctr_left(int ID) {
       } break;
       case CTR_1CTR: {
           switch (ID) {
-            case ID_PL1: return GFraMe_controllers[0].left
-                            || GFraMe_controllers[0].lx < -0.35;
-            case ID_PL2: return GFraMe_controllers[0].x
-                            || GFraMe_controllers[0].rx < -0.35;
+            case ID_PL1: return GFraMe_controllers[0].lx < -0.35;
+            case ID_PL2: return GFraMe_controllers[0].rx < -0.35;
             default: return 0;
           }
       } break;
@@ -102,10 +100,8 @@ int ctr_right(int ID) {
       } break;
       case CTR_1CTR: {
           switch (ID) {
-            case ID_PL1: return GFraMe_controllers[0].right
-                            || GFraMe_controllers[0].lx > 0.35;
-            case ID_PL2: return GFraMe_controllers[0].b
-                            || GFraMe_controllers[0].rx > 0.35;
+            case ID_PL1: return GFraMe_controllers[0].lx > 0.35;
+            case ID_PL2: return GFraMe_controllers[0].rx > 0.35;
             default: return 0;
           }
       } break;
@@ -149,10 +145,8 @@ int ctr_action(int ID) {
       } break;
       case CTR_1CTR: {
           switch (ID) {
-            case ID_PL1: return GFraMe_controllers[0].up
-                            || GFraMe_controllers[0].ly < -0.5;
-            case ID_PL2: return GFraMe_controllers[0].y
-                            || GFraMe_controllers[0].ry < -0.5;
+            case ID_PL1: return GFraMe_controllers[0].ly < -0.5;
+            case ID_PL2: return GFraMe_controllers[0].ry < -0.5;
             default: return 0;
           }
       } break;
@@ -279,8 +273,10 @@ int ctr_switchItem(int ID) {
       } break;
       case CTR_1CTR: {
           switch (ID) {
-            case ID_PL1: return GFraMe_controllers[0].select;
-            case ID_PL2: return GFraMe_controllers[0].start;
+            case ID_PL1: return GFraMe_controllers[0].up
+                             || GFraMe_controllers[0].left;
+            case ID_PL2: return GFraMe_controllers[0].x
+                             || GFraMe_controllers[0].a;
             default: return 0;
           }
       } break;
@@ -290,6 +286,31 @@ int ctr_switchItem(int ID) {
             case ID_PL2: return GFraMe_controllers[1].x;
             default: return 0;
           }
+      } break;
+      default: return 0;
+    }
+    return 0;
+}
+
+/**
+ * Checks if the pause button is pressed
+ * 
+ * @return 1 if the button is pressed, 0 otherwise
+ */
+int ctr_pause() {
+    switch (_ctr_mode) {
+      case CTR_KEYS: {
+          return GFraMe_keys.esc || GFraMe_keys.p || GFraMe_keys.enter;
+      } break;
+      case CTR_BOTH: {
+          return GFraMe_keys.esc || GFraMe_keys.p || GFraMe_keys.enter ||
+                 GFraMe_controllers[0].start;
+      } break;
+      case CTR_1CTR: {
+          return GFraMe_controllers[0].start || GFraMe_controllers[0].select;
+      } break;
+      case CTR_2CTR: {
+          return GFraMe_controllers[1].start || GFraMe_controllers[1].start;
       } break;
       default: return 0;
     }

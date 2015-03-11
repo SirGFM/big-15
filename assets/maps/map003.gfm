@@ -40,3 +40,7 @@ mob: { x:248 y:202 f:"jumper" }
 obj: { x:35 y:3 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map003_door" }
 ev: { x:2 y:3 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map003_door"    }
 ev: { x:40 y:2 w:1 h:6 ce:"ce_switch_map" int:100 int:1 int:5 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:27 y:12 w:9 h:8 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
+obj: { x:32 y:17 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup03-hidden" }
+ev: { x:32 y:17 w:2 h:2 ce:"ce_inc_maxhp" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"heartup03"    }
+ev: { x:27 y:13 w:1 h:6 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter" var:"heartup03-hidden"    }

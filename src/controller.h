@@ -71,5 +71,12 @@ int ctr_item(int ID);
  */
 int ctr_switchItem(int ID);
 
+/**
+ * Checks if the pause button is pressed
+ * 
+ * @return 1 if the button is pressed, 0 otherwise
+ */
+int ctr_pause();
+
 #endif
 
