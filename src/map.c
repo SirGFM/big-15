@@ -88,6 +88,24 @@ char *_map_tms[TM_MAX] = {
 #define TILE_JB4_1 231
 #define TILE_JB4_2 233
 
+#define TILE_SG1_1 234
+#define TILE_SG1_2 236
+#define TILE_SG2_1 235
+#define TILE_SG2_2 237
+#define TILE_SG3_1 238
+#define TILE_SG3_2 240
+#define TILE_SG4_1 239
+#define TILE_SG4_2 241
+
+#define TILE_TP1_1 242
+#define TILE_TP1_2 244
+#define TILE_TP2_1 243
+#define TILE_TP2_2 245
+#define TILE_TP3_1 246
+#define TILE_TP3_2 248
+#define TILE_TP4_1 247
+#define TILE_TP4_2 249
+
 //============================================================================//
 //                                                                            //
 // Structs                                                                    //
@@ -600,6 +618,22 @@ static GFraMe_ret map_tileIsAnimated(int tile) {
         case TILE_JB3_2:
         case TILE_JB4_1:
         case TILE_JB4_2:
+        case TILE_SG1_1:
+        case TILE_SG1_2:
+        case TILE_SG2_1:
+        case TILE_SG2_2:
+        case TILE_SG3_1:
+        case TILE_SG3_2:
+        case TILE_SG4_1:
+        case TILE_SG4_2:
+        case TILE_TP1_1:
+        case TILE_TP1_2:
+        case TILE_TP2_1:
+        case TILE_TP2_2:
+        case TILE_TP3_1:
+        case TILE_TP3_2:
+        case TILE_TP4_1:
+        case TILE_TP4_2:
             return GFraMe_ret_ok;
         default:
             return GFraMe_ret_failed;
@@ -688,7 +722,15 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
         case TILE_JB1_1:
         case TILE_JB2_1:
         case TILE_JB3_1:
-        case TILE_JB4_1: { // 12 fps
+        case TILE_JB4_1:
+        case TILE_SG1_1:
+        case TILE_SG2_1:
+        case TILE_SG3_1:
+        case TILE_SG4_1:
+        case TILE_TP1_1:
+        case TILE_TP2_1:
+        case TILE_TP3_1:
+        case TILE_TP4_1: { // 12 fps
             if (pT->elapsed >= 83) {
                 tile += TILE_JB1_2 - TILE_JB1_1;
                 pT->elapsed -= 83;
@@ -697,7 +739,15 @@ static void map_animateTile(map *pM, animTile *pT, int ms) {
         case TILE_JB1_2:
         case TILE_JB2_2:
         case TILE_JB3_2:
-        case TILE_JB4_2: { // 12 fps
+        case TILE_JB4_2:
+        case TILE_SG1_2:
+        case TILE_SG2_2:
+        case TILE_SG3_2:
+        case TILE_SG4_2:
+        case TILE_TP1_2:
+        case TILE_TP2_2:
+        case TILE_TP3_2:
+        case TILE_TP4_2: { // 12 fps
             if (pT->elapsed >= 83) {
                 tile -= TILE_JB1_2 - TILE_JB1_1;
                 pT->elapsed -= 83;
