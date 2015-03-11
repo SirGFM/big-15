@@ -34,6 +34,15 @@ static void *_ce_caller = NULL;
 static void *_ce_target = NULL;
 
 /**
+ * Select which tile to put, according to all its neighbours
+ * 
+ * @param i The tiles x position
+ * @param j The tiles y position
+ * @return The tile
+ */
+static unsigned char _ce_setTile(int i, int j);
+
+/**
  * Set a parameter
  * 
  * @param p The parameter to be set
@@ -324,63 +333,57 @@ void ce_callEvent(commonEvent ce) {
             ASSERT_NR(x + y*w < len);
             ASSERT_NR(x + lx + y*w < len);
             ASSERT_NR(x + (y + ly)*w < len);
-            // Actually set the data
+            // Make the hidden path empty
             j = 0;
-            // Set both walls and the empty space
-            while (++j < ly) {
-                i = ini;
-                // Set the left wall
-                if (map_isTileSolid(m, x - 1, y + j) == GFraMe_ret_ok)
-                    pData[i + j*w] = 106;
-                else
-                    pData[i + j*w] = 64;
-                // Set the walkable space
-                while (++i < ini + lx - 1)
-                    pData[i + j*w] = 64;
-                // Set the right wall
-                if (map_isTileSolid(m, x + lx, y + j) == GFraMe_ret_ok)
-                    pData[i + j*w] = 104;
-                else
-                    pData[i + j*w] = 64;
+            while (j < ly) {
+                i = 0;
+                while (i < lx) {
+                    pData[ini + i + j*w] = 64;
+                    i++;
+                }
+                j++;
             }
-            // Set both ceiling and floor
-            i = ini;
-            while (++i < ini + lx) {
-                if (map_isTileSolid(m, x, y-1) == GFraMe_ret_ok)
-                    pData[i] = 137;
-                if (map_isTileSolid(m, x, y+ly) == GFraMe_ret_ok)
-                    pData[i + (ly-1)*w] = 73;
+            // Set its left wall
+            j = 0;
+            while (j < ly) {
+                if (map_isTileSolid(m, x-1, y + j) == GFraMe_ret_ok) {
+                    pData[ini + j*w] = 106;
+                }
+                j++;
             }
-            // Set all corners
-            //if (map_isTileSolid(m, x, y) == GFraMe_ret_ok
-            //    && map_isTileSolid(m, x-1, y) == GFraMe_ret_ok
-              if (map_isTileSolid(m, x-1, y) == GFraMe_ret_ok
-                && map_isTileSolid(m, x, y-1) == GFraMe_ret_ok)
-                pData[x + y * w] = 140;
-            else
-                pData[x + y * w] = 136;
-            
-            if (map_isTileSolid(m, x+lx-1, y) == GFraMe_ret_ok
-                && map_isTileSolid(m, x+lx, y) == GFraMe_ret_ok
-                && map_isTileSolid(m, x+lx-1, y-1) == GFraMe_ret_ok)
-                pData[x+lx-1 + y * w] = 139;
-            else
-                pData[x+lx-1 + y * w] = 138;
-            
-            if (map_isTileSolid(m, x, y+ly-1) == GFraMe_ret_ok
-                && map_isTileSolid(m, x-1, y+ly-1) == GFraMe_ret_ok
-                && map_isTileSolid(m, x, y+ly) == GFraMe_ret_ok)
-                pData[x + (y+ly-1) * w] = 108;
-            else
-                pData[x + (y+ly-1) * w] = 72;
-            
-            if (map_isTileSolid(m, x+lx-1, y+ly-1) == GFraMe_ret_ok
-                && map_isTileSolid(m, x+lx, y+ly-1) == GFraMe_ret_ok
-                && map_isTileSolid(m, x+lx-1, y+ly) == GFraMe_ret_ok)
-                pData[x+lx-1 + (y+ly-1) * w] = 107;
-            else
-                pData[x+lx-1 + (y+ly-1) * w] = 74;
-            
+            // Set its right wall
+            j = 0;
+            while (j < ly) {
+                if (map_isTileSolid(m, x+lx, y + j) == GFraMe_ret_ok) {
+                    pData[ini + lx - 1 + j*w] = 104;
+                }
+                j++;
+            }
+            // Set its upper wall
+            i = 0;
+            while (i < lx) {
+                if (map_isTileSolid(m, x + i, y - 1) == GFraMe_ret_ok) {
+                    pData[ini + i] = 137;
+                }
+                i++;
+            }
+            // Set its lower wall
+            i = 0;
+            while (i < lx) {
+                if (map_isTileSolid(m, x + i, y + ly) == GFraMe_ret_ok) {
+                    pData[ini + i + (ly - 1)*w] = 73;
+                }
+                i++;
+            }
+            // Set the upper-left corner
+            pData[     x + y*w       ] = _ce_setTile(     x, y     );
+            // Set the upper-right corner
+            pData[x+lx-1 + y*w       ] = _ce_setTile(x+lx-1, y     );
+            // Set the lower-left corner
+            pData[     x + (y+ly-1)*w] = _ce_setTile(     x, y+ly-1);
+            // Set the lower-right corner
+            pData[x+lx-1 + (y+ly-1)*w] = _ce_setTile(x+lx-1, y+ly-1);
+            // Reset the tilemap bounds and animations
             map_setTilemap(m, pData, len, w, h);
         } break;
         case CE_UNHIDE_ON_GV: {
@@ -437,5 +440,112 @@ void ce_callEvent(commonEvent ce) {
     
 __ret:
     return;
+}
+
+/**
+ * Select which tile to put, according to all its neighbours
+ * 
+ * @param i The tiles x position
+ * @param j The tiles y position
+ * @return The tile
+ */
+static unsigned char _ce_setTile(int i, int j) {
+    int a, b, c, d, e, f, g, h;
+    // a | b | c
+    // d |   | e
+    // f | g | h
+    a = map_isTileSolid(m, i-1, j-1) == GFraMe_ret_ok;
+    b = map_isTileSolid(m, i  , j-1) == GFraMe_ret_ok;
+    c = map_isTileSolid(m, i+1, j-1) == GFraMe_ret_ok;
+    d = map_isTileSolid(m, i-1, j  ) == GFraMe_ret_ok;
+    e = map_isTileSolid(m, i+1, j  ) == GFraMe_ret_ok;
+    f = map_isTileSolid(m, i-1, j+1) == GFraMe_ret_ok;
+    g = map_isTileSolid(m, i  , j+1) == GFraMe_ret_ok;
+    h = map_isTileSolid(m, i+1, j+1) == GFraMe_ret_ok;
+    
+    if ( a &&  b &&  c &&
+         d &&        e &&
+         f &&  g && !h   )
+        return 140;
+    else
+    if ( a &&  b && !c &&
+         d &&        e &&
+         f &&  g &&  h   )
+        return 108;
+    else
+    if (!a &&  b &&  c &&
+         d &&        e &&
+         f &&  g &&  h   )
+        return 107;
+    else
+    if ( a &&  b &&  c &&
+         d &&        e &&
+        !f &&  g &&  h   )
+        return 139;
+
+    else
+    if ( a &&  b && !c &&
+         d &&        e &&
+         f &&  g && !h   )
+        return 141;
+    else
+    if (!a &&  b && !c &&
+         d &&        e &&
+         f &&  g &&  h   )
+        return 142;
+    else
+    if (!a &&  b &&  c &&
+         d &&        e &&
+        !f &&  g &&  h   )
+        return 110;
+    else
+    if ( a &&  b &&  c &&
+         d &&        e &&
+        !f &&  g && !h   )
+        return 109;
+
+    else
+    if (      !b &&      
+         d &&        e &&
+         f &&  g &&  h   )
+        return 73;
+    else
+    if (       b &&  c &&
+        !d &&        e &&
+               g &&  h   )
+        return 104;
+    else
+    if ( a &&  b &&  c &&
+         d &&        e &&
+              !g         )
+        return 137;
+    else
+    if ( a &&  b &&      
+         d &&       !e &&
+         f &&  g         )
+        return 106;
+
+    else
+    if (       b &&  c &&
+        !d &&        e &&
+        !f && !g         )
+        return 136;
+    else
+    if ( a &&  b &&      
+         d &&       !e &&
+              !g && !h   )
+        return 138;
+    else
+    if (      !b && !c &&
+         d &&       !e &&
+         f &&  g         )
+        return 74;
+    else
+    if (!a && !b &&      
+        !d &&        e &&
+               g &&  h   )
+        return 72;
+    else
+        return 64;
 }
 

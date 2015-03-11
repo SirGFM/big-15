@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="335">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="340">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="96">
@@ -787,7 +787,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="332" name="heart up" type="obj" x="768" y="1592" width="16" height="16">
+  <object id="332" name="heart up" type="obj" x="770" y="1594" width="16" height="16">
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
@@ -801,7 +801,7 @@
     <property name="int1" value="-1"/>
     <property name="int2" value="-1"/>
     <property name="int3" value="-1"/>
-    <property name="t" value="is_player|on_enter|on_pressed"/>
+    <property name="t" value="is_player|on_pressed"/>
     <property name="var0" value="heartup01"/>
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
@@ -1083,6 +1083,69 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="335" name="hidden_wall" type="event" x="592" y="1408" width="104" height="24">
+   <properties>
+    <property name="ce" value="ce_hidden_path"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="336" name="hidden_wall" type="event" x="592" y="1376" width="160" height="48">
+   <properties>
+    <property name="ce" value="ce_hidden_path"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="337" name="heart up" type="obj" x="722" y="1402" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_unhide_on_gv"/>
+    <property name="f" value="heartup|hidden"/>
+    <property name="var" value="heartup02-hidden"/>
+   </properties>
+  </object>
+  <object id="338" name="maxhp up" type="event" x="720" y="1400" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_inc_maxhp"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="heartup02"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="339" name="set gv" type="event" x="592" y="1416" width="104" height="8">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="heartup02-hidden"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map010" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
@@ -1189,7 +1252,7 @@
     <property name="int1" value="-1"/>
     <property name="int2" value="-1"/>
     <property name="int3" value="-1"/>
-    <property name="t" value="is_player|on_enter|on_pressed"/>
+    <property name="t" value="is_player|on_pressed"/>
     <property name="var0" value="heartup01"/>
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>

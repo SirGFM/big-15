@@ -332,6 +332,7 @@ void map_setTilemap(map *pM, unsigned char *pData, int len, int w, int h) {
     pM->h = h;
     
     // Animate the tilemap
+    pM->animTilesUsed = 0;
     rv = map_genAnimatedTiles(pM);
     ASSERT_NR(rv == GFraMe_ret_ok);
     // TODO return the error

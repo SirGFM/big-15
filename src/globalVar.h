@@ -28,7 +28,9 @@ typedef enum {
     DOOR_Y,       /** Entrance vertical point on current map   */
     ITEMS,        /** Flags for available items                */
     HEARTUP01,
+    HEARTUP02,
     HEARTUP01_HIDDEN,
+    HEARTUP02_HIDDEN,
     SWITCH_MAP,   /** Whether the map should be switched       */
     MAP001_DOOR,  /** State of the only door on map 001        */
     MAP002_DOOR1, /** State of the only door on map 002        */
