@@ -185,21 +185,13 @@ static void ps_draw() {
         map_draw(m);
         rg_drawMobs();
         rg_drawBullets();
-        if (gv_isZero(SWITCH_MAP)) {
-            player_draw(p2);
-            player_draw(p1);
-            signal_draw();
-            rg_drawObjects();
-            ui_draw();
-        }
-        else {
-            signal_draw();
-            rg_drawObjects();
-            ui_draw();
+        signal_draw();
+        rg_drawObjects();
+        if (gv_nIsZero(SWITCH_MAP))
             transition_draw();
-            player_draw(p2);
-            player_draw(p1);
-        }
+        ui_draw();
+        player_draw(p2);
+        player_draw(p1);
         #ifdef QT_DEBUG_DRAW
             if (GFraMe_keys.f1 ||
                 (GFraMe_controller_max > 0 && GFraMe_controllers[0].l2))

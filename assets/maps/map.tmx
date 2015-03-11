@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" nextobjectid="325">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="320" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="335">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="96">
@@ -95,12 +95,12 @@
    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
   </data>
  </layer>
- <layer name="map000" width="320" height="320">
+ <layer name="map000" width="320" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt3EtKxFAQhtG7NZ+Iu3Boi4tw6DJ8bMTHwqweZNKiHTpUKlDnwD9LApl8BC5kDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKCrXewhdrbB3Se+N4D+AV3pH9CV/gFdTf27HvW90z9gTVP/Lkd97/QPWJP+AV3pH9CV/gFd6R/Qlf4BXekf0JX+AV3pH9CV/gFd6R/Qlf4BXekf0NXUv4vY+R+r+jeM/gGZ5nz/VX0b6h+Qaerfzdhe/54T3xtgzv+f/+vfS+w19hZ7P/KcU+4HyLK0fx+xz9hX7PvIc065HyDL0v5lDyDLYf+uxu/z38Oz4Tnnwfvn3MWeZl6vf8Da9v17jN1udABZdhsfQJbqvukfUKW6b/oHVKnum/4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMByP+owX3M=
   </data>
  </layer>
- <objectgroup name="map000_objs">
+ <objectgroup name="map000_objs" visible="0">
   <object id="240" name="exit" type="event" x="656" y="920" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -704,12 +704,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map007" width="320" height="320" visible="0">
+ <layer name="map007" width="320" height="320">
   <data encoding="base64" compression="zlib">
    eJzt3Ftu01AUhtE9NSBQKKPoI5cOggfuYhhcJsJlGgUkGAbbClYjy0axmu1j5LWkX81Tqr58OoldRwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa/Ykd2vBPco9njGAKvoHbJX+AVulf8BW6R+wVfoHbJX+AVulf8BWVffvee5F7mXuVegfsB7V/Xuf+5D7mPsU+gesx9uo7d/n3Jfc19y30D9gPSrb9yB3PtjT0D9gHSr79zr35oYDqFLZv7Pc7dxF7tnf1/dnvgdAlcr+nWIAVYbfz3V7GO27p39AtbFrDt09Mfeiffv0D6g01b9dLNu5sWvF54V/N8Bh997F/pprd0/gndhfr1jiHHg3pu8LBKgyPPf1TdoNflau+x36ByztsDWXcX39oz//zb1fRf+A/8Wpvv+7yv3I/Yz9cw70D1i7qf7NPfd9z/3K/Y79cw6O/d6vO2N2Z039A5Y21b+5n2GHzzk49tzn/Ae0cor+jd27MnUPdX/m6899zn9AK//qX9+qi7j+/93+fpjD5o090+Uyxlu4G3nt/Ae0MNacw3ZNbc5zrG7yfgBVjm1YqwFUad03/QNaad03/QMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAdfsDmQ2F4w==
   </data>
  </layer>
- <objectgroup name="map007_objs" visible="0">
+ <objectgroup name="map007_objs">
   <object id="239" name="exit" type="event" x="824" y="1616" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -768,6 +768,55 @@
     <property name="int3" value="-1"/>
     <property name="t" value="is_player|on_enter|keep_active"/>
     <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="331" name="hidden_wall" type="event" x="728" y="1568" width="72" height="48">
+   <properties>
+    <property name="ce" value="ce_hidden_path"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="332" name="heart up" type="obj" x="768" y="1592" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_unhide_on_gv"/>
+    <property name="f" value="heartup|hidden"/>
+    <property name="var" value="heartup01-hidden"/>
+   </properties>
+  </object>
+  <object id="333" name="maxhp up" type="event" x="768" y="1592" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_inc_maxhp"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|on_pressed"/>
+    <property name="var0" value="heartup01"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="334" name="set gv" type="event" x="728" y="1576" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="heartup01-hidden"/>
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>
@@ -1121,6 +1170,41 @@
     <property name="int3" value="-1"/>
     <property name="t" value="is_player|on_enter"/>
     <property name="var0" value="gv_max"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="328" name="heart up" type="obj" x="537.125" y="949" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_unhide_on_gv"/>
+    <property name="f" value="heartup|hidden"/>
+    <property name="var" value="heartup01-hidden"/>
+   </properties>
+  </object>
+  <object id="329" name="maxhp up" type="event" x="537.125" y="949" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_inc_maxhp"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter|on_pressed"/>
+    <property name="var0" value="heartup01"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="330" name="set gv" type="event" x="505.125" y="957" width="16" height="8">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="heartup01-hidden"/>
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>

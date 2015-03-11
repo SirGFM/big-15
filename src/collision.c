@@ -203,7 +203,7 @@ void col_onPlWall(player *pPl, GFraMe_object *pWall) {
  * @param pObj The object
  */
 void col_onEvObj(event *pEv, object *pObj) {
-    GFraMe_log("Ev X Obj collision not implemented");
+    // GFraMe_log("Ev X Obj collision not implemented");
 }
 
 /**

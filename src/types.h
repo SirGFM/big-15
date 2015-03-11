@@ -14,12 +14,14 @@ typedef enum {
     
     ID_STATIC   = 0x01000000,
     ID_MOVABLE  = 0x02000000,
+    ID_HIDDEN   = 0x04000000,
     
     ID_PL1      = ID_PL   | 0x00000001,
     ID_PL2      = ID_PL   | 0x00000002,
     
     ID_DOOR     = ID_OBJ  | 0x00000001,
     ID_DOOR_HOR = ID_OBJ  | 0x00000002,
+    ID_HEARTUP  = ID_OBJ  | 0x00000004,
     
     ID_JUMPER   = ID_MOB  | 0x00000001,
     ID_EYE      = ID_MOB  | 0x00000002,

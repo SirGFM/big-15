@@ -22,6 +22,9 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_switch_map",
     "ce_get_item",
     "ce_hidden_path",
+    "ce_unhide_on_gv",
+    "ce_inc_maxhp",
+    "ce_set_gv",
     "ce_max"
 };
 
@@ -379,6 +382,54 @@ void ce_callEvent(commonEvent ce) {
                 pData[x+lx-1 + (y+ly-1) * w] = 74;
             
             map_setTilemap(m, pData, len, w, h);
+        } break;
+        case CE_UNHIDE_ON_GV: {
+            globalVar gv;
+            int ID;
+            object *pO;
+            
+            // Retrieve the reference
+            ASSERT_NR(_ce_caller);
+            pO = (object*)_ce_caller;
+            
+            // Check that the object is still hidden
+            obj_getID(&ID, pO);
+            ASSERT_NR((ID & ID_HIDDEN));
+            
+            // Unhide the event, on true
+            obj_getVar(&gv, pO, 0);
+            if (gv_nIsZero(gv))
+                obj_rmFlag(pO, ID_HIDDEN);
+        } break;
+        case CE_INC_MAXHP: {
+            event *pE;
+            globalVar gv;
+            int val;
+            
+            // Check whether this power up was previously gotten
+            pE = (event*)_ce_caller;
+            event_getVar(&gv, pE, 0);
+            ASSERT_NR(gv_isZero(gv));
+            // Increase the max hp and recover health
+            gv_inc(PL1_MAXHP);
+            gv_inc(PL2_MAXHP);
+            val = gv_getValue(PL1_MAXHP);
+            gv_setValue(PL1_HP, val);
+            gv_setValue(PL2_HP, val);
+            // Mark this as gotten
+            gv_inc(gv);
+        } break;
+        case CE_SET_GV: {
+            event *pE;
+            globalVar gv;
+            int val;
+            
+            // Get the globalVar value
+            pE = (event*)_ce_caller;
+            event_getVar(&gv, pE, 0);
+            event_iGetVar(&val, pE, 0);
+            // Set it!
+            gv_setValue(gv, val);
         } break;
         // TODO implement every common event
         default: {}

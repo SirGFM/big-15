@@ -35,3 +35,7 @@ ev: { x:25 y:9 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_playe
 ev: { x:19 y:22 w:2 h:2 ce:"ce_get_item" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed"     }
 obj: { x:4 y:19 w:4 h:1 ce:"ce_handle_notdoor" f:"door-hor"|"static" var:"map007_door" }
 ev: { x:-1 y:10 w:1 h:6 ce:"ce_switch_map" int:8 int:38 int:37 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:28 y:6 w:9 h:6 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
+obj: { x:33 y:9 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup01-hidden" }
+ev: { x:33 y:9 w:2 h:2 ce:"ce_inc_maxhp" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"|"on_pressed" var:"heartup01"    }
+ev: { x:28 y:7 w:1 h:4 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter" var:"heartup01-hidden"    }

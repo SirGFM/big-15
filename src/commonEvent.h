@@ -7,14 +7,17 @@
 #define __COMMONEVENT_H_
 
 typedef enum {
-    CE_OPEN_DOOR,      /**  ev ce; open a door                                */
-    CE_CLOSE_DOOR,     /**  ev ce; closes a door                              */
-    CE_SWITCH_DOOR,    /**  ev ce; switch a door's state from open <-> close  */
-    CE_HANDLE_DOOR,    /** obj ce; handles displaying and animating a door    */
-    CE_HANDLE_NOTDOOR, /** obj ce; handles displaying and animating a ~door   */
+    CE_OPEN_DOOR,      /**  ev ce: open a door                                */
+    CE_CLOSE_DOOR,     /**  ev ce: closes a door                              */
+    CE_SWITCH_DOOR,    /**  ev ce: switch a door's state from open <-> close  */
+    CE_HANDLE_DOOR,    /** obj ce: handles displaying and animating a door    */
+    CE_HANDLE_NOTDOOR, /** obj ce: handles displaying and animating a ~door   */
     CE_SWITCH_MAP,     /**  ev ce: loads a new map                            */
     CE_GET_ITEM,       /**  ev ce: get an item equip it to the current player */
     CE_HIDDEN_PATH,    /**  ev ce: change a part of the map into a corridor   */
+    CE_UNHIDE_ON_GV,   /** obj ce: removes the 'hidden' flag if the gv is true*/
+    CE_INC_MAXHP,      /**  ev ce: increase the max hp                        */
+    CE_SET_GV,         /**  ev ce: set a globalVar value                      */
     CE_MAX
 } commonEvent;
 

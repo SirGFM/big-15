@@ -35,14 +35,15 @@ static GFraMe_animation _obj_anim[OBJ_ANIM_MAX];
  *   _obj_animData[i]+3  = actual data
  */
 static int _obj_animData[] = {
-    0, 1, 0, 200,                             /* OBJ_ANIM_DOOR_OPEN    */
-    0, 1, 0, 192,                             /* OBJ_ANIM_DOOR_CLOSED  */
-    8, 8, 0, 192,193,192,193,192,194,195,200, /* OBJ_ANIM_DOOR_OPENING */
-    8, 8, 0, 200,195,194,192,193,192,193,192, /* OBJ_ANIM_DOOR_CLOSING */
+    0, 1, 0, 200,                             /* OBJ_ANIM_DOOR_OPEN        */
+    0, 1, 0, 192,                             /* OBJ_ANIM_DOOR_CLOSED      */
+    8, 8, 0, 192,193,192,193,192,194,195,200, /* OBJ_ANIM_DOOR_OPENING     */
+    8, 8, 0, 200,195,194,192,193,192,193,192, /* OBJ_ANIM_DOOR_CLOSING     */
     0, 1, 0, 217,                             /* OBJ_ANIM_DOOR_HOR_OPEN    */
     0, 1, 0, 185,                             /* OBJ_ANIM_DOOR_HOR_CLOSED  */
     8, 8, 0, 185,193,185,193,185,201,209,217, /* OBJ_ANIM_DOOR_HOR_OPENING */
     8, 8, 0, 217,209,201,185,193,185,193,183, /* OBJ_ANIM_DOOR_HOR_CLOSING */
+   15,10, 1, 160,160,160,160,160,160,161,160,160,162, /* OBJ_ANIM_MAXHP_UP */
     0
 };
 static int _obj_animInit = 0;
@@ -194,6 +195,10 @@ void obj_setID(object *pObj, int ID) {
     
     // Set the ID
     pObj->spr.id = ID;
+    
+    if (ID & ID_HEARTUP) {
+        obj_setAnim(pObj, OBJ_ANIM_MAXHP_UP);
+    }
 }
 
 /**
@@ -283,7 +288,8 @@ void obj_update(object *pObj, int ms) {
  */
 void obj_draw(object *pObj) {
     //GFraMe_sprite_draw(&pObj->spr);
-    GFraMe_sprite_draw_camera(&pObj->spr, cam_x, cam_y, SCR_W, SCR_H);
+    if (!(pObj->spr.id & ID_HIDDEN))
+        GFraMe_sprite_draw_camera(&pObj->spr, cam_x, cam_y, SCR_W, SCR_H);
 }
 
 /**
