@@ -21,6 +21,9 @@
 
 #include <stdio.h>
 
+#define PL1_ICON 286
+#define PL2_ICON 287
+
 enum {
     PL_STAND,
     PL_WALK,
@@ -320,10 +323,10 @@ void player_draw(player *pPl) {
         else if (y + 8 > SCR_H)
             y = SCR_H - 8;
         if (pPl->spr.id == ID_PL1) {
-            GFraMe_spriteset_draw(gl_sset8x8, 157/*tile*/, x, y, pPl->spr.flipped);
+            GFraMe_spriteset_draw(gl_sset8x8, PL1_ICON, x, y, pPl->spr.flipped);
         }
         else if (pPl->spr.id == ID_PL2) {
-            GFraMe_spriteset_draw(gl_sset8x8, 158/*tile*/, x, y, pPl->spr.flipped);
+            GFraMe_spriteset_draw(gl_sset8x8, PL2_ICON, x, y, pPl->spr.flipped);
         }
     }
 }

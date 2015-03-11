@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="420" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="382">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="420" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="385">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
+  <tile id="78">
+   <animation>
+    <frame tileid="78" duration="83"/>
+    <frame tileid="80" duration="83"/>
+   </animation>
+  </tile>
+  <tile id="79">
+   <animation>
+    <frame tileid="79" duration="83"/>
+    <frame tileid="81" duration="83"/>
+   </animation>
+  </tile>
+  <tile id="82">
+   <animation>
+    <frame tileid="82" duration="83"/>
+    <frame tileid="84" duration="83"/>
+   </animation>
+  </tile>
+  <tile id="83">
+   <animation>
+    <frame tileid="83" duration="83"/>
+    <frame tileid="85" duration="83"/>
+   </animation>
+  </tile>
   <tile id="96">
    <animation>
     <frame tileid="96" duration="83"/>
@@ -106,30 +130,6 @@
    <animation>
     <frame tileid="239" duration="83"/>
     <frame tileid="241" duration="83"/>
-   </animation>
-  </tile>
-  <tile id="242">
-   <animation>
-    <frame tileid="242" duration="83"/>
-    <frame tileid="244" duration="83"/>
-   </animation>
-  </tile>
-  <tile id="243">
-   <animation>
-    <frame tileid="243" duration="83"/>
-    <frame tileid="245" duration="83"/>
-   </animation>
-  </tile>
-  <tile id="246">
-   <animation>
-    <frame tileid="246" duration="83"/>
-    <frame tileid="248" duration="83"/>
-   </animation>
-  </tile>
-  <tile id="247">
-   <animation>
-    <frame tileid="247" duration="83"/>
-    <frame tileid="249" duration="83"/>
    </animation>
   </tile>
  </tileset>
@@ -1467,7 +1467,7 @@
  </objectgroup>
  <layer name="map012" width="420" height="320">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map012_objs">
@@ -1489,21 +1489,7 @@
    <properties>
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
-    <property name="var" value="map012_door"/>
-   </properties>
-  </object>
-  <object id="374" name="open_door" type="event" x="2968" y="1352" width="16" height="16">
-   <properties>
-    <property name="ce" value="ce_open_door"/>
-    <property name="int0" value="-1"/>
-    <property name="int1" value="-1"/>
-    <property name="int2" value="-1"/>
-    <property name="int3" value="-1"/>
-    <property name="t" value="is_player|on_pressed"/>
-    <property name="var0" value="map012_door"/>
-    <property name="var1" value="gv_max"/>
-    <property name="var2" value="gv_max"/>
-    <property name="var3" value="gv_max"/>
+    <property name="var" value="map012-b_door"/>
    </properties>
   </object>
   <object id="375" name="get_teleporter" type="event" x="2912" y="1336" width="16" height="16">
@@ -1592,6 +1578,41 @@
     <property name="int3" value="-1"/>
     <property name="t" value="is_player|on_enter"/>
     <property name="var0" value="heartup05-hidden"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="382" name="door" type="obj" x="2736" y="1216" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_notdoor"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value="map012-a_door"/>
+   </properties>
+  </object>
+  <object id="383" name="open_door" type="event" x="2968" y="1352" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_open_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="map012-b_door"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="384" name="set gv" type="event" x="2752" y="1168" width="8" height="80">
+   <properties>
+    <property name="ce" value="ce_open_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_enter"/>
+    <property name="var0" value="map012-a_door"/>
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>

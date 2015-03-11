@@ -97,14 +97,14 @@ char *_map_tms[TM_MAX] = {
 #define TILE_SG4_1 239
 #define TILE_SG4_2 241
 
-#define TILE_TP1_1 242
-#define TILE_TP1_2 244
-#define TILE_TP2_1 243
-#define TILE_TP2_2 245
-#define TILE_TP3_1 246
-#define TILE_TP3_2 248
-#define TILE_TP4_1 247
-#define TILE_TP4_2 249
+#define TILE_TP1_1 78
+#define TILE_TP1_2 80
+#define TILE_TP2_1 79
+#define TILE_TP2_2 81
+#define TILE_TP3_1 82
+#define TILE_TP3_2 84
+#define TILE_TP4_1 83
+#define TILE_TP4_2 85
 
 //============================================================================//
 //                                                                            //

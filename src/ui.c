@@ -6,13 +6,17 @@
 #include "types.h"
 #include "ui.h"
 
-#define HEART_ON   92
-#define HEART_OFF 124
-#define HJBOOT    154
-#define P_ONE     155
-#define P_TWO     156
-#define TELEP     186
-#define SIGNL     218
+#define BOX        93
+#define RECT_L    189
+#define RECT_C    190
+#define RECT_R    191
+#define HEART_ON  277
+#define HEART_OFF 278
+#define HJBOOT    279
+#define TELEP     280
+#define SIGNL     281
+#define P_ONE     284
+#define P_TWO     285
 
 /** Global timer used to animate ui graphics */
 static int _ui_globalTime;
@@ -135,15 +139,15 @@ void ui_draw() {
     // Render every gotten itens
     x = 64;
     y = 4;
-    GFraMe_spriteset_draw(gl_sset8x16, 61, x, y, 0);
+    GFraMe_spriteset_draw(gl_sset8x16, RECT_L, x, y, 0);
     x += 8;
     i = 0;
     while (i < 22) {
-        GFraMe_spriteset_draw(gl_sset8x16, 62, x, y, 0);
+        GFraMe_spriteset_draw(gl_sset8x16, RECT_C, x, y, 0);
         i++;
         x += 8;
     }
-    GFraMe_spriteset_draw(gl_sset8x16, 63, x, y, 0);
+    GFraMe_spriteset_draw(gl_sset8x16, RECT_R, x, y, 0);
     
     // Get every found item
     items = gv_getValue(ITEMS);
@@ -209,7 +213,7 @@ static void ui_drawHearts(struct stHeartArray *pData) {
  */
 static void ui_drawItemBox(int item, int x, int y) {
     ui_drawItem(item, x + 4, y + 3);
-    GFraMe_spriteset_draw(gl_sset16x16, 29/*tile*/, x, y, 0/*flip*/);
+    GFraMe_spriteset_draw(gl_sset16x16, BOX/*tile*/, x, y, 0/*flip*/);
 }
 
 /**
@@ -224,32 +228,8 @@ static void ui_drawItem(int item, int x, int y) {
     
     switch (item) {
         case ID_HIGHJUMP: tile = HJBOOT; break;
-        case ID_TELEPORT: {
-            int frame;
-            
-            frame = (_ui_globalTime / 66) % 14;
-            switch (frame) {
-                case 0: case  1: case 2: case  3: tile = TELEP;     break;
-                case 4: case 13:                  tile = TELEP + 1; break;
-                case 5: case 12:                  tile = TELEP + 2; break;
-                case 6: case 11:                  tile = TELEP + 3; break;
-                case 7: case  8: case 9: case 10: tile = TELEP + 4; break;
-                default: return;
-            }
-        } break;
-        case ID_SIGNALER: {
-            int frame;
-            
-            frame = (_ui_globalTime / 66) % 14;
-            switch (frame) {
-                case 0: case  1: case 2: case  3: tile = SIGNL;     break;
-                case 4: case 13:                  tile = SIGNL + 1; break;
-                case 5: case 12:                  tile = SIGNL + 2; break;
-                case 6: case 11:                  tile = SIGNL + 3; break;
-                case 7: case  8: case 9: case 10: tile = SIGNL + 4; break;
-                default: return;
-            }
-        } break;
+        case ID_TELEPORT: tile = TELEP; break;
+        case ID_SIGNALER: tile = SIGNL; break;
         case ID_PL1ITEM: tile = P_ONE; break;
         case ID_PL2ITEM: tile = P_TWO; break;
         // TODO Render item
