@@ -30,9 +30,12 @@ static char *_gv_names[GV_MAX+1] = {
     "heartup01",
     "heartup02",
     "heartup03",
+    "heartup04",
+    "heartup05",
     "heartup01-hidden",
     "heartup02-hidden",
     "heartup03-hidden",
+    "heartup05-hidden",
     "switch_map",
     "map001_door",
     "map002-1_door",
@@ -48,6 +51,11 @@ static char *_gv_names[GV_MAX+1] = {
     "map008-c_door",
     "map008-d_door",
     "map008-e_door",
+    "map010_door",
+    "map011-a_door",
+    "map011-b_door",
+    "map011-c_door",
+    "map012_door",
     "gv_max"
 };
 

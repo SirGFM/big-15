@@ -30,9 +30,12 @@ typedef enum {
     HEARTUP01,
     HEARTUP02,
     HEARTUP03,
+    HEARTUP04,
+    HEARTUP05,
     HEARTUP01_HIDDEN,
     HEARTUP02_HIDDEN,
     HEARTUP03_HIDDEN,
+    HEARTUP05_HIDDEN,
     SWITCH_MAP,   /** Whether the map should be switched       */
     MAP001_DOOR,  /** State of the only door on map 001        */
     MAP002_DOOR1, /** State of the only door on map 002        */
@@ -48,6 +51,11 @@ typedef enum {
     MAP008_DOOR_C,/** State of a door on map 005              */
     MAP008_DOOR_D,/** State of a door on map 005              */
     MAP008_DOOR_E,/** State of a door on map 005              */
+    MAP010_DOOR,  /** State of a door on map 005              */
+    MAP011_DOOR_A,/** State of a door on map 005              */
+    MAP011_DOOR_B,/** State of a door on map 005              */
+    MAP011_DOOR_C,/** State of a door on map 005              */
+    MAP012_DOOR,  /** State of a door on map 005              */
     GV_MAX        /** Global var count                         */
 } globalVar;
 
