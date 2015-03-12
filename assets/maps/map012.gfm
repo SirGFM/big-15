@@ -34,7 +34,7 @@ ev: { x:-1 y:5 w:1 h:6 ce:"ce_switch_map" int:11 int:44 int:24 int:-1 t:"is_play
 obj: { x:37 y:6 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map012-b_door" }
 ev: { x:22 y:21 w:2 h:2 ce:"ce_get_item" int:2 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed"     }
 ev: { x:22 y:8 w:2 h:2 ce:"ce_get_item" int:4 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed"     }
-ev: { x:40 y:5 w:1 h:6 ce:"ce_switch_map" int:13 int:1 int:24 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:5 w:1 h:6 ce:"ce_switch_map" int:13 int:1 int:45 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 ev: { x:9 y:11 w:11 h:6 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
 obj: { x:16 y:14 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup05-hidden" }
 ev: { x:16 y:14 w:2 h:2 ce:"ce_inc_maxhp" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"heartup05"    }
