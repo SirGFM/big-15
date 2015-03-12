@@ -185,3 +185,33 @@ void transition_draw() {
     }
 }
 
+/**
+ * Draw an overlay
+ */
+void transition_drawPause() {
+    int i, x, y;
+    
+    // Render it tile-by-tile
+    i = 0;
+    x = 0;
+    y = 0;
+    while (i < DATA_LEN) {
+        
+        GFraMe_spriteset_draw
+            (
+             gl_sset8x8,
+             252/*tile*/,
+             x,
+             y,
+             0 // flipped
+            );
+        
+        x += 8;
+        if (x >= SCR_W) {
+            x = 0;
+            y += 8;
+        }
+        i++;
+    }
+}
+

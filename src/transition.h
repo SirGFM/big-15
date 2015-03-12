@@ -42,5 +42,10 @@ tr_status transition_fadeIn(int ms);
  */
 void transition_draw();
 
+/**
+ * Draw an overlay
+ */
+void transition_drawPause();
+
 #endif
 

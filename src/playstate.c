@@ -19,6 +19,7 @@
 #include "bullet.h"
 #include "camera.h"
 #include "collision.h"
+#include "controller.h"
 #include "global.h"
 #include "map.h"
 #include "player.h"
@@ -37,6 +38,7 @@
 GFraMe_event_setup();
 
 int switchState;
+static int _ps_pause;
 
 /**
  * Initialize the playstate
@@ -61,6 +63,14 @@ static void ps_update();
  */
 static void ps_event();
 /**
+ * Handle pause menu
+ */
+static void ps_doPause();
+/**
+ * Draw pause menu
+ */
+static void ps_drawPause();
+/**
  * Switch the current map
  */
 static GFraMe_ret ps_switchMap();
@@ -84,6 +94,7 @@ void playstate() {
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
+    _ps_pause = 0;
     gl_running = 1;
     while (gl_running) {
 #ifdef DEBUG
@@ -91,12 +102,17 @@ void playstate() {
 #endif
         
         ps_event();
-        if (gv_isZero(SWITCH_MAP))
-            ps_update();
+        if (_ps_pause) {
+            ps_doPause();
+        }
         else {
-            rv = ps_switchMap();
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to switch maps",
-                __ret);
+            if (gv_isZero(SWITCH_MAP))
+                ps_update();
+            else {
+                rv = ps_switchMap();
+                GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to switch maps",
+                    __ret);
+            }
         }
         ps_draw();
         
@@ -197,6 +213,9 @@ static void ps_draw() {
                 (GFraMe_controller_max > 0 && GFraMe_controllers[0].l2))
                 qt_drawRootDebug();
         #endif 
+        if (_ps_pause) {
+            ps_drawPause();
+        }
     GFraMe_event_draw_end();
 }
 
@@ -413,12 +432,46 @@ static void ps_event() {
         GFraMe_event_on_key_down();
             if (GFraMe_keys.esc)
                 gl_running = 0;
+            if (ctr_pause())
+                _ps_pause = !_ps_pause;
         GFraMe_event_on_key_up();
         GFraMe_event_on_controller();
             if (GFraMe_controller_max > 0 && GFraMe_controllers[0].home)
                 gl_running = 0;
+            if (event.type == SDL_CONTROLLERBUTTONDOWN && ctr_pause())
+                _ps_pause = !_ps_pause;
         GFraMe_event_on_quit();
             gl_running = 0;
     GFraMe_event_end();
+}
+
+/**
+ * Handle pause menu
+ */
+static void ps_doPause() {
+    GFraMe_event_update_begin();
+    GFraMe_event_update_end();
+}
+
+/**
+ * Draw pause menu
+ */
+static void ps_drawPause() {
+    char text[] = "--PAUSED--";
+    int i, x, y;
+    
+    // Draw the overlay
+    transition_drawPause();
+    // Get the text tiles
+	GFraMe_str2tiles(text, text, 0);
+    // Render the text
+    i = 0;
+    x = (SCR_W - sizeof(text)*8) / 2;
+    y = 64;
+    while (i < sizeof(text) - 1) {
+        GFraMe_spriteset_draw(gl_sset8x8, text[i], x, y, 0/*flip*/);
+        i++;
+        x += 8;
+    }
 }
 
