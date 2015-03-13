@@ -146,12 +146,13 @@ void col_onPlEv(player *pPl, event *pEv) {
 void col_onPlObj(player *pPl, object *pObj) {
     GFraMe_object *pGfmObj;
     
-    ASSERT_NR(!player_isHurt(pPl));
+    // Removed damage boost through objects
+    // ASSERT_NR(!player_isHurt(pPl));
     
     player_getObject(&pGfmObj, pPl);
     obj_collide(pObj, pGfmObj);
-__ret:
-    return;
+//__ret:
+//    return;
 }
 
 /**

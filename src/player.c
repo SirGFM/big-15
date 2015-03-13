@@ -221,7 +221,10 @@ void player_update(player *pPl, int ms) {
             // Set the signaler position
             cx = obj->dx + obj->hitbox.cx;
             cy = obj->dy + obj->hitbox.cy;
-            signal_setPos(cx, cy);
+            if (isDown)
+                signal_setPos(cx, cy-1);
+            else
+                signal_setPos(cx, cy);
             
             pPl->pressedTeleport = 1;
         }
@@ -581,6 +584,9 @@ void player_checkTeleport(player *pPl) {
         }
         x -= pObj->hitbox.hw;
         y -= pObj->hitbox.hh;
+        
+        signal_setPos(x+4, y+6);
+        signal_release();
     }
     gv_setValue(TELP_X, x);
     gv_setValue(TELP_Y, y);
