@@ -146,8 +146,12 @@ void col_onPlEv(player *pPl, event *pEv) {
 void col_onPlObj(player *pPl, object *pObj) {
     GFraMe_object *pGfmObj;
     
+    ASSERT_NR(!player_isHurt(pPl));
+    
     player_getObject(&pGfmObj, pPl);
     obj_collide(pObj, pGfmObj);
+__ret:
+    return;
 }
 
 /**
@@ -162,6 +166,7 @@ void col_onPlMob(player *pPl, mob *pMob) {
     int plFlags;
     
     ASSERT_NR(mob_isAlive(pMob));
+    ASSERT_NR(!player_isHurt(pPl));
     
     // Get both player objects
     player_getObject(&pObj1, pPl);

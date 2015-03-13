@@ -158,5 +158,13 @@ void player_changeItem(player *pPl);
  */
 void player_hurt(player *pPl, int dmg, GFraMe_direction dir);
 
+/**
+ * Return when the player is still in hitstun
+ * 
+ * @param pPl The player
+ * @return Whether the player is in hitstun or not
+ */
+int player_isHurt(player *pPl);
+
 #endif
 

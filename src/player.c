@@ -284,10 +284,6 @@ void player_update(player *pPl, int ms) {
     
 __ret:
     GFraMe_sprite_update(&pPl->spr, ms);
-    // Damage boost through stuff!! (horizontal only!)
-    if (pPl->curAnim == PL_HURT && pPl->spr.anim) {
-        GFraMe_object_set_x(obj, obj->dx);
-    }
     
     // Store the player's central position so it's easilly acessible
     if ((pPl->spr.id & ID_PL1) == ID_PL1) {
@@ -688,5 +684,15 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
     player_setAnimation(pPl, PL_HURT);
 __ret:
     return;
+}
+
+/**
+ * Return when the player is still in hitstun
+ * 
+ * @param pPl The player
+ * @return Whether the player is in hitstun or not
+ */
+int player_isHurt(player *pPl) {
+    return pPl->curAnim == PL_HURT;
 }
 
