@@ -304,8 +304,8 @@ static GFraMe_ret ps_switchMap() {
     x = gv_getValue(DOOR_X) * 8;
     y = gv_getValue(DOOR_Y) * 8;
     // Tween the players
-    rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
-    rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, PL_TWEEN_DELAY);
+    rv = player_tweenTo(p1, x, y, GFraMe_event_elapsed, 0);
+    rv = player_tweenTo(p2, x, y, GFraMe_event_elapsed, 0);
     // Update camera
     cam_setPositionSt(p1, p2);
     

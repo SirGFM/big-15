@@ -463,89 +463,154 @@ static unsigned char _ce_setTile(int i, int j) {
     g = map_isTileSolid(m, i  , j+1) == GFraMe_ret_ok;
     h = map_isTileSolid(m, i+1, j+1) == GFraMe_ret_ok;
     
+    // xxx
+    // xxx
+    // xx#
     if ( a &&  b &&  c &&
          d &&        e &&
          f &&  g && !h   )
         return 140;
     else
+    // xx#
+    // xxx
+    // xxx
     if ( a &&  b && !c &&
          d &&        e &&
          f &&  g &&  h   )
         return 108;
     else
+    // #xx
+    // xxx
+    // xxx
     if (!a &&  b &&  c &&
          d &&        e &&
          f &&  g &&  h   )
         return 107;
     else
+    // xxx
+    // xxx
+    // #xx
     if ( a &&  b &&  c &&
          d &&        e &&
         !f &&  g &&  h   )
         return 139;
-
     else
+    // xx#
+    // xxx
+    // xx#
     if ( a &&  b && !c &&
          d &&        e &&
          f &&  g && !h   )
         return 141;
     else
+    // #x#
+    // xxx
+    // xxx
     if (!a &&  b && !c &&
          d &&        e &&
          f &&  g &&  h   )
         return 142;
     else
+    // #xx
+    // xxx
+    // #xx
     if (!a &&  b &&  c &&
          d &&        e &&
         !f &&  g &&  h   )
         return 110;
     else
+    // xxx
+    // xxx
+    // #x#
     if ( a &&  b &&  c &&
          d &&        e &&
         !f &&  g && !h   )
         return 109;
-
     else
+    // ###
+    // xxx
+    // xx#
+    if (      !b &&      
+         d &&        e &&
+         f &&  g && !h   )
+        return 174;
+    else
+    // xx#
+    // xxx
+    // ###
+    if ( a &&  b && !c &&
+         d &&        e &&
+              !g         )
+        return 206;
+    else
+    // ###
+    // xxx
+    // xxx
     if (      !b &&      
          d &&        e &&
          f &&  g &&  h   )
         return 73;
     else
+    // #xx
+    // #xx
+    // #xx
     if (       b &&  c &&
         !d &&        e &&
                g &&  h   )
         return 104;
     else
+    // xxx
+    // xxx
+    // ###
     if ( a &&  b &&  c &&
          d &&        e &&
               !g         )
         return 137;
     else
+    // xx#
+    // xx#
+    // xx#
     if ( a &&  b &&      
          d &&       !e &&
          f &&  g         )
         return 106;
 
     else
+    // #xx
+    // #xx
+    // ###
     if (       b &&  c &&
         !d &&        e &&
         !f && !g         )
         return 136;
     else
+    // xx#
+    // xx#
+    // ###
     if ( a &&  b &&      
          d &&       !e &&
               !g && !h   )
         return 138;
     else
+    // ###
+    // xx#
+    // xx#
     if (      !b && !c &&
          d &&       !e &&
          f &&  g         )
         return 74;
     else
+    // ###
+    // #xx
+    // #xx
     if (!a && !b &&      
         !d &&        e &&
                g &&  h   )
         return 72;
     else
+    // xxx
+    // xxx
+    // xxx
         return 64;
 }
 

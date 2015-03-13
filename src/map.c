@@ -27,7 +27,7 @@
 //                                                                            //
 //============================================================================//
 
-#define TM_MAX 15
+#define TM_MAX 21
 /** Lookup table for tilemap files */
 char *_map_tms[TM_MAX] = {
     "maps/map000.gfm",
@@ -44,7 +44,13 @@ char *_map_tms[TM_MAX] = {
     "maps/map011.gfm",
     "maps/map012.gfm",
     "maps/map013.gfm",
-    "maps/map014.gfm"
+    "maps/map014.gfm",
+    "maps/map015.gfm",
+    "maps/map016.gfm",
+    "maps/map017.gfm",
+    "maps/map018.gfm",
+    "maps/map019.gfm",
+    "maps/map020.gfm"
 };
 //============================================================================//
 //                                                                            //
@@ -867,6 +873,8 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 140:
         case 141:
         case 142:
+        case 174:
+        case 206:
             return GFraMe_ret_ok;
         default:
             return GFraMe_ret_failed;
