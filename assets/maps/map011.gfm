@@ -36,7 +36,7 @@ mob: { x:240 y:144 f:"charger" }
 obj: { x:2 y:10 w:4 h:1 ce:"ce_handle_door" f:"door-hor"|"static" var:"map011-c_door" }
 obj: { x:20 y:10 w:4 h:1 ce:"ce_handle_door" f:"door-hor"|"static" var:"map011-b_door" }
 obj: { x:28 y:10 w:4 h:1 ce:"ce_handle_notdoor" f:"door-hor"|"static" var:"map011-a_door" }
-ev: { x:39 y:18 w:2 h:2 ce:"ce_close_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map011-a_door"    }
+ev: { x:39 y:18 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map011-a_door"    }
 ev: { x:39 y:18 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map011-b_door"    }
 ev: { x:11 y:18 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map011-c_door"    }
 ev: { x:11 y:18 w:2 h:2 ce:"ce_close_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map011-b_door"    }
