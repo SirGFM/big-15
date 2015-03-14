@@ -32,10 +32,12 @@ static char *_gv_names[GV_MAX+1] = {
     "heartup03",
     "heartup04",
     "heartup05",
+    "heartup06",
     "heartup01-hidden",
     "heartup02-hidden",
     "heartup03-hidden",
     "heartup05-hidden",
+    "heartup06-hidden",
     "switch_map",
     "map001_door",
     "map002-1_door",
@@ -60,6 +62,9 @@ static char *_gv_names[GV_MAX+1] = {
     "map012-c_door",
     "map015-a_door",
     "map015-b_door",
+    "map016-a_door",
+    "map016-b_door",
+    "map016-c_door",
     "gv_max"
 };
 
@@ -89,9 +94,9 @@ void gv_init() {
     _gv_arr[SIGL_Y] = -1;
     // TODO set DOOR_X & DOOR_Y
     
-//    _gv_arr[ITEMS] = ID_HIGHJUMP | ID_TELEPORT | ID_SIGNALER;
-//    _gv_arr[PL1_ITEM] = ID_TELEPORT;
-//    _gv_arr[PL2_ITEM] = ID_SIGNALER;
+    _gv_arr[ITEMS] = ID_HIGHJUMP | ID_TELEPORT | ID_SIGNALER;
+    _gv_arr[PL1_ITEM] = ID_TELEPORT;
+    _gv_arr[PL2_ITEM] = ID_SIGNALER;
 }
 
 /**

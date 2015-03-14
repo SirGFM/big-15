@@ -214,13 +214,16 @@ void player_update(player *pPl, int ms) {
         else item = 0; // Screw warnings!
         
        
-        if (item == ID_SIGNALER &&
-            !(obj->hit & (GFraMe_direction_left | GFraMe_direction_right))) {
+        if (item == ID_SIGNALER) {
             int cx, cy;
             
             // Set the signaler position
             cx = obj->dx + obj->hitbox.cx;
             cy = obj->dy + obj->hitbox.cy;
+            if (obj->hit & GFraMe_direction_left)
+                cx += 1;
+            else if (obj->hit & GFraMe_direction_right)
+                cx -= 1;
             if (isDown)
                 signal_setPos(cx, cy-1);
             else
