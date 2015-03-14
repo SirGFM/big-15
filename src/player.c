@@ -259,8 +259,8 @@ void player_update(player *pPl, int ms) {
         }
         else if (!pPl->isBeingCarried)
             obj->vy = 32;
-        else
-            obj->ay = GRAVITY;
+//        else
+//            obj->ay = GRAVITY;
     }
     
     // Check current state and play the apropriate animation
@@ -392,31 +392,16 @@ __ret:
  * @param pObj The object of the carring player
  */
 void player_getCarried(player *pPl, GFraMe_object *pObj) {
-    GFraMe_hitbox *pHb;
     GFraMe_object *pThisObj;
-    double vy, maxvy;
     
     // Get the required Framework's object
     pThisObj = GFraMe_sprite_get_object(&pPl->spr);
-    pHb = GFraMe_object_get_hitbox(pThisObj);
     
     // Set the player as being carried above the other object
-    //GFraMe_object_set_y(pThisObj, pObj->y - pHb->hh - pHb->cy);
-    pThisObj->dy = pObj->dy - pHb->hh - pHb->cy;
-    pThisObj->y = (int)pThisObj->dy;
     pPl->isBeingCarried = 1;
-    
-    // Get the carrying player vertical speed
-    vy = pObj->vy;
-    // Modify the speeds if the high jump boots are on
-    if (vy < 0)
-        maxvy = 0.99 * vy;
-    else if (vy > 0)
-        maxvy = 1.01 * vy;
-    else maxvy = vy; // Screw warnings
+
     // Modify the player's VY
-    if (!ctr_jump(pPl->spr.id))
-        pThisObj->vy = maxvy;
+    pThisObj->vy = pObj->vy + 32;
 }
 
 /**

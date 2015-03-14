@@ -388,6 +388,7 @@ static void ps_update() {
         
         // Collide both players, manually
         col_onPlayer(p1, p2);
+        col_onPlayer(p2, p1);
         
         // Collide the carried player (if any) against the map
         if (player_isBeingCarried(p1))
