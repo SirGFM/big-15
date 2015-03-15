@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="428" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="450">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="428" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="451">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="78">
@@ -1476,7 +1476,7 @@
  </objectgroup>
  <layer name="map012" width="428" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map012_objs" visible="0">
@@ -1494,7 +1494,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="375" name="get_teleporter" type="event" x="2936" y="1336" width="16" height="16">
+  <object id="375" name="get_teleporter" type="event" x="2984" y="1352" width="16" height="16">
    <properties>
     <property name="ce" value="ce_get_item"/>
     <property name="int0" value="2"/>
@@ -1585,9 +1585,9 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="382" name="door" type="obj" x="3000" y="1336" width="8" height="32">
+  <object id="382" name="door" type="obj" x="2968" y="1336" width="8" height="32">
    <properties>
-    <property name="ce" value="ce_handle_door"/>
+    <property name="ce" value="ce_handle_notdoor"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map012-a_door"/>
    </properties>
@@ -1606,21 +1606,21 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="412" name="door-hor" type="obj" x="2976" y="1264" width="32" height="8">
+  <object id="412" name="door-hor" type="obj" x="2944" y="1264" width="32" height="8">
    <properties>
     <property name="ce" value="ce_handle_notdoor"/>
     <property name="f" value="door-hor|static"/>
     <property name="var" value="map012-b_door"/>
    </properties>
   </object>
-  <object id="413" name="door-hor" type="obj" x="2968" y="1304" width="32" height="8">
+  <object id="413" name="door-hor" type="obj" x="2936" y="1304" width="32" height="8">
    <properties>
     <property name="ce" value="ce_handle_notdoor"/>
     <property name="f" value="door-hor|static"/>
     <property name="var" value="map012-c_door"/>
    </properties>
   </object>
-  <object id="414" name="open_door" type="event" x="2938" y="1338" width="16" height="16">
+  <object id="414" name="open_door" type="event" x="2986" y="1354" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -1634,21 +1634,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="415" name="close_door" type="event" x="3026" y="1354" width="16" height="16">
-   <properties>
-    <property name="ce" value="ce_close_door"/>
-    <property name="int0" value="-1"/>
-    <property name="int1" value="-1"/>
-    <property name="int2" value="-1"/>
-    <property name="int3" value="-1"/>
-    <property name="t" value="is_player|on_pressed"/>
-    <property name="var0" value="map012-a_door"/>
-    <property name="var1" value="gv_max"/>
-    <property name="var2" value="gv_max"/>
-    <property name="var3" value="gv_max"/>
-   </properties>
-  </object>
-  <object id="416" name="open_door" type="event" x="2920" y="1200" width="16" height="16">
+  <object id="416" name="open_door" type="event" x="2904" y="1200" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -1660,6 +1646,13 @@
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="450" name="door" type="obj" x="3008" y="1336" width="8" height="32">
+   <properties>
+    <property name="ce" value="ce_handle_door"/>
+    <property name="f" value="door|static"/>
+    <property name="var" value="map012-a_door"/>
    </properties>
   </object>
  </objectgroup>

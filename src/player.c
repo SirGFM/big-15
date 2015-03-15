@@ -657,6 +657,8 @@ __ret:
  * @param dir Direction the player was hit from
  */
 void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
+    int x, y;
+    
     // Check that the player isn't "hurting"
     ASSERT_NR(pPl->curAnim != PL_HURT);
     
@@ -666,13 +668,30 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
     else if (pPl->spr.id == ID_PL2)
         gv_sub(PL2_HP, dmg);
     
+    x = pPl->spr.obj.x + pPl->spr.obj.hitbox.cx;
+    y = pPl->spr.obj.y + pPl->spr.obj.hitbox.cy + pPl->spr.obj.hitbox.hh - 1;
     // Push back the player
-    if (dir == GFraMe_direction_left)
+    if (dir == GFraMe_direction_left) {
+        if (map_isPixelSolid(m, x+8, y) == GFraMe_ret_failed
+            && map_isPixelSolid(m, x+16, y) == GFraMe_ret_failed
+            && map_isPixelSolid(m, x+24, y) == GFraMe_ret_failed
+            && map_isPixelSolid(m, x+32, y) == GFraMe_ret_failed)
+            pPl->spr.obj.vx = 32;
+        else
+            pPl->spr.obj.vx = -32;
+    }
+    else if (dir == GFraMe_direction_right) {
+        if (map_isPixelSolid(m, x-8, y) == GFraMe_ret_failed
+            && map_isPixelSolid(m, x-16, y) == GFraMe_ret_failed
+            && map_isPixelSolid(m, x-24, y) == GFraMe_ret_failed
+            && map_isPixelSolid(m, x-32, y) == GFraMe_ret_failed)
+            pPl->spr.obj.vx = -32;
+        else
+            pPl->spr.obj.vx = 32;
+    }
+    else {
         pPl->spr.obj.vx = 16;
-    else if (dir == GFraMe_direction_right)
-        pPl->spr.obj.vx = -16;
-    else
-        pPl->spr.obj.vx = 8;
+    }
     pPl->spr.obj.vy = 0;
     // Play the 'hurt' animation
     player_setAnimation(pPl, PL_HURT);
