@@ -27,6 +27,7 @@ typedef enum {
     ID_EYE      = ID_MOB  | 0x00000002,
     ID_EYE_LEFT = ID_MOB  | 0x00000004,
     ID_CHARGER  = ID_MOB  | 0x00000008,
+    ID_PHANTOM  = ID_MOB  | 0x00000010,
     
     ID_ENEPROJ  = ID_PROJ | 0x00000001,
     

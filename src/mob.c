@@ -21,6 +21,9 @@
 
 #define MOB_ANIM_MAX 6
 
+/** States for the 'phantom' mob */
+enum {PHANTOM_STAND = 0};
+#define PHANTOM_MAXSPEED 100
 /** States for the seifer('charger') mob */
 enum {CHARGER_STAND = 0, CHARGER_FLOAT, CHARGER_CHARGE};
 #define CHARGER_COUNTDOWN 1500
@@ -74,6 +77,10 @@ static int _mob_chargerAnimData[] = {
     6 , 2 , 1  , 201, 217,      /* stand   */
     0 , 1 , 0  , 202,           /* float   */
     0 , 1 , 0  , 218            /* charge  */
+};
+static int _mob_phantomAnimData[] = {
+/* fps,len,loop,data...                    */
+   12 , 4 , 1  , 185, 186,187,188 /* stand   */
 };
 
 /**
@@ -171,6 +178,16 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             
             animData = _mob_chargerAnimData;
             dataLen = sizeof(_mob_chargerAnimData) / sizeof(int);
+        } break;
+        case ID_PHANTOM: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 6/*w*/, 8/*h*/, gl_sset16x16,
+                -4/*ox*/, -4/*oy*/);
+            pMob->health = 1;
+            pMob->damage = 1;
+            pMob->countdown = 0;
+            
+            animData = _mob_phantomAnimData;
+            dataLen = sizeof(_mob_phantomAnimData) / sizeof(int);
         } break;
         default: {
             GFraMe_assertRV(0, "Invalid mob type!", rv = GFraMe_ret_failed,
@@ -416,6 +433,16 @@ int mob_didAnimFinish(mob *pMob) {
 }
 
 /**
+ * Read the mob's ID
+ * 
+ * @param pMob The mob
+ * @return The mob ID
+ */
+int mob_getID(mob *pMob) {
+    return pMob->spr.id;
+}
+
+/**
  * Updates the mob
  * 
  * @param pMob The mob
@@ -609,6 +636,32 @@ void mob_update(mob *pMob, int ms) {
                 pObj->vx = 0;
             }
         } break; /* ID_CHARGER */
+        case ID_PHANTOM: {
+            GFraMe_object *pObj;
+            int x, y;
+            
+            // Get the mob's object
+            mob_getObject(&pObj, pMob);
+            // Get the closest player's position
+            mob_getClosestPlDist(&x, &y, pMob);
+            
+            pObj->ax = (x / 8) * 50;
+            pObj->ay = (y / 8) * 50;
+            
+            if (pObj->vx > PHANTOM_MAXSPEED)
+                pObj->vx = PHANTOM_MAXSPEED;
+            else if (pObj->vx < -PHANTOM_MAXSPEED)
+                pObj->vx = -PHANTOM_MAXSPEED;
+            if (pObj->vy > PHANTOM_MAXSPEED)
+                pObj->vy = PHANTOM_MAXSPEED;
+            else if (pObj->vy < -PHANTOM_MAXSPEED)
+                pObj->vy = -PHANTOM_MAXSPEED;
+            
+            if (pObj->vx < 0)
+                pMob->spr.flipped = 0;
+            else if (pObj->vx > 0)
+                pMob->spr.flipped = 1;
+        } break;
         default: {
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
                 pMob->spr.obj.vy = 32;

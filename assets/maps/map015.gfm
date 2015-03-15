@@ -39,3 +39,4 @@ ev: { x:-1 y:0 w:1 h:6 ce:"ce_switch_map" int:16 int:38 int:21 int:-1 t:"is_play
 mob: { x:111 y:128 f:"eyel" }
 mob: { x:257 y:106 f:"jumper" }
 mob: { x:241 y:42 f:"jumper" }
+mob: { x:216 y:88 f:"phantom" }

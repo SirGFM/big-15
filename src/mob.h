@@ -156,5 +156,13 @@ void mob_getObject(GFraMe_object **ppObj, mob *pMob);
  */
 int mob_didAnimFinish(mob *pMob);
 
+/**
+ * Read the mob's ID
+ * 
+ * @param pMob The mob
+ * @return The mob ID
+ */
+int mob_getID(mob *pMob);
+
 #endif
 

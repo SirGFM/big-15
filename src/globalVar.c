@@ -94,9 +94,9 @@ void gv_init() {
     _gv_arr[SIGL_Y] = -1;
     // TODO set DOOR_X & DOOR_Y
     
-    _gv_arr[ITEMS] = ID_HIGHJUMP | ID_TELEPORT | ID_SIGNALER;
-    _gv_arr[PL1_ITEM] = ID_TELEPORT;
-    _gv_arr[PL2_ITEM] = ID_SIGNALER;
+//    _gv_arr[ITEMS] = ID_HIGHJUMP | ID_TELEPORT | ID_SIGNALER;
+//    _gv_arr[PL1_ITEM] = ID_TELEPORT;
+//    _gv_arr[PL2_ITEM] = ID_SIGNALER;
 }
 
 /**

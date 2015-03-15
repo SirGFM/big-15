@@ -262,8 +262,15 @@ void col_onObjWall(object *pObj, GFraMe_object *pWall) {
 void col_onMobWall(mob *pMob, GFraMe_object *pWall) {
     GFraMe_object *pObj;
     
+    ASSERT_NR(mob_getID(pMob) != ID_EYE);
+    ASSERT_NR(mob_getID(pMob) != ID_EYE_LEFT);
+    ASSERT_NR(mob_getID(pMob) != ID_PHANTOM);
+    
     mob_getObject(&pObj, pMob);
     GFraMe_object_overlap(pWall, pObj, GFraMe_first_fixed);
+    
+__ret:
+    return;
 }
 
 /**
