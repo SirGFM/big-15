@@ -32,10 +32,11 @@
 *.png
 *.xcf
 *.gif
+*atlas.dat
+*.wav
 
 # Temp files
 *~
 *.swp
 *bin/
-*.wav
 

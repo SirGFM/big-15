@@ -80,7 +80,7 @@ static int _mob_chargerAnimData[] = {
 };
 static int _mob_phantomAnimData[] = {
 /* fps,len,loop,data...                    */
-   12 , 4 , 1  , 185, 186,187,188 /* stand   */
+   12 , 4 , 1  , 186, 187,188,189 /* stand   */
 };
 
 /**
