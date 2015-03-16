@@ -200,15 +200,16 @@ static void ps_draw() {
         _drwCalls++;
 #endif
         map_draw(m);
-        rg_drawMobs();
         rg_drawBullets();
-        signal_draw();
         rg_drawObjects();
+        rg_drawMobs();
         if (gv_nIsZero(SWITCH_MAP))
             transition_draw();
         ui_draw();
         player_draw(p2);
         player_draw(p1);
+        if (gv_isZero(SWITCH_MAP))
+            signal_draw();
         #ifdef QT_DEBUG_DRAW
             if (GFraMe_keys.f1 ||
                 (GFraMe_controller_max > 0 && GFraMe_controllers[0].l2))
