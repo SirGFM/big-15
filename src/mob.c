@@ -248,7 +248,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             SET_ANIMDATA(_mob_bossTankAnimData);
         } break;
         case ID_BOSS_PLAT: {
-            GFraMe_sprite_init(&pMob->spr, x, y, 44/*w*/, 12/*h*/, gl_sset64x16,
+            GFraMe_sprite_init(&pMob->spr, x, y, 52/*w*/, 12/*h*/, gl_sset64x16,
                 0/*ox*/, 0/*oy*/);
             pMob->health = 1;
             pMob->damage = 0;
@@ -839,7 +839,7 @@ void mob_update(mob *pMob, int ms) {
             x = gv_getValue(BOSS_X);
             y = gv_getValue(BOSS_Y);
             // Set its position
-            GFraMe_object_set_pos(pObj, x + 1, y - 12);
+            GFraMe_object_set_pos(pObj, x - 3, y - 12);
         } break;
         case ID_BOSS_WHEEL: {
             GFraMe_object *pObj;

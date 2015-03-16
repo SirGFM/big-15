@@ -158,7 +158,8 @@ static GFraMe_ret ps_init() {
     rv = player_init(&p2, ID_PL2, 240);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
-    rv = map_loadi(m, 0);
+    //rv = map_loadi(m, 0);
+    rv = map_loadi(m, 19);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
 
     signal_init();
