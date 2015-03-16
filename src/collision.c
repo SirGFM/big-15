@@ -167,7 +167,6 @@ void col_onPlObj(player *pPl, object *pObj) {
 void col_onPlMob(player *pPl, mob *pMob) {
     GFraMe_object *pObj1, *pObj2;
     GFraMe_ret rv;
-    int plFlags;
     
     ASSERT_NR(mob_isAlive(pMob));
     ASSERT_NR(!player_isHurt(pPl));
@@ -176,17 +175,25 @@ void col_onPlMob(player *pPl, mob *pMob) {
     player_getObject(&pObj1, pPl);
     mob_getObject(&pObj2, pMob);
     
-    // Get their collision flags
-    plFlags = pObj1->hit;
-    // Clean their previous state
-    pObj1->hit = 0;
     // Try to collide them
-    rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
-    if (rv == GFraMe_ret_ok) {
-        player_hurt(pPl, mob_getDamage(pMob), pObj1->hit);
+    if (mob_getID(pMob) != ID_BOSS_PLAT) {
+        int plFlags;
+        
+        // Get their collision flags
+        plFlags = pObj1->hit;
+        // Clean their previous state
+        pObj1->hit = 0;
+        
+        rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
+        if (rv == GFraMe_ret_ok) {
+            player_hurt(pPl, mob_getDamage(pMob), pObj1->hit);
+        }
+        // Restore the collision flags
+        pObj1->hit = plFlags;
     }
-    // Restore the collision flags
-    pObj1->hit = plFlags;
+    else {
+        GFraMe_object_overlap(pObj1, pObj2, GFraMe_second_fixed);
+    }
     
 __ret:
     return;

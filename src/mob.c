@@ -26,6 +26,7 @@ enum {BOSS_HEAD_DEF = 0, BOSS_HEAD_ATTACK, BOSS_HEAD_HURT};
 enum {BOSS_WHEEL_STAND = 0, BOSS_WHEEL_RIGHT, BOSS_WHEEL_LEFT};
 enum {BOSS_TANK_DEF = 0};
 enum {BOSS_PLAT_DEF = 0};
+#define BOSS_HEAD_COUNTDOWN 2250
 #define BOSS_HEAD_MAXSPEED 160
 /** States for the 'phantom' mob */
 enum {PHANTOM_STAND = 0};
@@ -90,9 +91,9 @@ static int _mob_phantomAnimData[] = {
 };
 static int _mob_bossHeadAnimData[] = {
 /* fps,len,loop,data...                         */
-    0 , 1 , 0  , 77,              /* def        */
-    0 , 1 , 0  , 78,              /* attack     */
-    8 , 8 , 0  , 79,80,79,80,79,80,79,80/* hurt */
+    0 , 1 , 0  ,180,              /* def        */
+    2 , 1 , 0  ,181,              /* attack     */
+    8 , 8 , 0  ,182,183,182,183,182,183,182,183/* hurt */
 };
 static int _mob_bossWheelAnimData[] = {
 /* fps,len,loop,data...                         */
@@ -219,13 +220,13 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
                 -2/*ox*/, -2/*oy*/);
             pMob->health = 3;
             pMob->damage = 1;
-            pMob->countdown = 0;
+            pMob->countdown = BOSS_HEAD_COUNTDOWN;
             
             SET_ANIMDATA(_mob_bossHeadAnimData);
         } break;
         case ID_BOSS_WHEEL: {
-            GFraMe_sprite_init(&pMob->spr, x, y, 40/*w*/, 8/*h*/, gl_sset64x8,
-                0/*ox*/, 0/*oy*/);
+            GFraMe_sprite_init(&pMob->spr, x, y, 46/*w*/, 8/*h*/, gl_sset64x8,
+                3/*ox*/, 0/*oy*/);
             pMob->health = 1;
             pMob->damage = 1;
             pMob->countdown = 0;
@@ -233,8 +234,8 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             SET_ANIMDATA(_mob_bossWheelAnimData);
         } break;
         case ID_BOSS_TANK: {
-            GFraMe_sprite_init(&pMob->spr, x, y, 20/*w*/, 22/*h*/, gl_sset32x32,
-                -2/*ox*/, -2/*oy*/);
+            GFraMe_sprite_init(&pMob->spr, x, y, 20/*w*/, 20/*h*/, gl_sset32x32,
+                -2/*ox*/, -4/*oy*/);
             pMob->health = 1;
             pMob->damage = 1;
             pMob->countdown = 0;
@@ -723,6 +724,75 @@ void mob_update(mob *pMob, int ms) {
                 pMob->spr.flipped = 0;
             else if (pObj->vx > 0)
                 pMob->spr.flipped = 1;
+        } break;
+        case ID_BOSS_HEAD: {
+            if (pMob->anim == BOSS_HEAD_HURT) {
+                // Do nothing!
+            }
+            else if (pMob->anim == BOSS_HEAD_DEF && pMob->countdown <= 0) {
+                bullet *pBul;
+                GFraMe_ret rv;
+                int cx, cy;
+                
+                // Get the mob's center
+                cx = pMob->spr.obj.x + pMob->spr.obj.hitbox.cx;
+                cy = pMob->spr.obj.y + pMob->spr.obj.hitbox.cy;
+                
+                // Shoot to the right
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 8, cy + 0);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot upward, toward the right
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 8, cy - 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot upward
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 0, cy - 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot upward, toward the left
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx - 8, cy - 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot to the left
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx - 8, cy + 0);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot downward, toward the left
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx - 8, cy + 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot downward
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 0, cy + 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot downward, toward the right
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 8, cy + 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                
+                mob_setAnim(pMob, BOSS_HEAD_ATTACK, 0);
+            }
+            else if (pMob->anim == BOSS_HEAD_ATTACK && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, BOSS_HEAD_DEF, 0);
+                pMob->countdown += BOSS_HEAD_COUNTDOWN;
+            }
         } break;
         default: {
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
