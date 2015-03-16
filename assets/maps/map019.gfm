@@ -31,7 +31,7 @@ tm:[
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 ]
 ev: { x:80 y:12 w:1 h:6 ce:"ce_switch_map" int:18 int:1 int:7 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
-obj: { x:27 y:17 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup01-hidden" }
-ev: { x:27 y:17 w:2 h:2 ce:"ce_inc_maxhp" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"heartup01"    }
-ev: { x:24 y:17 w:12 h:1 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter" var:"heartup01-hidden"    }
+obj: { x:27 y:17 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup07-hidden" }
+ev: { x:27 y:17 w:2 h:2 ce:"ce_inc_maxhp" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"heartup07"    }
+ev: { x:24 y:17 w:12 h:1 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter" var:"heartup07-hidden"    }
 ev: { x:23 y:17 w:14 h:3 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
