@@ -198,7 +198,8 @@ void player_update(player *pPl, int ms) {
         pPl->spr.obj.dy = y;
         pPl->isTeleporting = 0;
         
-        return;
+        goto __ret;
+        //return;
     }
     
     isDown = obj->hit & GFraMe_direction_down;
@@ -224,10 +225,7 @@ void player_update(player *pPl, int ms) {
                 cx += 1;
             else if (obj->hit & GFraMe_direction_right)
                 cx -= 1;
-            if (isDown)
-                signal_setPos(cx, cy-1);
-            else
-                signal_setPos(cx, cy);
+            signal_setPos(cx, cy);
             
             pPl->pressedTeleport = 1;
         }
@@ -575,6 +573,9 @@ void player_checkTeleport(player *pPl) {
         
         signal_setPos(x+4, y+6);
         signal_release();
+    }
+    else {
+        y -= 8;
     }
     gv_setValue(TELP_X, x);
     gv_setValue(TELP_Y, y);

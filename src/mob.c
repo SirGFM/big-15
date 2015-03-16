@@ -21,6 +21,12 @@
 
 #define MOB_ANIM_MAX 6
 
+/** States for the boss' mob */
+enum {BOSS_HEAD_DEF = 0, BOSS_HEAD_ATTACK, BOSS_HEAD_HURT};
+enum {BOSS_WHEEL_STAND = 0, BOSS_WHEEL_RIGHT, BOSS_WHEEL_LEFT};
+enum {BOSS_TANK_DEF = 0};
+enum {BOSS_PLAT_DEF = 0};
+#define BOSS_HEAD_MAXSPEED 160
 /** States for the 'phantom' mob */
 enum {PHANTOM_STAND = 0};
 #define PHANTOM_MAXSPEED 100
@@ -57,30 +63,50 @@ struct stMob {
  *   _mob_*AnimData[i]+3  = actual data
  */
 static int _mob_jumperAnimData[] = {
-/* fps,len,loop,data...                       */
-    2 , 2 , 1  , 704, 705,      /* stand      */
-    6 , 1 , 0  , 706,           /* pre-jump   */
-    0 , 1 , 0  , 707,           /* jump       */
-    6 , 1 , 0  , 706            /* after-jump */
+/* fps,len,loop,data...                         */
+    2 , 2 , 1  , 704, 705,        /* stand      */
+    6 , 1 , 0  , 706,             /* pre-jump   */
+    0 , 1 , 0  , 707,             /* jump       */
+    6 , 1 , 0  , 706              /* after-jump */
 };
 static int _mob_eyeAnimData[] = {
-/* fps,len,loop,data...                    */
-    0 , 1 , 0  , 736,           /* closed  */
-    8 , 2 , 0  , 737, 738,      /* opening */
-    0 , 1 , 0  , 738,           /* open    */
-    4 , 1 , 0  , 737,           /* focused */
-    8 , 2 , 0  , 737, 736,      /* closing */
-   12 , 3 , 0  , 737, 736, 737  /* blink   */
+/* fps,len,loop,data...                         */
+    0 , 1 , 0  , 736,             /* closed     */
+    8 , 2 , 0  , 737, 738,        /* opening    */
+    0 , 1 , 0  , 738,             /* open       */
+    4 , 1 , 0  , 737,             /* focused    */
+    8 , 2 , 0  , 737, 736,        /* closing    */
+   12 , 3 , 0  , 737, 736, 737    /* blink      */
 };
 static int _mob_chargerAnimData[] = {
-/* fps,len,loop,data...                    */
-    6 , 2 , 1  , 201, 217,      /* stand   */
-    0 , 1 , 0  , 202,           /* float   */
-    0 , 1 , 0  , 218            /* charge  */
+/* fps,len,loop,data...                         */
+    6 , 2 , 1  , 201, 217,        /* stand      */
+    0 , 1 , 0  , 202,             /* float      */
+    0 , 1 , 0  , 218              /* charge     */
 };
 static int _mob_phantomAnimData[] = {
-/* fps,len,loop,data...                    */
-   12 , 4 , 1  , 186, 187,188,189 /* stand   */
+/* fps,len,loop,data...                         */
+   12 , 4 , 1  , 204, 205,206,207 /* stand      */
+};
+static int _mob_bossHeadAnimData[] = {
+/* fps,len,loop,data...                         */
+    0 , 1 , 0  , 77,              /* def        */
+    0 , 1 , 0  , 78,              /* attack     */
+    8 , 8 , 0  , 79,80,79,80,79,80,79,80/* hurt */
+};
+static int _mob_bossWheelAnimData[] = {
+/* fps,len,loop,data...                         */
+    0 , 1 , 0  , 83,              /* stand      */
+    12, 3 , 1  , 91, 87, 83,      /* right      */
+    12, 3 , 1  , 83, 87, 91       /* left       */
+};
+static int _mob_bossTankAnimData[] = {
+/* fps,len,loop,data...                         */
+    0 , 1 , 0  , 44               /* def        */
+};
+static int _mob_bossPlatAnimData[] = {
+/* fps,len,loop,data...                         */
+    0 , 1 , 0  , 41               /* def        */
 };
 
 /**
@@ -138,6 +164,9 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
     // Sanitize parameters
     ASSERT(pMob, GFraMe_ret_bad_param);
     
+    #define SET_ANIMDATA(__animData__) \
+            animData = __animData__; \
+            dataLen = sizeof(__animData__) / sizeof(int)
     // Initialize the mob
     animData = 0;
     switch (type) {
@@ -150,8 +179,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             pMob->damage = 1;
             pMob->countdown = JUMPER_COUNTDOWN;
             
-            animData = _mob_jumperAnimData;
-            dataLen = sizeof(_mob_jumperAnimData) / sizeof(int);
+            SET_ANIMDATA(_mob_jumperAnimData);
         } break;
         case ID_EYE_LEFT:
         case ID_EYE: {
@@ -166,8 +194,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
                 type = ID_EYE;
             }
             
-            animData = _mob_eyeAnimData;
-            dataLen = sizeof(_mob_eyeAnimData) / sizeof(int);
+            SET_ANIMDATA(_mob_eyeAnimData);
         } break;
         case ID_CHARGER: {
             GFraMe_sprite_init(&pMob->spr, x, y, 10/*w*/, 12/*h*/, gl_sset16x16,
@@ -176,8 +203,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             pMob->damage = 1;
             pMob->countdown = CHARGER_COUNTDOWN;
             
-            animData = _mob_chargerAnimData;
-            dataLen = sizeof(_mob_chargerAnimData) / sizeof(int);
+            SET_ANIMDATA(_mob_chargerAnimData);
         } break;
         case ID_PHANTOM: {
             GFraMe_sprite_init(&pMob->spr, x, y, 6/*w*/, 8/*h*/, gl_sset16x16,
@@ -186,14 +212,50 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
             pMob->damage = 1;
             pMob->countdown = 0;
             
-            animData = _mob_phantomAnimData;
-            dataLen = sizeof(_mob_phantomAnimData) / sizeof(int);
+            SET_ANIMDATA(_mob_phantomAnimData);
+        } break;
+        case ID_BOSS_HEAD: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 12/*w*/, 12/*h*/, gl_sset16x16,
+                -2/*ox*/, -2/*oy*/);
+            pMob->health = 3;
+            pMob->damage = 1;
+            pMob->countdown = 0;
+            
+            SET_ANIMDATA(_mob_bossHeadAnimData);
+        } break;
+        case ID_BOSS_WHEEL: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 40/*w*/, 8/*h*/, gl_sset64x8,
+                0/*ox*/, 0/*oy*/);
+            pMob->health = 1;
+            pMob->damage = 1;
+            pMob->countdown = 0;
+            
+            SET_ANIMDATA(_mob_bossWheelAnimData);
+        } break;
+        case ID_BOSS_TANK: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 20/*w*/, 22/*h*/, gl_sset32x32,
+                -2/*ox*/, -2/*oy*/);
+            pMob->health = 1;
+            pMob->damage = 1;
+            pMob->countdown = 0;
+            
+            SET_ANIMDATA(_mob_bossTankAnimData);
+        } break;
+        case ID_BOSS_PLAT: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 44/*w*/, 12/*h*/, gl_sset64x16,
+                0/*ox*/, 0/*oy*/);
+            pMob->health = 1;
+            pMob->damage = 0;
+            pMob->countdown = 0;
+            
+            SET_ANIMDATA(_mob_bossPlatAnimData);
         } break;
         default: {
             GFraMe_assertRV(0, "Invalid mob type!", rv = GFraMe_ret_failed,
                 __ret);
         }
     }
+    #undef SET_ANIMDATA
     pMob->spr.id = type;
     
     // Set all animations

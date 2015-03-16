@@ -48,9 +48,9 @@ extern GFraMe_spriteset *gl_sset8x8;   /** 8x8 pixels spriteset     */
 extern GFraMe_spriteset *gl_sset8x16;  /** 8x16 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset8x32;  /** 8x16 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset16x16; /** 16x16 pixels spriteset   */
-extern GFraMe_spriteset *gl_sset32x4;  /** 32x4 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset32x8;  /** 32x8 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset32x32; /** 32x32 pixels spriteset    */
+extern GFraMe_spriteset *gl_sset64x8;  /** 64x8 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset64x16; /** 64x16 pixels spriteset    */
 
 // Functions

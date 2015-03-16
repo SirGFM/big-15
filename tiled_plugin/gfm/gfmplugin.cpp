@@ -244,6 +244,18 @@ static void writeTilemap(QFile &file, const TileLayer *tileLayer,
     gfm_offset *pOff) {
 #endif
     // Write out the tilemap, by ID
+/*
+    file.write("teste: {", 8);
+    file.write(QByteArray::number(pOff->x));
+    file.write(", ", 2);
+    file.write(QByteArray::number(pOff->y));
+    file.write(", ", 2);
+    file.write(QByteArray::number(pOff->w));
+    file.write(", ", 2);
+    file.write(QByteArray::number(pOff->h));
+    file.write(", ", 2);
+    file.write("}\n", 2);
+*/
     file.write("tm:[\n", 5);
 //    for (int y = 0; y < tileLayer->height(); ++y) {
 //        for (int x = 0; x < tileLayer->width(); ++x) {

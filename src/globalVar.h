@@ -33,11 +33,13 @@ typedef enum {
     HEARTUP04,
     HEARTUP05,
     HEARTUP06,
+    HEARTUP07,
     HEARTUP01_HIDDEN,
     HEARTUP02_HIDDEN,
     HEARTUP03_HIDDEN,
     HEARTUP05_HIDDEN,
     HEARTUP06_HIDDEN,
+    HEARTUP07_HIDDEN,
     SWITCH_MAP,   /** Whether the map should be switched       */
     MAP001_DOOR,  /** State of the only door on map 001        */
     MAP002_DOOR1, /** State of the only door on map 002        */
