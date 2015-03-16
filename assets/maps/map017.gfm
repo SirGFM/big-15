@@ -37,7 +37,7 @@ mob: { x:144 y:152 f:"charger" }
 mob: { x:136 y:88 f:"charger" }
 mob: { x:289 y:130 f:"jumper" }
 ev: { x:35 y:4 w:4 h:6 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
-obj: { x:36 y:7 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup06-hidden" }
+obj: { x:36 y:7 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup06-hidden" var:"heartup06" }
 ev: { x:36 y:7 w:2 h:2 ce:"ce_inc_maxhp" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"heartup06"    }
 ev: { x:35 y:5 w:1 h:4 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter" var:"heartup06-hidden"    }
 ev: { x:-1 y:4 w:1 h:6 ce:"ce_switch_map" int:18 int:38 int:27 int:-1 t:"is_player"|"on_enter"|"keep_active"     }

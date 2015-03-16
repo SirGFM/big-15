@@ -10,7 +10,7 @@
 
 #include "types.h"
 
-#define FLAGS_MAX 19
+#define FLAGS_MAX 23
 
 static char *_t_flagNames[FLAGS_MAX] = {
     "static",
@@ -23,6 +23,10 @@ static char *_t_flagNames[FLAGS_MAX] = {
     "door",
     "door-hor",
     "heartup",
+    "hjump-term",
+    "telep-term",
+    "signl-term",
+    "term",
     
     "jumper",
     "eye",
@@ -49,6 +53,10 @@ static flag _t_flags[FLAGS_MAX] = {
     ID_DOOR,
     ID_DOOR_HOR,
     ID_HEARTUP,
+    ID_HJUMP_TERM,
+    ID_TELEP_TERM,
+    ID_SIGNL_TERM,
+    ID_TERM,
     
     ID_JUMPER,
     ID_EYE,

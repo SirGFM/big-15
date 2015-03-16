@@ -22,6 +22,10 @@ typedef enum {
     ID_DOOR       = ID_OBJ  | 0x00000001,
     ID_DOOR_HOR   = ID_OBJ  | 0x00000002,
     ID_HEARTUP    = ID_OBJ  | 0x00000004,
+    ID_HJUMP_TERM = ID_OBJ  | 0x00000008,
+    ID_TELEP_TERM = ID_OBJ  | 0x00000010,
+    ID_SIGNL_TERM = ID_OBJ  | 0x00000020,
+    ID_TERM       = ID_OBJ  | 0x00000040,
     
     ID_JUMPER     = ID_MOB  | 0x00000001,
     ID_EYE        = ID_MOB  | 0x00000002,

@@ -73,6 +73,34 @@ typedef enum {
     MAP016_DOOR_B,  /** State of a door on map 005              */
     MAP016_DOOR_C,  /** State of a door on map 005              */
     MAP020_DOOR_A,  /** State of a door on map 005              */
+    TERMINAL_001,
+    TERMINAL_002,
+    TERMINAL_003,
+    TERMINAL_004,
+    TERMINAL_005,
+    TERMINAL_006,
+    TERMINAL_007,
+    TERMINAL_008,
+    TERMINAL_009,
+    TERMINAL_010,
+    TERMINAL_011,
+    TERMINAL_012,
+    TERMINAL_013,
+    TERMINAL_014,
+    TERMINAL_015,
+    TERMINAL_016,
+    TERMINAL_017,
+    TERMINAL_018,
+    TERMINAL_019,
+    TERMINAL_020,
+    TERMINAL_021,
+    TERMINAL_022,
+    TERMINAL_023,
+    TERMINAL_024,
+    TERMINAL_025,
+    HJUMP_TERM,
+    TELEP_TERM,
+    SIGNL_TERM,
     GV_MAX        /** Global var count                         */
 } globalVar;
 

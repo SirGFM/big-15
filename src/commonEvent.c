@@ -22,9 +22,11 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_switch_map",
     "ce_get_item",
     "ce_hidden_path",
-    "ce_unhide_on_gv",
+    "ce_unhide_on_gv", // actualy CE_UNHIDE_HEART
     "ce_inc_maxhp",
     "ce_set_gv",
+    "ce_set_anim_off",
+    "ce_none",
     "ce_max"
 };
 
@@ -386,7 +388,7 @@ void ce_callEvent(commonEvent ce) {
             // Reset the tilemap bounds and animations
             map_setTilemap(m, pData, len, w, h);
         } break;
-        case CE_UNHIDE_ON_GV: {
+        case CE_UNHIDE_HEART: {
             globalVar gv;
             int ID;
             object *pO;
@@ -395,14 +397,19 @@ void ce_callEvent(commonEvent ce) {
             ASSERT_NR(_ce_caller);
             pO = (object*)_ce_caller;
             
-            // Check that the object is still hidden
             obj_getID(&ID, pO);
-            ASSERT_NR((ID & ID_HIDDEN));
             
-            // Unhide the event, on true
-            obj_getVar(&gv, pO, 0);
+            // Check if the object is still hidden
+            if (ID & ID_HIDDEN) {
+                // Unhide the event, on true
+                obj_getVar(&gv, pO, 0);
+                if (gv_nIsZero(gv))
+                    obj_rmFlag(pO, ID_HIDDEN);
+            }
+            // Check if the graphics should be updated
+            obj_getVar(&gv, pO, 1);
             if (gv_nIsZero(gv))
-                obj_rmFlag(pO, ID_HIDDEN);
+                obj_setAnim(pO, OBJ_ANIM_MAXHP_UP_OFF);
         } break;
         case CE_INC_MAXHP: {
             event *pE;
@@ -434,7 +441,34 @@ void ce_callEvent(commonEvent ce) {
             // Set it!
             gv_setValue(gv, val);
         } break;
+        case CE_SET_ANIM_OFF: {
+            globalVar gv;
+            int ID;
+            object *pO;
+            
+            // Retrieve the reference
+            ASSERT_NR(_ce_caller);
+            pO = (object*)_ce_caller;
+            // Change the animation, on true
+            obj_getVar(&gv, pO, 0);
+            if (gv_nIsZero(gv)) {
+                // Get the object's ID
+                obj_getID(&ID, pO);
+                // Set the animation accordingly
+                if ((ID & ID_HEARTUP) == ID_HEARTUP)
+                    obj_setAnim(pO, OBJ_ANIM_MAXHP_UP_OFF);
+                else if ((ID & ID_HJUMP_TERM) == ID_HJUMP_TERM)
+                    obj_setAnim(pO, OBJ_ANIM_HJUMP_OFF);
+                else if ((ID & ID_TELEP_TERM) == ID_TELEP_TERM)
+                    obj_setAnim(pO, OBJ_ANIM_TELEP_OFF);
+                else if ((ID & ID_SIGNL_TERM) == ID_SIGNL_TERM)
+                    obj_setAnim(pO, OBJ_ANIM_SIGNL_OFF);
+                else if ((ID & ID_TERM) == ID_TERM)
+                    obj_setAnim(pO, OBJ_ANIM_TERM_OFF);
+            }
+        } break;
         // TODO implement every common event
+        case CE_NONE: {}
         default: {}
     }
     

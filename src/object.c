@@ -43,7 +43,16 @@ static int _obj_animData[] = {
     0, 1, 0, 185,                             /* OBJ_ANIM_DOOR_HOR_CLOSED  */
     8, 8, 0, 185,193,185,193,185,201,209,217, /* OBJ_ANIM_DOOR_HOR_OPENING */
     8, 8, 0, 217,209,201,185,193,185,193,183, /* OBJ_ANIM_DOOR_HOR_CLOSING */
-   15,10, 1, 160,160,160,160,160,160,161,160,160,162, /* OBJ_ANIM_MAXHP_UP */
+   15,10, 1, 160,160,160,160,160,160,161,160,160,162, /* OBJ_ANIM_MAXHP_UP_ON */
+    0, 1, 0, 163,                              /* OBJ_ANIM_MAXHP_UP_OFF */
+   15,10, 1, 112,112,112,112,112,112,113,112,112,114, /* OBJ_ANIM_HJUMP_ON */
+    0, 1, 0, 115,                              /* OBJ_ANIM_HJUMP_OFF */
+   15,10, 1, 128,128,128,128,128,128,129,128,128,130, /* OBJ_ANIM_TELEP_ON */
+    0, 1, 0, 131,                              /* OBJ_ANIM_TELEP_OFF */
+   15,10, 1, 144,144,144,144,144,144,145,144,144,146, /* OBJ_ANIM_SIGNL_ON */
+    0, 1, 0, 147,                              /* OBJ_ANIM_SIGNL_OFF */
+    6, 4, 1,  96, 97, 98, 98,                  /* OBJ_ANIM_TERM_ON */
+    0, 1, 0,  99,                              /* OBJ_ANIM_TERM_OFF */
     0
 };
 static int _obj_animInit = 0;
@@ -196,8 +205,20 @@ void obj_setID(object *pObj, int ID) {
     // Set the ID
     pObj->spr.id = ID;
     
-    if (ID & ID_HEARTUP) {
-        obj_setAnim(pObj, OBJ_ANIM_MAXHP_UP);
+    if ((ID & ID_HEARTUP) == ID_HEARTUP) {
+        obj_setAnim(pObj, OBJ_ANIM_MAXHP_UP_ON);
+    }
+    else if ((ID & ID_HJUMP_TERM) == ID_HJUMP_TERM) {
+        obj_setAnim(pObj, OBJ_ANIM_HJUMP_ON);
+    }
+    else if ((ID & ID_TELEP_TERM) == ID_TELEP_TERM) {
+        obj_setAnim(pObj, OBJ_ANIM_TELEP_ON);
+    }
+    else if ((ID & ID_SIGNL_TERM) == ID_SIGNL_TERM) {
+        obj_setAnim(pObj, OBJ_ANIM_SIGNL_ON);
+    }
+    else if ((ID & ID_TERM) == ID_TERM) {
+        obj_setAnim(pObj, OBJ_ANIM_TERM_ON);
     }
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="528" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="720">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="528" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="781">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="78">
@@ -166,7 +166,7 @@
  </objectgroup>
  <layer name="map001" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map001_objs" visible="0">
@@ -219,10 +219,31 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="720" name="term" type="obj" x="1698" y="898" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal001"/>
+   </properties>
+  </object>
+  <object id="721" name="set gv" type="event" x="1700" y="900" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal001"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map002" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   eJzt3VtKw0AYgNHZmloVr3vwQcEbuAUftQgupUs081AIaRI7k6aZgXPgR5EQOk/5SGcwBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP28NnNS6DzPuG4AIJ9+AABS6QcAIJV+AABSrcPynaAfAKAuH2H5TtAPAFCXTSi3IfQDAJRpE6Y1xHkzp615aOaz87eLzHvrBwAo0yZMa4jVga7RDwBQj+vO3ITxZ/ptM3eduU+4fujaq57P8jbjugGAfC+d2fc8Z+47haHvP557PsvLjOsGAPIt3Q/xPrEh9AMA1KOEfoijHwCgHkv3w2UzZ0E/AEBN+vrhv/OYcc7C9POZ7RbRDwBQj+7z+j3snoPoO5uxGvg9Z++k9w8AUJe+Z/bQtL/bOEQ/rFo/9QMA1KOEfoh7IPQDANSjhH6Iox8AoB4p/TC2N2Jsr8TY2YvtHkz9AAD1SOmH3HcV+4x+AIB65LTBTzPf/8w69J+1eGzmKeye+/wauA8AUJ5jvFuIk/p/t+L8zrhuACDfsfohdWI7bGZcNwCQr8R+2LaDfgCAMi3RD2N7IdrtoB8AoEw5/ZByjnPqAADlyemHYw4AUJ6l+0A/AEB9lu4D/QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwrD98un70
   </data>
  </layer>
  <objectgroup name="map002_objs" visible="0">
@@ -296,10 +317,52 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="723" name="set gv" type="event" x="2100" y="948" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal002"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="724" name="term" type="obj" x="2098" y="946" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal002"/>
+   </properties>
+  </object>
+  <object id="725" name="term" type="obj" x="1938" y="1082" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal003"/>
+   </properties>
+  </object>
+  <object id="726" name="set gv" type="event" x="1940" y="1084" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal003"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map003" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map003_objs" visible="0">
@@ -409,7 +472,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
-    <property name="var" value="heartup03-hidden"/>
+    <property name="var1" value="heartup03-hidden"/>
+    <property name="var2" value="heartup03"/>
    </properties>
   </object>
   <object id="495" name="maxhp up" type="event" x="2400" y="1104" width="16" height="16">
@@ -435,6 +499,27 @@
     <property name="int3" value="-1"/>
     <property name="t" value="is_player|on_enter"/>
     <property name="var0" value="heartup03-hidden"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="727" name="term" type="obj" x="2162" y="994" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal004"/>
+   </properties>
+  </object>
+  <object id="728" name="set gv" type="event" x="2164" y="996" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal004"/>
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>
@@ -507,7 +592,7 @@
  </objectgroup>
  <layer name="map005" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map005_objs" visible="0">
@@ -630,10 +715,31 @@
     <property name="f" value="eye"/>
    </properties>
   </object>
+  <object id="729" name="term" type="obj" x="2106" y="1314" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal005"/>
+   </properties>
+  </object>
+  <object id="730" name="set gv" type="event" x="2108" y="1316" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal005"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map006" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map006_objs" visible="0">
@@ -679,7 +785,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="525" name="open_door" type="event" x="1872" y="1632" width="16" height="16">
+  <object id="525" name="open_door" type="event" x="1872" y="1640" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -800,10 +906,73 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="731" name="term" type="obj" x="1978" y="1538" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal006"/>
+   </properties>
+  </object>
+  <object id="732" name="set gv" type="event" x="1980" y="1540" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal006"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="733" name="term" type="obj" x="1778" y="1514" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal008"/>
+   </properties>
+  </object>
+  <object id="734" name="set gv" type="event" x="1780" y="1516" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal008"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="735" name="term" type="obj" x="1874" y="1642" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal007"/>
+   </properties>
+  </object>
+  <object id="736" name="set gv" type="event" x="1876" y="1644" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal007"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map007" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   eJzt3UtOwlAUgOGzNRVfuAqGPkjcgkM1JiyFJdoGGpqmNV6w7b34fcmJTFQY9c9JL40AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAODcPVdzMeE8VvOUMABAfvQDAJBKPwAAqfQDAJBKPwAAqfQDAJBKPwAAqfQDAJBKPwAAqfQDAJDqM/QDAJDmNcZrhftqlp15Cf0AAKXbxngN8V7Nx4kDAORnG+M1xG01l9Wsqnnbv75L+P3NiJ8bADjeNsZtiGNns39PAEB+uvcn1PMQebSDfgCAPPXds1if6byJ+dtBPwBAnob6YRHTdkPfWY3liJ8bADheuxu+Ynfmof5OiKvY3e84xR7iOoa/FwIAyE9379Bc0xedn2NO/T/0AwCUo32tXsfh/slm/5By3lI/AMD/kMP9D/oBAMoy1A9T7B3q+x7qHUe969APAFCOoX6Yau9g/wAA5fmLfug7ezn0HVTNzqHZO9g/AEB5fuqH5lq/isPzK5rznO1m6Hum5jr6W2LR89r+AQDK0nfNbl/7hyblOdyn/D0AID+/bYC5BgDIz9x9oB8AoDxz94F+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDz8A0KLYG2
   </data>
  </layer>
  <objectgroup name="map007_objs" visible="0">
@@ -888,7 +1057,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
-    <property name="var" value="heartup01-hidden"/>
+    <property name="var1" value="heartup01-hidden"/>
+    <property name="var2" value="heartup01"/>
    </properties>
   </object>
   <object id="546" name="maxhp up" type="event" x="1568" y="1592" width="16" height="16">
@@ -919,10 +1089,52 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="737" name="term" type="obj" x="1506" y="1594" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal009"/>
+   </properties>
+  </object>
+  <object id="738" name="set gv" type="event" x="1508" y="1596" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal009"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="773" name="set gv" type="event" x="1460" y="1700" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="hjump-term"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="774" name="term" type="obj" x="1458" y="1698" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="hjump-term"/>
+    <property name="var" value="hjump-term"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map008" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map008_objs" visible="0">
@@ -1140,6 +1352,132 @@
     <property name="f" value="jumper"/>
    </properties>
   </object>
+  <object id="739" name="term" type="obj" x="1082" y="1642" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal010"/>
+   </properties>
+  </object>
+  <object id="740" name="set gv" type="event" x="1084" y="1644" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal010"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="741" name="term" type="obj" x="1098" y="1714" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal011"/>
+   </properties>
+  </object>
+  <object id="742" name="set gv" type="event" x="1100" y="1716" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal011"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="743" name="term" type="obj" x="1002" y="1714" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal012"/>
+   </properties>
+  </object>
+  <object id="744" name="set gv" type="event" x="1004" y="1716" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal012"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="745" name="term" type="obj" x="1002" y="1530" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal013"/>
+   </properties>
+  </object>
+  <object id="746" name="set gv" type="event" x="1004" y="1532" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal013"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="747" name="term" type="obj" x="1002" y="1450" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal014"/>
+   </properties>
+  </object>
+  <object id="748" name="set gv" type="event" x="1004" y="1452" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal014"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="749" name="term" type="obj" x="1234" y="1362" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal015"/>
+   </properties>
+  </object>
+  <object id="750" name="set gv" type="event" x="1236" y="1364" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal015"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map009" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
@@ -1207,7 +1545,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
-    <property name="var" value="heartup02-hidden"/>
+    <property name="var1" value="heartup02-hidden"/>
+    <property name="var2" value="heartup02"/>
    </properties>
   </object>
   <object id="579" name="maxhp up" type="event" x="1520" y="1400" width="16" height="16">
@@ -1241,7 +1580,7 @@
  </objectgroup>
  <layer name="map010" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map010_objs" visible="0">
@@ -1263,7 +1602,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup"/>
-    <property name="var" value="heartup01-hidden"/>
+    <property name="var1" value="heartup04"/>
+    <property name="var2" value="heartup04"/>
    </properties>
   </object>
   <object id="583" name="maxhp up" type="event" x="2840" y="1072" width="16" height="16">
@@ -1337,10 +1677,31 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="753" name="term" type="obj" x="3090" y="1106" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal016"/>
+   </properties>
+  </object>
+  <object id="754" name="set gv" type="event" x="3092" y="1108" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal016"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map011" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map011_objs" visible="0">
@@ -1403,7 +1764,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="598" name="open_door" type="event" x="3466" y="1186" width="16" height="16">
+  <object id="598" name="open_door" type="event" x="3465" y="1185" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -1431,7 +1792,7 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
-  <object id="600" name="close_door" type="event" x="3242" y="1186" width="16" height="16">
+  <object id="600" name="close_door" type="event" x="3241" y="1185" width="16" height="16">
    <properties>
     <property name="ce" value="ce_close_door"/>
     <property name="int0" value="-1"/>
@@ -1473,10 +1834,52 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="755" name="term" type="obj" x="3242" y="1186" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal017"/>
+   </properties>
+  </object>
+  <object id="756" name="set gv" type="event" x="3243" y="1187" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal017"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="757" name="term" type="obj" x="3466" y="1186" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal018"/>
+   </properties>
+  </object>
+  <object id="758" name="set gv" type="event" x="3467" y="1187" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal018"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map012" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   eJzt3U1u2zAQBtC5Wt2kTd1TdBknAXKFLttk0aP4iJWQELFl1SYZy6Ka94ABvDFlrvRhzJ8IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiNh0ddfVp4q6ff3+e8Y4NuZmwnkDAPXSu3/V1ZeQHwCA03bf/VchPwAAp+32Hz5HWR9CfgCAj2ms/5Dbh5AfAOBj+t3VU7z0HW5i/vzw6/U3pQIA2vMYh+/wmvzw0NV6pL5njjVWfyacNwBQbxuHGSI3Pwx7BWP1lDnWWHbYTjhvAKDeNg4zROk+jHNXyg7yAwC0aRv7GeI6XvZh/OjqZ9SdC3GsrnfGHht3NzvIDwDQprE1C+dex7Bb3wqeuZ5w3gBAvU1mnXt/xXPmcwGA9lw6P6QanvMgPwDAclw6P6T/L+4znwsAtOeS+aFfO5nbd5AfAKBdU+eHPjOs4u1+DfkBAJZvyvyQ9oKm/NCfj92vn8xdOyk/AECbSvJDygG550FcxfhZVCU9CACgPTX9h9zzKb/Gfv+hzx39+snctZPyAwC0qab/MMwEpzKE9Q8A8H95b/+h5K6MPkvk3LmV6nnCeQMA9S6ZH0rrdsJ5AwD15AcAoFRpfhjuyew/p3WR63i7a2sV5fs15AcAWIbS/DDckzl2HvVD7N/ZWdujkB8AoE25+SFlgmEd24v5r+/k1v2E8wYA6pXspZyjAID2zJ0P5AcAWJ6584H8AADLM3c+kB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgfX8BeReUrg==
   </data>
  </layer>
  <objectgroup name="map012_objs" visible="0">
@@ -1554,7 +1957,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
-    <property name="var" value="heartup05-hidden"/>
+    <property name="var1" value="heartup05-hidden"/>
+    <property name="var2" value="heartup05"/>
    </properties>
   </object>
   <object id="609" name="maxhp up" type="event" x="3552" y="1352" width="16" height="16">
@@ -1620,7 +2024,7 @@
     <property name="var" value="map012-c_door"/>
    </properties>
   </object>
-  <object id="615" name="open_door" type="event" x="3786" y="1354" width="16" height="16">
+  <object id="615" name="open_door" type="event" x="3785" y="1353" width="16" height="16">
    <properties>
     <property name="ce" value="ce_open_door"/>
     <property name="int0" value="-1"/>
@@ -1653,6 +2057,90 @@
     <property name="ce" value="ce_handle_door"/>
     <property name="f" value="door|static"/>
     <property name="var" value="map012-a_door"/>
+   </properties>
+  </object>
+  <object id="759" name="term" type="obj" x="3826" y="1354" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal019"/>
+   </properties>
+  </object>
+  <object id="760" name="set gv" type="event" x="3828" y="1356" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal019"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="761" name="term" type="obj" x="3706" y="1202" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal020"/>
+   </properties>
+  </object>
+  <object id="762" name="set gv" type="event" x="3708" y="1204" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal020"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="775" name="set gv" type="event" x="3692" y="1340" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="signl-term"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="777" name="term" type="obj" x="3690" y="1338" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="signl-term"/>
+    <property name="var" value="signl-term"/>
+   </properties>
+  </object>
+  <object id="778" name="set gv" type="event" x="3787" y="1355" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="telep-term"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="779" name="term" type="obj" x="3786" y="1354" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="telep-term"/>
+    <property name="var" value="telep-term"/>
    </properties>
   </object>
  </objectgroup>
@@ -1788,7 +2276,7 @@
  </objectgroup>
  <layer name="map015" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="map015_objs" visible="0">
@@ -1882,10 +2370,52 @@
     <property name="f" value="charger"/>
    </properties>
   </object>
+  <object id="763" name="set gv" type="event" x="2500" y="956" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal021"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="764" name="term" type="obj" x="2498" y="954" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal021"/>
+   </properties>
+  </object>
+  <object id="765" name="set gv" type="event" x="2620" y="892" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal022"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="766" name="term" type="obj" x="2618" y="890" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal022"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map016" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt3Vtu00AUBuDZGhBu5bIHHkBqaSW2wEMvtEViE728kU308saWOCNqYbmOY5s4mYjvk35VldKkfsqvmeNxSgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/4fPkScFZjeyN+F1AwDj6Q8AwFD6AwAwVO4Ph5GjyHHkJG2+O+gPAFC23B8uIpeRq8h12nx30B8AoGy5P9xEbiN3kfu0+e6gPwBA2Q4iO428Sd3f7W8j7yLvl7zudeTnw2v7vF5/AIDtsNeSvCbxtCPPHvIqLe8AQ+Yzc9+oOsx+0h8AoFRd/eFFav+ef5n+9IeujpFT9Ye+85nfIqcPOU/6AwCUqqs/dHWEZWsP9fWHtvnM5wvet/pM+xcAUK5F/SF/x8/Sv89ALprPXPTes9rf6g8AUKYp+0Pej/iV/s5P1pNnKbvWNfQHACjXlP2hmpUYO3upPwBAmbrmH/rMOAzNLPXrJfoDAJTrtCVnafW9YWh/yHsf5xNeNwAw3pc0XVdoJt9z0Wfvor4GAQCUZ57W1yHyukOeh1h0rkQ9+Syp/QmvGwAYb57W1yFmjZ/L1h7MPwBAmeZpPR2i2ruo7sFYtgZRnUUJAJSn+eysPs/Pyl3gQ+Rr6rcXUe1HDPmMnB8TXjcAMF7X+Q+LUj1/c8gzNXcHfkbuDvMJrxsAGG/s8zeHPAejvh/R5x7RqjvoDwBQpjH9YYpzpdq6g/4AAGVqdofvadrzo4bMSOxMeN0AwHhDZx9WnfpzvJszEu7fBIAyNb+vD9LjeyMOI0eR48hJWm1/qJ8FoT8AwHboc//FReQychW5TqvpDdW6Q30WU38AgO3Qpz/cRG4jd5H79LgD5HyMfKr93jwXov7aem/QHwBg+7T1h7yH0Xau1NTZb/lfAIDytPWHkgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAULrfZnBzRw==
+   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
   </data>
  </layer>
  <objectgroup name="map016_objs" visible="0">
@@ -2020,6 +2550,69 @@
     <property name="var3" value="gv_max"/>
    </properties>
   </object>
+  <object id="767" name="set gv" type="event" x="2356" y="796" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal023"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="768" name="term" type="obj" x="2354" y="794" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal023"/>
+   </properties>
+  </object>
+  <object id="769" name="set gv" type="event" x="2228" y="932" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal024"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="770" name="term" type="obj" x="2226" y="930" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal024"/>
+   </properties>
+  </object>
+  <object id="771" name="set gv" type="event" x="2164" y="756" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal025"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="772" name="term" type="obj" x="2162" y="754" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal025"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="map017" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
@@ -2084,7 +2677,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
-    <property name="var" value="heartup06-hidden"/>
+    <property name="var1" value="heartup06-hidden"/>
+    <property name="var2" value="heartup06"/>
    </properties>
   </object>
   <object id="668" name="maxhp up" type="event" x="2096" y="696" width="16" height="16">
@@ -2235,12 +2829,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map019" width="528" height="320" visible="0">
+ <layer name="map019" width="528" height="320">
   <data encoding="base64" compression="zlib">
    eJzt21tqwlAUBdA7tfqo0nm0H351HP1yKA6xCgmk8dGYUA6nZy3YoHhNYn724QZbAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACWOsiiAEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABV9yaIAQEWf57xMyO6cdZf3cz661/vBms3EY83J9pzVKPs7a3fd5/eu89FvXHXrHx2/z3HG/QaA/+DUps8Qm/ZzRhjPC381P1xmh0unv878/rPXNWX9sbt3AFDRqU2fIYbzQ9/pw/2A/v3cnv/tvFPngPFexZTr2t5Yf+87/exgfgCgqlO7PUP0fdo/A+j38/sOv9Xnw/3/JTPE+Nzrdv3s5NE8sGm354F7c8Rwf2Pbrp/RDNcPZwfzAwBVvcmiAEBFB/H/TQB4UnT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQwze0E7iS
   </data>
  </layer>
- <objectgroup name="map019_objs" visible="0">
+ <objectgroup name="map019_objs">
   <object id="687" name="exit" type="event" x="1456" y="512" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -2259,7 +2853,8 @@
    <properties>
     <property name="ce" value="ce_unhide_on_gv"/>
     <property name="f" value="heartup|hidden"/>
-    <property name="var" value="heartup07-hidden"/>
+    <property name="var1" value="heartup07-hidden"/>
+    <property name="var2" value="heartup07"/>
    </properties>
   </object>
   <object id="703" name="maxhp up" type="event" x="1032" y="552" width="16" height="16">
@@ -2319,12 +2914,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map020" width="528" height="320">
+ <layer name="map020" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt27ENwlAQREG35hA6AUwhdI0z4v3SyYs0I20Bl73ktg0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAer3O7aV7DN4NAKzTDwBASj8AACn9AACk9AMAkNIPAEBKPwAAKf0AAKT0AwCQ0g8AQEo/AAAp/QAApJr74TN4NwCwrrkf9sG7AYB1+gEASOkHACClHwCAVHM/3AbvBgDWNfeD/00A6KQfAICUfgAAUvoBAEjpBwAgpR8AgJR+AABS+gEASL3P3Ut3DN4NAKx7lg8A6HN1H+gHAPg/V/eBfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgJ8v4rpNWQ==
   </data>
  </layer>
- <objectgroup name="map020_objs">
+ <objectgroup name="map020_objs" visible="0">
   <object id="711" name="mob_boss_wheel" type="mob" x="600" y="616" width="46" height="8">
    <properties>
     <property name="f" value="boss_wheel"/>

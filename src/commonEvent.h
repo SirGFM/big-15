@@ -15,9 +15,11 @@ typedef enum {
     CE_SWITCH_MAP,     /**  ev ce: loads a new map                            */
     CE_GET_ITEM,       /**  ev ce: get an item equip it to the current player */
     CE_HIDDEN_PATH,    /**  ev ce: change a part of the map into a corridor   */
-    CE_UNHIDE_ON_GV,   /** obj ce: removes the 'hidden' flag if the gv is true*/
+    CE_UNHIDE_HEART,   /** obj ce: removes the 'hidden' flag if the gv is true*/
     CE_INC_MAXHP,      /**  ev ce: increase the max hp                        */
     CE_SET_GV,         /**  ev ce: set a globalVar value                      */
+    CE_SET_ANIM_OFF,   /** obj ce: switch to OFF on some variable             */
+    CE_NONE,
     CE_MAX
 } commonEvent;
 
