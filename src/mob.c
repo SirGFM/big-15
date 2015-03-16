@@ -23,11 +23,14 @@
 
 /** States for the boss' mob */
 enum {BOSS_HEAD_DEF = 0, BOSS_HEAD_ATTACK, BOSS_HEAD_HURT};
-enum {BOSS_WHEEL_STAND = 0, BOSS_WHEEL_RIGHT, BOSS_WHEEL_LEFT};
+enum {BOSS_WHEEL_STAND = 0, BOSS_WHEEL_RIGHT, BOSS_WHEEL_LEFT, BOSS_WHEEL_RUN_RIGHT, BOSS_WHEEL_RUN_LEFT};
 enum {BOSS_TANK_DEF = 0};
 enum {BOSS_PLAT_DEF = 0};
 #define BOSS_HEAD_COUNTDOWN 2250
-#define BOSS_HEAD_MAXSPEED 160
+#define BOSS_HEAD_MAXSPEED 140
+#define BOSS_WHEEL_SPEED BOSS_SPEED
+#define BOSS_WHEEL_RUNSPEED 160
+#define BOSS_WHEEL_COUNTDOWN 5000
 /** States for the 'phantom' mob */
 enum {PHANTOM_STAND = 0};
 #define PHANTOM_MAXSPEED 100
@@ -99,7 +102,9 @@ static int _mob_bossWheelAnimData[] = {
 /* fps,len,loop,data...                         */
     0 , 1 , 0  , 83,              /* stand      */
     12, 3 , 1  , 91, 87, 83,      /* right      */
-    12, 3 , 1  , 83, 87, 91       /* left       */
+    12, 3 , 1  , 83, 87, 91,      /* left       */
+    18, 3 , 1  , 91, 87, 83,      /* run right  */
+    18, 3 , 1  , 83, 87, 91       /* run left   */
 };
 static int _mob_bossTankAnimData[] = {
 /* fps,len,loop,data...                         */
@@ -726,6 +731,26 @@ void mob_update(mob *pMob, int ms) {
                 pMob->spr.flipped = 1;
         } break;
         case ID_BOSS_HEAD: {
+            int phase;
+            
+            // Check if the vehicle was already destroyed
+            phase = gv_getValue(BOSS_PHASE);
+            if (phase == 0) {
+                GFraMe_object *pObj;
+                int x, y;
+                
+                // Get the mob's object and position
+                mob_getObject(&pObj, pMob);
+                x = gv_getValue(BOSS_X);
+                y = gv_getValue(BOSS_Y);
+                // Set its position
+                GFraMe_object_set_pos(pObj, x + 17, y - 30);
+                
+                pMob->spr.flipped = gv_getValue(BOSS_DIR);
+            }
+            else {
+            }
+            
             if (pMob->anim == BOSS_HEAD_HURT) {
                 // Do nothing!
             }
@@ -742,49 +767,49 @@ void mob_update(mob *pMob, int ms) {
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 8, cy + 0);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx + 8, cy + 0);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot upward, toward the right
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 8, cy - 8);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx + 8, cy - 8);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot upward
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 0, cy - 8);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx + 0, cy - 8);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot upward, toward the left
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx - 8, cy - 8);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx - 8, cy - 8);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot to the left
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx - 8, cy + 0);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx - 8, cy + 0);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot downward, toward the left
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx - 8, cy + 8);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx - 8, cy + 8);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot downward
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 0, cy + 8);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx + 0, cy + 8);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 // Shoot downward, toward the right
                 pBul = 0;
                 rv = rg_recycleBullet(&pBul);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx + 8, cy + 8);
+                rv = bullet_init(pBul, ID_BOSSPROJ, cx, cy, cx + 8, cy + 8);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
                 mob_setAnim(pMob, BOSS_HEAD_ATTACK, 0);
@@ -792,6 +817,65 @@ void mob_update(mob *pMob, int ms) {
             else if (pMob->anim == BOSS_HEAD_ATTACK && mob_didAnimFinish(pMob)) {
                 mob_setAnim(pMob, BOSS_HEAD_DEF, 0);
                 pMob->countdown += BOSS_HEAD_COUNTDOWN;
+            }
+        } break;
+        case ID_BOSS_TANK: {
+            GFraMe_object *pObj;
+            int x, y;
+            
+            // Get the mob's object and position
+            mob_getObject(&pObj, pMob);
+            x = gv_getValue(BOSS_X);
+            y = gv_getValue(BOSS_Y);
+            // Set its position
+            GFraMe_object_set_pos(pObj, x + 13, y - 32);
+        } break;
+        case ID_BOSS_PLAT: {
+            GFraMe_object *pObj;
+            int x, y;
+            
+            // Get the mob's object and position
+            mob_getObject(&pObj, pMob);
+            x = gv_getValue(BOSS_X);
+            y = gv_getValue(BOSS_Y);
+            // Set its position
+            GFraMe_object_set_pos(pObj, x + 1, y - 12);
+        } break;
+        case ID_BOSS_WHEEL: {
+            GFraMe_object *pObj;
+            int pX, pY, x, y;
+            
+            // Get the mob's object
+            mob_getObject(&pObj, pMob);
+            
+            // Start the movement
+            if (pObj->vx == 0) {
+                pObj->vx = BOSS_WHEEL_SPEED;
+                mob_setAnim(pMob, BOSS_WHEEL_RIGHT, 0);
+            }
+            // Check the player position
+            mob_getClosestPlDist(&pX, &pY, pMob);
+            // Check if the boss should ram into him
+            y = 8;
+            x = 38;
+            // Make the boss run if it (the wheel) just hit the player
+            gv_setValue(BOSS_ISRUNNING, (pY > -y && pY < y && pX > -x && pX < x));
+            
+            if ((pObj->hit & GFraMe_direction_left) && pObj->vx < 0) {
+                if (gv_isZero(BOSS_ISRUNNING))
+                    pObj->vx = BOSS_WHEEL_SPEED;
+                else
+                    pObj->vx = BOSS_WHEEL_RUNSPEED;
+                mob_setAnim(pMob, BOSS_WHEEL_RIGHT, 0);
+                gv_setValue(BOSS_DIR, 0);
+            }
+            else if ((pObj->hit & GFraMe_direction_right) && pObj->vx > 0) {
+                if (gv_isZero(BOSS_ISRUNNING))
+                    pObj->vx = -BOSS_WHEEL_SPEED;
+                else
+                    pObj->vx = -BOSS_WHEEL_RUNSPEED;
+                mob_setAnim(pMob, BOSS_WHEEL_LEFT, 0);
+                gv_setValue(BOSS_DIR, 1);
             }
         } break;
         default: {
@@ -802,6 +886,11 @@ void mob_update(mob *pMob, int ms) {
     }
     
     GFraMe_sprite_update(&pMob->spr, ms);
+    
+    if (pMob->spr.id == ID_BOSS_WHEEL) {
+        gv_setValue(BOSS_X, pMob->spr.obj.x);
+        gv_setValue(BOSS_Y, pMob->spr.obj.y);
+    }
     
 __ret:
     return;

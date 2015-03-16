@@ -193,6 +193,7 @@ void col_onPlMob(player *pPl, mob *pMob) {
     }
     else {
         GFraMe_object_overlap(pObj1, pObj2, GFraMe_second_fixed);
+        player_getCarriedBoss(pPl, pObj2);
     }
     
 __ret:

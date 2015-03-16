@@ -7,26 +7,31 @@
 #define __GLOBAL_VAR_H_
 
 typedef enum {
-    PL1_HP,       /** Player 1 current health                  */
-    PL1_MAXHP,    /** Player 1 maximum health                  */
-    PL1_ITEM,     /** Player 1 current item                    */
-    PL1_DEATH,    /** How many times player 1 died             */
-    PL1_CX,       /** Player 1 horizontal (world) position     */
-    PL1_CY,       /** Player 1 vertical (world) position       */
-    PL2_HP,       /** Player 2 current health                  */
-    PL2_MAXHP,    /** Player 2 maximum health                  */
-    PL2_ITEM,     /** Player 2 current item                    */
-    PL2_DEATH,    /** How many times player 2 died             */
-    PL2_CX,       /** Player 1 horizontal (world) position     */
-    PL2_CY,       /** Player 1 vertical (world) position       */
-    SIGL_X,       /** Signaler horizontal position             */
-    SIGL_Y,       /** Signaler vertical position               */
-    TELP_X,       /** Target teleporting position              */
-    TELP_Y,       /** Target teleporting position              */
-    MAP,          /** Current map                              */
-    DOOR_X,       /** Entrance horizontal point on current map */
-    DOOR_Y,       /** Entrance vertical point on current map   */
-    ITEMS,        /** Flags for available items                */
+    PL1_HP,       /** Player 1 current health                      */
+    PL1_MAXHP,    /** Player 1 maximum health                      */
+    PL1_ITEM,     /** Player 1 current item                        */
+    PL1_DEATH,    /** How many times player 1 died                 */
+    PL1_CX,       /** Player 1 horizontal (world) position         */
+    PL1_CY,       /** Player 1 vertical (world) position           */
+    PL2_HP,       /** Player 2 current health                      */
+    PL2_MAXHP,    /** Player 2 maximum health                      */
+    PL2_ITEM,     /** Player 2 current item                        */
+    PL2_DEATH,    /** How many times player 2 died                 */
+    PL2_CX,       /** Player 1 horizontal (world) position         */
+    PL2_CY,       /** Player 1 vertical (world) position           */
+    SIGL_X,       /** Signaler horizontal position                 */
+    SIGL_Y,       /** Signaler vertical position                   */
+    TELP_X,       /** Target teleporting position                  */
+    TELP_Y,       /** Target teleporting position                  */
+    MAP,          /** Current map                                  */
+    DOOR_X,       /** Entrance horizontal point on current map     */
+    DOOR_Y,       /** Entrance vertical point on current map       */
+    ITEMS,        /** Flags for available items                    */
+    BOSS_PHASE,   /** Which phase the boss is currently in         */
+    BOSS_X,       /** Boss top-left origin, according to the wheel */
+    BOSS_Y,       /** Boss top-left origin, according to the wheel */
+    BOSS_DIR,
+    BOSS_ISRUNNING,
     HEARTUP01,
     HEARTUP02,
     HEARTUP03,

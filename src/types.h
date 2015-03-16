@@ -35,6 +35,7 @@ typedef enum {
     ID_BOSS_PLAT  = ID_MOB  | 0x00000800,
     
     ID_ENEPROJ    = ID_PROJ | 0x00000001,
+    ID_BOSSPROJ    = ID_PROJ | 0x00000002,
     
     ID_HIGHJUMP  = 0x00000001,
     ID_TELEPORT  = 0x00000002,

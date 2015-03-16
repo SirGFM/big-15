@@ -81,6 +81,14 @@ void player_setAnimation(player *pPl, int anim);
 void player_getCarried(player *pPl, GFraMe_object *pObj);
 
 /**
+ * Position the player (and set it to be moved) as being carried by the boss
+ * 
+ * @param pPl The player
+ * @param pObj The object of the boss
+ */
+void player_getCarriedBoss(player *pPl, GFraMe_object *pObj);
+
+/**
  * Get a player's center position
  * 
  * @param pX The central horizontal position

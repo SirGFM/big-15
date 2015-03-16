@@ -19,6 +19,8 @@
 #define BUL_ANIM_MAX 3
 /** Projectile's states */
 typedef enum { PROJ_INIT=0, PROJ_DEF, PROJ_EXPLODE, PROJ_NONE } projState;
+#define ENEPROJ_SPEED  100
+#define BOSSPROJ_SPEED 160
 
 struct stBullet {
     GFraMe_sprite spr;
@@ -111,6 +113,7 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
     pData = 0;
     len = 0;
     switch (type) {
+        case ID_BOSSPROJ:
         case ID_ENEPROJ: {
             double d, vx, vy;
             
@@ -121,7 +124,10 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
             
             vx = dstCX - cx;
             vy = dstCY - cy;
-            d = 100 / GFraMe_util_sqrtd(vx*vx + vy*vy);
+            if (type == ID_BOSSPROJ)
+                d = BOSSPROJ_SPEED / GFraMe_util_sqrtd(vx*vx + vy*vy);
+            else
+                d = ENEPROJ_SPEED / GFraMe_util_sqrtd(vx*vx + vy*vy);
             
             pObj->vx = vx * d;
             pObj->vy = vy * d;

@@ -14,6 +14,7 @@
 #include "controller.h"
 #include "global.h"
 #include "globalVar.h"
+#include "mob.h"
 #include "player.h"
 #include "registry.h"
 #include "signal.h"
@@ -46,6 +47,7 @@ struct stPlayer {
     
     int curAnim;
     int isBeingCarried;
+    int isBeingCarriedBoss;
     int pressedTeleport;
     int isTeleporting;
     int lastItemSwitch;
@@ -258,7 +260,7 @@ void player_update(player *pPl, int ms) {
             else
                 obj->vy = -PL_JUMPS;
         }
-        else if (!pPl->isBeingCarried)
+        else if (!pPl->isBeingCarried && !pPl->isBeingCarriedBoss)
             obj->vy = 32;
 //        else
 //            obj->ay = GRAVITY;
@@ -284,6 +286,17 @@ void player_update(player *pPl, int ms) {
             obj->vx += PL_VX;
         
         pPl->isBeingCarried = 0;
+    }
+    else if (pPl->isBeingCarriedBoss) {
+        if (gv_isZero(BOSS_DIR)) {
+            // Boss is facing right
+            obj->vx += BOSS_SPEED;
+        }
+        else {
+            // Boss is facing left
+            obj->vx -= BOSS_SPEED;
+        }
+        pPl->isBeingCarriedBoss = 0;
     }
     
 __ret:
@@ -403,6 +416,17 @@ void player_getCarried(player *pPl, GFraMe_object *pObj) {
 
     // Modify the player's VY
     pThisObj->vy = pObj->vy + 32;
+}
+
+/**
+ * Position the player (and set it to be moved) as being carried by the boss
+ * 
+ * @param pPl The player
+ * @param pObj The object of the boss
+ */
+void player_getCarriedBoss(player *pPl, GFraMe_object *pObj) {
+    // Set the player as being carried above the other object
+    pPl->isBeingCarriedBoss = 1;
 }
 
 /**

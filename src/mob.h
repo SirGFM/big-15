@@ -13,6 +13,8 @@
 
 typedef struct stMob mob;
 
+#define BOSS_SPEED 90
+
 /**
  * Instantiate a new mob
  * 
