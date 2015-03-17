@@ -21,6 +21,8 @@
 
 #define MOB_ANIM_MAX 6
 
+/** State for the bomb mob */
+enum {BOMB_DEF = 0};
 /** States for the boss' mob */
 enum {BOSS_HEAD_DEF = 0, BOSS_HEAD_ATTACK, BOSS_HEAD_HURT};
 enum {BOSS_WHEEL_STAND = 0, BOSS_WHEEL_RIGHT, BOSS_WHEEL_LEFT, BOSS_WHEEL_RUN_RIGHT, BOSS_WHEEL_RUN_LEFT};
@@ -113,6 +115,14 @@ static int _mob_bossTankAnimData[] = {
 static int _mob_bossPlatAnimData[] = {
 /* fps,len,loop,data...                         */
     0 , 1 , 0  , 41               /* def        */
+};
+static int _mob_bombAnimData[] = {
+/* fps,len,loop,data...                         */
+    12, 54, 0  , 220,220,220,220,221,221,221,221,220,220,220,221,
+                 221,221,220,220,220,221,221,221,220,220,221,221,
+                 220,220,221,221,220,220,221,221,220,221,220,221,
+                 220,221,220,221,222,221,222,221,222,221,222,222,
+                 222,222,222,222,222,222
 };
 
 /**
@@ -232,7 +242,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_BOSS_WHEEL: {
             GFraMe_sprite_init(&pMob->spr, x, y, 46/*w*/, 8/*h*/, gl_sset64x8,
                 3/*ox*/, 0/*oy*/);
-            pMob->health = 1;
+            pMob->health = 2;
             pMob->damage = 1;
             pMob->countdown = 0;
             
@@ -241,7 +251,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_BOSS_TANK: {
             GFraMe_sprite_init(&pMob->spr, x, y, 20/*w*/, 20/*h*/, gl_sset32x32,
                 -2/*ox*/, -4/*oy*/);
-            pMob->health = 1;
+            pMob->health = 2;
             pMob->damage = 1;
             pMob->countdown = 0;
             
@@ -250,11 +260,20 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_BOSS_PLAT: {
             GFraMe_sprite_init(&pMob->spr, x, y, 52/*w*/, 12/*h*/, gl_sset64x16,
                 0/*ox*/, 0/*oy*/);
-            pMob->health = 1;
+            pMob->health = 2;
             pMob->damage = 0;
             pMob->countdown = 0;
             
             SET_ANIMDATA(_mob_bossPlatAnimData);
+        } break;
+        case ID_BOMB: {
+            GFraMe_sprite_init(&pMob->spr, x, y, 10/*w*/, 10/*h*/, gl_sset16x16,
+                -3/*ox*/, -6/*oy*/);
+            pMob->health = 1;
+            pMob->damage = 0;
+            pMob->countdown = 0;
+            
+            SET_ANIMDATA(_mob_bombAnimData);
         } break;
         default: {
             GFraMe_assertRV(0, "Invalid mob type!", rv = GFraMe_ret_failed,
@@ -458,7 +477,11 @@ int mob_getPlVerDist(mob *pMob, flag plID);
  * @param type Type of "hurting method"
  * @return Whether the mob was damaged (GFraMe_ret_ok) or not
  */
-GFraMe_ret mob_hit(mob *pMob, int dmg, flag type);
+GFraMe_ret mob_hit(mob *pMob, int dmg, flag type) {
+    // TODO check flag
+    pMob->health -= dmg;
+    return GFraMe_ret_ok;
+}
 
 /**
  * Get how much damage the mob deal on touch
@@ -877,6 +900,17 @@ void mob_update(mob *pMob, int ms) {
                 mob_setAnim(pMob, BOSS_WHEEL_LEFT, 0);
                 gv_setValue(BOSS_DIR, 1);
             }
+        } break;
+        case ID_BOMB: {
+            if (mob_didAnimFinish(pMob)) {
+                mob_hit(pMob, 1, ID_BOMB);
+            }
+            if (pMob->spr.obj.hit & GFraMe_direction_down) {
+                pMob->spr.obj.vy = 32;
+                pMob->spr.obj.ay = 0;
+            }
+            else
+                pMob->spr.obj.ay = GRAVITY;
         } break;
         default: {
             if (pMob->spr.obj.hit & GFraMe_direction_down) {

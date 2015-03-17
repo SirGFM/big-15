@@ -32,6 +32,7 @@ typedef enum {
     ID_EYE_LEFT   = ID_MOB  | 0x00000004,
     ID_CHARGER    = ID_MOB  | 0x00000008,
     ID_PHANTOM    = ID_MOB  | 0x00000010,
+    ID_BOMB       = ID_MOB  | 0x00000020,
     
     ID_BOSS_HEAD  = ID_MOB  | 0x00000100,
     ID_BOSS_WHEEL = ID_MOB  | 0x00000200,

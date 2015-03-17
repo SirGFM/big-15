@@ -167,6 +167,7 @@ void col_onPlObj(player *pPl, object *pObj) {
 void col_onPlMob(player *pPl, mob *pMob) {
     GFraMe_object *pObj1, *pObj2;
     GFraMe_ret rv;
+    int ID;
     
     ASSERT_NR(mob_isAlive(pMob));
     ASSERT_NR(!player_isHurt(pPl));
@@ -176,7 +177,8 @@ void col_onPlMob(player *pPl, mob *pMob) {
     mob_getObject(&pObj2, pMob);
     
     // Try to collide them
-    if (mob_getID(pMob) != ID_BOSS_PLAT) {
+    ID = mob_getID(pMob);
+    if (ID != ID_BOSS_PLAT && ID != ID_BOMB) {
         int plFlags;
         
         // Get their collision flags
@@ -191,9 +193,14 @@ void col_onPlMob(player *pPl, mob *pMob) {
         // Restore the collision flags
         pObj1->hit = plFlags;
     }
-    else {
+    else if (ID == ID_BOSS_PLAT) {
+        // Make the player stand on the platform
         GFraMe_object_overlap(pObj1, pObj2, GFraMe_second_fixed);
         player_getCarriedBoss(pPl, pObj2);
+    }
+    else if (ID == ID_BOMB) {
+        // Push the bomb
+        GFraMe_object_overlap(pObj2, pObj1, GFraMe_second_fixed);
     }
     
 __ret:
@@ -288,6 +295,33 @@ __ret:
  * @param pMob2 A mob
  */
 void col_onMob(mob *pMob1, mob *pMob2) {
+    GFraMe_object *pObj1, *pObj2;
+    
+    ASSERT_NR(mob_isAlive(pMob1));
+    ASSERT_NR(mob_isAlive(pMob2));
+    
+    mob_getObject(&pObj1, pMob1);
+    mob_getObject(&pObj2, pMob2);
+    
+    if (mob_getID(pMob1) == ID_BOMB) {
+//        int tmp;
+        
+        // Push the bomb
+//        tmp = pObj2->hit;
+        GFraMe_object_overlap(pObj1, pObj2, GFraMe_second_fixed);
+//        pObj2->hit = tmp;
+    }
+    else if (mob_getID(pMob2) == ID_BOMB) {
+//        int tmp;
+        
+        // Push the bomb
+//        tmp = pObj1->hit;
+        GFraMe_object_overlap(pObj2, pObj1, GFraMe_second_fixed);
+//        pObj1->hit = tmp;
+    }
+    
+__ret:
+    return;
 }
 
 /**
