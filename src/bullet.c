@@ -20,7 +20,7 @@
 /** Projectile's states */
 typedef enum { PROJ_INIT=0, PROJ_DEF, PROJ_EXPLODE, PROJ_NONE } projState;
 #define ENEPROJ_SPEED  100
-#define BOSSPROJ_SPEED 160
+#define BOSSPROJ_SPEED 120
 
 struct stBullet {
     GFraMe_sprite spr;

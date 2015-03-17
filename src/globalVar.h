@@ -73,6 +73,8 @@ typedef enum {
     MAP016_DOOR_B,  /** State of a door on map 005              */
     MAP016_DOOR_C,  /** State of a door on map 005              */
     MAP020_DOOR_A,  /** State of a door on map 005              */
+    MAP020_DOOR_B,  /** State of a door on map 005              */
+    MAP020_DOOR_C,  /** State of a door on map 005              */
     TERMINAL_001,
     TERMINAL_002,
     TERMINAL_003,
@@ -98,6 +100,8 @@ typedef enum {
     TERMINAL_023,
     TERMINAL_024,
     TERMINAL_025,
+    TERMINAL_026,
+    TERMINAL_027,
     HJUMP_TERM,
     TELEP_TERM,
     SIGNL_TERM,

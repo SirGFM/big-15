@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="528" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="781">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="528" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="790">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="78">
@@ -2829,12 +2829,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map019" width="528" height="320">
+ <layer name="map019" width="528" height="320" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt21tqwlAUBdA7tfqo0nm0H351HP1yKA6xCgmk8dGYUA6nZy3YoHhNYn724QZbAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACWOsiiAEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABV9yaIAQEWf57xMyO6cdZf3cz661/vBms3EY83J9pzVKPs7a3fd5/eu89FvXHXrHx2/z3HG/QaA/+DUps8Qm/ZzRhjPC381P1xmh0unv878/rPXNWX9sbt3AFDRqU2fIYbzQ9/pw/2A/v3cnv/tvFPngPFexZTr2t5Yf+87/exgfgCgqlO7PUP0fdo/A+j38/sOv9Xnw/3/JTPE+Nzrdv3s5NE8sGm354F7c8Rwf2Pbrp/RDNcPZwfzAwBVvcmiAEBFB/H/TQB4UnT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AEBF0f2bPQBQUXT/Zg8AVBTdv9kDABVF92/2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQwze0E7iS
   </data>
  </layer>
- <objectgroup name="map019_objs">
+ <objectgroup name="map019_objs" visible="0">
   <object id="687" name="exit" type="event" x="1456" y="512" width="8" height="48">
    <properties>
     <property name="ce" value="ce_switch_map"/>
@@ -2914,12 +2914,12 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="map020" width="528" height="320" visible="0">
+ <layer name="map020" width="528" height="320">
   <data encoding="base64" compression="zlib">
-   eJzt27ENwlAQREG35hA6AUwhdI0z4v3SyYs0I20Bl73ktg0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAer3O7aV7DN4NAKzTDwBASj8AACn9AACk9AMAkNIPAEBKPwAAKf0AAKT0AwCQ0g8AQEo/AAAp/QAApJr74TN4NwCwrrkf9sG7AYB1+gEASOkHACClHwCAVHM/3AbvBgDWNfeD/00A6KQfAICUfgAAUvoBAEjpBwAgpR8AgJR+AABS+gEASL3P3Ut3DN4NAKx7lg8A6HN1H+gHAPg/V/eBfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgJ8v4rpNWQ==
+   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
   </data>
  </layer>
- <objectgroup name="map020_objs" visible="0">
+ <objectgroup name="map020_objs">
   <object id="711" name="mob_boss_wheel" type="mob" x="600" y="616" width="46" height="8">
    <properties>
     <property name="f" value="boss_wheel"/>
@@ -2973,6 +2973,90 @@
     <property name="var1" value="gv_max"/>
     <property name="var2" value="gv_max"/>
     <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="781" name="set gv" type="event" x="492" y="524" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal026"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="782" name="term" type="obj" x="490" y="522" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal026"/>
+   </properties>
+  </object>
+  <object id="783" name="open_door" type="event" x="488" y="520" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_open_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="map020-b_door"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="784" name="set gv" type="event" x="492" y="492" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_gv"/>
+    <property name="int0" value="1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="terminal027"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="785" name="term" type="obj" x="490" y="490" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_set_anim_off"/>
+    <property name="f" value="term"/>
+    <property name="var" value="terminal027"/>
+   </properties>
+  </object>
+  <object id="786" name="open_door" type="event" x="488" y="488" width="16" height="16">
+   <properties>
+    <property name="ce" value="ce_open_door"/>
+    <property name="int0" value="-1"/>
+    <property name="int1" value="-1"/>
+    <property name="int2" value="-1"/>
+    <property name="int3" value="-1"/>
+    <property name="t" value="is_player|on_pressed"/>
+    <property name="var0" value="map020-c_door"/>
+    <property name="var1" value="gv_max"/>
+    <property name="var2" value="gv_max"/>
+    <property name="var3" value="gv_max"/>
+   </properties>
+  </object>
+  <object id="787" name="door-hor" type="obj" x="504" y="576" width="32" height="8">
+   <properties>
+    <property name="ce" value="ce_handle_notdoor"/>
+    <property name="f" value="door-hor|static"/>
+    <property name="var" value="map020-b_door"/>
+   </properties>
+  </object>
+  <object id="789" name="door-hor" type="obj" x="496" y="552" width="32" height="8">
+   <properties>
+    <property name="ce" value="ce_handle_notdoor"/>
+    <property name="f" value="door-hor|static"/>
+    <property name="var" value="map020-c_door"/>
    </properties>
   </object>
  </objectgroup>
