@@ -96,5 +96,14 @@ void bullet_draw(bullet *pBul);
  */
 void bullet_update(bullet *pBul, int ms);
 
+/**
+ * Shoots explosions in 8 directions
+ * 
+ * @param cx The central x position
+ * @param cy The central y position
+ * @return GFraMe error code
+ */
+GFraMe_ret bullet_fireworks(int cx, int cy);
+
 #endif
 

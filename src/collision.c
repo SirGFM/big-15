@@ -400,6 +400,8 @@ void col_onObjBul(object *pObj, bullet *pBul) {
 void col_onMobBul(mob *pMob, bullet *pBul) {
     flag ID;
     
+    // Check that the bullet is actually alive
+    ASSERT_NR(bullet_isAlive(pBul));
     // Mob is only 'hurtable' by explosion
     bullet_getID(&ID, pBul);
     ASSERT_NR(ID == ID_EXPLPROJ);

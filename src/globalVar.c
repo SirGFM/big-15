@@ -32,6 +32,7 @@ static char *_gv_names[GV_MAX+1] = {
     "boss_y",
     "boss_dir",
     "boss_isRunning",
+    "boss_isDead",
     "heartup01",
     "heartup02",
     "heartup03",

@@ -57,6 +57,7 @@ struct stMob {
     int countdown;           /** Counter, in frames, for next action          */
     int anim;                /** The mob's current animation                  */
     int animLen;             /** How many animations this mob has             */
+    int hurtCountdown;       /** How long until the mob can be hurt again     */
     /** Every possible animation, so it won't overlap another mob's */
     GFraMe_animation mob_anim[MOB_ANIM_MAX];
 };
@@ -242,7 +243,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_BOSS_WHEEL: {
             GFraMe_sprite_init(&pMob->spr, x, y, 46/*w*/, 8/*h*/, gl_sset64x8,
                 3/*ox*/, 0/*oy*/);
-            pMob->health = 2;
+            pMob->health = 999;
             pMob->damage = 1;
             pMob->countdown = 0;
             
@@ -251,7 +252,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_BOSS_TANK: {
             GFraMe_sprite_init(&pMob->spr, x, y, 20/*w*/, 20/*h*/, gl_sset32x32,
                 -2/*ox*/, -4/*oy*/);
-            pMob->health = 2;
+            pMob->health = 999;
             pMob->damage = 1;
             pMob->countdown = 0;
             
@@ -260,7 +261,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
         case ID_BOSS_PLAT: {
             GFraMe_sprite_init(&pMob->spr, x, y, 52/*w*/, 12/*h*/, gl_sset64x16,
                 0/*ox*/, 0/*oy*/);
-            pMob->health = 2;
+            pMob->health = 999;
             pMob->damage = 0;
             pMob->countdown = 0;
             
@@ -282,6 +283,7 @@ GFraMe_ret mob_init(mob *pMob, int x, int y, flag type) {
     }
     #undef SET_ANIMDATA
     pMob->spr.id = type;
+    pMob->hurtCountdown = 0;
     
     // Set all animations
     if (animData) {
@@ -480,10 +482,19 @@ int mob_getPlVerDist(mob *pMob, flag plID);
 GFraMe_ret mob_hit(mob *pMob, int dmg, flag type) {
     GFraMe_ret rv;
     
+    ASSERT(pMob->health > 0, GFraMe_ret_failed);
+    ASSERT(pMob->hurtCountdown <= 0, GFraMe_ret_failed);
     ASSERT(type == ID_EXPLPROJ, GFraMe_ret_failed);
-    // TODO set some 'hurting' flag
     
     pMob->health -= dmg;
+    pMob->hurtCountdown += 1000;
+    
+    if (pMob->spr.id == ID_BOSS_HEAD && pMob->health <= 0) {
+        gv_setValue(BOSS_ISDEAD, 1);
+        
+        // Explode!!
+        bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
+    }
     
     rv = GFraMe_ret_ok;
 __ret:
@@ -555,6 +566,8 @@ void mob_update(mob *pMob, int ms) {
     isDown = pMob->spr.obj.hit & GFraMe_direction_down;
     if (pMob->countdown > 0)
         pMob->countdown -= ms;
+    if (pMob->hurtCountdown > 0)
+        pMob->hurtCountdown -= ms;
     
     switch (pMob->spr.id) {
         case ID_JUMPER: {
@@ -781,8 +794,10 @@ void mob_update(mob *pMob, int ms) {
             else {
             }
             
-            if (pMob->anim == BOSS_HEAD_HURT) {
-                // Do nothing!
+            if (pMob->anim != BOSS_HEAD_HURT && pMob->hurtCountdown > 0)
+                mob_setAnim(pMob, BOSS_HEAD_HURT, 0);
+            else if (pMob->anim == BOSS_HEAD_HURT && mob_didAnimFinish(pMob)) {
+                mob_setAnim(pMob, BOSS_HEAD_DEF, 0);
             }
             else if (pMob->anim == BOSS_HEAD_DEF && pMob->countdown <= 0) {
                 bullet *pBul;
@@ -853,6 +868,17 @@ void mob_update(mob *pMob, int ms) {
             GFraMe_object *pObj;
             int x, y;
             
+            // Check that the boss is still alive
+            if (gv_nIsZero(BOSS_ISDEAD) && pMob->hurtCountdown <= 0) {
+                GFraMe_ret rv;
+                mob_hit(pMob, 999, ID_EXPLPROJ);
+                gv_inc(BOSS_ISDEAD);
+                
+                // Explode!!
+                rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+            }
+            
             // Get the mob's object and position
             mob_getObject(&pObj, pMob);
             x = gv_getValue(BOSS_X);
@@ -864,6 +890,17 @@ void mob_update(mob *pMob, int ms) {
             GFraMe_object *pObj;
             int x, y;
             
+            // Check that the boss is still alive
+            if (gv_nIsZero(BOSS_ISDEAD) && pMob->hurtCountdown <= 0) {
+                GFraMe_ret rv;
+                mob_hit(pMob, 999, ID_EXPLPROJ);
+                gv_inc(BOSS_ISDEAD);
+                
+                // Explode!!
+                rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+            }
+            
             // Get the mob's object and position
             mob_getObject(&pObj, pMob);
             x = gv_getValue(BOSS_X);
@@ -874,6 +911,17 @@ void mob_update(mob *pMob, int ms) {
         case ID_BOSS_WHEEL: {
             GFraMe_object *pObj;
             int pX, pY, x, y;
+           
+            // Check that the boss is still alive
+            if (gv_nIsZero(BOSS_ISDEAD) && pMob->hurtCountdown <= 0) {
+                GFraMe_ret rv;
+                mob_hit(pMob, 999, ID_EXPLPROJ);
+                gv_inc(BOSS_ISDEAD);
+                
+                // Explode!!
+                rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+            }
             
             // Get the mob's object
             mob_getObject(&pObj, pMob);
@@ -910,64 +958,13 @@ void mob_update(mob *pMob, int ms) {
         } break;
         case ID_BOMB: {
             if (mob_didAnimFinish(pMob)) {
-                bullet *pBul;
                 GFraMe_ret rv;
-                int cx, cy;
                 
                 // "Delete" the mob
-                mob_hit(pMob, 1, ID_BOMB);
+                mob_hit(pMob, 1, ID_EXPLPROJ);
                 
-                // Get the mob's center
-                cx = pMob->spr.obj.x + pMob->spr.obj.hitbox.cx;
-                cy = pMob->spr.obj.y + pMob->spr.obj.hitbox.cy;
-                
-                // Shoot to the right
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy + 0);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot upward, toward the right
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy - 8);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot upward
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 0, cy - 8);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot upward, toward the left
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy - 8);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot to the left
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy + 0);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot downward, toward the left
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy + 8);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot downward
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 0, cy + 8);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                // Shoot downward, toward the right
-                pBul = 0;
-                rv = rg_recycleBullet(&pBul);
-                ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy + 8);
+                // Explode!!
+                rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
                 ASSERT_NR(rv == GFraMe_ret_ok);
             }
             if (pMob->spr.obj.hit & GFraMe_direction_down) {

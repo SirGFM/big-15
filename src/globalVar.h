@@ -32,6 +32,7 @@ typedef enum {
     BOSS_Y,       /** Boss top-left origin, according to the wheel */
     BOSS_DIR,
     BOSS_ISRUNNING,
+    BOSS_ISDEAD,
     HEARTUP01,
     HEARTUP02,
     HEARTUP03,

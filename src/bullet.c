@@ -14,6 +14,7 @@
 #include "bullet.h"
 #include "camera.h"
 #include "global.h"
+#include "registry.h"
 #include "types.h"
 
 #define BUL_ANIM_MAX 3
@@ -290,5 +291,70 @@ void bullet_update(bullet *pBul, int ms) {
     }
 __ret:
     return;
+}
+
+/**
+ * Shoots explosions in 8 directions
+ * 
+ * @param cx The central x position
+ * @param cy The central y position
+ * @return GFraMe error code
+ */
+GFraMe_ret bullet_fireworks(int cx, int cy) {
+    GFraMe_ret rv;
+    bullet *pBul;
+    
+    // Shoot to the right
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy + 0);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot upward, toward the right
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy - 8);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot upward
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 0, cy - 8);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot upward, toward the left
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy - 8);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot to the left
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy + 0);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot downward, toward the left
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy + 8);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot downward
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 0, cy + 8);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Shoot downward, toward the right
+    pBul = 0;
+    rv = rg_recycleBullet(&pBul);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy + 8);
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
