@@ -478,9 +478,16 @@ int mob_getPlVerDist(mob *pMob, flag plID);
  * @return Whether the mob was damaged (GFraMe_ret_ok) or not
  */
 GFraMe_ret mob_hit(mob *pMob, int dmg, flag type) {
-    // TODO check flag
+    GFraMe_ret rv;
+    
+    ASSERT(type == ID_EXPLPROJ, GFraMe_ret_failed);
+    // TODO set some 'hurting' flag
+    
     pMob->health -= dmg;
-    return GFraMe_ret_ok;
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
 }
 
 /**
@@ -903,7 +910,65 @@ void mob_update(mob *pMob, int ms) {
         } break;
         case ID_BOMB: {
             if (mob_didAnimFinish(pMob)) {
+                bullet *pBul;
+                GFraMe_ret rv;
+                int cx, cy;
+                
+                // "Delete" the mob
                 mob_hit(pMob, 1, ID_BOMB);
+                
+                // Get the mob's center
+                cx = pMob->spr.obj.x + pMob->spr.obj.hitbox.cx;
+                cy = pMob->spr.obj.y + pMob->spr.obj.hitbox.cy;
+                
+                // Shoot to the right
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy + 0);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot upward, toward the right
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy - 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot upward
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 0, cy - 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot upward, toward the left
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy - 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot to the left
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy + 0);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot downward, toward the left
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx - 8, cy + 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot downward
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 0, cy + 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                // Shoot downward, toward the right
+                pBul = 0;
+                rv = rg_recycleBullet(&pBul);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = bullet_init(pBul, ID_EXPLPROJ, cx, cy, cx + 8, cy + 8);
+                ASSERT_NR(rv == GFraMe_ret_ok);
             }
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
                 pMob->spr.obj.vy = 32;

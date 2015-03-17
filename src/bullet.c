@@ -21,6 +21,7 @@
 typedef enum { PROJ_INIT=0, PROJ_DEF, PROJ_EXPLODE, PROJ_NONE } projState;
 #define ENEPROJ_SPEED  100
 #define BOSSPROJ_SPEED 120
+#define EXPLPROJ_SPEED 60
 
 struct stBullet {
     GFraMe_sprite spr;
@@ -37,10 +38,15 @@ struct stBullet {
  *   _bul_*AnimData[i]+3  = actual data
  */
 static int _bul_EnAnimData[] = {
+/* fps,len,loop,data...                                  */
+   20 , 1 , 0  , 809,                    /* PROJ_INIT    */
+    8 , 2 , 1  , 810, 811,               /* PROJ_DEF     */
+   16 , 5 , 0  , 812, 813, 814, 815, 816 /* PROJ_EXPLODE */
+};
+static int _bul_ExplAnimData[] = {
 /* fps,len,loop,data...                    */
-   20 , 1 , 0  , 809,                    /* PROJ_INIT */
-    8 , 2 , 1  , 810, 811,               /* PROJ_DEF  */
-   16 , 5 , 0  , 812, 813, 814, 815, 816 /* PROJ_NONE */
+    8 , 1 , 0  , 170,                    /* PROJ_INIT */
+    8 , 4 , 0  , 171, 186, 187, 187      /* PROJ_DEF  */
 };
 
 /**
@@ -97,10 +103,11 @@ __ret:
  * @return GFraMe error code
  */
 GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int dstCY) {
+    double d, vx, vy;
     GFraMe_object *pObj;
     GFraMe_ret rv;
     GFraMe_sprite *pSpr;
-    int *pData, len;
+    int *pData, len, speed;
     
     // Sanitize input
     ASSERT(type & ID_PROJ, GFraMe_ret_bad_param);
@@ -113,27 +120,41 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
     pData = 0;
     len = 0;
     switch (type) {
-        case ID_BOSSPROJ:
         case ID_ENEPROJ: {
-            double d, vx, vy;
-            
             GFraMe_sprite_init(pSpr, cx - 4, cy - 4, 6/*w*/, 6/*h*/, gl_sset8x8,
                 -2/*ox*/, -2/*oy*/);
+            
+            speed = ENEPROJ_SPEED;
+            
             pData = _bul_EnAnimData;
             len = sizeof(_bul_EnAnimData) / sizeof(int);
+        } break;
+        case ID_BOSSPROJ: {
+            GFraMe_sprite_init(pSpr, cx - 4, cy - 4, 6/*w*/, 6/*h*/, gl_sset8x8,
+                -2/*ox*/, -2/*oy*/);
             
-            vx = dstCX - cx;
-            vy = dstCY - cy;
-            if (type == ID_BOSSPROJ)
-                d = BOSSPROJ_SPEED / GFraMe_util_sqrtd(vx*vx + vy*vy);
-            else
-                d = ENEPROJ_SPEED / GFraMe_util_sqrtd(vx*vx + vy*vy);
+            speed = BOSSPROJ_SPEED;
             
-            pObj->vx = vx * d;
-            pObj->vy = vy * d;
+            pData = _bul_EnAnimData;
+            len = sizeof(_bul_EnAnimData) / sizeof(int);
+        } break;
+        case ID_EXPLPROJ: {
+            GFraMe_sprite_init(pSpr, cx - 8, cy - 8, 10/*w*/, 10/*h*/, gl_sset16x16,
+                -3/*ox*/, -3/*oy*/);
+            
+            speed = EXPLPROJ_SPEED;
+            
+            pData = _bul_ExplAnimData;
+            len = sizeof(_bul_ExplAnimData) / sizeof(int);
         } break;
         default: {}
     }
+    vx = dstCX - cx;
+    vy = dstCY - cy;
+    d = speed / GFraMe_util_sqrtd(vx*vx + vy*vy);
+    pObj->vx = vx * d;
+    pObj->vy = vy * d;
+    
     pSpr->id = type;
     
     // Set all animations
@@ -176,7 +197,9 @@ __ret:
  */
 void bullet_explode(bullet *pBul) {
     switch (pBul->spr.id) {
+        case ID_BOSSPROJ:
         case ID_ENEPROJ: bullet_setAnim(pBul, PROJ_EXPLODE); break;
+        case ID_EXPLPROJ: {} break;
         default: pBul->state = PROJ_NONE;
     }
 }
@@ -261,6 +284,10 @@ void bullet_update(bullet *pBul, int ms) {
         bullet_setAnim(pBul, PROJ_DEF);
     else if (pBul->state == PROJ_EXPLODE && !pBul->spr.anim)
         pBul->state = PROJ_NONE;
+    else if (pBul->state == PROJ_DEF && !pBul->spr.anim) {
+        if (pBul->spr.id == ID_EXPLPROJ)
+            pBul->state = PROJ_NONE;
+    }
 __ret:
     return;
 }

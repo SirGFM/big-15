@@ -398,6 +398,15 @@ void col_onObjBul(object *pObj, bullet *pBul) {
  * @param pBul The wall
  */
 void col_onMobBul(mob *pMob, bullet *pBul) {
+    flag ID;
+    
+    // Mob is only 'hurtable' by explosion
+    bullet_getID(&ID, pBul);
+    ASSERT_NR(ID == ID_EXPLPROJ);
+    
+    mob_hit(pMob, 1, ID);
+__ret:
+    return;
 }
 
 /**
@@ -407,10 +416,14 @@ void col_onMobBul(mob *pMob, bullet *pBul) {
  * @param pBul The bullet
  */
 void col_onBulWall(bullet *pBul, GFraMe_object *pWall) {
+    flag ID;
     GFraMe_object *pObj;
     GFraMe_ret rv;
     
     ASSERT_NR(bullet_isAlive(pBul));
+    
+    bullet_getID(&ID, pBul);
+    ASSERT_NR(ID != ID_EXPLPROJ);
     
     bullet_getObject(&pObj, pBul);
     rv = GFraMe_object_overlap(pWall, pObj, GFraMe_first_fixed);
