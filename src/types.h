@@ -7,6 +7,14 @@
 #define __TYPES_H_
 
 typedef enum {
+    MENUSTATE = 0,
+    NEW_PLAYSTATE,
+    CNT_PLAYSTATE,
+    OPTIONS,
+    CREDITS
+} state;
+
+typedef enum {
     ID_PL         = 0x10000000,
     ID_MOB        = 0x20000000,
     ID_OBJ        = 0x40000000,

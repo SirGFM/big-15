@@ -22,6 +22,7 @@ CC=gcc
          $(OBJDIR)/globalVar.o         \
          $(OBJDIR)/main.o              \
          $(OBJDIR)/map.o               \
+         $(OBJDIR)/menustate.o         \
          $(OBJDIR)/mob.o               \
          $(OBJDIR)/object.o            \
          $(OBJDIR)/parser.o            \

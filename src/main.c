@@ -12,11 +12,14 @@
 
 #include "controller.h"
 #include "global.h"
+#include "menustate.h"
 #include "playstate.h"
+#include "types.h"
 
 int main(int argc, char *argv[]) {
     GFraMe_ret rv;
     GFraMe_wndext ext;
+    state st;
     
     ext.atlas = "atlas";
     ext.atlasWidth = 256;
@@ -53,8 +56,14 @@ int main(int argc, char *argv[]) {
         ctr_setMode(CTR_KEYS);
 //    GFraMe_audio_player_play_bgm(gl_bgm, 0.60f);
     
+    st = MENUSTATE;
     while (gl_running) {
-        playstate(0);
+        switch (st) {
+            case MENUSTATE: st = menustate(); break;
+            case NEW_PLAYSTATE: playstate(0); break;
+            case CNT_PLAYSTATE: playstate(1); break;
+            default: GFraMe_assertRet(0, "Invalid state!", __ret);
+        }
     }
     
 __ret:
