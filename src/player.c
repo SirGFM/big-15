@@ -69,9 +69,11 @@ struct stPlayer {
  * @param ppPl The player
  * @param ID Player's ID
  * @param firstTile Sprite's standing frame (first from its set)
+ * @param x Horizontal position
+ * @param y Vertical position
  * @return GFraMe error code
  */
-GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
+GFraMe_ret player_init(player **ppPl, int ID, int firstTile, int x, int y) {
     //GFraMe_hitbox *hb;
     //GFraMe_object *obj;
     GFraMe_ret rv;
@@ -113,7 +115,7 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile) {
     GFraMe_animation_init(&pPl->walkAnim, 14, pPl->walkData, 8, 1);
     
     // Initialize the sprite
-    GFraMe_sprite_init(&pPl->spr, 16, 184, 8, 14, gl_sset16x16, -4, -2);
+    GFraMe_sprite_init(&pPl->spr, x, y, 8/*w*/, 14/*h*/, gl_sset16x16, -4, -2);
     
     // Play the stand animation
     GFraMe_sprite_set_animation(&pPl->spr, &pPl->standAnim, 1);

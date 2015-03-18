@@ -24,6 +24,7 @@
 #define PL_VX 80
 #define PL_JUMPS 180
 #define PL_HIGHJUMPS 245
+#define SAVEFILE "playstate.save"
 
 #define ASSERT(stmt, err) \
   do { \

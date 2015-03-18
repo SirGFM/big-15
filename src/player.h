@@ -21,9 +21,11 @@ typedef struct stPlayer player;
  * @param ppPl The player
  * @param ID Player's ID
  * @param firstTile Sprite's standing frame (first from its set)
+ * @param x Horizontal position
+ * @param y Vertical position
  * @return GFraMe error code
  */
-GFraMe_ret player_init(player **ppPl, int ID, int firstTile);
+GFraMe_ret player_init(player **ppPl, int ID, int firstTile, int x, int y);
 
 /**
  * Clean up the player

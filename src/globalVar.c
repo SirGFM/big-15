@@ -3,6 +3,9 @@
  * 
  * Module for storing global variables, accessible anywhere in the game
  */
+#include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_save.h>
+
 #include "globalVar.h"
 #include "types.h"
 
@@ -251,5 +254,121 @@ int gv_nIsZero(globalVar gv) {
 char* gv_getName(globalVar gv) {
     if (gv >= GV_MAX) return 0;
     return _gv_names[gv];
+}
+
+/**
+ * Save the current state of the global vars to a file
+ * 
+ * @param filename The filename
+ * @return GFraMe error code
+ */
+GFraMe_ret gv_save(char *filename) {
+    char varname[7];
+    GFraMe_ret rv;
+    GFraMe_save sv, *pSv;
+    globalVar gv;
+    
+    pSv = 0;
+    rv = GFraMe_save_bind(&sv, filename);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to open save file", __ret);
+    pSv = &sv;
+    
+    varname[0] = 'v';
+    varname[1] = 'a';
+    varname[2] = 'r';
+    varname[3] = '0';
+    varname[4] = '0';
+    varname[5] = '0';
+    varname[6] = '\0';
+    gv = 0;
+    while (gv < GV_MAX) {
+        int val;
+        
+        val = gv_getValue(gv);
+        rv = GFraMe_save_write_int(pSv, varname, val);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+        
+        gv++;
+        if (varname[5] == '9') {
+            varname[5] = '0';
+            if (varname[4] == '9') {
+                varname[4] = '0';
+                GFraMe_assertRV(varname[4] < '9', "Too many variables!",
+                    rv = GFraMe_ret_failed, __ret);
+                varname[3]++;
+            }
+            else {
+                varname[4]++;
+            }
+        }
+        else {
+            varname[5]++;
+        }
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    if (pSv)
+        GFraMe_save_close(pSv);
+    
+    return rv;
+}
+
+/**
+ * Load the gv state from a file
+ * 
+ * @param filename The filename
+ * @return GFraMe error code
+ */
+GFraMe_ret gv_load(char *filename) {
+    char varname[7];
+    GFraMe_ret rv;
+    GFraMe_save sv, *pSv;
+    globalVar gv;
+    
+    pSv = 0;
+    rv = GFraMe_save_bind(&sv, filename);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to open save file", __ret);
+    pSv = &sv;
+    
+    varname[0] = 'v';
+    varname[1] = 'a';
+    varname[2] = 'r';
+    varname[3] = '0';
+    varname[4] = '0';
+    varname[5] = '0';
+    varname[6] = '\0';
+    gv = 0;
+    while (gv < GV_MAX) {
+        int val;
+        
+        rv = GFraMe_save_read_int(pSv, varname, &val);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading variable", __ret);
+        gv_setValue(gv, val);
+        
+        gv++;
+        if (varname[5] == '9') {
+            varname[5] = '0';
+            if (varname[4] == '9') {
+                varname[4] = '0';
+                GFraMe_assertRV(varname[4] < '9', "Too many variables!",
+                    rv = GFraMe_ret_failed, __ret);
+                varname[3]++;
+            }
+            else {
+                varname[4]++;
+            }
+        }
+        else {
+            varname[5]++;
+        }
+    }
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    if (pSv)
+        GFraMe_save_close(pSv);
+    
+    return rv;
 }
 

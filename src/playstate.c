@@ -45,7 +45,7 @@ static int _ps_pause;
  * 
  * @return GFraMe error code
  */
-static GFraMe_ret ps_init();
+static GFraMe_ret ps_init(int isLoading);
 /**
  * Clean up the playstate
  */
@@ -85,11 +85,11 @@ static unsigned int _ltime;
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
-void playstate() {
+void playstate(int doLoad) {
     GFraMe_ret rv;
     
     gl_running = 0;
-    rv = ps_init();
+    rv = ps_init(doLoad);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
@@ -138,11 +138,26 @@ __ret:
  * 
  * @return GFraMe error code
  */
-static GFraMe_ret ps_init() {
+static GFraMe_ret ps_init(int isLoading) {
     GFraMe_ret rv;
+    int map, plX, plY;
     
-    gv_init();
-    
+    if (!isLoading) {
+        gv_init();
+        
+        plX = 16;
+        plY = 184;
+        map = 0;
+    }
+    else {
+        rv = gv_load(SAVEFILE);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load state", __ret);
+        
+        plX = gv_getValue(DOOR_X) * 8;
+        plY = gv_getValue(DOOR_Y) * 8;
+        map = gv_getValue(MAP);
+    }
+
     rv = ui_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init ui", __ret);
     
@@ -152,14 +167,13 @@ static GFraMe_ret ps_init() {
     rv = map_init(&m);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
     
-    rv = player_init(&p1, ID_PL1, 224);
+    rv = player_init(&p1, ID_PL1, 224, plX, plY);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
-    rv = player_init(&p2, ID_PL2, 240);
+    rv = player_init(&p2, ID_PL2, 240, plX, plY);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init player", __ret);
     
-    rv = map_loadi(m, 0);
-    //rv = map_loadi(m, 19);
+    rv = map_loadi(m, map);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init map", __ret);
 
     signal_init();
@@ -284,6 +298,9 @@ static GFraMe_ret ps_switchMap() {
                 
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);
+                // Save the current state
+                rv = gv_save(SAVEFILE);
+                GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
 #  if defined(DEBUG) && defined(RESET_GV)
                 gv_init();
 #  endif /* RESET_GV */
@@ -322,6 +339,9 @@ static GFraMe_ret ps_switchMap() {
     gl_running = tmp;
     // Set the update time (for using on events)
     gv_setValue(GAME_UPS, GFraMe_event_elapsed);
+    // Save the current state
+    rv = gv_save(SAVEFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
 #endif /* FAST_TRANSITION */
     
     // Set return variable

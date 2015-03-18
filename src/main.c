@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 //    GFraMe_audio_player_play_bgm(gl_bgm, 0.60f);
     
     while (gl_running) {
-        playstate();
+        playstate(1);
     }
     
 __ret:

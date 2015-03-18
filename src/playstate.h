@@ -9,7 +9,7 @@
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
-void playstate();
+void playstate(int doLoad);
 
 #endif
 

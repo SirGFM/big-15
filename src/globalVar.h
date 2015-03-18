@@ -6,6 +6,8 @@
 #ifndef __GLOBAL_VAR_H_
 #define __GLOBAL_VAR_H_
 
+#include <GFraMe/GFraMe_error.h>
+
 typedef enum {
     PL1_HP,       /** Player 1 current health                      */
     PL1_MAXHP,    /** Player 1 maximum health                      */
@@ -195,6 +197,22 @@ int gv_nIsZero(globalVar gv);
  * @return The global variable's name or NULL
  */
 char* gv_getName(globalVar gv);
+
+/**
+ * Save the current state of the global vars to a file
+ * 
+ * @param filename The filename
+ * @return GFraMe error code
+ */
+GFraMe_ret gv_save(char *filename);
+
+/**
+ * Load the gv state from a file
+ * 
+ * @param filename The filename
+ * @return GFraMe error code
+ */
+GFraMe_ret gv_load(char *filename);
 
 #endif
 
