@@ -476,7 +476,7 @@ void ce_callEvent(commonEvent ce) {
                 // Recycle a mob
                 rv = rg_recycleMob(&pM);
                 ASSERT_NR(rv == GFraMe_ret_ok);
-                rv = mob_init(pM, 142, 24, ID_BOMB);
+                rv = mob_init(pM, 143, 32, ID_BOMB);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
                 // Reset the timer
