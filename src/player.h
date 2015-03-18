@@ -176,5 +176,21 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir);
  */
 int player_isHurt(player *pPl);
 
+/**
+ * Return whether a player is alive
+ * 
+ * @param pPl The player
+ * @return 1 on sucess, 0 otherwise
+ */
+int player_isAlive(player *pPl);
+
+/**
+ * Check if a player is within vertical bounds of the map
+ * 
+ * @param pPl The player
+ * @return 1 on sucess, 0 otherwise
+ */
+int player_isInsideMap(player *pPl);
+
 #endif
 

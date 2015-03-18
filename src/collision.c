@@ -216,8 +216,10 @@ __ret:
 void col_onPlWall(player *pPl, GFraMe_object *pWall) {
     GFraMe_object *pObj;
     
-    player_getObject(&pObj, pPl);
-    GFraMe_object_overlap(pWall, pObj, GFraMe_first_fixed);
+    if (player_isAlive(pPl)) {
+        player_getObject(&pObj, pPl);
+        GFraMe_object_overlap(pWall, pObj, GFraMe_first_fixed);
+    }
 }
 
 /**

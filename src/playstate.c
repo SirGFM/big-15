@@ -434,6 +434,34 @@ static void ps_update() {
             gv_setValue(SWITCH_MAP, 1);
             return;
         }
+        
+        if (!player_isAlive(p1) && !player_isInsideMap(p1)) {
+            GFraMe_ret rv;
+            
+            // Recover previous state
+            rv = gv_load(SAVEFILE);
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
+            // Increase death counter
+            gv_inc(PL1_DEATH);
+            // Save death counter
+            rv = gv_save(SAVEFILE);
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+            // Force reload
+            gv_setValue(SWITCH_MAP, 1);
+        }
+        else if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
+            GFraMe_ret rv;
+            // Recover previous state
+            rv = gv_load(SAVEFILE);
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
+            // Increase death counter
+            gv_inc(PL1_DEATH);
+            // Save death counter
+            rv = gv_save(SAVEFILE);
+            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+            // Force reload
+            gv_setValue(SWITCH_MAP, 1);
+        }
     GFraMe_event_update_end();
     
     return;

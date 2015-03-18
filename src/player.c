@@ -736,3 +736,31 @@ int player_isHurt(player *pPl) {
     return pPl->curAnim == PL_HURT;
 }
 
+/**
+ * Return whether a player is alive
+ * 
+ * @param pPl The player
+ * @return 1 on sucess, 0 otherwise
+ */
+int player_isAlive(player *pPl) {
+    if (pPl->spr.id == ID_PL1)
+        return gv_getValue(PL1_HP) > 0;
+    else if (pPl->spr.id == ID_PL2)
+        return gv_getValue(PL2_HP) > 0;
+    return 0;
+}
+
+/**
+ * Check if a player is within vertical bounds of the map
+ * 
+ * @param pPl The player
+ * @return 1 on sucess, 0 otherwise
+ */
+int player_isInsideMap(player *pPl) {
+    int w, h;
+    
+    map_getDimensions(m, &w, &h);
+    
+    return pPl->spr.obj.y <= h;
+}
+
