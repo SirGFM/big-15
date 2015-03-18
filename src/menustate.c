@@ -93,13 +93,14 @@ state menustate() {
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
+    // Run the menu
     gl_running = 1;
     while (gl_running && ms.runMenu) {
         ms_event(&ms);
         ms_update(&ms);
         ms_draw(&ms);
     }
-    
+    // Set the next menu
     if (ms.curOpt == OPT_CONTINUE)
         ret = CNT_PLAYSTATE;
     else if (ms.curOpt == OPT_NEWGAME)
@@ -290,6 +291,15 @@ static void ms_event(struct stMenustate *ms) {
             ms->firstPress = 0;
             ms->lastPressedTime = 0;
         GFraMe_event_on_controller();
+            if (event.type == SDL_CONTROLLERBUTTONUP ||
+                (GFraMe_controller_max > 0
+                    && (GFraMe_controllers[0].ly < 0.5
+                        && GFraMe_controllers[0].ly > -0.5)
+                    && !GFraMe_controllers[0].up
+                    && !GFraMe_controllers[0].down)) {
+                ms->firstPress = 0;
+                ms->lastPressedTime = 0;
+            }
         GFraMe_event_on_quit();
             gl_running = 0;
     GFraMe_event_end();

@@ -22,6 +22,7 @@
 #include "controller.h"
 #include "global.h"
 #include "map.h"
+#include "options.h"
 #include "player.h"
 #include "playstate.h"
 #include "registry.h"
@@ -39,6 +40,7 @@ GFraMe_event_setup();
 
 int switchState;
 static int _ps_pause;
+static int _ps_onOptions;
 
 /**
  * Initialize the playstate
@@ -104,6 +106,10 @@ void playstate(int doLoad) {
         ps_event();
         if (_ps_pause) {
             ps_doPause();
+            if (_ps_onOptions) {
+                options();
+                _ps_onOptions = 0;
+            }
         }
         else {
             if (gv_isZero(SWITCH_MAP))
@@ -178,6 +184,7 @@ static GFraMe_ret ps_init(int isLoading) {
 
     signal_init();
     
+    _ps_onOptions = 0;
     switchState = 0;
     transition_initFadeOut();
     
@@ -481,15 +488,13 @@ static void ps_event() {
         GFraMe_event_on_mouse_down();
         GFraMe_event_on_mouse_moved();
 #endif
-//        GFraMe_event_on_finger_down();
-//        GFraMe_event_on_finger_up();
-//        GFraMe_event_on_bg();
-//        GFraMe_event_on_fg();
         GFraMe_event_on_key_down();
             if (GFraMe_keys.esc)
                 gl_running = 0;
-            if (ctr_pause())
+            if (ctr_pause()) {
                 _ps_pause = !_ps_pause;
+                _ps_onOptions = 0;
+            }
         GFraMe_event_on_key_up();
         GFraMe_event_on_controller();
             if (GFraMe_controller_max > 0 && GFraMe_controllers[0].home)

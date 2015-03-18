@@ -25,6 +25,7 @@ CC=gcc
          $(OBJDIR)/menustate.o         \
          $(OBJDIR)/mob.o               \
          $(OBJDIR)/object.o            \
+         $(OBJDIR)/options.o           \
          $(OBJDIR)/parser.o            \
          $(OBJDIR)/player.o            \
          $(OBJDIR)/playstate.o         \

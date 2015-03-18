@@ -1,5 +1,5 @@
 /**
- * @file src/menustate.c
+ * @file src/menustate.h
  * 
  * Menu state
  */
