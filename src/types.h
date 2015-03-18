@@ -48,7 +48,9 @@ typedef enum {
     ID_SIGNALER  = 0x00000004,
     ID_LASTITEM  = 0x00000008,
     ID_PL1ITEM   = 0x00000100,
-    ID_PL2ITEM   = 0x00000200
+    ID_PL2ITEM   = 0x00000200,
+    
+    ID_NONE      = 0x00100000
 } flag;
 
 enum {

@@ -281,6 +281,9 @@ static GFraMe_ret ps_switchMap() {
                 gv_setValue(SWITCH_MAP, 0);
                 switchState = 0;
                 signal_release();
+                
+                // Set the update time (for using on events)
+                gv_setValue(GAME_UPS, GFraMe_event_elapsed);
 #  if defined(DEBUG) && defined(RESET_GV)
                 gv_init();
 #  endif /* RESET_GV */
@@ -317,6 +320,8 @@ static GFraMe_ret ps_switchMap() {
 #  endif /* RESET_GV */
         
     gl_running = tmp;
+    // Set the update time (for using on events)
+    gv_setValue(GAME_UPS, GFraMe_event_elapsed);
 #endif /* FAST_TRANSITION */
     
     // Set return variable

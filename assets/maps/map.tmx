@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="528" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="790">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="528" height="320" tilewidth="8" tileheight="8" backgroundcolor="#404040" nextobjectid="791">
  <tileset firstgid="1" name="atlas" tilewidth="8" tileheight="8">
   <image source="../atlas.bmp" trans="ff00ff" width="256" height="256"/>
   <tile id="78">
@@ -3057,6 +3057,12 @@
     <property name="ce" value="ce_handle_notdoor"/>
     <property name="f" value="door-hor|static"/>
     <property name="var" value="map020-c_door"/>
+   </properties>
+  </object>
+  <object id="790" name="spawner" type="obj" x="800" y="656" width="8" height="8">
+   <properties>
+    <property name="ce" value="ce_spawn_bomb"/>
+    <property name="f" value="none"/>
    </properties>
   </object>
  </objectgroup>

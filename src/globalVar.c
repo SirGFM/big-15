@@ -106,6 +106,8 @@ static char *_gv_names[GV_MAX+1] = {
     "hjump-term",
     "telep-term",
     "signl-term",
+    "game-ups",
+    "timer-bomb",
     "gv_max"
 };
 

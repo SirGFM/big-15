@@ -174,6 +174,14 @@ void rg_drawMobs();
 GFraMe_ret rg_qtAddMob();
 
 /**
+ * Recycle a mob (and expand the buffer as necessary)
+ * 
+ * @param ppM Returns the mob
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_recycleMob(mob **ppM);
+
+/**
  * Recycle a bullet (and expand the buffer as necessary)
  * 
  * @param ppB Returns the bullet

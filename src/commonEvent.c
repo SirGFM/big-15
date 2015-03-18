@@ -26,6 +26,7 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_inc_maxhp",
     "ce_set_gv",
     "ce_set_anim_off",
+    "ce_spawn_bomb",
     "ce_none",
     "ce_max"
 };
@@ -466,6 +467,23 @@ void ce_callEvent(commonEvent ce) {
                 else if ((ID & ID_TERM) == ID_TERM)
                     obj_setAnim(pO, OBJ_ANIM_TERM_OFF);
             }
+        } break;
+        case CE_SPAWN_BOMB: {
+            if (gv_getValue(TIMER_BOMB) >= 8500) {
+                GFraMe_ret rv;
+                mob *pM;
+                
+                // Recycle a mob
+                rv = rg_recycleMob(&pM);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                rv = mob_init(pM, 142, 24, ID_BOMB);
+                ASSERT_NR(rv == GFraMe_ret_ok);
+                
+                // Reset the timer
+                gv_sub(TIMER_BOMB, 8500);
+            }
+            else
+                gv_add(TIMER_BOMB, gv_getValue(GAME_UPS));
         } break;
         // TODO implement every common event
         case CE_NONE: {}

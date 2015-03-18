@@ -343,6 +343,22 @@ __ret:
 }
 
 /**
+ * Recycle a mob (and expand the buffer as necessary)
+ * 
+ * @param ppM Returns the mob
+ * @return GFraMe error code
+ */
+GFraMe_ret rg_recycleMob(mob **ppM) {
+    GFraMe_ret rv;
+    
+    BUF_RECYCLE_REF(mob, MOB_INC, *ppM, GFraMe_ret_memory_error, !mob_isAlive, mob_getNew);
+    
+    rv = GFraMe_ret_ok;
+__ret:
+    return rv;
+}
+
+/**
  * Recycle a bullet (and expand the buffer as necessary)
  * 
  * @param ppB Returns the bullet

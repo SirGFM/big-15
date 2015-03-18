@@ -19,6 +19,7 @@ typedef enum {
     CE_INC_MAXHP,      /**  ev ce: increase the max hp                        */
     CE_SET_GV,         /**  ev ce: set a globalVar value                      */
     CE_SET_ANIM_OFF,   /** obj ce: switch to OFF on some variable             */
+    CE_SPAWN_BOMB,     /**  ev ce: spawn a bomb after some time               */
     CE_NONE,
     CE_MAX
 } commonEvent;

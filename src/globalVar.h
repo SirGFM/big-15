@@ -106,6 +106,8 @@ typedef enum {
     HJUMP_TERM,
     TELEP_TERM,
     SIGNL_TERM,
+    GAME_UPS,
+    TIMER_BOMB,
     GV_MAX        /** Global var count                         */
 } globalVar;
 
