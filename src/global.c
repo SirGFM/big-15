@@ -33,6 +33,7 @@ DECLARE_SSET(32, 8 );
 DECLARE_SSET(32, 32);
 DECLARE_SSET(64, 8);
 DECLARE_SSET(64, 16);
+DECLARE_SSET(64, 32);
 
 GFraMe_ret gl_init() {
     GFraMe_ret rv;
@@ -68,6 +69,7 @@ GFraMe_ret gl_init() {
     INIT_SSET(32, 32);
     INIT_SSET(64, 8 );
     INIT_SSET(64, 16);
+    INIT_SSET(64, 32);
     
     gl_isInit = 1;
     gl_running = 1;

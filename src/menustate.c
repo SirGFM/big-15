@@ -16,6 +16,14 @@
 #include "types.h"
 
 #define GFM_ICON 39
+#define TIME_TO_DEMO 15000
+#define J1_VY 64
+#define J2_VY 64
+#define  A_VY 64
+#define  T_VY 64
+#define J_TILE 13
+#define A_TILE 14
+#define T_TILE 15
 
 /**
  * Render some text into the screen
@@ -49,8 +57,36 @@ struct stMenustate {
     int iconX;
     /** Dev icon's y position */
     int iconY;
+    /** Whether the title finished setting up */
+    int isTitleSet;
+    /** Letter j x position */
+    int j1X;
+    float j1Xf;
+    /** Letter j y position */
+    int j1Y;
+    float j1Yf;
+    /** Letter j x position */
+    int j2X;
+    float j2Xf;
+    /** Letter j y position */
+    int j2Y;
+    float j2Yf;
+    /** Letter a x position */
+    int aX;
+    float aXf;
+    /** Letter a y position */
+    int aY;
+    float aYf;
+    /** Letter t x position */
+    int tX;
+    float tXf;
+    /** Letter t y position */
+    int tY;
+    float tYf;
     /** Whether the menu is running */
     int runMenu;
+    /** How long the menu has been idle */
+    int idleTime;
 };
 
 /**
@@ -107,6 +143,8 @@ state menustate() {
         ret = NEW_PLAYSTATE;
     else if (ms.curOpt == OPT_OPTIONS)
         ret = OPTIONS;
+    else if (ms.curOpt == OPT_MAX)
+        ret = DEMO;
 __ret:
     ms_clean(&ms);
     return ret;
@@ -151,6 +189,20 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     ms->iconY = 25 * 8;
     // Start the menu
     ms->runMenu = 1;
+    // Set the title position
+    ms->isTitleSet = 0;
+    ms->j1X = 82;
+    ms->j1Yf = -32.0f;
+    ms->j1Y = -32;
+    ms->j2X = 122;
+    ms->j2Yf = -40.0f;
+    ms->j2Y = -40;
+    ms->aX = 154;
+    ms->aYf = -48.0f;
+    ms->aY = -48;
+    ms->tX = 194;
+    ms->tYf = -54.0f;
+    ms->tY = -54;
     
     rv = GFraMe_ret_ok;
 //__ret:
@@ -176,6 +228,7 @@ static void ms_draw(struct stMenustate *ms) {
     GFraMe_event_draw_begin();
         int i, l, x, y;
         
+        // Draw the BG
         x = 0;
         y = 0;
         while (1) {
@@ -189,27 +242,33 @@ static void ms_draw(struct stMenustate *ms) {
                 break;
             }
         }
-        // TODO draw TILE
+        // Draw the title
+        GFraMe_spriteset_draw(gl_sset64x32, J_TILE, ms->j1X, ms->j1Y, 0);
+        GFraMe_spriteset_draw(gl_sset64x32, J_TILE, ms->j2X, ms->j2Y, 0);
+        GFraMe_spriteset_draw(gl_sset64x32, A_TILE, ms->aX, ms->aY, 0);
+        GFraMe_spriteset_draw(gl_sset64x32, T_TILE, ms->tX, ms->tY, 0);
         
-        // Put the 'selected' mark
-        i = 13 * ms->curOpt;
-        options[i] = '-'; options[i+1] = '-';
-        options[i+10] = '-'; options[i+11] = '-';
-        // Render texts
-        l = sizeof(options);
-        if (!ms->hasSave) {
-            _ms_renderText(options, ms->textX, ms->textY + 8, 13/*i*/, l);
+        if (ms->isTitleSet) {
+            // TODO write title
+            // Put the 'selected' mark
+            i = 13 * ms->curOpt;
+            options[i] = '-'; options[i+1] = '-';
+            options[i+10] = '-'; options[i+11] = '-';
+            // Render texts
+            l = sizeof(options);
+            if (!ms->hasSave) {
+                _ms_renderText(options, ms->textX, ms->textY + 8, 13/*i*/, l);
+            }
+            else {
+                _ms_renderText(options, ms->textX, ms->textY, 0/*i*/, l);
+            }
+            l = sizeof(devText);
+            _ms_renderText(devText, ms->iconX - l*8, ms->iconY + 16, 0, l);
+            l = sizeof(twitterText);
+            _ms_renderText(twitterText, ms->iconX - l*8, ms->iconY + 24, 0, l);
+            // Render the dev icon
+            GFraMe_spriteset_draw(gl_sset32x32, GFM_ICON, ms->iconX, ms->iconY, 0);
         }
-        else {
-            _ms_renderText(options, ms->textX, ms->textY, 0/*i*/, l);
-        }
-        l = sizeof(devText);
-        _ms_renderText(devText, ms->iconX - l*8, ms->iconY + 16, 0, l);
-        l = sizeof(twitterText);
-        _ms_renderText(twitterText, ms->iconX - l*8, ms->iconY + 24, 0, l);
-        //_ms_renderText(twitterText, (40 - l)*8, ms->iconY -8, 0, l);
-        
-        GFraMe_spriteset_draw(gl_sset32x32, GFM_ICON, ms->iconX, ms->iconY, 0);
     GFraMe_event_draw_end();
 }
 
@@ -220,62 +279,88 @@ static void ms_update(struct stMenustate *ms) {
     GFraMe_event_update_begin();
         int isEnter;
         
-        if (ms->lastPressedTime > 0)
-            ms->lastPressedTime -= GFraMe_event_elapsed;
-        else {
-            int isDown, isUp;
+        if (!ms->isTitleSet) {
+            float t;
             
-            // Get key state
-            isDown = GFraMe_keys.down;
-            isDown = isDown || GFraMe_keys.s;
-            if (GFraMe_controller_max >= 1) {
-                isDown = isDown || GFraMe_controllers[0].ly > 0.5;
-                isDown = isDown || GFraMe_controllers[0].down;
-            }
-            isUp = GFraMe_keys.up;
-            isUp = isUp || GFraMe_keys.w;
-            if (GFraMe_controller_max >= 1) {
-                isUp = isUp || GFraMe_controllers[0].ly < -0.5;
-                isUp = isUp || GFraMe_controllers[0].up;
-            }
-            
-            if (isDown) {
-                ms->curOpt++;
-                if (ms->curOpt >= OPT_MAX) {
-                    if (ms->hasSave)
-                        ms->curOpt = 0;
-                    else
-                        ms->curOpt = 1;
+            t = GFraMe_event_elapsed / 1000.0f;
+            #define UPD_LETTER(L, LF, V) \
+                if (L < 32) { \
+                    LF += t * V; \
+                    L = (int)LF; \
                 }
-                if (!ms->firstPress)
-                    ms->lastPressedTime += 300;
-                else
-                    ms->lastPressedTime += 100;
-                ms->firstPress = 1;
-            }
-            else if (isUp) {
-                ms->curOpt--;
-                if ((!ms->hasSave && ms->curOpt < 1) || ms->curOpt < 0)
-                    ms->curOpt = OPT_MAX - 1;
-                if (!ms->firstPress)
-                    ms->lastPressedTime += 300;
-                else
-                    ms->lastPressedTime += 100;
-                ms->firstPress = 1;
+            UPD_LETTER(ms->j1Y, ms->j1Yf, J1_VY)
+            UPD_LETTER(ms->j2Y, ms->j2Yf, J2_VY)
+            UPD_LETTER(ms->aY, ms->aYf, A_VY)
+            UPD_LETTER(ms->tY, ms->tYf, T_VY)
+            #undef UPD_LETTER
+            if (ms->j1Y == 32 && ms->j2Y == 32 && ms->aY == 32 && ms->tY == 32) {
+                ms->isTitleSet =1;
             }
         }
-        
-        isEnter = GFraMe_keys.enter;
-        isEnter = isEnter || GFraMe_keys.z;
-        isEnter = isEnter || GFraMe_keys.space;
-        if (GFraMe_controller_max > 0) {
-            isEnter = isEnter || GFraMe_controllers[0].a;
-            isEnter = isEnter || GFraMe_controllers[0].start;
-        }
-        if (isEnter) {
-            ms->runMenu = 0;
-            if (ms->curOpt == OPT_QUIT)
+        else {
+            if (ms->lastPressedTime > 0)
+                ms->lastPressedTime -= GFraMe_event_elapsed;
+            else {
+                int isDown, isUp;
+                
+                // Get key state
+                isDown = GFraMe_keys.down;
+                isDown = isDown || GFraMe_keys.s;
+                if (GFraMe_controller_max >= 1) {
+                    isDown = isDown || GFraMe_controllers[0].ly > 0.5;
+                    isDown = isDown || GFraMe_controllers[0].down;
+                }
+                isUp = GFraMe_keys.up;
+                isUp = isUp || GFraMe_keys.w;
+                if (GFraMe_controller_max >= 1) {
+                    isUp = isUp || GFraMe_controllers[0].ly < -0.5;
+                    isUp = isUp || GFraMe_controllers[0].up;
+                }
+                
+                if (isDown) {
+                    ms->curOpt++;
+                    if (ms->curOpt >= OPT_MAX) {
+                        if (ms->hasSave)
+                            ms->curOpt = 0;
+                        else
+                            ms->curOpt = 1;
+                    }
+                    if (!ms->firstPress)
+                        ms->lastPressedTime += 300;
+                    else
+                        ms->lastPressedTime += 100;
+                    ms->firstPress = 1;
+                }
+                else if (isUp) {
+                    ms->curOpt--;
+                    if ((!ms->hasSave && ms->curOpt < 1) || ms->curOpt < 0)
+                        ms->curOpt = OPT_MAX - 1;
+                    if (!ms->firstPress)
+                        ms->lastPressedTime += 300;
+                    else
+                        ms->lastPressedTime += 100;
+                    ms->firstPress = 1;
+                }
+            }
+            
+            isEnter = GFraMe_keys.enter;
+            isEnter = isEnter || GFraMe_keys.z;
+            isEnter = isEnter || GFraMe_keys.space;
+            if (GFraMe_controller_max > 0) {
+                isEnter = isEnter || GFraMe_controllers[0].a;
+                isEnter = isEnter || GFraMe_controllers[0].start;
+            }
+            if (isEnter) {
+                ms->runMenu = 0;
+                if (ms->curOpt == OPT_QUIT)
+                    gl_running = 0;
+            }
+            
+            ms->idleTime += GFraMe_event_elapsed;
+            if (ms->idleTime >= TIME_TO_DEMO) {
                 gl_running = 0;
+                ms->curOpt = OPT_MAX;
+            }
         }
     GFraMe_event_update_end();
 }
@@ -287,9 +372,18 @@ static void ms_event(struct stMenustate *ms) {
     GFraMe_event_begin();
         GFraMe_event_on_timer();
         GFraMe_event_on_key_down();
+            ms->idleTime = 0;
+            if (!ms->isTitleSet) {
+                ms->isTitleSet = 1;
+                ms->j1Y = 32;
+                ms->j2Y = 32;
+                ms->aY = 32;
+                ms->tY = 32;
+            }
         GFraMe_event_on_key_up();
             ms->firstPress = 0;
             ms->lastPressedTime = 0;
+            ms->idleTime = 0;
         GFraMe_event_on_controller();
             if (event.type == SDL_CONTROLLERBUTTONUP ||
                 (GFraMe_controller_max > 0
@@ -300,6 +394,7 @@ static void ms_event(struct stMenustate *ms) {
                 ms->firstPress = 0;
                 ms->lastPressedTime = 0;
             }
+            ms->idleTime = 0;
         GFraMe_event_on_quit();
             gl_running = 0;
     GFraMe_event_end();

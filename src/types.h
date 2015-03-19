@@ -11,7 +11,8 @@ typedef enum {
     NEW_PLAYSTATE,
     CNT_PLAYSTATE,
     OPTIONS,
-    CREDITS
+    CREDITS,
+    DEMO
 } state;
 
 typedef enum {
