@@ -87,17 +87,15 @@ static unsigned int _ltime;
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
-void playstate(int doLoad) {
+state playstate(int doLoad) {
     GFraMe_ret rv;
     
-    gl_running = 0;
     rv = ps_init(doLoad);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
     _ps_pause = 0;
-    gl_running = 1;
     while (gl_running) {
 #ifdef DEBUG
         unsigned int t;
@@ -137,6 +135,8 @@ void playstate(int doLoad) {
     
 __ret:
     ps_clean();
+    
+    return MENUSTATE;
 }
 
 /**

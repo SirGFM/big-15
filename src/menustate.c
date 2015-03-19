@@ -16,7 +16,7 @@
 #include "types.h"
 
 #define GFM_ICON 39
-#define TIME_TO_DEMO 15000
+#define TIME_TO_DEMO 5000
 #define J1_VY 64
 #define J2_VY 64
 #define  A_VY 64
@@ -122,15 +122,13 @@ state menustate() {
     state ret;
     struct stMenustate ms;
     
-    rv = -1;
-    gl_running = 0;
+    ret = -1;
     rv = ms_init(&ms);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init menustate", __ret);
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
     // Run the menu
-    gl_running = 1;
     while (gl_running && ms.runMenu) {
         ms_event(&ms);
         ms_update(&ms);
@@ -251,9 +249,11 @@ static void ms_draw(struct stMenustate *ms) {
         if (ms->isTitleSet) {
             // TODO write title
             // Put the 'selected' mark
-            i = 13 * ms->curOpt;
-            options[i] = '-'; options[i+1] = '-';
-            options[i+10] = '-'; options[i+11] = '-';
+            if (ms->curOpt < OPT_MAX) {
+                i = 13 * ms->curOpt;
+                options[i] = '-'; options[i+1] = '-';
+                options[i+10] = '-'; options[i+11] = '-';
+            }
             // Render texts
             l = sizeof(options);
             if (!ms->hasSave) {
@@ -358,7 +358,7 @@ static void ms_update(struct stMenustate *ms) {
             
             ms->idleTime += GFraMe_event_elapsed;
             if (ms->idleTime >= TIME_TO_DEMO) {
-                gl_running = 0;
+                ms->runMenu = 0;
                 ms->curOpt = OPT_MAX;
             }
         }
@@ -373,6 +373,10 @@ static void ms_event(struct stMenustate *ms) {
         GFraMe_event_on_timer();
         GFraMe_event_on_key_down();
             ms->idleTime = 0;
+        GFraMe_event_on_key_up();
+            ms->firstPress = 0;
+            ms->lastPressedTime = 0;
+            ms->idleTime = 0;
             if (!ms->isTitleSet) {
                 ms->isTitleSet = 1;
                 ms->j1Y = 32;
@@ -380,11 +384,14 @@ static void ms_event(struct stMenustate *ms) {
                 ms->aY = 32;
                 ms->tY = 32;
             }
-        GFraMe_event_on_key_up();
-            ms->firstPress = 0;
-            ms->lastPressedTime = 0;
-            ms->idleTime = 0;
         GFraMe_event_on_controller();
+            if (event.type == SDL_CONTROLLERBUTTONUP && !ms->isTitleSet) {
+                ms->isTitleSet = 1;
+                ms->j1Y = 32;
+                ms->j2Y = 32;
+                ms->aY = 32;
+                ms->tY = 32;
+            }
             if (event.type == SDL_CONTROLLERBUTTONUP ||
                 (GFraMe_controller_max > 0
                     && (GFraMe_controllers[0].ly < 0.5

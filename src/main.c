@@ -11,6 +11,7 @@
 //#include <GFraMe/GFraMe_sprite.h>
 
 #include "controller.h"
+#include "demo.h"
 #include "global.h"
 #include "menustate.h"
 #include "playstate.h"
@@ -59,9 +60,10 @@ int main(int argc, char *argv[]) {
     st = MENUSTATE;
     while (gl_running) {
         switch (st) {
-            case MENUSTATE: st = menustate(); break;
-            case NEW_PLAYSTATE: playstate(0); break;
-            case CNT_PLAYSTATE: playstate(1); break;
+            case     MENUSTATE: st = menustate(); break;
+            case NEW_PLAYSTATE: st = playstate(0); break;
+            case CNT_PLAYSTATE: st = playstate(1); break;
+            case          DEMO: st = demo(); break;
             default: GFraMe_assertRet(0, "Invalid state!", __ret);
         }
     }
