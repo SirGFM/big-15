@@ -64,6 +64,10 @@ DECLARE_AUDIO(bombExpl);
 DECLARE_AUDIO(bossExpl);
 DECLARE_AUDIO(bossMove);
 DECLARE_AUDIO(plDeath);
+DECLARE_AUDIO(menu);
+DECLARE_AUDIO(intro);
+DECLARE_AUDIO(movingOn);
+
 
 GFraMe_ret gl_init() {
     GFraMe_ret rv;
@@ -92,6 +96,10 @@ GFraMe_ret gl_init() {
     
     #define INIT_AUDIO(AUD, FILEN) \
         rv = GFraMe_audio_init(&_glAud_##AUD, FILEN, 0, 0, 1); \
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Loading audio "FILEN" failed", __ret); \
+        gl_aud_##AUD = &_glAud_##AUD
+    #define INIT_SONG(AUD, FILEN) \
+        rv = GFraMe_audio_init(&_glAud_##AUD, FILEN, 1, 0, 1); \
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Loading audio "FILEN" failed", __ret); \
         gl_aud_##AUD = &_glAud_##AUD
     
@@ -131,6 +139,9 @@ GFraMe_ret gl_init() {
     INIT_AUDIO(bossExpl, "bossExpl");
     INIT_AUDIO(bossMove, "bossMove");
     INIT_AUDIO(plDeath, "plDeath");
+    INIT_SONG(menu, "menu");
+    INIT_SONG(intro, "intro");
+    INIT_SONG(movingOn, "movingOn");
     
     gl_isInit = 1;
     gl_running = 1;
@@ -176,6 +187,9 @@ void gl_clean() {
         CLEAN_AUDIO(bossExpl);
         CLEAN_AUDIO(bossMove);
         CLEAN_AUDIO(plDeath);
+        CLEAN_AUDIO(menu);
+        CLEAN_AUDIO(intro);
+        CLEAN_AUDIO(movingOn);
     }
 }
 

@@ -17,6 +17,7 @@
 #  include <SDL2/SDL_timer.h>
 #endif
 
+#include "audio.h"
 #include "bullet.h"
 #include "camera.h"
 #include "collision.h"
@@ -42,6 +43,8 @@ GFraMe_event_setup();
 int switchState;
 static int _ps_pause;
 static int _ps_onOptions;
+static int _timerTilCredits;
+static int _psRunning;
 
 /**
  * Initialize the playstate
@@ -90,14 +93,17 @@ static unsigned int _ltime;
  */
 state playstate(int doLoad) {
     GFraMe_ret rv;
+    state ret;
     
+    ret = -1;
     rv = ps_init(doLoad);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
     _ps_pause = 0;
-    while (gl_running) {
+    _psRunning = 1;
+    while (gl_running && _psRunning) {
 #ifdef DEBUG
         unsigned int t;
 #endif
@@ -134,10 +140,14 @@ state playstate(int doLoad) {
 #endif
     }
     
+    if (_timerTilCredits >= 5000)
+        ret = CREDITS;
+    else
+        ret = MENUSTATE;
 __ret:
     ps_clean();
     
-    return MENUSTATE;
+    return ret;
 }
 
 /**
@@ -164,6 +174,16 @@ static GFraMe_ret ps_init(int isLoading) {
         plY = gv_getValue(DOOR_Y) * 8;
         map = gv_getValue(MAP);
     }
+    
+    if (map >= 20) {
+        audio_playBoss();
+    }
+    else if (map >= 15) {
+        audio_playMovingOn();
+    }
+    else {
+        audio_playIntro();
+    }
 
     rv = ui_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init ui", __ret);
@@ -185,6 +205,7 @@ static GFraMe_ret ps_init(int isLoading) {
 
     signal_init();
     
+    _timerTilCredits = 0;
     _ps_onOptions = 0;
     switchState = 0;
     transition_initFadeOut();
@@ -272,6 +293,13 @@ static GFraMe_ret ps_switchMap() {
                 
                 rv = map_loadi(m, map);
                 ASSERT(rv == GFraMe_ret_ok, rv);
+                
+                if (map >= 20) {
+                    audio_playBoss();
+                }
+                else if (map >= 15) {
+                    audio_playMovingOn();
+                }
                 
                 switchState++;
             } break;
@@ -366,6 +394,16 @@ static void ps_update() {
         GFraMe_object *pObj;
         GFraMe_ret rv;
         int  h, w;
+        
+        if (gv_getValue(BOSS_ISDEAD) >= 4) {
+            if (_timerTilCredits == 0) {
+                audio_playVictory();
+            }
+            else if (_timerTilCredits > 5000) {
+                _psRunning = 0;
+            }
+            _timerTilCredits += GFraMe_event_elapsed;
+        }
         
 #ifdef DEBUG
         _updCalls++;
@@ -490,8 +528,6 @@ static void ps_event() {
         GFraMe_event_on_mouse_moved();
 #endif
         GFraMe_event_on_key_down();
-            if (GFraMe_keys.esc)
-                gl_running = 0;
             if (ctr_pause()) {
                 _ps_pause = !_ps_pause;
                 _ps_onOptions = 0;
@@ -499,8 +535,6 @@ static void ps_event() {
             }
         GFraMe_event_on_key_up();
         GFraMe_event_on_controller();
-            if (GFraMe_controller_max > 0 && GFraMe_controllers[0].home)
-                gl_running = 0;
             if (event.type == SDL_CONTROLLERBUTTONDOWN && ctr_pause()) {
                 _ps_pause = !_ps_pause;
                 GFraMe_audio_play(gl_aud_pause, 0.4f);

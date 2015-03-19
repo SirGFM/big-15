@@ -83,6 +83,9 @@ AUD_DECLARE_EXT(bombExpl);
 AUD_DECLARE_EXT(bossExpl);
 AUD_DECLARE_EXT(bossMove);
 AUD_DECLARE_EXT(plDeath);
+AUD_DECLARE_EXT(menu);
+AUD_DECLARE_EXT(intro);
+AUD_DECLARE_EXT(movingOn);
 
 // Functions
 

@@ -11,6 +11,7 @@
 #include <GFraMe/GFraMe_save.h>
 #include <GFraMe/GFraMe_spriteset.h>
 
+#include "audio.h"
 #include "global.h"
 #include "globalVar.h"
 #include "transition.h"
@@ -202,6 +203,8 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     ms->tX = 194;
     ms->tYf = -54.0f;
     ms->tY = -54;
+    
+    audio_playMenu();
     
     rv = GFraMe_ret_ok;
 //__ret:
