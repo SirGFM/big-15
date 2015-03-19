@@ -1,6 +1,7 @@
     /**
  * @file src/commonEvent.c
  */
+#include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
@@ -154,8 +155,10 @@ void ce_callEvent(commonEvent ce) {
             
             // Switch the var's state
             val = gv_getValue(gv);
-            if (val == CLOSED)
+            if (val == CLOSED) {
                 gv_setValue(gv, OPENING);
+                GFraMe_audio_play(gl_aud_door, 0.3f);
+            }
         } break;
         case CE_CLOSE_DOOR: {
             event *pE;
@@ -168,8 +171,10 @@ void ce_callEvent(commonEvent ce) {
             
             // Switch the var's state
             val = gv_getValue(gv);
-            if (val == OPEN)
+            if (val == OPEN) {
                 gv_setValue(gv, CLOSING);
+                GFraMe_audio_play(gl_aud_door, 0.3f);
+            }
         } break;
         case CE_SWITCH_DOOR: {
             event *pE;
@@ -182,10 +187,14 @@ void ce_callEvent(commonEvent ce) {
             
             // Switch the var's state
             val = gv_getValue(gv);
-            if (val == OPEN)
+            if (val == OPEN) {
                 gv_setValue(gv, CLOSING);
-            else if (val == CLOSED)
+                GFraMe_audio_play(gl_aud_door, 0.3f);
+            }
+            else if (val == CLOSED) {
                 gv_setValue(gv, OPENING);
+                GFraMe_audio_play(gl_aud_door, 0.3f);
+            }
         } break;
         case CE_HANDLE_DOOR:
         case CE_HANDLE_NOTDOOR: {
@@ -429,6 +438,8 @@ void ce_callEvent(commonEvent ce) {
             gv_setValue(PL2_HP, val);
             // Mark this as gotten
             gv_inc(gv);
+            
+            GFraMe_audio_play(gl_aud_heartup, 0.55f);
         } break;
         case CE_SET_GV: {
             event *pE;
@@ -441,6 +452,12 @@ void ce_callEvent(commonEvent ce) {
             event_iGetVar(&val, pE, 0);
             // Set it!
             gv_setValue(gv, val);
+            if (gv >= TERMINAL_001 && gv <= TERMINAL_027) {
+                GFraMe_audio_play(gl_aud_terminal, 0.3f);
+            }
+            else if (gv >= HJUMP_TERM && gv <= SIGNL_TERM) {
+                GFraMe_audio_play(gl_aud_getItem, 0.75f);
+            }
         } break;
         case CE_SET_ANIM_OFF: {
             globalVar gv;

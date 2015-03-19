@@ -55,6 +55,35 @@ extern GFraMe_spriteset *gl_sset64x8;  /** 64x8 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset64x16; /** 64x16 pixels spriteset    */
 extern GFraMe_spriteset *gl_sset64x32; /** 64x32 pixels spriteset    */
 
+#define AUD_DECLARE_EXT(AUD) \
+  extern GFraMe_audio *gl_aud_##AUD
+
+AUD_DECLARE_EXT(menuMove);
+AUD_DECLARE_EXT(menuSelect);
+AUD_DECLARE_EXT(text);
+AUD_DECLARE_EXT(jump);
+AUD_DECLARE_EXT(highjump);
+AUD_DECLARE_EXT(door);
+AUD_DECLARE_EXT(terminal);
+AUD_DECLARE_EXT(getItem);
+AUD_DECLARE_EXT(heartup);
+AUD_DECLARE_EXT(switchItem);
+AUD_DECLARE_EXT(shootEn);
+AUD_DECLARE_EXT(blHit);
+AUD_DECLARE_EXT(fall);
+AUD_DECLARE_EXT(pause);
+AUD_DECLARE_EXT(plHit);
+AUD_DECLARE_EXT(jumperJump);
+AUD_DECLARE_EXT(jumperFall);
+AUD_DECLARE_EXT(charger);
+AUD_DECLARE_EXT(teleport);
+AUD_DECLARE_EXT(signaler);
+AUD_DECLARE_EXT(shootBoss);
+AUD_DECLARE_EXT(bombExpl);
+AUD_DECLARE_EXT(bossExpl);
+AUD_DECLARE_EXT(bossMove);
+AUD_DECLARE_EXT(plDeath);
+
 // Functions
 
 GFraMe_ret gl_init();

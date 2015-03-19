@@ -3,6 +3,7 @@
  * 
  * Play a little demo (only text on a black screen, actually)
  */
+#include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_spriteset.h>
@@ -165,8 +166,14 @@ static int dm_update(struct stDemo *dm) {
                 dm->textLen++;
                 if (dm->textLen == dm->textMaxLen)
                     dm->time += 1500;
-                else
+                else {
+                    int c;
+                    
                     dm->time += 50;
+                    c = dm->text[dm->textLen - 1];
+                    if (c != ' ' && c != '\n')
+                        GFraMe_audio_play(gl_aud_text, 0.5f);
+                }
             }
         }
     GFraMe_event_update_end();

@@ -4,6 +4,7 @@
  * A projectile like thing
  */
 #include <GFraMe/GFraMe_animation.h>
+#include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
@@ -199,7 +200,9 @@ __ret:
 void bullet_explode(bullet *pBul) {
     switch (pBul->spr.id) {
         case ID_BOSSPROJ:
-        case ID_ENEPROJ: bullet_setAnim(pBul, PROJ_EXPLODE); break;
+        case ID_ENEPROJ: {
+            bullet_setAnim(pBul, PROJ_EXPLODE);
+        } break;
         case ID_EXPLPROJ: {} break;
         default: pBul->state = PROJ_NONE;
     }
@@ -248,6 +251,9 @@ void bullet_setAnim(bullet *pBul, int anim) {
     ASSERT_NR(anim < pBul->animLen);
     
     GFraMe_sprite_set_animation(&pBul->spr, &pBul->anim[anim], 0);
+    
+    if (anim == PROJ_EXPLODE)
+        GFraMe_audio_play(gl_aud_blHit, 0.5f);
     
     pBul->state = anim;
 __ret:

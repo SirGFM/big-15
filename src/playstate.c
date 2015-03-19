@@ -2,6 +2,7 @@
  * @file src/playstate.c
  */
 #include <GFraMe/GFraMe_assets.h>
+#include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_hitbox.h>
@@ -494,13 +495,16 @@ static void ps_event() {
             if (ctr_pause()) {
                 _ps_pause = !_ps_pause;
                 _ps_onOptions = 0;
+                GFraMe_audio_play(gl_aud_pause, 0.4f);
             }
         GFraMe_event_on_key_up();
         GFraMe_event_on_controller();
             if (GFraMe_controller_max > 0 && GFraMe_controllers[0].home)
                 gl_running = 0;
-            if (event.type == SDL_CONTROLLERBUTTONDOWN && ctr_pause())
+            if (event.type == SDL_CONTROLLERBUTTONDOWN && ctr_pause()) {
                 _ps_pause = !_ps_pause;
+                GFraMe_audio_play(gl_aud_pause, 0.4f);
+            }
         GFraMe_event_on_quit();
             gl_running = 0;
     GFraMe_event_end();

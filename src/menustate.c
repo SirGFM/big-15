@@ -3,6 +3,7 @@
  * 
  * Menu state
  */
+#include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_controller.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
@@ -330,6 +331,7 @@ static void ms_update(struct stMenustate *ms) {
                     else
                         ms->lastPressedTime += 100;
                     ms->firstPress = 1;
+                    GFraMe_audio_play(gl_aud_menuMove, 0.5f);
                 }
                 else if (isUp) {
                     ms->curOpt--;
@@ -340,6 +342,7 @@ static void ms_update(struct stMenustate *ms) {
                     else
                         ms->lastPressedTime += 100;
                     ms->firstPress = 1;
+                    GFraMe_audio_play(gl_aud_menuMove, 0.5f);
                 }
             }
             
@@ -351,6 +354,7 @@ static void ms_update(struct stMenustate *ms) {
                 isEnter = isEnter || GFraMe_controllers[0].start;
             }
             if (isEnter) {
+                GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
                 ms->runMenu = 0;
                 if (ms->curOpt == OPT_QUIT)
                     gl_running = 0;
