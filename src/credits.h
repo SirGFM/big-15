@@ -3,13 +3,15 @@
  * 
  * Menu state
  */
-#ifndef __MENUSTATE_H_
-#define __MENUSTATE_H_
+#ifndef __CREDITS_H_
+#define __CREDITS_H_
+
+#include "types.h"
 
 /**
  * Menustate implementation. Must initialize it, run the loop and clean it up
  */
-void menustate();
+state credits();
 
 #endif
 

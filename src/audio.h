@@ -14,6 +14,7 @@ void audio_playVictory();
 
 void sfx_menuMove();
 void sfx_menuSelect();
+void sfx_text();
 
 #endif
 

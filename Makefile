@@ -18,6 +18,7 @@ CC=gcc
          $(OBJDIR)/collision.o         \
          $(OBJDIR)/commonEvent.o       \
          $(OBJDIR)/controller.o        \
+         $(OBJDIR)/credits.o           \
          $(OBJDIR)/demo.o              \
          $(OBJDIR)/event.o             \
          $(OBJDIR)/global.o            \

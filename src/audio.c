@@ -70,4 +70,7 @@ void sfx_menuMove() {
 void sfx_menuSelect() {
     GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
 }
+void sfx_text() {
+    GFraMe_audio_play(gl_aud_text, 0.5f);
+}
 

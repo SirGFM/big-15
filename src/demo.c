@@ -8,6 +8,7 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_spriteset.h>
 
+#include "audio.h"
 #include "demo.h"
 #include "global.h"
 #include "types.h"
@@ -172,7 +173,7 @@ static int dm_update(struct stDemo *dm) {
                     dm->time += 50;
                     c = dm->text[dm->textLen - 1];
                     if (c != ' ' && c != '\n')
-                        GFraMe_audio_play(gl_aud_text, 0.5f);
+                        sfx_text();
                 }
             }
         }

@@ -158,7 +158,7 @@ static void op_draw(struct stOptions *op) {
         else if (pl1 < CTR_PAD2_A)
             _op_renderText("GAMEPAD1", x+12, y, sizeof("GAMEPAD1")-1);
         else
-            _op_renderText("GAMEPAD1", x+12, y, sizeof("GAMEPAD1")-1);
+            _op_renderText("GAMEPAD2", x+12, y, sizeof("GAMEPAD2")-1);
         y++;
         
         _op_renderText("PL1 MODE", x, y, sizeof("PL1 MODE")-1);

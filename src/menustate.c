@@ -17,7 +17,7 @@
 #include "transition.h"
 #include "types.h"
 
-#define GFM_ICON 39
+#define GFM_ICON 34
 #define TIME_TO_DEMO 5000
 #define J1_VY 64
 #define J2_VY 64

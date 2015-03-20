@@ -10,6 +10,7 @@
 #include <GFraMe/GFraMe_screen.h>
 //#include <GFraMe/GFraMe_sprite.h>
 
+#include "credits.h"
 #include "controller.h"
 #include "demo.h"
 #include "global.h"
@@ -54,6 +55,7 @@ int main(int argc, char *argv[]) {
     GFraMe_controller_init(1);
     
     st = MENUSTATE;
+    // st = CREDITS;
     while (gl_running) {
         switch (st) {
             case     MENUSTATE: st = menustate(); break;
@@ -61,7 +63,7 @@ int main(int argc, char *argv[]) {
             case CNT_PLAYSTATE: st = playstate(1); break;
             case       OPTIONS: st = options(); break;
             case          DEMO: st = demo(); break;
-            // case       CREDITS:
+            case       CREDITS: st = credits(); break;
             default: GFraMe_assertRet(0, "Invalid state!", __ret);
         }
     }
@@ -75,5 +77,4 @@ __ret:
     
     return 0;
 }
-
 
