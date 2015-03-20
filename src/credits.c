@@ -201,11 +201,11 @@ static void cr_update(struct stCredits *cr) {
                         switch (cr->len % 4) {
                             case 0:
                             case 2:
-                                cr->frame = 36; break;
+                                cr->frame = 35; break;
                             case 1:
-                                cr->frame = 37; break;
+                                cr->frame = 36; break;
                             case 3:
-                                cr->frame = 38; break;
+                                cr->frame = 37; break;
                         }
                     }
                 }
