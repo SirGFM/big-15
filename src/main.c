@@ -14,6 +14,7 @@
 #include "demo.h"
 #include "global.h"
 #include "menustate.h"
+#include "options.h"
 #include "playstate.h"
 #include "types.h"
 
@@ -51,11 +52,6 @@ int main(int argc, char *argv[]) {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "global init failed", __ret);
     
     GFraMe_controller_init(1);
-    if (GFraMe_controller_max >= 2)
-        ctr_setMode(CTR_2CTR);
-    else if (GFraMe_controller_max == 0)
-        ctr_setMode(CTR_KEYS);
-//    GFraMe_audio_player_play_bgm(gl_bgm, 0.60f);
     
     st = MENUSTATE;
     while (gl_running) {
@@ -63,7 +59,9 @@ int main(int argc, char *argv[]) {
             case     MENUSTATE: st = menustate(); break;
             case NEW_PLAYSTATE: st = playstate(0); break;
             case CNT_PLAYSTATE: st = playstate(1); break;
+            case       OPTIONS: st = options(); break;
             case          DEMO: st = demo(); break;
+            // case       CREDITS:
             default: GFraMe_assertRet(0, "Invalid state!", __ret);
         }
     }

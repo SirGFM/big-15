@@ -12,5 +12,8 @@ void audio_playMovingOn();
 void audio_playBoss();
 void audio_playVictory();
 
+void sfx_menuMove();
+void sfx_menuSelect();
+
 #endif
 

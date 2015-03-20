@@ -64,3 +64,10 @@ void audio_playVictory() {
     audio_playMovingOn();
 }
 
+void sfx_menuMove() {
+    GFraMe_audio_play(gl_aud_menuMove, 0.5f);
+}
+void sfx_menuSelect() {
+    GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
+}
+

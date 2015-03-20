@@ -3,7 +3,6 @@
  * 
  * Menu state
  */
-#include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_controller.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
@@ -12,6 +11,7 @@
 #include <GFraMe/GFraMe_spriteset.h>
 
 #include "audio.h"
+#include "controller.h"
 #include "global.h"
 #include "globalVar.h"
 #include "transition.h"
@@ -158,20 +158,42 @@ __ret:
 static GFraMe_ret ms_init(struct stMenustate *ms) {
     GFraMe_ret rv;
     GFraMe_save sv;
+    int tmp, ctrPl1, ctrPl2;
     
     // Check if there's already a saved game
     rv = GFraMe_save_bind(&sv, SAVEFILE);
-    if (rv == GFraMe_ret_ok) {
-        // Check if something other than the version is written
-        if (sv.size > 50)
-            ms->hasSave = 1;
-        else
-            ms->hasSave = 0;
-        GFraMe_save_close(&sv);
-    }
-    else {
+    ASSERT_NR(rv == GFraMe_ret_ok);
+    // Check if something other than the version is written
+    if (sv.size > 50)
+        ms->hasSave = 1;
+    else
         ms->hasSave = 0;
+    GFraMe_save_close(&sv);
+    
+    // Check the configurations
+    rv = GFraMe_save_bind(&sv, CONFFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
+    // Try to read both players control mode
+    ctrPl1 = -1;
+    ctrPl2 = -1;
+    rv = GFraMe_save_read_int(&sv, "ctr_pl1", &tmp);
+    if (rv == GFraMe_ret_ok)
+        ctrPl1 = tmp;
+    rv = GFraMe_save_read_int(&sv, "ctr_pl2", &tmp);
+    if (rv == GFraMe_ret_ok)
+        ctrPl2 = tmp;
+    // set the control scheme
+    if (ctrPl1 != -1 && ctrPl2 != -1) {
+        tmp = ctr_setModeForce(ID_PL1, ctrPl1);
+        if (tmp)
+            tmp = ctr_setModeForce(ID_PL2, ctrPl2);
+        // In case any error happened, set the default
+        if (!tmp)
+            ctr_setDef();
     }
+    else
+        ctr_setDef();
+    GFraMe_save_close(&sv);
     
     // Zero some variables
     ms->lastPressedTime = 0;
@@ -207,7 +229,7 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     audio_playMenu();
     
     rv = GFraMe_ret_ok;
-//__ret:
+__ret:
     return rv;
 }
 
@@ -334,7 +356,7 @@ static void ms_update(struct stMenustate *ms) {
                     else
                         ms->lastPressedTime += 100;
                     ms->firstPress = 1;
-                    GFraMe_audio_play(gl_aud_menuMove, 0.5f);
+                    sfx_menuMove();
                 }
                 else if (isUp) {
                     ms->curOpt--;
@@ -345,7 +367,7 @@ static void ms_update(struct stMenustate *ms) {
                     else
                         ms->lastPressedTime += 100;
                     ms->firstPress = 1;
-                    GFraMe_audio_play(gl_aud_menuMove, 0.5f);
+                    sfx_menuMove();
                 }
             }
             
@@ -357,7 +379,7 @@ static void ms_update(struct stMenustate *ms) {
                 isEnter = isEnter || GFraMe_controllers[0].start;
             }
             if (isEnter) {
-                GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
+                sfx_menuSelect();
                 ms->runMenu = 0;
                 if (ms->curOpt == OPT_QUIT)
                     gl_running = 0;
