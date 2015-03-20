@@ -409,6 +409,9 @@ static void ps_update() {
             }
             _timerTilCredits += GFraMe_event_elapsed;
         }
+        else if (gv_nIsZero(SWITCH_MAP)) {
+            return;
+        }
         
 #ifdef DEBUG
         _updCalls++;
@@ -500,13 +503,13 @@ static void ps_update() {
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
         }
-        else if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
+        if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
             GFraMe_ret rv;
             // Recover previous state
             rv = gv_load(SAVEFILE);
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
             // Increase death counter
-            gv_inc(PL1_DEATH);
+            gv_inc(PL2_DEATH);
             // Save death counter
             rv = gv_save(SAVEFILE);
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
