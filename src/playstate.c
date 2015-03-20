@@ -37,11 +37,16 @@
 
 #define PL_TWEEN_DELAY 1000
 
+enum {OPT_CONT, OPT_RETRY, OPT_OPTIONS, OPT_MENU, OPT_EXIT, OPT_MAX};
+
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
 int switchState;
 static int _ps_pause;
+static int _ps_firstPress;
+static int _ps_lastPress;
+static int _ps_opt;
 static int _ps_onOptions;
 static int _timerTilCredits;
 static int _psRunning;
@@ -528,16 +533,34 @@ static void ps_event() {
         GFraMe_event_on_mouse_moved();
 #endif
         GFraMe_event_on_key_down();
-            if (ctr_pause()) {
+            if (ctr_pause() && (!_ps_pause || !GFraMe_keys.enter)) {
                 _ps_pause = !_ps_pause;
+                _ps_firstPress = 0;
+                _ps_opt = 0;
                 _ps_onOptions = 0;
+                _ps_lastPress = 300;
                 GFraMe_audio_play(gl_aud_pause, 0.4f);
             }
         GFraMe_event_on_key_up();
+            _ps_firstPress = 0;
+            _ps_lastPress = 0;
         GFraMe_event_on_controller();
             if (event.type == SDL_CONTROLLERBUTTONDOWN && ctr_pause()) {
                 _ps_pause = !_ps_pause;
+                _ps_firstPress = 0;
+                _ps_opt = 0;
+                _ps_onOptions = 0;
+                _ps_lastPress = 300;
                 GFraMe_audio_play(gl_aud_pause, 0.4f);
+            }
+            else if (event.type == SDL_CONTROLLERBUTTONUP ||
+                (GFraMe_controller_max > 0
+                    && (GFraMe_controllers[0].ly < 0.5
+                        && GFraMe_controllers[0].ly > -0.5)
+                    && !GFraMe_controllers[0].up
+                    && !GFraMe_controllers[0].down)) {
+                _ps_firstPress = 0;
+                _ps_lastPress = 0;
             }
         GFraMe_event_on_quit();
             gl_running = 0;
@@ -545,10 +568,87 @@ static void ps_event() {
 }
 
 /**
+ * Render some text into the screen
+ * 
+ * @param text The text
+ * @param X Horizontal position
+ * @param Y Vertical position
+ * @param l Text length
+ */
+static void _op_renderText(char *text, int X, int Y, int l);
+
+/**
  * Handle pause menu
  */
 static void ps_doPause() {
     GFraMe_event_update_begin();
+        if (_ps_lastPress > 0)
+            _ps_lastPress -= GFraMe_event_elapsed;
+        else {
+            int isDown, isUp, isEnter;
+            
+            // Get key state
+            isDown = GFraMe_keys.down;
+            isDown = isDown || GFraMe_keys.s;
+            if (GFraMe_controller_max >= 1) {
+                isDown = isDown || GFraMe_controllers[0].ly > 0.5;
+                isDown = isDown || GFraMe_controllers[0].down;
+            }
+            isUp = GFraMe_keys.up;
+            isUp = isUp || GFraMe_keys.w;
+            if (GFraMe_controller_max >= 1) {
+                isUp = isUp || GFraMe_controllers[0].ly < -0.5;
+                isUp = isUp || GFraMe_controllers[0].up;
+            }
+            
+            if (isDown) {
+                _ps_opt++;
+                if (_ps_opt >= OPT_MAX) {
+                    _ps_opt = 0;
+                }
+                if (!_ps_firstPress)
+                    _ps_lastPress += 300;
+                else
+                    _ps_lastPress += 100;
+                _ps_firstPress = 1;
+                sfx_menuMove();
+            }
+            else if (isUp) {
+                _ps_opt--;
+                if (_ps_opt < 0)
+                    _ps_opt = OPT_MAX - 1;
+                if (!_ps_firstPress)
+                    _ps_lastPress += 300;
+                else
+                    _ps_lastPress += 100;
+                _ps_firstPress = 1;
+                sfx_menuMove();
+            }
+            
+            isEnter = GFraMe_keys.enter;
+            isEnter = isEnter || GFraMe_keys.z;
+            isEnter = isEnter || GFraMe_keys.space;
+            if (GFraMe_controller_max > 0) {
+                isEnter = isEnter || GFraMe_controllers[0].a;
+            }
+            
+            if (isEnter) {
+                switch (_ps_opt) {
+                    case OPT_CONT: _ps_pause = 0; break;
+                    case OPT_RETRY: {
+                        gv_setValue(PL1_HP, 0);
+                        gv_setValue(PL2_HP, 0);
+                        _ps_pause = 0;
+                    } break;
+                    case OPT_OPTIONS: {
+                        _ps_onOptions = 1;
+                        _ps_lastPress = 500;
+                    } break;
+                    case OPT_MENU: _psRunning = 0; break;
+                    case OPT_EXIT: gl_running = 0; break;
+                }
+            }
+        }
     GFraMe_event_update_end();
 }
 
@@ -556,21 +656,58 @@ static void ps_doPause() {
  * Draw pause menu
  */
 static void ps_drawPause() {
-    char text[] = "--PAUSED--";
-    int i, x, y;
+    int x, y;
     
     // Draw the overlay
     transition_drawPause();
-    // Get the text tiles
-	GFraMe_str2tiles(text, text, 0);
     // Render the text
+    _op_renderText("--PAUSED--", 15, 8, sizeof("--PAUSED--")-1);
+    
+    x = 14;
+    y = 16;
+    
+    _op_renderText("--", x-2, y+_ps_opt, 2);
+    
+    _op_renderText("CONTINUE", x, y, sizeof("CONTINUE")-1);
+    y++;
+    _op_renderText("RETRY", x, y, sizeof("RETRY")-1);
+    y++;
+    _op_renderText("OPTIONS", x, y, sizeof("OPTIONS")-1);
+    y++;
+    _op_renderText("QUIT TO MENU", x, y, sizeof("QUIT TO MENU")-1);
+    y++;
+    _op_renderText("EXIT GAME", x, y, sizeof("EXIT GAME")-1);
+}
+
+/**
+ * Render some text into the screen
+ * 
+ * @param text The text
+ * @param X Horizontal position
+ * @param Y Vertical position
+ * @param l Text length
+ */
+static void _op_renderText(char *text, int X, int Y, int l) {
+    int i, x, y;
+    
     i = 0;
-    x = (SCR_W - sizeof(text)*8) / 2;
-    y = 64;
-    while (i < sizeof(text) - 1) {
-        GFraMe_spriteset_draw(gl_sset8x8, text[i], x, y, 0/*flip*/);
-        i++;
+    x = X*8;
+    y = Y*8;
+    // Draw the text
+    while (i < l) {
+        char c;
+        
+        c = text[i];
+        
+        if (c == '\n') {
+            x = X - 8;
+            y += 8;
+        }
+        else if (c != ' ')
+            GFraMe_spriteset_draw(gl_sset8x8, c-'!', x, y, 0/*flipped*/);
+        
         x += 8;
+        i++;
     }
 }
 

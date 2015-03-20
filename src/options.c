@@ -161,7 +161,7 @@ static void op_draw(struct stOptions *op) {
             _op_renderText("GAMEPAD1", x+12, y, sizeof("GAMEPAD1")-1);
         y++;
         
-        _op_renderText(" PL1 MODE", x, y, sizeof(" PL1 MODE")-1);
+        _op_renderText("PL1 MODE", x, y, sizeof("PL1 MODE")-1);
         if (pl1 % 4 == 0)
             _op_renderText("TYPE A ", x+12, y, sizeof("TYPE A")-1);
         else if (pl1 % 4 == 1)
@@ -181,7 +181,7 @@ static void op_draw(struct stOptions *op) {
             _op_renderText("GAMEPAD2", x+12, y, sizeof("GAMEPAD2")-1);
         y++;
         
-        _op_renderText(" PL2 MODE", x, y, sizeof(" PL2 MODE")-1);
+        _op_renderText("PL2 MODE", x, y, sizeof("PL2 MODE")-1);
         if (pl2 % 4 == 0)
             _op_renderText("TYPE A ", x+12, y, sizeof("TYPE A")-1);
         else if (pl2 % 4 == 1)
@@ -192,23 +192,23 @@ static void op_draw(struct stOptions *op) {
             _op_renderText("TYPE D ", x+12, y, sizeof("TYPE D")-1);
         y++;
         
-        _op_renderText("   BACK", x, y, sizeof("   BACK")-1);
+        _op_renderText("BACK", x, y, sizeof("BACK")-1);
         y += 4;
         
-        _op_renderText("PLAYER1", x+9, y, sizeof("PLAYER1")-1);
-        _op_renderText("PLAYER2", x+19, y, sizeof("PLAYER2")-1);
+        _op_renderText("PLAYER1", x+13, y, sizeof("PLAYER1")-1);
+        _op_renderText("PLAYER2", x+24, y, sizeof("PLAYER2")-1);
         y += 2;
         
         _y = y;
-        _op_renderText(" LEFT", x, _y++, sizeof(" LEFT")-1);
-        _op_renderText(" RIGHT", x, _y++, sizeof(" RIGHT")-1);
-        _op_renderText("  UP", x, _y++, sizeof("  UP")-1);
-        _op_renderText(" JUMP", x, _y++, sizeof(" JUMP")-1);
-        _op_renderText(" ITEM", x, _y++, sizeof(" ITEM")-1);
+        _op_renderText("LEFT", x, _y++, sizeof("LEFT")-1);
+        _op_renderText("RIGHT", x, _y++, sizeof("RIGHT")-1);
+        _op_renderText("UP", x, _y++, sizeof("UP")-1);
+        _op_renderText("JUMP", x, _y++, sizeof("JUMP")-1);
+        _op_renderText("ITEM", x, _y++, sizeof("ITEM")-1);
         _op_renderText("SWITCH", x, _y++, sizeof("SWITCH")-1);
         
-        _op_renderMode(pl1, x+8, y);
-        _op_renderMode(pl2, x+18, y);
+        _op_renderMode(pl1, x+12, y);
+        _op_renderMode(pl2, x+23, y);
         
     GFraMe_event_draw_end();
 }
@@ -387,6 +387,8 @@ static void op_event(struct stOptions *op) {
                 (GFraMe_controller_max > 0
                     && (GFraMe_controllers[0].ly < 0.5
                         && GFraMe_controllers[0].ly > -0.5)
+                    && (GFraMe_controllers[0].lx < 0.5
+                        && GFraMe_controllers[0].lx > -0.5)
                     && !GFraMe_controllers[0].up
                     && !GFraMe_controllers[0].down)) {
                 op->firstPress = 0;
@@ -439,72 +441,72 @@ static void _op_renderText(char *text, int X, int Y, int l) {
 static void _op_renderMode(ctr_mode mode, int x, int y) {
     switch (mode) {
         case CTR_KEYS_A: {
-            _op_renderText("    A    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    D    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    W    ", x, y++, sizeof("         ")-1);
+            _op_renderText("  A      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  D      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  W      ", x, y++, sizeof("         ")-1);
             _op_renderText("  SPACE  ", x, y++, sizeof("         ")-1);
             _op_renderText("  SHIFT  ", x, y++, sizeof("         ")-1);
-            _op_renderText("   TAB   ", x, y++, sizeof("         ")-1);
+            _op_renderText("  TAB    ", x, y++, sizeof("         ")-1);
         } break;
         case CTR_KEYS_B: {
-            _op_renderText("   LEFT  ", x, y++, sizeof("         ")-1);
+            _op_renderText("  LEFT   ", x, y++, sizeof("         ")-1);
             _op_renderText("  RIGHT  ", x, y++, sizeof("         ")-1);
-            _op_renderText("    UP   ", x, y++, sizeof("         ")-1);
-            _op_renderText("    X    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    C    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    V    ", x, y++, sizeof("         ")-1);
+            _op_renderText("  UP     ", x, y++, sizeof("         ")-1);
+            _op_renderText("  X      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  C      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  V      ", x, y++, sizeof("         ")-1);
         } break;
         case CTR_KEYS_C: {
-            _op_renderText("   NUM4  ", x, y++, sizeof("         ")-1);
-            _op_renderText("   NUM6  ", x, y++, sizeof("         ")-1);
-            _op_renderText("   NUM8  ", x, y++, sizeof("         ")-1);
-            _op_renderText("   NUM0  ", x, y++, sizeof("         ")-1);
+            _op_renderText("  NUM4   ", x, y++, sizeof("         ")-1);
+            _op_renderText("  NUM6   ", x, y++, sizeof("         ")-1);
+            _op_renderText("  NUM8   ", x, y++, sizeof("         ")-1);
+            _op_renderText("  NUM0   ", x, y++, sizeof("         ")-1);
             _op_renderText(" NUMENTER", x, y++, sizeof("         ")-1);
             _op_renderText(" NUMCOMMA", x, y++, sizeof("         ")-1);
         } break;
         case CTR_KEYS_D: {
-            _op_renderText("    H    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    K    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    U    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    L    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    G    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    I    ", x, y++, sizeof("         ")-1);
+            _op_renderText("  H      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  K      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  U      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  L      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  G      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  I      ", x, y++, sizeof("         ")-1);
         } break;
         case CTR_PAD2_A:
         case CTR_PAD1_A: {
-            _op_renderText("   LEFT  ", x, y++, sizeof("         ")-1);
+            _op_renderText("  LEFT   ", x, y++, sizeof("         ")-1);
             _op_renderText("  RIGHT  ", x, y++, sizeof("         ")-1);
-            _op_renderText("    UP   ", x, y++, sizeof("         ")-1);
-            _op_renderText("    A    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    B    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    X    ", x, y++, sizeof("         ")-1);
+            _op_renderText("  UP     ", x, y++, sizeof("         ")-1);
+            _op_renderText("  A      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  B      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  X      ", x, y++, sizeof("         ")-1);
         } break;
         case CTR_PAD2_B:
         case CTR_PAD1_B: {
-            _op_renderText("  LSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("  LSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("  LSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("    A    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    B    ", x, y++, sizeof("         ")-1);
-            _op_renderText("    X    ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText("  A      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  B      ", x, y++, sizeof("         ")-1);
+            _op_renderText("  X      ", x, y++, sizeof("         ")-1);
         } break;
         case CTR_PAD2_C:
         case CTR_PAD1_C: {
-            _op_renderText("  LSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("  LSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("  LSTICK ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LSTICK  ", x, y++, sizeof("         ")-1);
             _op_renderText("LSHOULDER", x, y++, sizeof("         ")-1);
             _op_renderText(" LTRIGGER", x, y++, sizeof("         ")-1);
-            _op_renderText("   LEFT  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" LEFT    ", x, y++, sizeof("         ")-1);
         } break;
         case CTR_PAD2_D:
         case CTR_PAD1_D: {
-            _op_renderText("  RSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("  RSTICK ", x, y++, sizeof("         ")-1);
-            _op_renderText("  RSTICK ", x, y++, sizeof("         ")-1);
+            _op_renderText(" RSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" RSTICK  ", x, y++, sizeof("         ")-1);
+            _op_renderText(" RSTICK  ", x, y++, sizeof("         ")-1);
             _op_renderText("RSHOULDER", x, y++, sizeof("         ")-1);
             _op_renderText(" RTRIGGER", x, y++, sizeof("         ")-1);
-            _op_renderText("    X    ", x, y++, sizeof("         ")-1);
+            _op_renderText("  X      ", x, y++, sizeof("         ")-1);
         } break;
         default: {}
     }

@@ -246,7 +246,7 @@ static void ms_draw(struct stMenustate *ms) {
     char options[] = "  CONTINUE  \n"
                      "  NEW GAME  \n"
                      "  OPTIONS   \n"
-                     "    QUIT    ";
+                     "  QUIT";
     char devText[] = "A GAME BY";
     char twitterText[] = "@SIRGFM";
     GFraMe_event_draw_begin();
@@ -273,12 +273,10 @@ static void ms_draw(struct stMenustate *ms) {
         GFraMe_spriteset_draw(gl_sset64x32, T_TILE, ms->tX, ms->tY, 0);
         
         if (ms->isTitleSet) {
-            // TODO write title
             // Put the 'selected' mark
             if (ms->curOpt < OPT_MAX) {
                 i = 13 * ms->curOpt;
                 options[i] = '-'; options[i+1] = '-';
-                options[i+10] = '-'; options[i+11] = '-';
             }
             // Render texts
             l = sizeof(options);
