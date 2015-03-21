@@ -14,7 +14,7 @@
 #include "options.h"
 #include "types.h"
 
-enum { OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
+enum { OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
 
 struct stOptions {
     /** Whether the menu is still running */
@@ -25,6 +25,8 @@ struct stOptions {
     int firstPress;
     /** Current option */
     int curOpt;
+    /** Whether or not hint should be shown */
+    int hint;
 };
 
 // Initialize variables used by the event module
@@ -73,7 +75,7 @@ static void op_event(struct stOptions *op);
  */
 state options() {
     GFraMe_ret rv;
-    GFraMe_save sv;
+    GFraMe_save sv, *pSv;
     int pl1, pl2;
     state ret;
     struct stOptions op;
@@ -87,18 +89,26 @@ state options() {
         op_draw(&op);
     }
     
+    pSv = 0;
+    ret = -1;
     // Get the current input mode
     ctr_getModes(&pl1, &pl2);
     // Save it into a file
     rv = GFraMe_save_bind(&sv, CONFFILE);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
+    pSv = &sv;
     rv = GFraMe_save_write_int(&sv, "ctr_pl1", pl1);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "ctr_pl2", pl2);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    rv = GFraMe_save_write_int(&sv, "hint", op.hint);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     
     ret = MENUSTATE;
 __ret:
+    if (pSv) {
+        GFraMe_save_close(pSv);
+    }
     return ret;
 }
 
@@ -106,11 +116,25 @@ __ret:
  * Initialize everything!!!
  */
 static void op_init(struct stOptions *op) {
+    GFraMe_ret rv;
+    GFraMe_save sv, *pSv;
+    
     op->running = 1;
     
     op->lastPressedTime = 0;
     op->firstPress = 0;
     op->curOpt = 0;
+    
+    pSv = 0;
+    op->hint = 1;
+    rv = GFraMe_save_bind(&sv, CONFFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
+    pSv = &sv;
+    GFraMe_save_read_int(&sv, "hint", &op->hint);
+    
+__ret:
+    if (pSv)
+        GFraMe_save_close(pSv);
 }
 
 /**
@@ -140,6 +164,7 @@ static void op_draw(struct stOptions *op) {
         _op_renderText("OPTIONS", 16/*x*/, 3/*y*/, sizeof("OPTIONS")-1);
         
 /*
+        "   HINT   "
         "PL1 DEVICE"
         " PL1 MODE"
         "PL2 DEVICE"
@@ -152,6 +177,14 @@ static void op_draw(struct stOptions *op) {
         
         _op_renderText("<", x-1, y+op->curOpt, 1);
         _op_renderText(">", x+10, y+op->curOpt, 1);
+        
+        _op_renderText("   HINT", x, y, sizeof("   HINT")-1);
+        if (op->hint)
+            _op_renderText("ENABLED", x+12, y, sizeof("ENABLED")-1);
+        else
+            _op_renderText("DISABLED", x+12, y, sizeof("DISABLED")-1);
+        y++;
+        
         _op_renderText("PL1 DEVICE", x, y, sizeof("PL1 DEVICE")-1);
         if (pl1 < CTR_PAD1_A)
             _op_renderText("KEYBOARD", x+12, y, sizeof("KEYBOARD")-1);
@@ -357,6 +390,15 @@ static void op_update(struct stOptions *op) {
                     op->lastPressedTime += 100;
                 op->firstPress = 1;
                 sfx_menuMove();
+            }
+            else if (op->curOpt == OPT_HINT && (isLeft || isRight)) {
+                op->hint = !op->hint;
+                sfx_menuMove();
+                if (!op->firstPress)
+                    op->lastPressedTime += 300;
+                else
+                    op->lastPressedTime += 100;
+                op->firstPress = 1;
             }
         }
         isEnter = GFraMe_keys.enter;

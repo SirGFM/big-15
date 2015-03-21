@@ -34,6 +34,7 @@ CC=gcc
          $(OBJDIR)/playstate.o         \
          $(OBJDIR)/registry.o          \
          $(OBJDIR)/signal.o            \
+         $(OBJDIR)/textwindow.o        \
          $(OBJDIR)/transition.o        \
          $(OBJDIR)/types.o             \
          $(OBJDIR)/ui.o                \
