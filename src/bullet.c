@@ -149,7 +149,7 @@ GFraMe_ret bullet_init(bullet *pBul, flag type, int cx, int cy, int dstCX, int d
             pData = _bul_ExplAnimData;
             len = sizeof(_bul_ExplAnimData) / sizeof(int);
         } break;
-        default: {}
+        default: return GFraMe_ret_failed;
     }
     vx = dstCX - cx;
     vy = dstCY - cy;
