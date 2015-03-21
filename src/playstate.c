@@ -54,6 +54,18 @@ static int _timerTilCredits;
 static int _psRunning;
 static int _ps_text;
 
+static char _ps_map001_text[] = 
+"PRESS UP ON TERMINALS TO ACTIVATE\n"
+"DOORS.\n"
+"\n"
+"PRESS ANY KEY/BUTTON TO CONTINUE...";
+
+static char _ps_map_afterItem[] = 
+"REMEMBER: YOU CAN ONLY SWITCH ITEMS\n"
+"WHEN BOTH PLAYERS ARE CLOSE!\n"
+"\n"
+"PRESS ANY KEY/BUTTON TO CONTINUE...";
+
 /**
  * Initialize the playstate
  * 
@@ -340,6 +352,16 @@ static GFraMe_ret ps_switchMap() {
             } break;
             /** Finish the transition */
             default: {
+                int map;
+                map = gv_getValue(MAP);
+                
+                if (map == 1) {
+                    ps_showText(_ps_map001_text, sizeof(_ps_map001_text), 0, 0, 40, 6);
+                }
+                else if (map == 8 || map == 13) {
+                    ps_showText(_ps_map_afterItem, sizeof(_ps_map_afterItem), 0, 0, 40, 6);
+                }
+                
                 gv_setValue(SWITCH_MAP, 0);
                 switchState = 0;
                 signal_release();
@@ -756,7 +778,7 @@ void ps_showText(char *text, int textLen, int x, int y, int w, int h) {
     rv = GFraMe_save_bind(&sv, CONFFILE);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
     pSv = &sv;
-    // Check if the used disabled it
+    // Check if the user disabled it
     GFraMe_save_read_int(&sv, "hint", &hint);
     
     if (hint) {

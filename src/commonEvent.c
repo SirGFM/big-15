@@ -13,6 +13,7 @@
 #include "globalVar.h"
 #include "object.h"
 #include "player.h"
+#include "playstate.h"
 #include "registry.h"
 #include "types.h"
 
@@ -33,6 +34,30 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_none",
     "ce_max"
 };
+
+static char _ce_hjboots_text[] = 
+"YOU GOT THE HIGH JUMP BOOTS!\n"
+"     \n"
+"JUST EQUIP IT TO JUMP HIGHER.\n"
+"\n"
+"PRESS ANY KEY/BUTTON TO CONTINUE...";
+
+static char _ce_telp_text[] = 
+"YOU GOT THE TELEPORTER!\n"
+"     \n"
+"USE IT TO TELEPORT TO A PLACED SIGNAL\n"
+"OR THE SIGNALER HOLDER.\n"
+"\n"
+"PRESS ANY KEY/BUTTON TO CONTINUE...";
+
+static char _ce_sign_text[] = 
+"YOU GOT THE SIGNALER!\n"
+"     \n"
+"USE IT TO PLACE A SIGNAL FOR THE\n"
+"TELEPORTER OR SIMPLY HOLD IT, SO\n"
+"YOU'LL ACT AS THE TELEPORTER TARGET.\n"
+"\n"
+"PRESS ANY KEY/BUTTON TO CONTINUE...";
 
 /** Object that caused the event to be called */
 static void *_ce_caller = NULL;
@@ -319,6 +344,16 @@ void ce_callEvent(commonEvent ce) {
                     gv_setValue(PL1_ITEM, item);
                 else if (player_getID(pPl) == ID_PL2)
                     gv_setValue(PL2_ITEM, item);
+                
+                if (item == ID_HIGHJUMP) {
+                    ps_showText(_ce_hjboots_text, sizeof(_ce_hjboots_text), 0, 0, 40, 8);
+                }
+                else if (item == ID_TELEPORT) {
+                    ps_showText(_ce_telp_text, sizeof(_ce_telp_text), 0, 0, 40, 9);
+                }
+                else if (item == ID_SIGNALER) {
+                    ps_showText(_ce_sign_text, sizeof(_ce_sign_text), 0, 0, 40, 9);
+                }
             }
         } break;
         case CE_HIDDEN_PATH: {

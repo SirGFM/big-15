@@ -59,7 +59,7 @@ void textWnd_update(int ms) {
                 sfx_text();
         }
         else if (!_finished) {
-            _time += 1500;
+            _time += 100;
             _finished = 1;
         }
     }
