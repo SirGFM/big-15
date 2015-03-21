@@ -11,6 +11,7 @@
 #ifdef DEBUG
 #  include <GFraMe/GFraMe_pointer.h>
 #endif
+#include <GFraMe/GFraMe_save.h>
 #include <GFraMe/GFraMe_util.h>
 
 #ifdef DEBUG
@@ -29,6 +30,7 @@
 #include "playstate.h"
 #include "registry.h"
 #include "signal.h"
+#include "textwindow.h"
 #include "transition.h"
 #include "types.h"
 #include "ui.h"
@@ -50,6 +52,7 @@ static int _ps_opt;
 static int _ps_onOptions;
 static int _timerTilCredits;
 static int _psRunning;
+static int _ps_text;
 
 /**
  * Initialize the playstate
@@ -212,6 +215,7 @@ static GFraMe_ret ps_init(int isLoading) {
     
     _timerTilCredits = 0;
     _ps_onOptions = 0;
+    _ps_text = 0;
     switchState = 0;
     transition_initFadeOut();
     
@@ -265,6 +269,9 @@ static void ps_draw() {
         #endif 
         if (_ps_pause) {
             ps_drawPause();
+        }
+        if (_ps_text) {
+            textWnd_draw();
         }
     GFraMe_event_draw_end();
 }
@@ -408,8 +415,14 @@ static void ps_update() {
                 _psRunning = 0;
             }
             _timerTilCredits += GFraMe_event_elapsed;
+            if (_timerTilCredits >= 2000)
+                return;
         }
         else if (gv_nIsZero(SWITCH_MAP)) {
+            return;
+        }
+        else if (_ps_text) {
+            textWnd_update(GFraMe_event_elapsed);
             return;
         }
         
@@ -544,17 +557,25 @@ static void ps_event() {
                 _ps_lastPress = 300;
                 GFraMe_audio_play(gl_aud_pause, 0.4f);
             }
+            else if (_ps_text && textWnd_didFinish()) {
+                _ps_text = 0;
+            }
         GFraMe_event_on_key_up();
             _ps_firstPress = 0;
             _ps_lastPress = 0;
         GFraMe_event_on_controller();
-            if (event.type == SDL_CONTROLLERBUTTONDOWN && ctr_pause()) {
-                _ps_pause = !_ps_pause;
-                _ps_firstPress = 0;
-                _ps_opt = 0;
-                _ps_onOptions = 0;
-                _ps_lastPress = 300;
-                GFraMe_audio_play(gl_aud_pause, 0.4f);
+            if (event.type == SDL_CONTROLLERBUTTONDOWN) {
+                if (ctr_pause()) {
+                    _ps_pause = !_ps_pause;
+                    _ps_firstPress = 0;
+                    _ps_opt = 0;
+                    _ps_onOptions = 0;
+                    _ps_lastPress = 300;
+                    GFraMe_audio_play(gl_aud_pause, 0.4f);
+                }
+                else if (_ps_text && textWnd_didFinish()) {
+                    _ps_text = 0;
+                }
             }
             else if (event.type == SDL_CONTROLLERBUTTONUP ||
                 (GFraMe_controller_max > 0
@@ -712,5 +733,38 @@ static void _op_renderText(char *text, int X, int Y, int l) {
         x += 8;
         i++;
     }
+}
+
+/**
+ * Set a text to be shown
+ * 
+ * @param text Text (the pointer will be copied)
+ * @param textLen Text's length
+ * @param x Window's horizontal position (in tiles)
+ * @param y Window's vertical position (in tiles)
+ * @param w Window's width (in tiles)
+ * @param h Window's height (in tiles)
+ */
+void ps_showText(char *text, int textLen, int x, int y, int w, int h) {
+    GFraMe_ret rv;
+    GFraMe_save sv, *pSv;
+    int hint;
+    
+    hint = 1;
+    pSv = 0;
+    // Open the configurations
+    rv = GFraMe_save_bind(&sv, CONFFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
+    pSv = &sv;
+    // Check if the used disabled it
+    GFraMe_save_read_int(&sv, "hint", &hint);
+    
+    if (hint) {
+        textWnd_init(x, y, w, h, text, textLen);
+        _ps_text = 1;
+    }
+__ret:
+    if (pSv)
+        GFraMe_save_close(pSv);
 }
 
