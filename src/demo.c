@@ -60,7 +60,7 @@ static void _dm_renderText(char *text, int X, int Y, int l);
  */
 state demo() {
     char text1[] =
-"IN THE DISTANT FUTURE, A MONTER HAS\n"
+"IN THE DISTANT FUTURE, A MONSTER HAS\n"
 "BEEN WREACKING HAVOC THROUGH THE\n"
 "GALAXY.          \n"
 "NO KNOWN WEAPON SEEMS TO HURT IT.         \n"
