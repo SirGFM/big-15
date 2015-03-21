@@ -19,6 +19,8 @@
 #include "playstate.h"
 #include "types.h"
 
+void setIcon();
+
 int main(int argc, char *argv[]) {
     GFraMe_ret rv;
     GFraMe_wndext ext;
@@ -45,6 +47,8 @@ int main(int argc, char *argv[]) {
              0  // Log append
             );
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Init failed", __ret);
+    
+    setIcon();
     
     rv = GFraMe_audio_player_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Audio player init failed", __ret);
@@ -76,5 +80,48 @@ __ret:
     GFraMe_quit();
     
     return 0;
+}
+
+void setIcon() {
+            /* AA , RR , GG , BB */
+    #define x 0x00,0x00,0x00,0x00,
+    #define w 0xff,0x3f,0x3f,0x74,
+    #define m 0xff,0x5b,0x6e,0xe1,
+    #define n 0xff,0x63,0x9b,0xff,
+    #define o 0xff,0x22,0x20,0x34,
+    #define e 0xff,0x5f,0xcd,0xe5,
+    #define s 0xff,0xcb,0xbf,0xfc,
+    #define i 0xff,0xff,0xff,0xff,
+    #define z 0xff,0x30,0x60,0x82,
+	char arr[16*16*4] = 
+{
+x w w w w w w w w w w w w w w x
+w n n n n n n n n n n n n n n w
+w m o o o o o o o o o o o o n w
+w m o o o o o e e e e o o o n w
+w m o o o o e m n m m e o o n w
+w m o e e e m e m n m n e o n w
+w m e m n e n m s n n m e o n w
+w m e w m e m s w s w n e o n w
+w m o e s w s i z i z s m e n w
+w m o e w i w i i i i w e o n w
+w m o e z i z w w w w e o o n w
+w m o e i i i i i w e o o o n w
+w m o e w w w w w e o o o o n w
+w m o o e e e e e o o o o o n w
+w m m m m m m m m m m m m m m w
+x w w w w w w w w w w w w w w x
+};
+    #undef x
+    #undef w
+    #undef m
+    #undef n
+    #undef o
+    #undef e
+    #undef s
+    #undef i
+    #undef z
+    
+	GFraMe_set_icon(arr);
 }
 
