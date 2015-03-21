@@ -11,6 +11,7 @@
 #include <GFraMe/GFraMe_spriteset.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "bullet.h"
 #include "camera.h"

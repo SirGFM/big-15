@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_object.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "bullet.h"
 #include "event.h"

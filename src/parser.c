@@ -6,6 +6,7 @@
 #include <GFraMe/GFraMe_error.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "camera.h"

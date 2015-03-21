@@ -5,6 +5,8 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_object.h>
 
+#include <stdio.h>
+
 #include "commonEvent.h"
 #include "event.h"
 #include "global.h"

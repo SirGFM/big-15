@@ -11,6 +11,9 @@
 #endif
 #include <GFraMe/GFraMe_sprite.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "camera.h"
 #include "controller.h"
 #include "global.h"
@@ -20,8 +23,6 @@
 #include "registry.h"
 #include "signal.h"
 #include "types.h"
-
-#include <stdio.h>
 
 #define PL1_ICON 286
 #define PL2_ICON 287

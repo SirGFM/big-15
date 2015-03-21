@@ -8,6 +8,7 @@
 #include <GFraMe/GFraMe_spriteset.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "camera.h"
 #include "commonEvent.h"

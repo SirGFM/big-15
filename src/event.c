@@ -6,6 +6,9 @@
 #include <GFraMe/GFraMe_object.h>
 #include <GFraMe/GFraMe_sprite.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "commonEvent.h"
 #include "controller.h"
 #include "event.h"
