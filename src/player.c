@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "audio.h"
 #include "camera.h"
 #include "controller.h"
 #include "global.h"
@@ -63,6 +64,8 @@ struct stPlayer {
     int tx;
     int ty;
     int tt;
+    
+    int step;
 };
 
 /**
@@ -137,6 +140,8 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile, int x, int y) {
     pPl->ty = -1;
     pPl->tt = -1;
     
+    pPl->step = 0;
+    
     // Set the return variables
     *ppPl = pPl;
     rv = GFraMe_ret_ok;
@@ -204,7 +209,7 @@ void player_update(player *pPl, int ms) {
         pPl->spr.obj.dy = y;
         pPl->isTeleporting = 0;
         
-        GFraMe_audio_play(gl_aud_teleport, 0.4f);
+        sfx_teleport();
         goto __ret;
         //return;
     }
@@ -255,7 +260,7 @@ void player_update(player *pPl, int ms) {
     if (obj->hit & GFraMe_direction_up) {
         obj->vy = 0;
         if (!isDown) {
-            GFraMe_audio_play(gl_aud_fall, 0.5f);
+            sfx_plFall();
         }
     }
     else if (!isDown)
@@ -266,17 +271,21 @@ void player_update(player *pPl, int ms) {
             if ((pPl->spr.id == ID_PL1 && gv_getValue(PL1_ITEM) == ID_HIGHJUMP) ||
                 (pPl->spr.id == ID_PL2 && gv_getValue(PL2_ITEM) == ID_HIGHJUMP)) {
                 obj->vy = -PL_HIGHJUMPS;
-                GFraMe_audio_play(gl_aud_highjump, 0.5f);
+                sfx_plHighJump();
             }
             else {
                 obj->vy = -PL_JUMPS;
-                GFraMe_audio_play(gl_aud_jump, 0.5f);
+                sfx_plJump();
             }
         }
         else if (!pPl->isBeingCarried && !pPl->isBeingCarriedBoss)
             obj->vy = 32;
 //        else
 //            obj->ay = GRAVITY;
+    }
+    
+    if (pPl->curAnim == PL_FALL && isDown && !(obj->hit & GFraMe_direction_last_down)) {
+        sfx_plFall();
     }
     
     // Check current state and play the apropriate animation
@@ -310,6 +319,16 @@ void player_update(player *pPl, int ms) {
             obj->vx -= BOSS_SPEED;
         }
         pPl->isBeingCarriedBoss = 0;
+    }
+    
+    if (pPl->curAnim == PL_WALK && (pPl->spr.anim->index == 3
+        || pPl->spr.anim->index == 7)) {
+        if (!pPl->step)
+            sfx_plStep();
+        pPl->step = 1;
+    }
+    else {
+        pPl->step = 0;
     }
     
 __ret:
@@ -679,7 +698,7 @@ void player_changeItem(player *pPl) {
         gv_setValue(PL2_ITEM, i);
     
     if (i != prev) {
-        GFraMe_audio_play(gl_aud_switchItem, 0.5f);
+        sfx_switchItem();
     }
     // Set the cooldown
     pPl->lastItemSwitch += 300;
@@ -708,12 +727,12 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
     if (pPl->spr.id == ID_PL1) {
         gv_sub(PL1_HP, dmg);
         if (gv_getValue(PL1_HP) <= 0)
-            GFraMe_audio_play(gl_aud_plDeath, 0.7f);
+            sfx_plDeath();
     }
     else if (pPl->spr.id == ID_PL2) {
         gv_sub(PL2_HP, dmg);
         if (gv_getValue(PL2_HP) <= 0)
-            GFraMe_audio_play(gl_aud_plDeath, 0.7f);
+            sfx_plDeath();
     }
 
     x = pPl->spr.obj.x + pPl->spr.obj.hitbox.cx;
@@ -743,7 +762,7 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
     pPl->spr.obj.vy = 0;
     // Play the 'hurt' animation
     player_setAnimation(pPl, PL_HURT);
-    GFraMe_audio_play(gl_aud_plHit, 0.75f);
+    sfx_plHurt();
 __ret:
     return;
 }

@@ -64,6 +64,7 @@ DECLARE_AUDIO(bombExpl);
 DECLARE_AUDIO(bossExpl);
 DECLARE_AUDIO(bossMove);
 DECLARE_AUDIO(plDeath);
+DECLARE_AUDIO(plStep);
 DECLARE_AUDIO(menu);
 DECLARE_AUDIO(intro);
 DECLARE_AUDIO(movingOn);
@@ -139,6 +140,7 @@ GFraMe_ret gl_init() {
     INIT_AUDIO(bossExpl, "bossExpl");
     INIT_AUDIO(bossMove, "bossMove");
     INIT_AUDIO(plDeath, "plDeath");
+    INIT_AUDIO(plStep, "plStep");
     INIT_SONG(menu, "menu");
     INIT_SONG(intro, "intro");
     INIT_SONG(movingOn, "movingOn");

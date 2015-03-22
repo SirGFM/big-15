@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "audio.h"
 #include "bullet.h"
 #include "camera.h"
 #include "global.h"
@@ -496,10 +497,11 @@ GFraMe_ret mob_hit(mob *pMob, int dmg, flag type) {
         
         // Explode!!
         bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
-        GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
+        sfx_bossExpl();
     }
     else if (pMob->spr.id == ID_BOSS_HEAD) {
-        GFraMe_audio_play(gl_aud_plDeath, 0.4f);
+        // Was hit, but is still alive
+        sfx_bossHit();
     }
     
     rv = GFraMe_ret_ok;
@@ -592,7 +594,7 @@ void mob_update(mob *pMob, int ms) {
                 
                 pMob->spr.obj.vy = -GRAVITY / 4;
                 
-                GFraMe_audio_play(gl_aud_jumperJump, 0.35f);
+                sfx_jumperJump();
             }
             else if (pMob->anim == JUMPER_JUMP && isDown) {
                 GFraMe_object *pObj;
@@ -600,7 +602,7 @@ void mob_update(mob *pMob, int ms) {
                 // Set the new animation and stop the mob
                 mob_setAnim(pMob, JUMPER_LANDED, 0);
                 pMob->spr.obj.vx = 0;
-                GFraMe_audio_play(gl_aud_jumperFall, 0.35f);
+                sfx_jumperFall();
                 
                 mob_getObject(&pObj, pMob);
                 
@@ -694,7 +696,7 @@ void mob_update(mob *pMob, int ms) {
                 rv = bullet_init(pBul, ID_ENEPROJ, cx, cy, cx+dx, cy+dy);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
-                GFraMe_audio_play(gl_aud_shootEn, 0.4f);
+                sfx_shootEn();
             }
             else if (pMob->anim == EYE_FOCUSED && pMob->countdown <= 0) {
                 mob_setAnim(pMob, EYE_OPEN, 0);
@@ -715,12 +717,12 @@ void mob_update(mob *pMob, int ms) {
             if ((pObj->hit & GFraMe_direction_left) && pObj->vx < 0) {
                 pMob->spr.flipped = 0;
                 pObj->vx *= -1;
-                GFraMe_audio_play(gl_aud_charger, 0.4f);
+                sfx_charger();
             }
             else if ((pObj->hit & GFraMe_direction_right) && pObj->vx > 0) {
                 pMob->spr.flipped = 1;
                 pObj->vx *= -1;
-                GFraMe_audio_play(gl_aud_charger, 0.4f);
+                sfx_charger();
             }
             else if ((!pMob->spr.flipped && map_isPixelSolid(m,
                 pObj->x + pHb->cx + pHb->hw,
@@ -731,7 +733,7 @@ void mob_update(mob *pMob, int ms) {
                 {
                 pMob->spr.flipped = !pMob->spr.flipped;
                 pObj->vx *= -1;
-                GFraMe_audio_play(gl_aud_charger, 0.4f);
+                sfx_charger();
             }
             
             
@@ -742,7 +744,7 @@ void mob_update(mob *pMob, int ms) {
                     pObj->vx = -120;
                 else
                     pObj->vx = 120;
-                GFraMe_audio_play(gl_aud_charger, 0.4f);
+                sfx_charger();
             }
             else if (pMob->anim == CHARGER_FLOAT && pMob->countdown > 0) {
                 int x, y;
@@ -873,7 +875,7 @@ void mob_update(mob *pMob, int ms) {
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
                 mob_setAnim(pMob, BOSS_HEAD_ATTACK, 0);
-                GFraMe_audio_play(gl_aud_shootBoss, 0.4f);
+                sfx_shootBoss();
             }
             else if (pMob->anim == BOSS_HEAD_ATTACK && mob_didAnimFinish(pMob)) {
                 mob_setAnim(pMob, BOSS_HEAD_DEF, 0);
@@ -894,7 +896,7 @@ void mob_update(mob *pMob, int ms) {
                 rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
-                GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
+                sfx_bossExpl();
             }
             
             // Get the mob's object and position
@@ -918,7 +920,7 @@ void mob_update(mob *pMob, int ms) {
                 rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
-                GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
+                sfx_bossExpl();
             }
             
             // Get the mob's object and position
@@ -942,7 +944,7 @@ void mob_update(mob *pMob, int ms) {
                 rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
-                GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
+                sfx_bossExpl();
             }
             
             // Get the mob's object
@@ -962,7 +964,7 @@ void mob_update(mob *pMob, int ms) {
             gv_setValue(BOSS_ISRUNNING, (pY > -y && pY < y && pX > -x && pX < x));
             
             if (pMob->countdown <= 0) {
-                GFraMe_audio_play(gl_aud_bossMove, 0.5f);
+                sfx_bossMove();
                 pMob->countdown += BOSS_WHEEL_COUNTDOWN;
             }
             
@@ -994,7 +996,7 @@ void mob_update(mob *pMob, int ms) {
                 rv = bullet_fireworks(pMob->spr.obj.x + pMob->spr.obj.hitbox.cx, pMob->spr.obj.y + pMob->spr.obj.hitbox.cy);
                 ASSERT_NR(rv == GFraMe_ret_ok);
                 
-                GFraMe_audio_play(gl_aud_bombExpl, 0.35f);
+                sfx_bombExpl();
             }
             if (pMob->spr.obj.hit & GFraMe_direction_down) {
                 pMob->spr.obj.vy = 32;

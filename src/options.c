@@ -14,7 +14,7 @@
 #include "options.h"
 #include "types.h"
 
-enum { OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
+enum { OPT_MUSIC, OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
 
 struct stOptions {
     /** Whether the menu is still running */
@@ -103,7 +103,8 @@ state options() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "hint", op.hint);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    
+    rv = GFraMe_save_write_int(&sv, "music", audio_isMuted());
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     ret = MENUSTATE;
 __ret:
     if (pSv) {
@@ -164,7 +165,8 @@ static void op_draw(struct stOptions *op) {
         _op_renderText("OPTIONS", 16/*x*/, 3/*y*/, sizeof("OPTIONS")-1);
         
 /*
-        "   HINT   "
+        "MUSIC     "
+        "HINT      "
         "PL1 DEVICE"
         " PL1 MODE"
         "PL2 DEVICE"
@@ -178,7 +180,14 @@ static void op_draw(struct stOptions *op) {
         _op_renderText("<", x-1, y+op->curOpt, 1);
         _op_renderText(">", x+10, y+op->curOpt, 1);
         
-        _op_renderText("   HINT", x, y, sizeof("   HINT")-1);
+        _op_renderText("MUSIC", x, y, sizeof("MUSIC")-1);
+        if (audio_isMuted())
+            _op_renderText("MUTED", x+12, y, sizeof("MUTED")-1);
+        else
+            _op_renderText("PLAYING", x+12, y, sizeof("PLAYING")-1);
+        y++;
+        
+        _op_renderText("HINT", x, y, sizeof("HINT")-1);
         if (op->hint)
             _op_renderText("ENABLED", x+12, y, sizeof("ENABLED")-1);
         else
@@ -393,6 +402,20 @@ static void op_update(struct stOptions *op) {
             }
             else if (op->curOpt == OPT_HINT && (isLeft || isRight)) {
                 op->hint = !op->hint;
+                sfx_menuMove();
+                if (!op->firstPress)
+                    op->lastPressedTime += 300;
+                else
+                    op->lastPressedTime += 100;
+                op->firstPress = 1;
+            }
+            else if (op->curOpt == OPT_MUSIC && (isLeft || isRight)) {
+                if (audio_isMuted()) {
+                    audio_unmuteSong();
+                }
+                else {
+                    audio_muteSong();
+                }
                 sfx_menuMove();
                 if (!op->firstPress)
                     op->lastPressedTime += 300;

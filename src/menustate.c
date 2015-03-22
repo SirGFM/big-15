@@ -193,6 +193,12 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     }
     else
         ctr_setDef();
+    rv = GFraMe_save_read_int(&sv, "music", &tmp);
+    if (rv == GFraMe_ret_ok) {
+        if (tmp) {
+            audio_muteSong();
+        }
+    }
     GFraMe_save_close(&sv);
     
     // Zero some variables
