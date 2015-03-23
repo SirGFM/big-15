@@ -392,12 +392,39 @@ GFraMe_ret map_loads(map *m, char *str, int len) {
  * @param fn Filename
  * @return GFraMe error code
  */
-GFraMe_ret map_loadf(map *pM, char *fn) {
+static GFraMe_ret _map_loadf(map *pM, char *fn) {
     GFraMe_ret rv;
     
     // Parse the map from a file
     rv = parsef_map(&pM, fn);
     
+    return rv;
+}
+
+/**
+ * Load a map from a file
+ * 
+ * @param pM The map
+ * @param fn Filename
+ * @return GFraMe error code
+ */
+GFraMe_ret map_loadf(map *pM, char *fn) {
+    #define MAX_NAME_LEN 128
+    char name[MAX_NAME_LEN];
+    GFraMe_ret rv;
+    int len;
+    
+    // Retrive a valid asset filename
+    len = MAX_NAME_LEN;
+	rv = GFraMe_assets_clean_filename(name, fn, &len);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load map", __ret);
+    
+    // Load the map
+    rv = _map_loadf(pM, name);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load map", __ret);
+    
+    rv = GFraMe_ret_ok;
+__ret:
     return rv;
 }
 
@@ -424,7 +451,7 @@ GFraMe_ret map_loadi(map *m, int i) {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load map", __ret);
     
     // Load the map
-    rv = map_loadf(m, name);
+    rv = _map_loadf(m, name);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load map", __ret);
     
     rv = GFraMe_ret_ok;

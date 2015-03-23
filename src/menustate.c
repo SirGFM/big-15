@@ -11,9 +11,11 @@
 #include <GFraMe/GFraMe_spriteset.h>
 
 #include "audio.h"
+#include "camera.h"
 #include "controller.h"
 #include "global.h"
 #include "globalVar.h"
+#include "map.h"
 #include "transition.h"
 #include "types.h"
 
@@ -89,6 +91,8 @@ struct stMenustate {
     int runMenu;
     /** How long the menu has been idle */
     int idleTime;
+    /** BG map */
+    map *pM;
 };
 
 /**
@@ -160,6 +164,7 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     GFraMe_save sv;
     int tmp, ctrPl1, ctrPl2;
     
+    ms->pM = 0;
     // Check if there's already a saved game
     rv = GFraMe_save_bind(&sv, SAVEFILE);
     ASSERT_NR(rv == GFraMe_ret_ok);
@@ -210,8 +215,8 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     else
         ms->curOpt = 1;
     // Set text position
-    ms->textX = 112;
-    ms->textY = 176;
+    ms->textX = 120;
+    ms->textY = 120;
     // Set the dev icon position
     ms->iconX = 35 * 8;
     ms->iconY = 25 * 8;
@@ -231,11 +236,22 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     ms->tX = 194;
     ms->tYf = -54.0f;
     ms->tY = -54;
+    ms->idleTime = 0;
+    
+    rv = map_init(&ms->pM);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load background", __ret);
+    rv = map_loadf(ms->pM, "maps/mainmenu.gfm");
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load background", __ret);
+    
+    cam_x = 0;
+    cam_y = 0;
+    cam_setMapDimension(40, 30);
     
     audio_playMenu();
     
     rv = GFraMe_ret_ok;
 __ret:
+    
     return rv;
 }
 
@@ -243,6 +259,8 @@ __ret:
  * Clean up the menustate
  */
 static void ms_clean(struct stMenustate *ms) {
+    if (ms->pM)
+        map_clean(&ms->pM);
 }
 
 /**
@@ -256,29 +274,28 @@ static void ms_draw(struct stMenustate *ms) {
     char devText[] = "A GAME BY";
     char twitterText[] = "@SIRGFM";
     GFraMe_event_draw_begin();
-        int i, l, x, y;
-        
-        // Draw the BG
-        x = 0;
-        y = 0;
-        while (1) {
-            GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
-            x += 8;
-            if (x >= 320) {
-                x = 0;
-                y += 8;
-            }
-            if (y >= 240) {
-                break;
+        if (!ms->isTitleSet) {
+            int x, y;
+            
+            // Draw the BG
+            x = 0;
+            y = 0;
+            while (1) {
+                GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
+                x += 8;
+                if (x >= 320) {
+                    x = 0;
+                    y += 8;
+                }
+                if (y >= 240) {
+                    break;
+                }
             }
         }
-        // Draw the title
-        GFraMe_spriteset_draw(gl_sset64x32, J_TILE, ms->j1X, ms->j1Y, 0);
-        GFraMe_spriteset_draw(gl_sset64x32, J_TILE, ms->j2X, ms->j2Y, 0);
-        GFraMe_spriteset_draw(gl_sset64x32, A_TILE, ms->aX, ms->aY, 0);
-        GFraMe_spriteset_draw(gl_sset64x32, T_TILE, ms->tX, ms->tY, 0);
-        
-        if (ms->isTitleSet) {
+        else {
+            int i, l;
+            
+            map_draw(ms->pM);
             // Put the 'selected' mark
             if (ms->curOpt < OPT_MAX) {
                 i = 13 * ms->curOpt;
@@ -299,6 +316,12 @@ static void ms_draw(struct stMenustate *ms) {
             // Render the dev icon
             GFraMe_spriteset_draw(gl_sset32x32, GFM_ICON, ms->iconX, ms->iconY, 0);
         }
+        
+        // Draw the title
+        GFraMe_spriteset_draw(gl_sset64x32, J_TILE, ms->j1X, ms->j1Y, 0);
+        GFraMe_spriteset_draw(gl_sset64x32, J_TILE, ms->j2X, ms->j2Y, 0);
+        GFraMe_spriteset_draw(gl_sset64x32, A_TILE, ms->aX, ms->aY, 0);
+        GFraMe_spriteset_draw(gl_sset64x32, T_TILE, ms->tX, ms->tY, 0);
     GFraMe_event_draw_end();
 }
 
@@ -328,6 +351,7 @@ static void ms_update(struct stMenustate *ms) {
             }
         }
         else {
+            map_update(ms->pM, GFraMe_event_elapsed);
             if (ms->lastPressedTime > 0)
                 ms->lastPressedTime -= GFraMe_event_elapsed;
             else {
