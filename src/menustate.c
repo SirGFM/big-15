@@ -12,10 +12,12 @@
 
 #include "audio.h"
 #include "camera.h"
+#include "commonEvent.h"
 #include "controller.h"
 #include "global.h"
 #include "globalVar.h"
 #include "map.h"
+#include "object.h"
 #include "transition.h"
 #include "types.h"
 
@@ -93,6 +95,8 @@ struct stMenustate {
     int idleTime;
     /** BG map */
     map *pM;
+    /** The small 'heartup' terminal */
+    object *pO;
 };
 
 /**
@@ -164,6 +168,7 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     GFraMe_save sv;
     int tmp, ctrPl1, ctrPl2;
     
+    ms->pO = 0;
     ms->pM = 0;
     // Check if there's already a saved game
     rv = GFraMe_save_bind(&sv, SAVEFILE);
@@ -215,8 +220,8 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     else
         ms->curOpt = 1;
     // Set text position
-    ms->textX = 120;
-    ms->textY = 120;
+    ms->textX = 112;
+    ms->textY = 176;
     // Set the dev icon position
     ms->iconX = 35 * 8;
     ms->iconY = 25 * 8;
@@ -243,6 +248,13 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     rv = map_loadf(ms->pM, "maps/mainmenu.gfm");
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load background", __ret);
     
+    rv = obj_getNew(&ms->pO);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to load background", __ret);
+    obj_setZero(ms->pO);
+    obj_setBounds(ms->pO, 8*8, 17*8, 2*8, 2*8);
+    obj_setID(ms->pO, ID_HEARTUP);
+    obj_setCommonEvent(ms->pO, CE_NONE);
+    
     cam_x = 0;
     cam_y = 0;
     cam_setMapDimension(40, 30);
@@ -261,6 +273,8 @@ __ret:
 static void ms_clean(struct stMenustate *ms) {
     if (ms->pM)
         map_clean(&ms->pM);
+    if (ms->pO)
+        obj_clean(&ms->pO);
 }
 
 /**
@@ -315,6 +329,10 @@ static void ms_draw(struct stMenustate *ms) {
             _ms_renderText(twitterText, ms->iconX - l*8, ms->iconY + 24, 0, l);
             // Render the dev icon
             GFraMe_spriteset_draw(gl_sset32x32, GFM_ICON, ms->iconX, ms->iconY, 0);
+            // Draw both characters
+            GFraMe_spriteset_draw(gl_sset32x32, 20, 18*8+4, 11*8-13, 0);
+            // Draw the 'heartup' terminal
+            obj_draw(ms->pO);
         }
         
         // Draw the title
@@ -352,6 +370,7 @@ static void ms_update(struct stMenustate *ms) {
         }
         else {
             map_update(ms->pM, GFraMe_event_elapsed);
+            obj_update(ms->pO, GFraMe_event_elapsed);
             if (ms->lastPressedTime > 0)
                 ms->lastPressedTime -= GFraMe_event_elapsed;
             else {
