@@ -7,6 +7,7 @@
 #include <GFraMe/GFraMe_audio_player.h>
 #include <GFraMe/GFraMe_controller.h>
 #include <GFraMe/GFraMe_error.h>
+#include <GFraMe/GFraMe_save.h>
 #include <GFraMe/GFraMe_screen.h>
 //#include <GFraMe/GFraMe_sprite.h>
 
@@ -23,7 +24,9 @@ void setIcon();
 
 int main(int argc, char *argv[]) {
     GFraMe_ret rv;
+    GFraMe_save sv, *pSv;
     GFraMe_wndext ext;
+    int zoom;
     state st;
     
     ext.atlas = "atlas";
@@ -50,6 +53,31 @@ int main(int argc, char *argv[]) {
     
     setIcon();
     
+    // Set the actual game dimensions
+    pSv = 0;
+    rv = GFraMe_save_bind(&sv, CONFFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
+    pSv = &sv;
+    rv = GFraMe_save_read_int(&sv, "zoom", &zoom);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    GFraMe_save_close(&sv);
+    pSv = 0;
+    // Switch the resolution... in real time! (yep, a great idea...)
+    if (zoom != 0 && zoom != 2) {
+        GFraMe_ret rv;
+        
+        rv = GFraMe_screen_set_window_size(SCR_W*zoom, SCR_H*zoom);
+        if (rv == GFraMe_ret_ok)
+            GFraMe_screen_set_pixel_perfect(0, 1);
+    }
+    else if (zoom == 0) {
+        GFraMe_ret rv;
+        
+        rv = GFraMe_screen_setFullscreen();
+        if (rv == GFraMe_ret_ok)
+            GFraMe_screen_set_pixel_perfect(0, 1);
+    }
+    
     rv = GFraMe_audio_player_init();
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Audio player init failed", __ret);
     
@@ -73,6 +101,8 @@ int main(int argc, char *argv[]) {
     }
     
 __ret:
+    if (pSv)
+        GFraMe_save_close(pSv);
     GFraMe_audio_player_pause();
     GFraMe_audio_player_clear();
     gl_clean();

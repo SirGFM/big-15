@@ -383,11 +383,19 @@ static void ms_update(struct stMenustate *ms) {
                     isDown = isDown || GFraMe_controllers[0].ly > 0.5;
                     isDown = isDown || GFraMe_controllers[0].down;
                 }
+                if (GFraMe_controller_max >= 2) {
+                    isDown = isDown || GFraMe_controllers[1].ly > 0.5;
+                    isDown = isDown || GFraMe_controllers[1].down;
+                }
                 isUp = GFraMe_keys.up;
                 isUp = isUp || GFraMe_keys.w;
                 if (GFraMe_controller_max >= 1) {
                     isUp = isUp || GFraMe_controllers[0].ly < -0.5;
                     isUp = isUp || GFraMe_controllers[0].up;
+                }
+                if (GFraMe_controller_max >= 2) {
+                    isUp = isUp || GFraMe_controllers[1].ly < -0.5;
+                    isUp = isUp || GFraMe_controllers[1].up;
                 }
                 
                 if (isDown) {
@@ -424,6 +432,10 @@ static void ms_update(struct stMenustate *ms) {
             if (GFraMe_controller_max > 0) {
                 isEnter = isEnter || GFraMe_controllers[0].a;
                 isEnter = isEnter || GFraMe_controllers[0].start;
+            }
+            if (GFraMe_controller_max > 1) {
+                isEnter = isEnter || GFraMe_controllers[1].a;
+                isEnter = isEnter || GFraMe_controllers[1].start;
             }
             if (isEnter) {
                 sfx_menuSelect();
@@ -469,11 +481,11 @@ static void ms_event(struct stMenustate *ms) {
                 ms->tY = 32;
             }
             if (event.type == SDL_CONTROLLERBUTTONUP ||
-                (GFraMe_controller_max > 0
-                    && (GFraMe_controllers[0].ly < 0.5
-                        && GFraMe_controllers[0].ly > -0.5)
-                    && !GFraMe_controllers[0].up
-                    && !GFraMe_controllers[0].down)) {
+                (event.type == SDL_CONTROLLERAXISMOTION
+                && event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY
+                && GFraMe_controllers[event.caxis.which].ly < 0.3
+                && GFraMe_controllers[event.caxis.which].ly > -0.3)
+               ) {
                 ms->firstPress = 0;
                 ms->lastPressedTime = 0;
             }

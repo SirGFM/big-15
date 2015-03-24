@@ -134,6 +134,7 @@ state playstate(int doLoad) {
             if (_ps_onOptions) {
                 options();
                 _ps_onOptions = 0;
+                _ps_lastPress = 300;
             }
         }
         else {
@@ -586,6 +587,17 @@ static void ps_event() {
             _ps_firstPress = 0;
             _ps_lastPress = 0;
         GFraMe_event_on_controller();
+            if (_ps_pause) {
+                if (event.type == SDL_CONTROLLERBUTTONUP ||
+                    (event.type == SDL_CONTROLLERAXISMOTION
+                    && event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY
+                    && GFraMe_controllers[event.caxis.which].ly < 0.3
+                    && GFraMe_controllers[event.caxis.which].ly > -0.3)
+                   ) {
+                    _ps_firstPress = 0;
+                    _ps_lastPress = 0;
+                }
+            }
             if (event.type == SDL_CONTROLLERBUTTONDOWN) {
                 if (ctr_pause()) {
                     _ps_pause = !_ps_pause;
@@ -598,15 +610,6 @@ static void ps_event() {
                 else if (_ps_text && textWnd_didFinish()) {
                     _ps_text = 0;
                 }
-            }
-            else if (event.type == SDL_CONTROLLERBUTTONUP ||
-                (GFraMe_controller_max > 0
-                    && (GFraMe_controllers[0].ly < 0.5
-                        && GFraMe_controllers[0].ly > -0.5)
-                    && !GFraMe_controllers[0].up
-                    && !GFraMe_controllers[0].down)) {
-                _ps_firstPress = 0;
-                _ps_lastPress = 0;
             }
         GFraMe_event_on_quit();
             gl_running = 0;

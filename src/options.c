@@ -6,6 +6,7 @@
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_save.h>
+#include <GFraMe/GFraMe_screen.h>
 #include <GFraMe/GFraMe_spriteset.h>
 
 #include "audio.h"
@@ -14,7 +15,7 @@
 #include "options.h"
 #include "types.h"
 
-enum { OPT_MUSIC, OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
+enum { OPT_RES, OPT_MUSIC, OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
 
 struct stOptions {
     /** Whether the menu is still running */
@@ -27,6 +28,8 @@ struct stOptions {
     int curOpt;
     /** Whether or not hint should be shown */
     int hint;
+    /** Current window resolution; [0, 4], where 0 mean fullscreen */
+    int res;
 };
 
 // Initialize variables used by the event module
@@ -103,6 +106,8 @@ state options() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "hint", op.hint);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    rv = GFraMe_save_write_int(&sv, "zoom", op.res);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "music", audio_isMuted());
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     ret = MENUSTATE;
@@ -127,11 +132,14 @@ static void op_init(struct stOptions *op) {
     op->curOpt = 0;
     
     pSv = 0;
+    /* Try to read the hint mode and zoom from the file */
     op->hint = 1;
+    op->res = 2;
     rv = GFraMe_save_bind(&sv, CONFFILE);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
     pSv = &sv;
     GFraMe_save_read_int(&sv, "hint", &op->hint);
+    GFraMe_save_read_int(&sv, "zoom", &op->res);
     
 __ret:
     if (pSv)
@@ -180,6 +188,15 @@ static void op_draw(struct stOptions *op) {
         _op_renderText("<", x-1, y+op->curOpt, 1);
         _op_renderText(">", x+10, y+op->curOpt, 1);
         
+        _op_renderText("ZOOM", x, y, sizeof("ZOOM")-1);
+        switch (op->res) {
+            case 0: _op_renderText("FULLSCREEN", x+12, y, sizeof("FULLSCREEN")-1); break;
+            case 1: _op_renderText("X1", x+12, y, sizeof("X1")-1); break;
+            case 2: _op_renderText("X2", x+12, y, sizeof("X2")-1); break;
+            case 3: _op_renderText("X3", x+12, y, sizeof("X3")-1); break;
+            case 4: _op_renderText("X4", x+12, y, sizeof("X4")-1); break;
+        }
+        y++;
         _op_renderText("MUSIC", x, y, sizeof("MUSIC")-1);
         if (audio_isMuted())
             _op_renderText("MUTED", x+12, y, sizeof("MUTED")-1);
@@ -409,6 +426,43 @@ static void op_update(struct stOptions *op) {
                     op->lastPressedTime += 100;
                 op->firstPress = 1;
             }
+            else if (op->curOpt == OPT_RES && (isLeft || isRight)) {
+                // Exit fullscreen
+                if (op->res == 0) {
+                    GFraMe_screen_setWindowed();
+                }
+                // Modify the current resolution
+                if (isLeft)
+                    op->res--;
+                else if (isRight)
+                    op->res++;
+                // Make sure it's a valid value
+                if (op->res < 0)
+                    op->res = 4;
+                else if (op->res > 4)
+                    op->res = 0;
+                // Switch the resolution... in real time! (yep, a great idea...)
+                if (op->res != 0) {
+                    GFraMe_ret rv;
+                    
+                    rv = GFraMe_screen_set_window_size(SCR_W*op->res, SCR_H*op->res);
+                    if (rv == GFraMe_ret_ok)
+					    GFraMe_screen_set_pixel_perfect(0, 1);
+                }
+                else {
+                    GFraMe_ret rv;
+                    
+                    rv = GFraMe_screen_setFullscreen();
+                    if (rv == GFraMe_ret_ok)
+                        GFraMe_screen_set_pixel_perfect(0, 1);
+                }
+                // Set the delay on the cursor
+                if (!op->firstPress)
+                    op->lastPressedTime += 300;
+                else
+                    op->lastPressedTime += 100;
+                op->firstPress = 1;
+            }
             else if (op->curOpt == OPT_MUSIC && (isLeft || isRight)) {
                 if (audio_isMuted()) {
                     audio_unmuteSong();
@@ -449,13 +503,12 @@ static void op_event(struct stOptions *op) {
             op->lastPressedTime = 0;
         GFraMe_event_on_controller();
             if (event.type == SDL_CONTROLLERBUTTONUP ||
-                (GFraMe_controller_max > 0
-                    && (GFraMe_controllers[0].ly < 0.5
-                        && GFraMe_controllers[0].ly > -0.5)
-                    && (GFraMe_controllers[0].lx < 0.5
-                        && GFraMe_controllers[0].lx > -0.5)
-                    && !GFraMe_controllers[0].up
-                    && !GFraMe_controllers[0].down)) {
+                (event.type == SDL_CONTROLLERAXISMOTION
+                && GFraMe_controllers[event.caxis.which].ly < 0.3
+                && GFraMe_controllers[event.caxis.which].ly > -0.3
+                && GFraMe_controllers[event.caxis.which].lx < 0.3
+                && GFraMe_controllers[event.caxis.which].lx > -0.3
+               )) {
                 op->firstPress = 0;
                 op->lastPressedTime = 0;
             }
