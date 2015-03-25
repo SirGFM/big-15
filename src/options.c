@@ -291,11 +291,19 @@ static void op_update(struct stOptions *op) {
                 isDown = isDown || GFraMe_controllers[0].ly > 0.5;
                 isDown = isDown || GFraMe_controllers[0].down;
             }
+            if (GFraMe_controller_max >= 2) {
+                isDown = isDown || GFraMe_controllers[1].ly > 0.5;
+                isDown = isDown || GFraMe_controllers[1].down;
+            }
             isUp = GFraMe_keys.up;
             isUp = isUp || GFraMe_keys.w;
             if (GFraMe_controller_max >= 1) {
                 isUp = isUp || GFraMe_controllers[0].ly < -0.5;
                 isUp = isUp || GFraMe_controllers[0].up;
+            }
+            if (GFraMe_controller_max >= 2) {
+                isUp = isUp || GFraMe_controllers[1].ly < -0.5;
+                isUp = isUp || GFraMe_controllers[1].up;
             }
             isLeft = GFraMe_keys.left;
             isLeft = isLeft || GFraMe_keys.a;
@@ -303,11 +311,19 @@ static void op_update(struct stOptions *op) {
                 isLeft = isLeft || GFraMe_controllers[0].lx < -0.5;
                 isLeft = isLeft || GFraMe_controllers[0].left;
             }
+            if (GFraMe_controller_max >= 2) {
+                isLeft = isLeft || GFraMe_controllers[1].lx < -0.5;
+                isLeft = isLeft || GFraMe_controllers[1].left;
+            }
             isRight = GFraMe_keys.right;
             isRight = isRight || GFraMe_keys.d;
             if (GFraMe_controller_max >= 1) {
                 isRight = isRight || GFraMe_controllers[0].lx > 0.5;
                 isRight = isRight || GFraMe_controllers[0].right;
+            }
+            if (GFraMe_controller_max >= 2) {
+                isRight = isRight || GFraMe_controllers[1].lx > 0.5;
+                isRight = isRight || GFraMe_controllers[1].right;
             }
             
             if (isDown) {
@@ -484,6 +500,10 @@ static void op_update(struct stOptions *op) {
         if (GFraMe_controller_max > 0) {
             isEnter = isEnter || GFraMe_controllers[0].a;
             isEnter = isEnter || GFraMe_controllers[0].start;
+        }
+        if (GFraMe_controller_max > 1) {
+            isEnter = isEnter || GFraMe_controllers[1].a;
+            isEnter = isEnter || GFraMe_controllers[1].start;
         }
         if (isEnter && op->curOpt == OPT_BACK) {
             op->running = 0;

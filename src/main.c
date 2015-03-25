@@ -53,6 +53,8 @@ int main(int argc, char *argv[]) {
     
     setIcon();
     
+    // Set the bg color
+    GFraMe_set_bg_color(0x00, 0x00, 0x00, 0xff);
     // Set the actual game dimensions
     pSv = 0;
     rv = GFraMe_save_bind(&sv, CONFFILE);

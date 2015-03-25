@@ -643,11 +643,19 @@ static void ps_doPause() {
                 isDown = isDown || GFraMe_controllers[0].ly > 0.5;
                 isDown = isDown || GFraMe_controllers[0].down;
             }
+            if (GFraMe_controller_max >= 2) {
+                isDown = isDown || GFraMe_controllers[1].ly > 0.5;
+                isDown = isDown || GFraMe_controllers[1].down;
+            }
             isUp = GFraMe_keys.up;
             isUp = isUp || GFraMe_keys.w;
             if (GFraMe_controller_max >= 1) {
                 isUp = isUp || GFraMe_controllers[0].ly < -0.5;
                 isUp = isUp || GFraMe_controllers[0].up;
+            }
+            if (GFraMe_controller_max >= 2) {
+                isUp = isUp || GFraMe_controllers[1].ly < -0.5;
+                isUp = isUp || GFraMe_controllers[1].up;
             }
             
             if (isDown) {
@@ -679,6 +687,9 @@ static void ps_doPause() {
             isEnter = isEnter || GFraMe_keys.space;
             if (GFraMe_controller_max > 0) {
                 isEnter = isEnter || GFraMe_controllers[0].a;
+            }
+            if (GFraMe_controller_max > 1) {
+                isEnter = isEnter || GFraMe_controllers[1].a;
             }
             
             if (isEnter) {
