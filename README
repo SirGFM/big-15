@@ -1,0 +1,60 @@
+ #############################################################################
+ ##                                                                         ##
+ ##  JJAT - by GFM                                                          ##
+ ##                                                                         ##
+ #############################################################################
+
+================================================================================
+  Story
+--------------------------------------------------------------------------------
+
+ In the distant future, a monster has been wrecking havoc through the galaxy. No
+known weapon seems to hurt it. All beings live in fear of the creature's next
+attack.
+ But two adventurers, fearing nothing but boredom and the lack of danger,
+decided to fight back!
+ They went back in time and into the monster's lair, to destroy it before it
+could become a threat!
+
+================================================================================
+  About
+--------------------------------------------------------------------------------
+
+ JJAT is a precision platformer with a few inspiration from metroidvania games
+(except it turned out really short...). You play as two characters exploring a
+facility, looking for a way to defeat a monster.
+ The game can be played alone, using the left stick and left shoulder buttons to
+control one character and using the "right side" of the controller to control
+the other character. There are bindings for keyboard, but a gamepad should be
+used, if possible.
+ The game can also be played by two people. This make somethings easier, as its
+not necessary to control two characters at once, but add a new layer of
+complexity, since both players need to be in sync and cooperate.
+
+================================================================================
+  Controls
+--------------------------------------------------------------------------------
+
+ The controls can be checked and modified on the 'options' menu.
+
+================================================================================
+  Dependencies
+--------------------------------------------------------------------------------
+
+To run this game, you must have SDL2 installed on your system.
+Simply install it from apt-get and it should work:
+
+  $ sudo apt-get install libsdl2-2.0.0
+
+If that doesn't work, try using the develpment package:
+
+  $ sudo apt-get install libsdl2-dev
+
+================================================================================
+  Installation
+--------------------------------------------------------------------------------
+
+ *TO BE DONE (as soon as I get to packaging this...)*
+
+================================================================================
+
