@@ -370,8 +370,10 @@ static GFraMe_ret ps_switchMap() {
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);
                 // Save the current state
-                rv = gv_save(SAVEFILE);
-                GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
+                if (player_isAlive(p1) && player_isAlive(p2)) {
+                    rv = gv_save(SAVEFILE);
+                    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
+                }
 #  if defined(DEBUG) && defined(RESET_GV)
                 gv_init();
 #  endif /* RESET_GV */
@@ -411,8 +413,10 @@ static GFraMe_ret ps_switchMap() {
     // Set the update time (for using on events)
     gv_setValue(GAME_UPS, GFraMe_event_elapsed);
     // Save the current state
-    rv = gv_save(SAVEFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
+    if (player_isAlive(p1) && player_isAlive(p2)) {
+        rv = gv_save(SAVEFILE);
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
+    }
 #endif /* FAST_TRANSITION */
     
     // Set return variable
