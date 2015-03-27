@@ -68,6 +68,7 @@ DECLARE_AUDIO(plStep);
 DECLARE_AUDIO(menu);
 DECLARE_AUDIO(intro);
 DECLARE_AUDIO(movingOn);
+DECLARE_AUDIO(victory);
 
 
 GFraMe_ret gl_init() {
@@ -144,6 +145,7 @@ GFraMe_ret gl_init() {
     INIT_SONG(menu, "menu");
     INIT_SONG(intro, "intro");
     INIT_SONG(movingOn, "movingOn");
+    INIT_SONG(victory, "victory");
     
     gl_isInit = 1;
     gl_running = 1;

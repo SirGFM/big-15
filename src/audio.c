@@ -7,7 +7,8 @@
 #include "audio.h"
 #include "global.h"
 
-typedef enum {SONG_NONE=0, SONG_MENU, SONG_INTRO, SONG_MOVINGON} song;
+typedef enum {SONG_NONE=0, SONG_MENU, SONG_INTRO, SONG_MOVINGON,
+              SONG_VICTORY} song;
 song curSong = SONG_NONE;
 static int isSongMuted = 0;
 
@@ -36,6 +37,10 @@ void audio_unmuteSong() {
         case SONG_MOVINGON: {
             curSong = SONG_NONE;
             audio_playMovingOn();
+        } break;
+        case SONG_VICTORY: {
+            curSong = SONG_NONE;
+            audio_playVictory();
         } break;
         default: {}
     }
@@ -67,7 +72,10 @@ void audio_playBoss() {
 }
 
 void audio_playVictory() {
-    audio_playMovingOn();
+    if (curSong != SONG_VICTORY && !isSongMuted) {
+        GFraMe_audio_player_play_bgm(gl_aud_victory, 0.60f);
+    }
+    curSong = SONG_VICTORY;
 }
 
 void sfx_menuMove() {

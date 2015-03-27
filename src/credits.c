@@ -181,7 +181,7 @@ static void cr_update(struct stCredits *cr) {
         else {
             cr->len++;
             if (cr->len == cr->maxLen) {
-                cr->textTimer += 1500;
+                cr->textTimer += 3750;
                 cr->frame = 39; // Set smile+wink
             }
             else if (cr->len > cr->maxLen) {

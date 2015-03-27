@@ -88,6 +88,7 @@ AUD_DECLARE_EXT(plStep);
 AUD_DECLARE_EXT(menu);
 AUD_DECLARE_EXT(intro);
 AUD_DECLARE_EXT(movingOn);
+AUD_DECLARE_EXT(victory);
 
 // Functions
 
