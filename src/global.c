@@ -69,6 +69,7 @@ DECLARE_AUDIO(menu);
 DECLARE_AUDIO(intro);
 DECLARE_AUDIO(movingOn);
 DECLARE_AUDIO(victory);
+DECLARE_AUDIO(bossBattle);
 
 
 GFraMe_ret gl_init() {
@@ -102,6 +103,10 @@ GFraMe_ret gl_init() {
         gl_aud_##AUD = &_glAud_##AUD
     #define INIT_SONG(AUD, FILEN) \
         rv = GFraMe_audio_init(&_glAud_##AUD, FILEN, 1, 0, 1); \
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Loading audio "FILEN" failed", __ret); \
+        gl_aud_##AUD = &_glAud_##AUD
+    #define INIT_SONG_WINTRO(AUD, FILEN, LOOPPOS) \
+        rv = GFraMe_audio_init(&_glAud_##AUD, FILEN, 1, LOOPPOS, 1); \
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Loading audio "FILEN" failed", __ret); \
         gl_aud_##AUD = &_glAud_##AUD
     #define INIT_SONG_NOLOOP(AUD, FILEN) \
@@ -150,6 +155,7 @@ GFraMe_ret gl_init() {
     INIT_SONG(intro, "intro");
     INIT_SONG(movingOn, "movingOn");
     INIT_SONG_NOLOOP(victory, "victory");
+    INIT_SONG_WINTRO(bossBattle, "bossBattle", 58800);
     
     gl_isInit = 1;
     gl_running = 1;

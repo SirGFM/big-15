@@ -8,7 +8,7 @@
 #include "global.h"
 
 typedef enum {SONG_NONE=0, SONG_MENU, SONG_INTRO, SONG_MOVINGON,
-              SONG_VICTORY} song;
+              SONG_VICTORY, SONG_BOSSBATTLE} song;
 song curSong = SONG_NONE;
 static int isSongMuted = 0;
 
@@ -42,6 +42,10 @@ void audio_unmuteSong() {
             curSong = SONG_NONE;
             audio_playVictory();
         } break;
+        case SONG_BOSSBATTLE: {
+            curSong = SONG_BOSSBATTLE;
+            audio_playVictory();
+        } break;
         default: {}
     }
 }
@@ -68,7 +72,10 @@ void audio_playMovingOn() {
 }
 
 void audio_playBoss() {
-    audio_playMovingOn();
+    if (curSong != SONG_BOSSBATTLE && !isSongMuted) {
+        GFraMe_audio_player_play_bgm(gl_aud_bossBattle, 0.60f);
+    }
+    curSong = SONG_BOSSBATTLE;
 }
 
 void audio_playVictory() {

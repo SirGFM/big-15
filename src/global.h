@@ -89,6 +89,7 @@ AUD_DECLARE_EXT(menu);
 AUD_DECLARE_EXT(intro);
 AUD_DECLARE_EXT(movingOn);
 AUD_DECLARE_EXT(victory);
+AUD_DECLARE_EXT(bossBattle);
 
 // Functions
 
