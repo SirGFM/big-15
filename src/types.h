@@ -6,16 +6,17 @@
 #ifndef __TYPES_H_
 #define __TYPES_H_
 
-typedef enum {
+enum enTypesState {
     MENUSTATE = 0,
     NEW_PLAYSTATE,
     CNT_PLAYSTATE,
     OPTIONS,
     CREDITS,
     DEMO
-} state;
+};
+typedef enum enTypesState state;
 
-typedef enum {
+enum enTypesFlag {
     ID_PL         = 0x10000000,
     ID_MOB        = 0x20000000,
     ID_OBJ        = 0x40000000,
@@ -60,7 +61,8 @@ typedef enum {
     ID_PL2ITEM   = 0x00000200,
     
     ID_NONE      = 0x00100000
-} flag;
+};
+typedef enum enTypesFlag flag;
 
 enum {
     CLOSED  = 0,
@@ -73,7 +75,7 @@ enum {
 /**
  * Possible triggers
  */
-typedef enum {
+enum enTypesTrigger {
     /** Whether a object just touched the event from the left */
     ON_ENTER_LEFT  = 0x00000001,
     /** Whether a object just touched the event from the right */
@@ -97,7 +99,8 @@ typedef enum {
     /** Whether any object just touched the event */
     ON_ENTER          = ON_ENTER_LEFT | ON_ENTER_RIGHT | ON_ENTER_DOWN
                         | ON_ENTER_UP
-} trigger;
+};
+typedef enum enTypesTrigger trigger;
 
 
 //#  ifdef __PARSER_H_
