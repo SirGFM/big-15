@@ -65,12 +65,12 @@ static void cr_event(struct stCredits *cr);
  */
 state credits() {
     char text[] =
-"               GAME OVER\n"
+"               GAME OVER   \n"
 "    \n"
 "  \n"
 "  \n"
-"    THANK YOU FOR PLAYING THIS GAME     \n"
-"  \n"
+"    THANK YOU FOR PLAYING THIS GAME       \n"
+"       \n"
 "  \n"
 "  \n"
 "  \n"

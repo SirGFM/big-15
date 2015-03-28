@@ -104,6 +104,10 @@ GFraMe_ret gl_init() {
         rv = GFraMe_audio_init(&_glAud_##AUD, FILEN, 1, 0, 1); \
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Loading audio "FILEN" failed", __ret); \
         gl_aud_##AUD = &_glAud_##AUD
+    #define INIT_SONG_NOLOOP(AUD, FILEN) \
+        rv = GFraMe_audio_init(&_glAud_##AUD, FILEN, 0, 0, 1); \
+        GFraMe_assertRet(rv == GFraMe_ret_ok, "Loading audio "FILEN" failed", __ret); \
+        gl_aud_##AUD = &_glAud_##AUD
     
     INIT_SSET(4 , 4 );
     INIT_SSET(8 , 8 );
@@ -145,7 +149,7 @@ GFraMe_ret gl_init() {
     INIT_SONG(menu, "menu");
     INIT_SONG(intro, "intro");
     INIT_SONG(movingOn, "movingOn");
-    INIT_SONG(victory, "victory");
+    INIT_SONG_NOLOOP(victory, "victory");
     
     gl_isInit = 1;
     gl_running = 1;
