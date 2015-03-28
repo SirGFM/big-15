@@ -40,7 +40,7 @@ struct stPlayer {
     GFraMe_sprite spr;
     
     GFraMe_animation standAnim;
-    int standData[1];
+    int standData[8];
     
     GFraMe_animation walkAnim;
     int walkData[8];
@@ -107,7 +107,14 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile, int x, int y) {
     GFraMe_animation_init(&pPl->hurtAnim, 12, pPl->hurtData, 8, 0);
     
     pPl->standData[0] = firstTile;
-    GFraMe_animation_init(&pPl->standAnim, 0, pPl->standData, 1, 0);
+    pPl->standData[1] = firstTile;
+    pPl->standData[2] = firstTile + 11;
+    pPl->standData[3] = firstTile;
+    pPl->standData[4] = firstTile;
+    pPl->standData[5] = firstTile + 13;
+    pPl->standData[6] = firstTile;
+    pPl->standData[7] = firstTile + 12;
+    GFraMe_animation_init(&pPl->standAnim, 8, pPl->standData, 8, 1);
     
     pPl->walkData[0] = firstTile + 1;
     pPl->walkData[1] = firstTile + 2;
