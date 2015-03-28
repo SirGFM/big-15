@@ -155,7 +155,7 @@ GFraMe_ret gl_init() {
     INIT_SONG(intro, "intro");
     INIT_SONG(movingOn, "movingOn");
     INIT_SONG_NOLOOP(victory, "victory");
-    INIT_SONG_WINTRO(bossBattle, "bossBattle", 58800);
+    INIT_SONG_WINTRO(bossBattle, "bossBattle", 58800*4);
     
     gl_isInit = 1;
     gl_running = 1;
