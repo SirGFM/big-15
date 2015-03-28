@@ -48,6 +48,12 @@ struct stPlayer {
     GFraMe_animation hurtAnim;
     int hurtData[8];
     
+    GFraMe_animation jumpAnim;
+    int jumpData[1];
+    
+    GFraMe_animation fallAnim;
+    int fallData[1];
+    
     int curAnim;
     int isBeingCarried;
     int isBeingCarriedBoss;
@@ -125,6 +131,12 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile, int x, int y) {
     pPl->walkData[6] = firstTile + 7;
     pPl->walkData[7] = firstTile + 8;
     GFraMe_animation_init(&pPl->walkAnim, 14, pPl->walkData, 8, 1);
+    
+    pPl->jumpData[0] = firstTile + 14;
+    GFraMe_animation_init(&pPl->jumpAnim, 0, pPl->jumpData, 1, 0);
+    
+    pPl->fallData[0] = firstTile + 15;
+    GFraMe_animation_init(&pPl->fallAnim, 0, pPl->fallData, 1, 0);
     
     // Initialize the sprite
     GFraMe_sprite_init(&pPl->spr, x, y, 8/*w*/, 14/*h*/, gl_sset16x16, -4, -2);
@@ -423,9 +435,9 @@ void player_setAnimation(player *pPl, int anim) {
         case PL_WALK:
             GFraMe_sprite_set_animation(&pPl->spr, &pPl->walkAnim, 1); break;
         case PL_JUMP:
-            /* TODO play jump anim */ break;
+            GFraMe_sprite_set_animation(&pPl->spr, &pPl->jumpAnim, 1); break;
         case PL_FALL:
-            /* TODO play fall anim */ break;
+            GFraMe_sprite_set_animation(&pPl->spr, &pPl->fallAnim, 1); break;
         case PL_HURT:
             GFraMe_sprite_set_animation(&pPl->spr, &pPl->hurtAnim, 0); break;
     }
