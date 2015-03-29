@@ -200,6 +200,9 @@ static GFraMe_ret ps_init(int isLoading) {
         audio_playBoss();
     }
     else if (map >= 15) {
+        audio_playTensionGoesUp();
+    }
+    else if (map >= 5) {
         audio_playMovingOn();
     }
     else {

@@ -90,6 +90,7 @@ AUD_DECLARE_EXT(intro);
 AUD_DECLARE_EXT(movingOn);
 AUD_DECLARE_EXT(victory);
 AUD_DECLARE_EXT(bossBattle);
+AUD_DECLARE_EXT(tensionGoesUp);
 
 // Functions
 

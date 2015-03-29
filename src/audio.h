@@ -12,6 +12,7 @@ void audio_playIntro();
 void audio_playMovingOn();
 void audio_playBoss();
 void audio_playVictory();
+void audio_playTensionGoesUp();
 
 void sfx_menuMove();
 void sfx_menuSelect();

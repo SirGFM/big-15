@@ -70,6 +70,7 @@ DECLARE_AUDIO(intro);
 DECLARE_AUDIO(movingOn);
 DECLARE_AUDIO(victory);
 DECLARE_AUDIO(bossBattle);
+DECLARE_AUDIO(tensionGoesUp);
 
 
 GFraMe_ret gl_init() {
@@ -156,6 +157,7 @@ GFraMe_ret gl_init() {
     INIT_SONG(movingOn, "movingOn");
     INIT_SONG_NOLOOP(victory, "victory");
     INIT_SONG_WINTRO(bossBattle, "bossBattle", 58800*4);
+    INIT_SONG(tensionGoesUp, "tensionGoesUp");
     
     gl_isInit = 1;
     gl_running = 1;
