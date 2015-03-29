@@ -202,7 +202,7 @@ static GFraMe_ret ps_init(int isLoading) {
     else if (map >= 15) {
         audio_playTensionGoesUp();
     }
-    else if (map >= 5) {
+    else if (map >= 4) {
         audio_playMovingOn();
     }
     else {
@@ -326,7 +326,13 @@ static GFraMe_ret ps_switchMap() {
                     audio_playBoss();
                 }
                 else if (map >= 15) {
+                    audio_playTensionGoesUp();
+                }
+                else if (map >= 4) {
                     audio_playMovingOn();
+                }
+                else {
+                    audio_playIntro();
                 }
                 
                 switchState++;

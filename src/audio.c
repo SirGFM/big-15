@@ -90,7 +90,7 @@ void audio_playVictory() {
 }
 
 void audio_playTensionGoesUp() {
-    if (curSong != SONG_TENSIONGOESUP&& !isSongMuted) {
+    if (curSong != SONG_TENSIONGOESUP && !isSongMuted) {
         GFraMe_audio_player_play_bgm(gl_aud_tensionGoesUp, 0.60f);
     }
     curSong = SONG_TENSIONGOESUP;
