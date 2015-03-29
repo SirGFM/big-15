@@ -591,7 +591,7 @@ static void ps_event() {
                 _ps_opt = 0;
                 _ps_onOptions = 0;
                 _ps_lastPress = 300;
-                GFraMe_audio_play(gl_aud_pause, 0.4f);
+                sfx_pause();
             }
             else if (_ps_text && textWnd_didFinish()) {
                 _ps_text = 0;
@@ -618,7 +618,7 @@ static void ps_event() {
                     _ps_opt = 0;
                     _ps_onOptions = 0;
                     _ps_lastPress = 300;
-                    GFraMe_audio_play(gl_aud_pause, 0.4f);
+                    sfx_pause();
                 }
                 else if (_ps_text && textWnd_didFinish()) {
                     _ps_text = 0;

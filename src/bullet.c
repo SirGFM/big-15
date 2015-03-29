@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 
+#include "audio.h"
 #include "bullet.h"
 #include "camera.h"
 #include "global.h"
@@ -253,7 +254,7 @@ void bullet_setAnim(bullet *pBul, int anim) {
     GFraMe_sprite_set_animation(&pBul->spr, &pBul->anim[anim], 0);
     
     if (anim == PROJ_EXPLODE)
-        GFraMe_audio_play(gl_aud_blHit, 0.5f);
+        sfx_bulHit();
     
     pBul->state = anim;
 __ret:

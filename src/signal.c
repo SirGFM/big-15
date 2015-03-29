@@ -6,6 +6,7 @@
 #include <GFraMe/GFraMe_audio.h>
 #include <GFraMe/GFraMe_spriteset.h>
 
+#include "audio.h"
 #include "camera.h"
 #include "global.h"
 #include "globalVar.h"
@@ -61,7 +62,7 @@ void signal_setPos(int cx, int cy) {
     cur.frame = SGNL_FRAME0;
     cur.time = 0;
     cur.state = SGNL_BEGIN;
-    GFraMe_audio_play(gl_aud_signaler, 0.43f);
+    sfx_signaler();
 }
 
 /**

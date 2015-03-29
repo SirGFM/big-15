@@ -156,3 +156,24 @@ void sfx_bossMove() {
 void sfx_bombExpl() {
     GFraMe_audio_play(gl_aud_bombExpl, 0.35f);
 }
+void sfx_door() {
+    GFraMe_audio_play(gl_aud_door, 0.3f);
+}
+void sfx_bulHit() {
+    GFraMe_audio_play(gl_aud_blHit, 0.5f);
+}
+void sfx_heartUp() {
+    GFraMe_audio_play(gl_aud_heartup, 0.55f);
+}
+void sfx_terminal() {
+    GFraMe_audio_play(gl_aud_terminal, 0.3f);
+}
+void sfx_getItem() {
+    GFraMe_audio_play(gl_aud_getItem, 0.75f);
+}
+void sfx_pause() {
+    GFraMe_audio_play(gl_aud_pause, 0.4f);
+}
+void sfx_signaler() {
+    GFraMe_audio_play(gl_aud_signaler, 0.43f);
+}

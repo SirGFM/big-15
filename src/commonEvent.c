@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 
+#include "audio.h"
 #include "commonEvent.h"
 #include "event.h"
 #include "global.h"
@@ -184,7 +185,7 @@ void ce_callEvent(commonEvent ce) {
             val = gv_getValue(gv);
             if (val == CLOSED) {
                 gv_setValue(gv, OPENING);
-                GFraMe_audio_play(gl_aud_door, 0.3f);
+                sfx_door();
             }
         } break;
         case CE_CLOSE_DOOR: {
@@ -200,7 +201,7 @@ void ce_callEvent(commonEvent ce) {
             val = gv_getValue(gv);
             if (val == OPEN) {
                 gv_setValue(gv, CLOSING);
-                GFraMe_audio_play(gl_aud_door, 0.3f);
+                sfx_door();
             }
         } break;
         case CE_SWITCH_DOOR: {
@@ -216,11 +217,11 @@ void ce_callEvent(commonEvent ce) {
             val = gv_getValue(gv);
             if (val == OPEN) {
                 gv_setValue(gv, CLOSING);
-                GFraMe_audio_play(gl_aud_door, 0.3f);
+                sfx_door();
             }
             else if (val == CLOSED) {
                 gv_setValue(gv, OPENING);
-                GFraMe_audio_play(gl_aud_door, 0.3f);
+                sfx_door();
             }
         } break;
         case CE_HANDLE_DOOR:
@@ -476,7 +477,7 @@ void ce_callEvent(commonEvent ce) {
             // Mark this as gotten
             gv_inc(gv);
             
-            GFraMe_audio_play(gl_aud_heartup, 0.55f);
+            sfx_heartUp();
         } break;
         case CE_SET_GV: {
             event *pE;
@@ -490,10 +491,10 @@ void ce_callEvent(commonEvent ce) {
             // Set it!
             gv_setValue(gv, val);
             if (gv >= TERMINAL_001 && gv <= TERMINAL_027) {
-                GFraMe_audio_play(gl_aud_terminal, 0.3f);
+                sfx_terminal();
             }
             else if (gv >= HJUMP_TERM && gv <= SIGNL_TERM) {
-                GFraMe_audio_play(gl_aud_getItem, 0.75f);
+                sfx_getItem();
             }
         } break;
         case CE_SET_ANIM_OFF: {

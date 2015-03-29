@@ -358,6 +358,10 @@ static void ms_update(struct stMenustate *ms) {
                 if (L < 32) { \
                     LF += t * V; \
                     L = (int)LF; \
+                } \
+                else if (L >= 32) { \
+                    LF = 32.0f; \
+                    L = 32; \
                 }
             UPD_LETTER(ms->j1Y, ms->j1Yf, J1_VY)
             UPD_LETTER(ms->j2Y, ms->j2Yf, J2_VY)

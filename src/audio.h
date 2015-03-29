@@ -34,6 +34,13 @@ void sfx_charger();
 void sfx_shootBoss();
 void sfx_bossMove();
 void sfx_bombExpl();
+void sfx_door();
+void sfx_bulHit();
+void sfx_heartUp();
+void sfx_terminal();
+void sfx_getItem();
+void sfx_pause();
+void sfx_signaler();
 
 #endif
 
