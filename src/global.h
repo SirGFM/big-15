@@ -17,7 +17,7 @@
 #define SCR_H 240
 #define ORG "com.gfmgamecorner"
 #define NAME "JJAT"
-#define FPS 60
+#define FPS 90
 #define GAME_UFPS 60
 #define GAME_DFPS 60
 #define GRAVITY 500

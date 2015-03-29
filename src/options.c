@@ -15,7 +15,7 @@
 #include "options.h"
 #include "types.h"
 
-enum { OPT_RES, OPT_MUSIC, OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
+enum { OPT_UFPS, OPT_DFPS, OPT_RES, OPT_MUSIC, OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
 
 struct stOptions {
     /** Whether the menu is still running */
@@ -30,6 +30,10 @@ struct stOptions {
     int hint;
     /** Current window resolution; [0, 4], where 0 mean fullscreen */
     int res;
+    /** Desired update rate */
+    int ufps;
+    /** Desired draw rate */
+    int dfps;
 };
 
 // Initialize variables used by the event module
@@ -110,6 +114,10 @@ state options() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "music", audio_isMuted());
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    rv = GFraMe_save_write_int(&sv, "ufps", op.ufps);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    rv = GFraMe_save_write_int(&sv, "dfps", op.dfps);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     ret = MENUSTATE;
 __ret:
     if (pSv) {
@@ -140,6 +148,12 @@ static void op_init(struct stOptions *op) {
     pSv = &sv;
     GFraMe_save_read_int(&sv, "hint", &op->hint);
     GFraMe_save_read_int(&sv, "zoom", &op->res);
+    rv = GFraMe_save_read_int(&sv, "ufps", &op->ufps);
+    if (rv != GFraMe_ret_ok)
+        op->ufps = GAME_UFPS;
+    rv = GFraMe_save_read_int(&sv, "dfps", &op->dfps);
+    if (rv != GFraMe_ret_ok)
+        op->dfps = GAME_DFPS;
     
 __ret:
     if (pSv)
@@ -173,82 +187,102 @@ static void op_draw(struct stOptions *op) {
         _op_renderText("OPTIONS", 16/*x*/, 3/*y*/, sizeof("OPTIONS")-1);
         
 /*
-        "MUSIC     "
-        "HINT      "
-        "PL1 DEVICE"
-        " PL1 MODE"
-        "PL2 DEVICE"
-        " PL2 MODE"
-        "   BACK"
+        "UPDATE RATE "
+        "DRAW RATE   "
+        "ZOOM        "
+        "MUSIC       "
+        "HINT        "
+        "PL1 DEVICE  "
+        "PL1 MODE    "
+        "PL2 DEVICE  "
+        "PL2 MODE    "
+        "BACK        "
 */
         
-        x = 3;
-        y = 8;
+        x = 2;
+        y = 6;
         
         _op_renderText("<", x-1, y+op->curOpt, 1);
-        _op_renderText(">", x+10, y+op->curOpt, 1);
+        _op_renderText(">", x+11, y+op->curOpt, 1);
+        
+        _op_renderText("UPDATE RATE", x, y, sizeof("UPDATE RATE")-1);
+        switch (op->ufps) {
+            case 60: _op_renderText("60", x+13, y, sizeof("60")-1); break;
+            case 90: _op_renderText("90", x+13, y, sizeof("90")-1); break;
+        }
+        _op_renderText("FPS", x+16, y, sizeof("FPS")-1);
+        y++;
+        
+        _op_renderText("DRAW RATE", x, y, sizeof("DRAW RATE")-1);
+        switch (op->dfps) {
+            case 30: _op_renderText("30", x+13, y, sizeof("30")-1); break;
+            case 60: _op_renderText("60", x+13, y, sizeof("60")-1); break;
+            case 90: _op_renderText("90", x+13, y, sizeof("90")-1); break;
+        }
+        _op_renderText("FPS", x+16, y, sizeof("FPS")-1);
+        y++;
         
         _op_renderText("ZOOM", x, y, sizeof("ZOOM")-1);
         switch (op->res) {
-            case 0: _op_renderText("FULLSCREEN", x+12, y, sizeof("FULLSCREEN")-1); break;
-            case 1: _op_renderText("X1", x+12, y, sizeof("X1")-1); break;
-            case 2: _op_renderText("X2", x+12, y, sizeof("X2")-1); break;
-            case 3: _op_renderText("X3", x+12, y, sizeof("X3")-1); break;
-            case 4: _op_renderText("X4", x+12, y, sizeof("X4")-1); break;
+            case 0: _op_renderText("FULLSCREEN", x+13, y, sizeof("FULLSCREEN")-1); break;
+            case 1: _op_renderText("X1", x+13, y, sizeof("X1")-1); break;
+            case 2: _op_renderText("X2", x+13, y, sizeof("X2")-1); break;
+            case 3: _op_renderText("X3", x+13, y, sizeof("X3")-1); break;
+            case 4: _op_renderText("X4", x+13, y, sizeof("X4")-1); break;
         }
         y++;
         _op_renderText("MUSIC", x, y, sizeof("MUSIC")-1);
         if (audio_isMuted())
-            _op_renderText("MUTED", x+12, y, sizeof("MUTED")-1);
+            _op_renderText("MUTED", x+13, y, sizeof("MUTED")-1);
         else
-            _op_renderText("PLAYING", x+12, y, sizeof("PLAYING")-1);
+            _op_renderText("PLAYING", x+13, y, sizeof("PLAYING")-1);
         y++;
         
         _op_renderText("HINT", x, y, sizeof("HINT")-1);
         if (op->hint)
-            _op_renderText("ENABLED", x+12, y, sizeof("ENABLED")-1);
+            _op_renderText("ENABLED", x+13, y, sizeof("ENABLED")-1);
         else
-            _op_renderText("DISABLED", x+12, y, sizeof("DISABLED")-1);
+            _op_renderText("DISABLED", x+13, y, sizeof("DISABLED")-1);
         y++;
         
         _op_renderText("PL1 DEVICE", x, y, sizeof("PL1 DEVICE")-1);
         if (pl1 < CTR_PAD1_A)
-            _op_renderText("KEYBOARD", x+12, y, sizeof("KEYBOARD")-1);
+            _op_renderText("KEYBOARD", x+13, y, sizeof("KEYBOARD")-1);
         else if (pl1 < CTR_PAD2_A)
-            _op_renderText("GAMEPAD1", x+12, y, sizeof("GAMEPAD1")-1);
+            _op_renderText("GAMEPAD1", x+13, y, sizeof("GAMEPAD1")-1);
         else
-            _op_renderText("GAMEPAD2", x+12, y, sizeof("GAMEPAD2")-1);
+            _op_renderText("GAMEPAD2", x+13, y, sizeof("GAMEPAD2")-1);
         y++;
         
         _op_renderText("PL1 MODE", x, y, sizeof("PL1 MODE")-1);
         if (pl1 % 4 == 0)
-            _op_renderText("TYPE A ", x+12, y, sizeof("TYPE A")-1);
+            _op_renderText("TYPE A ", x+13, y, sizeof("TYPE A")-1);
         else if (pl1 % 4 == 1)
-            _op_renderText("TYPE B ", x+12, y, sizeof("TYPE B")-1);
+            _op_renderText("TYPE B ", x+13, y, sizeof("TYPE B")-1);
         else if (pl1 % 4 == 2)
-            _op_renderText("TYPE C ", x+12, y, sizeof("TYPE C")-1);
+            _op_renderText("TYPE C ", x+13, y, sizeof("TYPE C")-1);
         else if (pl1 % 4 == 3)
-            _op_renderText("TYPE D ", x+12, y, sizeof("TYPE D")-1);
+            _op_renderText("TYPE D ", x+13, y, sizeof("TYPE D")-1);
         y++;
         
         _op_renderText("PL2 DEVICE", x, y, sizeof("PL2 DEVICE")-1);
         if (pl2 < CTR_PAD1_A)
-            _op_renderText("KEYBOARD", x+12, y, sizeof("KEYBOARD")-1);
+            _op_renderText("KEYBOARD", x+13, y, sizeof("KEYBOARD")-1);
         else if (pl2 < CTR_PAD2_A)
-            _op_renderText("GAMEPAD1", x+12, y, sizeof("GAMEPAD1")-1);
+            _op_renderText("GAMEPAD1", x+13, y, sizeof("GAMEPAD1")-1);
         else
-            _op_renderText("GAMEPAD2", x+12, y, sizeof("GAMEPAD2")-1);
+            _op_renderText("GAMEPAD2", x+13, y, sizeof("GAMEPAD2")-1);
         y++;
         
         _op_renderText("PL2 MODE", x, y, sizeof("PL2 MODE")-1);
         if (pl2 % 4 == 0)
-            _op_renderText("TYPE A ", x+12, y, sizeof("TYPE A")-1);
+            _op_renderText("TYPE A ", x+13, y, sizeof("TYPE A")-1);
         else if (pl2 % 4 == 1)
-            _op_renderText("TYPE B ", x+12, y, sizeof("TYPE B")-1);
+            _op_renderText("TYPE B ", x+13, y, sizeof("TYPE B")-1);
         else if (pl2 % 4 == 2)
-            _op_renderText("TYPE C ", x+12, y, sizeof("TYPE C")-1);
+            _op_renderText("TYPE C ", x+13, y, sizeof("TYPE C")-1);
         else if (pl2 % 4 == 3)
-            _op_renderText("TYPE D ", x+12, y, sizeof("TYPE D")-1);
+            _op_renderText("TYPE D ", x+13, y, sizeof("TYPE D")-1);
         y++;
         
         _op_renderText("BACK", x, y, sizeof("BACK")-1);
@@ -491,6 +525,28 @@ static void op_update(struct stOptions *op) {
                     op->lastPressedTime += 300;
                 else
                     op->lastPressedTime += 100;
+                op->firstPress = 1;
+            }
+            else if (op->curOpt == OPT_UFPS && (isLeft || isRight)) {
+                if (isLeft) op->ufps -= 30;
+                else if (isRight) op->ufps += 30;
+                // Clamp the value
+                if (op->ufps < 60) op->ufps = 90;
+                else if (op->ufps > 90) op->ufps = 60;
+                // Avoid multi presses
+                if (!op->firstPress) op->lastPressedTime += 300;
+                else op->lastPressedTime += 100;
+                op->firstPress = 1;
+            }
+            else if (op->curOpt == OPT_DFPS && (isLeft || isRight)) {
+                if (isLeft) op->dfps -= 30;
+                else if (isRight) op->dfps += 30;
+                // Clamp the value
+                if (op->dfps < 30) op->dfps = 90;
+                else if (op->dfps > 90) op->dfps = 30;
+                // Avoid multi presses
+                if (!op->firstPress) op->lastPressedTime += 300;
+                else op->lastPressedTime += 100;
                 op->firstPress = 1;
             }
         }

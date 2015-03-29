@@ -11,9 +11,20 @@ typedef enum {SONG_NONE=0, SONG_MENU, SONG_INTRO, SONG_MOVINGON,
               SONG_VICTORY, SONG_BOSSBATTLE, SONG_TENSIONGOESUP} song;
 song curSong = SONG_NONE;
 static int isSongMuted = 0;
+static int isSfxMuted = 0;
 
 int audio_isMuted() {
 	return isSongMuted;
+}
+int sfx_isMuted() {
+    return isSfxMuted;
+}
+
+void sfx_Mute() {
+    isSfxMuted = 1;
+}
+void sfx_Unmute() {
+    isSfxMuted = 0;
 }
 
 void audio_muteSong() {
@@ -97,83 +108,83 @@ void audio_playTensionGoesUp() {
 }
 
 void sfx_menuMove() {
-    GFraMe_audio_play(gl_aud_menuMove, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_menuMove, 0.5f);
 }
 void sfx_menuSelect() {
-    GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
 }
 void sfx_text() {
-    GFraMe_audio_play(gl_aud_text, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_text, 0.5f);
 }
 void sfx_plJump() {
-    GFraMe_audio_play(gl_aud_jump, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jump, 0.5f);
 }
 void sfx_plHighJump() {
-    GFraMe_audio_play(gl_aud_highjump, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_highjump, 0.5f);
 }
 void sfx_teleport() {
-    GFraMe_audio_play(gl_aud_teleport, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_teleport, 0.4f);
 }
 void sfx_plFall() {
-    GFraMe_audio_play(gl_aud_fall, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_fall, 0.4f);
 }
 void sfx_switchItem() {
-    GFraMe_audio_play(gl_aud_switchItem, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_switchItem, 0.5f);
 }
 void sfx_plDeath() {
-    GFraMe_audio_play(gl_aud_plDeath, 0.7f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plDeath, 0.7f);
 }
 void sfx_plHurt() {
-    GFraMe_audio_play(gl_aud_plHit, 0.75f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plHit, 0.75f);
 }
 void sfx_plStep() {
-    GFraMe_audio_play(gl_aud_plStep, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plStep, 0.5f);
 }
 void sfx_bossExpl() {
-    GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
 }
 void sfx_bossHit() {
-    GFraMe_audio_play(gl_aud_plDeath, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plDeath, 0.4f);
 }
 void sfx_jumperJump() {
-    GFraMe_audio_play(gl_aud_jumperJump, 0.15f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jumperJump, 0.15f);
 }
 void sfx_jumperFall() {
-    GFraMe_audio_play(gl_aud_jumperFall, 0.35f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jumperFall, 0.35f);
 }
 void sfx_shootEn() {
-    GFraMe_audio_play(gl_aud_shootEn, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_shootEn, 0.4f);
 }
 void sfx_charger() {
-    GFraMe_audio_play(gl_aud_charger, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_charger, 0.4f);
 }
 void sfx_shootBoss() {
-    GFraMe_audio_play(gl_aud_shootBoss, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_shootBoss, 0.4f);
 }
 void sfx_bossMove() {
-    GFraMe_audio_play(gl_aud_bossMove, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bossMove, 0.5f);
 }
 void sfx_bombExpl() {
-    GFraMe_audio_play(gl_aud_bombExpl, 0.35f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bombExpl, 0.35f);
 }
 void sfx_door() {
-    GFraMe_audio_play(gl_aud_door, 0.3f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_door, 0.3f);
 }
 void sfx_bulHit() {
-    GFraMe_audio_play(gl_aud_blHit, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_blHit, 0.5f);
 }
 void sfx_heartUp() {
-    GFraMe_audio_play(gl_aud_heartup, 0.55f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_heartup, 0.55f);
 }
 void sfx_terminal() {
-    GFraMe_audio_play(gl_aud_terminal, 0.3f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_terminal, 0.3f);
 }
 void sfx_getItem() {
-    GFraMe_audio_play(gl_aud_getItem, 0.75f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_getItem, 0.75f);
 }
 void sfx_pause() {
-    GFraMe_audio_play(gl_aud_pause, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_pause, 0.4f);
 }
 void sfx_signaler() {
-    GFraMe_audio_play(gl_aud_signaler, 0.43f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_signaler, 0.43f);
 }

@@ -102,6 +102,8 @@ static void ps_drawPause();
 static GFraMe_ret ps_switchMap();
 
 #ifdef DEBUG
+static int _maxUfps;
+static int _maxDfps;
 static int _updCalls;
 static int _drwCalls;
 static unsigned int _time;
@@ -112,14 +114,36 @@ static unsigned int _ltime;
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
 state playstate(int doLoad) {
+    GFraMe_save sv, *pSv;
     GFraMe_ret rv;
+    int ufps, dfps;
     state ret;
     
+    pSv = 0;
     ret = -1;
     rv = ps_init(doLoad);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
-    GFraMe_event_init(GAME_UFPS, GAME_DFPS);
+    // Open the configurations
+    rv = GFraMe_save_bind(&sv, CONFFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
+    pSv = &sv;
+    // Read the desired fps (for update and drawing)
+    rv = GFraMe_save_read_int(&sv, "ufps", &ufps);
+    if (rv != GFraMe_ret_ok)
+        ufps = GAME_UFPS;
+    rv = GFraMe_save_read_int(&sv, "dfps", &dfps);
+    if (rv != GFraMe_ret_ok)
+        dfps = GAME_DFPS;
+    GFraMe_save_close(&sv);
+    pSv = 0;
+    
+#ifdef DEBUG
+    _maxUfps = ufps;
+    _maxDfps = dfps;
+#endif
+    
+    GFraMe_event_init(ufps, dfps);
     
     _ps_pause = 0;
     _psRunning = 1;
@@ -152,7 +176,7 @@ state playstate(int doLoad) {
         t = SDL_GetTicks();
         if (t >= _time) {
             GFraMe_log("t=%04i, U=%03i/%03i D=%03i/%03i", _time - _ltime,
-                _updCalls, GAME_UFPS, _drwCalls, GAME_DFPS);
+                _updCalls, _maxUfps, _drwCalls, _maxDfps);
             _updCalls = 0;
             _drwCalls = 0;
             _ltime = _time;
@@ -167,6 +191,8 @@ state playstate(int doLoad) {
         ret = MENUSTATE;
 __ret:
     ps_clean();
+    if (pSv)
+        GFraMe_save_close(pSv);
     
     return ret;
 }
