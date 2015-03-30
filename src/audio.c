@@ -13,19 +13,53 @@ song curSong = SONG_NONE;
 static int isSongMuted = 0;
 static int isSfxMuted = 0;
 
+static int song_volume;
+static int sfx_volume;
+static float sfx_volumef;
+
+int audio_getVolume() {
+    return song_volume;
+}
 int audio_isMuted() {
 	return isSongMuted;
+}
+
+int sfx_getVolume() {
+    return sfx_volume;
 }
 int sfx_isMuted() {
     return isSfxMuted;
 }
 
-void sfx_Mute() {
-    isSfxMuted = 1;
+void audio_setVolume(int val) {
+    if (val < 0)
+        val = 0;
+    else if (val > 100)
+        val = 100;
+    
+    if (song_volume != val)
+        audio_muteSong();
+    
+    song_volume = val;
+    
+    isSongMuted = song_volume == 0;
+    
+    if (!audio_isMuted())
+        audio_unmuteSong();
 }
-void sfx_Unmute() {
-    isSfxMuted = 0;
+
+void sfx_setVolume(int val) {
+    if (val < 0)
+        val = 0;
+    else if (val > 100)
+        val = 100;
+    
+    sfx_volume = val;
+    
+    isSfxMuted = sfx_volume == 0;
+    sfx_volumef = sfx_volume / 100.0f;
 }
+
 
 void audio_muteSong() {
     if (!isSongMuted) {
@@ -67,124 +101,124 @@ void audio_unmuteSong() {
 
 void audio_playMenu() {
     if (curSong != SONG_MENU && !isSongMuted) {
-        GFraMe_audio_player_play_bgm(gl_aud_menu, 0.60f);
+        GFraMe_audio_player_play_bgm(gl_aud_menu, song_volume / 100.0f);
     }
     curSong = SONG_MENU;
 }
 
 void audio_playIntro() {
     if (curSong != SONG_INTRO && !isSongMuted) {
-        GFraMe_audio_player_play_bgm(gl_aud_intro, 0.60f);
+        GFraMe_audio_player_play_bgm(gl_aud_intro, song_volume / 100.0f);
     }
     curSong = SONG_INTRO;
 }
 
 void audio_playMovingOn() {
     if (curSong != SONG_MOVINGON && !isSongMuted) {
-        GFraMe_audio_player_play_bgm(gl_aud_movingOn, 0.60f);
+        GFraMe_audio_player_play_bgm(gl_aud_movingOn, song_volume / 100.0f);
     }
     curSong = SONG_MOVINGON;
 }
 
 void audio_playBoss() {
     if (curSong != SONG_BOSSBATTLE && !isSongMuted) {
-        GFraMe_audio_player_play_bgm(gl_aud_bossBattle, 0.60f);
+        GFraMe_audio_player_play_bgm(gl_aud_bossBattle, song_volume / 100.0f);
     }
     curSong = SONG_BOSSBATTLE;
 }
 
 void audio_playVictory() {
     if (curSong != SONG_VICTORY && !isSongMuted) {
-        GFraMe_audio_player_play_bgm(gl_aud_victory, 0.60f);
+        GFraMe_audio_player_play_bgm(gl_aud_victory, song_volume / 100.0f);
     }
     curSong = SONG_VICTORY;
 }
 
 void audio_playTensionGoesUp() {
     if (curSong != SONG_TENSIONGOESUP && !isSongMuted) {
-        GFraMe_audio_player_play_bgm(gl_aud_tensionGoesUp, 0.60f);
+        GFraMe_audio_player_play_bgm(gl_aud_tensionGoesUp, song_volume / 100.0f);
     }
     curSong = SONG_TENSIONGOESUP;
 }
 
 void sfx_menuMove() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_menuMove, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_menuMove, sfx_volumef);
 }
 void sfx_menuSelect() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_menuSelect, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_menuSelect, sfx_volumef);
 }
 void sfx_text() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_text, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_text, sfx_volumef);
 }
 void sfx_plJump() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jump, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jump, sfx_volumef);
 }
 void sfx_plHighJump() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_highjump, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_highjump, sfx_volumef);
 }
 void sfx_teleport() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_teleport, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_teleport, 0.8f * sfx_volumef);
 }
 void sfx_plFall() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_fall, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_fall, 0.8f * sfx_volumef);
 }
 void sfx_switchItem() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_switchItem, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_switchItem, sfx_volumef);
 }
 void sfx_plDeath() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plDeath, 0.7f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plDeath, 1.4f * sfx_volumef);
 }
 void sfx_plHurt() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plHit, 0.75f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plHit, 1.5f * sfx_volumef);
 }
 void sfx_plStep() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plStep, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plStep, sfx_volumef);
 }
 void sfx_bossExpl() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bossExpl, 0.36f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bossExpl, 0.72f * sfx_volumef);
 }
 void sfx_bossHit() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plDeath, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_plDeath, 0.8f * sfx_volumef);
 }
 void sfx_jumperJump() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jumperJump, 0.15f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jumperJump, 0.3f * sfx_volumef);
 }
 void sfx_jumperFall() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jumperFall, 0.35f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_jumperFall, 0.7f * sfx_volumef);
 }
 void sfx_shootEn() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_shootEn, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_shootEn, 0.8f * sfx_volumef);
 }
 void sfx_charger() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_charger, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_charger, 0.8f * sfx_volumef);
 }
 void sfx_shootBoss() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_shootBoss, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_shootBoss, 0.8f * sfx_volumef);
 }
 void sfx_bossMove() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bossMove, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bossMove, sfx_volumef);
 }
 void sfx_bombExpl() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bombExpl, 0.35f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_bombExpl, 0.7f * sfx_volumef);
 }
 void sfx_door() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_door, 0.3f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_door, 0.6f * sfx_volumef);
 }
 void sfx_bulHit() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_blHit, 0.5f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_blHit, sfx_volumef);
 }
 void sfx_heartUp() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_heartup, 0.55f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_heartup, sfx_volumef);
 }
 void sfx_terminal() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_terminal, 0.3f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_terminal, 0.6f * sfx_volumef);
 }
 void sfx_getItem() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_getItem, 0.75f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_getItem, 1.5f * sfx_volumef);
 }
 void sfx_pause() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_pause, 0.4f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_pause, 0.8f * sfx_volumef);
 }
 void sfx_signaler() {
-    if (!isSfxMuted) GFraMe_audio_play(gl_aud_signaler, 0.43f);
+    if (!isSfxMuted) GFraMe_audio_play(gl_aud_signaler, 0.86f * sfx_volumef);
 }

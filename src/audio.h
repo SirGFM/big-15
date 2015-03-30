@@ -7,6 +7,15 @@
 int audio_isMuted();
 void audio_muteSong();
 void audio_unmuteSong();
+int audio_getVolume();
+void audio_setVolume(int val);
+
+int sfx_isMuted();
+void sfx_Mute();
+void sfx_Unmute();
+int sfx_getVolume();
+void sfx_setVolume(int val);
+
 void audio_playMenu();
 void audio_playIntro();
 void audio_playMovingOn();

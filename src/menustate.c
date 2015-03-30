@@ -203,12 +203,18 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     }
     else
         ctr_setDef();
+    // Set the song volume
     rv = GFraMe_save_read_int(&sv, "music", &tmp);
-    if (rv == GFraMe_ret_ok) {
-        if (tmp) {
-            audio_muteSong();
-        }
-    }
+    if (rv == GFraMe_ret_ok)
+        audio_setVolume(tmp);
+    else
+        audio_setVolume(60);
+    // Set the sfx volume
+    rv = GFraMe_save_read_int(&sv, "sfx", &tmp);
+    if (rv == GFraMe_ret_ok)
+        sfx_setVolume(tmp);
+    else
+        sfx_setVolume(50);
     GFraMe_save_close(&sv);
     
     // Zero some variables
