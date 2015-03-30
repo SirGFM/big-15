@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
              GFraMe_window_none, // GFraMe_window_fullscreen
              &ext,
              FPS,
-             0, // Log to file
+             1, // Log to file
              0  // Log append
             );
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Init failed", __ret);

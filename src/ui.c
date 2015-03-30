@@ -156,7 +156,7 @@ void ui_draw() {
     pl1Item = gv_getValue(PL1_ITEM);
     pl2Item = gv_getValue(PL2_ITEM);
     // Draw every enabled item
-    x = 80;
+    x = 96;
     y = 7;
     while (items) {
         int item;

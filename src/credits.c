@@ -12,6 +12,7 @@
 #include "audio.h"
 #include "global.h"
 #include "globalVar.h"
+#include "timer.h"
 #include "transition.h"
 #include "types.h"
 
@@ -65,27 +66,27 @@ static void cr_event(struct stCredits *cr);
  */
 state credits() {
     char text[] =
-"               GAME OVER   \n"
-"    \n"
-"  \n"
-"  \n"
-"    THANK YOU FOR PLAYING THIS GAME       \n"
-"       \n"
-"  \n"
-"  \n"
-"  \n"
-"  \n"
-"             DEATH COUNT:\n"
-"    \n"
+"               GAME OVER    \n"
+"\n"
+"    THANK YOU FOR PLAYING THIS GAME    \n"
+"\n"
+"\n"
+"\n"
+"             DEATH COUNT:    \n"
+"\n"
 "            PLAYER1: 00000    \n"
 "            PLAYER2: 00000    \n"
-"        \n";
+"\n"
+"\n"
+"              TOTAL TIME:        \n"
+"\n"
+"              00:00:00.000";
     int i, j, val;
     state ret;
     struct stCredits cr;
     
     ret = -1;
-    cr_init(&cr, text, (int)sizeof(text), 0, 7);
+    cr_init(&cr, text, (int)sizeof(text) - 1, 0, 7);
     
     i = 0;
     // Search for the first '0'
@@ -111,6 +112,13 @@ state credits() {
         i--;
         text[i] = (char)('0' + (val % 10));
         val /= 10;
+    }
+    
+    i = sizeof(text) - 1 - 12;
+    timer_getString(text + i);
+    while (i < sizeof(text) - 1) {
+        text[i] += '!';
+        i++;
     }
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
@@ -190,7 +198,7 @@ static void cr_update(struct stCredits *cr) {
             else {
                 int c;
                 
-                cr->textTimer += 50;
+                cr->textTimer += 40;
                 c = cr->text[cr->len - 1];
                 if (c != ' ' && c != '\n') {
                     sfx_text();
