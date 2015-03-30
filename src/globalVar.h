@@ -110,6 +110,7 @@ typedef enum {
     SIGNL_TERM,
     GAME_UPS,
     TIMER_BOMB,
+    GAME_TIME,
     GV_MAX        /** Global var count                         */
 } globalVar;
 

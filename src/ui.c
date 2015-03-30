@@ -142,7 +142,8 @@ void ui_draw() {
     GFraMe_spriteset_draw(gl_sset8x16, RECT_L, x, y, 0);
     x += 8;
     i = 0;
-    while (i < 22) {
+    //while (i < 22) {
+    while (i < 5) {
         GFraMe_spriteset_draw(gl_sset8x16, RECT_C, x, y, 0);
         i++;
         x += 8;
@@ -155,7 +156,7 @@ void ui_draw() {
     pl1Item = gv_getValue(PL1_ITEM);
     pl2Item = gv_getValue(PL2_ITEM);
     // Draw every enabled item
-    x = 72;
+    x = 80;
     y = 7;
     while (items) {
         int item;

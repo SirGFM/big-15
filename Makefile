@@ -35,6 +35,7 @@ CC=gcc
          $(OBJDIR)/registry.o          \
          $(OBJDIR)/signal.o            \
          $(OBJDIR)/textwindow.o        \
+         $(OBJDIR)/timer.o             \
          $(OBJDIR)/transition.o        \
          $(OBJDIR)/types.o             \
          $(OBJDIR)/ui.o                \

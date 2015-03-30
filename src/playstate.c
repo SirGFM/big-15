@@ -31,6 +31,7 @@
 #include "registry.h"
 #include "signal.h"
 #include "textwindow.h"
+#include "timer.h"
 #include "transition.h"
 #include "types.h"
 #include "ui.h"
@@ -101,9 +102,9 @@ static void ps_drawPause();
  */
 static GFraMe_ret ps_switchMap();
 
-#ifdef DEBUG
 static int _maxUfps;
 static int _maxDfps;
+#ifdef DEBUG
 static int _updCalls;
 static int _drwCalls;
 static unsigned int _time;
@@ -114,36 +115,14 @@ static unsigned int _ltime;
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
 state playstate(int doLoad) {
-    GFraMe_save sv, *pSv;
     GFraMe_ret rv;
-    int ufps, dfps;
     state ret;
     
-    pSv = 0;
     ret = -1;
     rv = ps_init(doLoad);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
-    // Open the configurations
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
-    pSv = &sv;
-    // Read the desired fps (for update and drawing)
-    rv = GFraMe_save_read_int(&sv, "ufps", &ufps);
-    if (rv != GFraMe_ret_ok)
-        ufps = GAME_UFPS;
-    rv = GFraMe_save_read_int(&sv, "dfps", &dfps);
-    if (rv != GFraMe_ret_ok)
-        dfps = GAME_DFPS;
-    GFraMe_save_close(&sv);
-    pSv = 0;
-    
-#ifdef DEBUG
-    _maxUfps = ufps;
-    _maxDfps = dfps;
-#endif
-    
-    GFraMe_event_init(ufps, dfps);
+    GFraMe_event_init(_maxUfps, _maxDfps);
     
     _ps_pause = 0;
     _psRunning = 1;
@@ -153,6 +132,7 @@ state playstate(int doLoad) {
 #endif
         
         ps_event();
+        timer_update();
         if (_ps_pause) {
             ps_doPause();
             if (_ps_onOptions) {
@@ -191,8 +171,6 @@ state playstate(int doLoad) {
         ret = MENUSTATE;
 __ret:
     ps_clean();
-    if (pSv)
-        GFraMe_save_close(pSv);
     
     return ret;
 }
@@ -204,7 +182,22 @@ __ret:
  */
 static GFraMe_ret ps_init(int isLoading) {
     GFraMe_ret rv;
-    int map, plX, plY;
+    GFraMe_save sv, *pSv;
+    int map, plX, plY, time;
+    
+    // Open the configurations
+    rv = GFraMe_save_bind(&sv, CONFFILE);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
+    pSv = &sv;
+    // Read the desired fps (for update and drawing)
+    rv = GFraMe_save_read_int(&sv, "ufps", &_maxUfps);
+    if (rv != GFraMe_ret_ok)
+        _maxUfps = GAME_UFPS;
+    rv = GFraMe_save_read_int(&sv, "dfps", &_maxDfps);
+    if (rv != GFraMe_ret_ok)
+        _maxDfps = GAME_DFPS;
+    GFraMe_save_close(&sv);
+    pSv = 0;
     
     if (!isLoading) {
         gv_init();
@@ -221,6 +214,8 @@ static GFraMe_ret ps_init(int isLoading) {
         plY = gv_getValue(DOOR_Y) * 8;
         map = gv_getValue(MAP);
     }
+    time = gv_getValue(GAME_TIME);
+    timer_init(time);
     
     if (map >= 20) {
         audio_playBoss();
@@ -270,6 +265,9 @@ static GFraMe_ret ps_init(int isLoading) {
     
     rv = GFraMe_ret_ok;
 __ret:
+    if (pSv)
+        GFraMe_save_close(pSv);
+    
     return rv;
 }
 
@@ -312,6 +310,7 @@ static void ps_draw() {
         if (_ps_pause) {
             ps_drawPause();
         }
+        timer_draw();
         if (_ps_text) {
             textWnd_draw();
         }
@@ -406,6 +405,7 @@ static GFraMe_ret ps_switchMap() {
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);
                 // Save the current state
                 if (player_isAlive(p1) && player_isAlive(p2)) {
+                    gv_setValue(GAME_TIME, timer_getTime());
                     rv = gv_save(SAVEFILE);
                     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
                 }
@@ -449,6 +449,7 @@ static GFraMe_ret ps_switchMap() {
     gv_setValue(GAME_UPS, GFraMe_event_elapsed);
     // Save the current state
     if (player_isAlive(p1) && player_isAlive(p2)) {
+        gv_setValue(GAME_TIME, timer_getTime());
         rv = gv_save(SAVEFILE);
         GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving file!", __ret);
     }
@@ -573,6 +574,7 @@ static void ps_update() {
             // Increase death counter
             gv_inc(PL1_DEATH);
             // Save death counter
+            gv_setValue(GAME_TIME, timer_getTime());
             rv = gv_save(SAVEFILE);
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
             // Force reload
@@ -586,6 +588,7 @@ static void ps_update() {
             // Increase death counter
             gv_inc(PL2_DEATH);
             // Save death counter
+            gv_setValue(GAME_TIME, timer_getTime());
             rv = gv_save(SAVEFILE);
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
             // Force reload
