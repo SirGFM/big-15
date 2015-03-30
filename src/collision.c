@@ -99,7 +99,6 @@ void col_onPlayer(player *pPl1, player *pPl2) {
     pObj2->hit = 0;
     // Check if they were already touching down
     wasPl1Down = (pl1Flags & GFraMe_direction_down);
-//    wasPl2Down = (pl2Flags & GFraMe_direction_down);
     // Try to collide them
     rv = GFraMe_object_overlap(pObj1, pObj2, GFraMe_dont_collide);
     if (rv == GFraMe_ret_ok) {
@@ -113,14 +112,9 @@ void col_onPlayer(player *pPl1, player *pPl2) {
             || (pl2Flags & GFraMe_direction_up)) {}
         else if (!wasPl1Down && (pObj1->hit&GFraMe_direction_down)){
             GFraMe_object_overlap(pObj1, pObj2, GFraMe_second_fixed);
-            player_getCarried(pPl1, pObj2);
+            player_getCarried(pPl1, pPl2);
             pl1Flags |= GFraMe_direction_down;
         }
-//        else if (!wasPl2Down && (pObj2->hit&GFraMe_direction_down)){
-//            GFraMe_object_overlap(pObj2, pObj1, GFraMe_second_fixed);
-//            player_getCarried(pPl2, pObj1);
-//            pl2Flags |= GFraMe_direction_down;
-//        }
     }
     // Restore the collision flags
     pObj1->hit = pl1Flags;

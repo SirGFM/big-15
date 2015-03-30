@@ -328,7 +328,7 @@ void player_update(player *pPl, int ms) {
         
         pPl->isBeingCarried = 0;
     }
-    else if (pPl->isBeingCarriedBoss) {
+    if (pPl->isBeingCarriedBoss) {
         if (gv_isZero(BOSS_DIR)) {
             // Boss is facing right
             obj->vx += BOSS_SPEED;
@@ -454,16 +454,18 @@ __ret:
  * player
  * 
  * @param pPl The player
- * @param pObj The object of the carring player
+ * @param pOther The other player
  */
-void player_getCarried(player *pPl, GFraMe_object *pObj) {
-    GFraMe_object *pThisObj;
+void player_getCarried(player *pPl, player *pOther) {
+    GFraMe_object *pThisObj, *pObj;
     
     // Get the required Framework's object
     pThisObj = GFraMe_sprite_get_object(&pPl->spr);
+    pObj = GFraMe_sprite_get_object(&pOther->spr);
     
     // Set the player as being carried above the other object
     pPl->isBeingCarried = 1;
+    pPl->isBeingCarriedBoss = pOther->isBeingCarriedBoss;
 
     // Modify the player's VY
     pThisObj->vy = pObj->vy + 32;

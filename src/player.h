@@ -78,9 +78,9 @@ void player_setAnimation(player *pPl, int anim);
  * player
  * 
  * @param pPl The player
- * @param pObj The object of the carring player
+ * @param pOther The other player
  */
-void player_getCarried(player *pPl, GFraMe_object *pObj);
+void player_getCarried(player *pPl, player *pOther);
 
 /**
  * Position the player (and set it to be moved) as being carried by the boss
