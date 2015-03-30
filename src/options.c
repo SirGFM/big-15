@@ -15,7 +15,8 @@
 #include "options.h"
 #include "types.h"
 
-enum { OPT_UFPS, OPT_DFPS, OPT_RES, OPT_MUSIC, OPT_SFX, OPT_HINT, OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
+enum { OPT_UFPS, OPT_DFPS, OPT_RES, OPT_MUSIC, OPT_SFX, OPT_HINT, OPT_SPEEDRUN,
+       OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
 
 struct stOptions {
     /** Whether the menu is still running */
@@ -34,6 +35,8 @@ struct stOptions {
     int ufps;
     /** Desired draw rate */
     int dfps;
+    /** Whether we are running in speed run mode (i.e., should display the timer) */
+    int speedrun;
 };
 
 // Initialize variables used by the event module
@@ -120,6 +123,8 @@ state options() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "dfps", op.dfps);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    rv = GFraMe_save_write_int(&sv, "speedrun", op.speedrun);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     ret = MENUSTATE;
 __ret:
     if (pSv) {
@@ -156,6 +161,9 @@ static void op_init(struct stOptions *op) {
     rv = GFraMe_save_read_int(&sv, "dfps", &op->dfps);
     if (rv != GFraMe_ret_ok)
         op->dfps = GAME_DFPS;
+    rv = GFraMe_save_read_int(&sv, "speedrun", &op->speedrun);
+    if (rv != GFraMe_ret_ok)
+        op->speedrun = 0;
     
 __ret:
     if (pSv)
@@ -277,6 +285,13 @@ static void op_draw(struct stOptions *op) {
                 case OPT_HINT: {
                     _op_renderText("HINT", x, y, sizeof("HINT")-1);
                     if (op->hint)
+                        _op_renderText("ENABLED", x+13, y, sizeof("ENABLED")-1);
+                    else
+                        _op_renderText("DISABLED", x+13, y, sizeof("DISABLED")-1);
+                } break;
+                case OPT_SPEEDRUN: {
+                    _op_renderText("SPEEDRUN", x, y, sizeof("SPEEDRUN")-1);
+                    if (op->speedrun)
                         _op_renderText("ENABLED", x+13, y, sizeof("ENABLED")-1);
                     else
                         _op_renderText("DISABLED", x+13, y, sizeof("DISABLED")-1);
@@ -512,6 +527,15 @@ static void op_update(struct stOptions *op) {
             }
             else if (op->curOpt == OPT_HINT && (isLeft || isRight)) {
                 op->hint = !op->hint;
+                sfx_menuMove();
+                if (!op->firstPress)
+                    op->lastPressedTime += 300;
+                else
+                    op->lastPressedTime += 100;
+                op->firstPress = 1;
+            }
+            else if (op->curOpt == OPT_SPEEDRUN && (isLeft || isRight)) {
+                op->speedrun = !op->speedrun;
                 sfx_menuMove();
                 if (!op->firstPress)
                     op->lastPressedTime += 300;

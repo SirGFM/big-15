@@ -54,6 +54,9 @@ static int _ps_onOptions;
 static int _timerTilCredits;
 static int _psRunning;
 static int _ps_text;
+static int _maxUfps;
+static int _maxDfps;
+static int _ps_isSpeedrun;
 
 static char _ps_map001_text[] = 
 "PRESS UP ON TERMINALS TO ACTIVATE\n"
@@ -102,8 +105,6 @@ static void ps_drawPause();
  */
 static GFraMe_ret ps_switchMap();
 
-static int _maxUfps;
-static int _maxDfps;
 #ifdef DEBUG
 static int _updCalls;
 static int _drwCalls;
@@ -196,6 +197,9 @@ static GFraMe_ret ps_init(int isLoading) {
     rv = GFraMe_save_read_int(&sv, "dfps", &_maxDfps);
     if (rv != GFraMe_ret_ok)
         _maxDfps = GAME_DFPS;
+    rv = GFraMe_save_read_int(&sv, "speedrun", &_ps_isSpeedrun);
+    if (rv != GFraMe_ret_ok)
+        _ps_isSpeedrun = 0;
     GFraMe_save_close(&sv);
     pSv = 0;
     
@@ -310,7 +314,8 @@ static void ps_draw() {
         if (_ps_pause) {
             ps_drawPause();
         }
-        timer_draw();
+        if (_ps_isSpeedrun)
+            timer_draw();
         if (_ps_text) {
             textWnd_draw();
         }
@@ -472,6 +477,7 @@ static void ps_update() {
         
         if (gv_getValue(BOSS_ISDEAD) >= 4) {
             if (_timerTilCredits == 0) {
+                timer_stop();
                 audio_playVictory();
             }
             else if (_timerTilCredits > 5000) {
