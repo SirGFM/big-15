@@ -54,8 +54,8 @@ void timer_draw() {
     
     timer_getString(str);
     
-    x = 128;
-    y = 8;
+    x = 140;
+    y = 7;
     i = 0;
     while (i < 12) {
         GFraMe_spriteset_draw(gl_sset8x8, str[i], x, y, 0/*flip*/);

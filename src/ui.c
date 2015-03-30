@@ -137,13 +137,13 @@ void ui_draw() {
     ui_drawItemBox(gv_getValue(PL2_ITEM), 300/*x*/, 4/*y*/);
     
     // Render every gotten itens
-    x = 64;
+    x = 84;
     y = 4;
     GFraMe_spriteset_draw(gl_sset8x16, RECT_L, x, y, 0);
     x += 8;
     i = 0;
     //while (i < 22) {
-    while (i < 5) {
+    while (i < 4) {
         GFraMe_spriteset_draw(gl_sset8x16, RECT_C, x, y, 0);
         i++;
         x += 8;
