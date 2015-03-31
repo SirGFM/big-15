@@ -375,6 +375,16 @@ void col_onEvBul(event *pEv, bullet *pBul) {
 void col_onObjBul(object *pObj, bullet *pBul) {
     GFraMe_object *pObj1, *pObj2;
     GFraMe_ret rv;
+    int ID;
+    objAnim anim;
+    
+    // Check if it's a door
+    obj_getID(&ID, pObj);
+    ASSERT_NR((ID & ID_DOOR) || (ID & ID_DOOR_HOR));
+    // Check that the door is closed
+    anim = obj_getAnim(pObj);
+    ASSERT_NR((anim != OBJ_ANIM_DOOR_OPEN)
+        && (anim != OBJ_ANIM_DOOR_HOR_OPEN));
     
     // Get both objects
     obj_getObject(&pObj1, pObj);
@@ -385,6 +395,9 @@ void col_onObjBul(object *pObj, bullet *pBul) {
     if (rv == GFraMe_ret_ok) {
         bullet_explode(pBul);
     }
+    
+__ret:
+    return;
 }
 
 /**
