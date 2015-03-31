@@ -37,15 +37,15 @@ void audio_setVolume(int val) {
     else if (val > 100)
         val = 100;
     
-    if (song_volume != val)
+    if (song_volume != 0 && val == 0)
         audio_muteSong();
+    else if (song_volume == 0 && val != 0)
+        audio_unmuteSong();
     
     song_volume = val;
+    GFraMe_audio_player_set_bgm_volume(song_volume / 100.0);
     
     isSongMuted = song_volume == 0;
-    
-    if (!audio_isMuted())
-        audio_unmuteSong();
 }
 
 void sfx_setVolume(int val) {
