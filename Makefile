@@ -95,7 +95,7 @@ CC=gcc
  LFLAGS := -lGFraMe -lm
 # Add dependencies
  ifeq ($(OS), Win)
-   LFLAGS := -L./lib/GFraMe/bin/Win -lmingw32 $(LFLAGS) -lSDL2main
+   LFLAGS := -L./lib/GFraMe/bin/Win -mwindows -lmingw32 $(LFLAGS) -lSDL2main
    ifeq ($(USE_OPENGL), yes)
      LFLAGS := $(LFLAGS) -lopengl32
    endif
