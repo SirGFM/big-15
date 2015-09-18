@@ -107,22 +107,6 @@ state demo() {
  */
 static void dm_draw(struct stDemo *dm) {
     GFraMe_event_draw_begin();
-        int x, y;
-        
-        // Draw the BG
-        x = 0;
-        y = 0;
-        while (1) {
-            GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
-            x += 8;
-            if (x >= 320) {
-                x = 0;
-                y += 8;
-            }
-            if (y >= 240) {
-                break;
-            }
-        }
         // Draw the text
         if (dm->text)
             _dm_renderText(dm->text, dm->textX, dm->textY, dm->textLen);

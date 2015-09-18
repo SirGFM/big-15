@@ -156,22 +156,6 @@ static void cr_init(struct stCredits *cr, char *text, int maxLen, int X, int Y) 
  */
 static void cr_draw(struct stCredits *cr) {
     GFraMe_event_draw_begin();
-        int x, y;
-        
-        // Draw the BG
-        x = 0;
-        y = 0;
-        while (1) {
-            GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
-            x += 8;
-            if (x >= 320) {
-                x = 0;
-                y += 8;
-            }
-            if (y >= 240) {
-                break;
-            }
-        }
         // Draw the text
         _cr_renderText(cr->text, cr->textX, cr->textY, cr->len);
         // Draw the player's icon

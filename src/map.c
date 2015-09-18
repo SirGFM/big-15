@@ -518,19 +518,24 @@ void map_draw(map *pM) {
     x = iniX;
     offX = 0;
     while (1) {
+        int tile;
+        
         // Check that the tile is still valid
         if (i >= pM->w * pM->h)
             break;
         
         // Render the tile to the screen
-        GFraMe_spriteset_draw
-            (
-             gl_sset8x8,
-             pM->data[firstTile + offX + i],
-             x,
-             y,
-             0 // flipped
-            );
+        tile = pM->data[firstTile + offX + i];
+        if (tile > 0 && tile != 64) {
+            GFraMe_spriteset_draw
+                (
+                 gl_sset8x8,
+                 tile,
+                 x,
+                 y,
+                 0 // flipped
+                );
+        }
         
         // Updates the tile position
         x += 8;

@@ -179,21 +179,6 @@ static void op_draw(struct stOptions *op) {
         
         ctr_getModes(&pl1, &pl2);
         
-        // Draw the BG
-        x = 0;
-        y = 0;
-        while (1) {
-            GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
-            x += 8;
-            if (x >= 320) {
-                x = 0;
-                y += 8;
-            }
-            if (y >= 240) {
-                break;
-            }
-        }
-        
         _op_renderText("OPTIONS", 16/*x*/, 3/*y*/, sizeof("OPTIONS")-1);
         
 /*
