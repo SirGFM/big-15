@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     GFraMe_ret rv;
     GFraMe_save sv, *pSv;
     GFraMe_wndext ext;
-    int zoom;
+    int zoom, lang;
     state st;
     
     ext.atlas = "atlas";
@@ -77,6 +77,19 @@ int main(int argc, char *argv[]) {
             if (rv == GFraMe_ret_ok)
                 GFraMe_screen_set_pixel_perfect(0, 1);
         }
+    }
+    // Check if the language was stored (and load it)
+    rv = GFraMe_save_read_int(&sv, "lang", &lang);
+    if (rv == GFraMe_ret_ok) {
+        if (lang == EN_US) {
+            gl_lang = EN_US;
+        }
+        else if (lang == PT_BR) {
+            gl_lang = PT_BR;
+        }
+    }
+    else {
+        gl_lang = EN_US;
     }
     GFraMe_save_close(&sv);
     pSv = 0;

@@ -16,7 +16,41 @@
 #include "types.h"
 
 enum { OPT_UFPS, OPT_DFPS, OPT_RES, OPT_MUSIC, OPT_SFX, OPT_HINT, OPT_SPEEDRUN,
-       OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_BACK, OPT_MAX };
+       OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_LANG, OPT_BACK, OPT_MAX };
+
+enum {
+    TXT_OPTS,
+    TXT_UPS,
+    TXT_DPS,
+    TXT_ZOOM,
+    TXT_MUSIC,
+    TXT_SFX,
+    TXT_HINT,
+    TXT_SPEEDRUN,
+    TXT_PL1DEV,
+    TXT_PL1MODE,
+    TXT_PL2DEV,
+    TXT_PL2MODE,
+    TXT_LANG,
+    TXT_BACK,
+    TXT_ENABLED,
+    TXT_DISABLED,
+    TXT_MUTED,
+    TXT_KEYBOARD,
+    TXT_GAMEPAD1,
+    TXT_GAMEPAD2,
+    TXT_TYPEA,
+    TXT_TYPEB,
+    TXT_TYPEC,
+    TXT_TYPED,
+    TXT_LEFT,
+    TXT_RIGHT,
+    TXT_UP,
+    TXT_JUMP,
+    TXT_ITEM,
+    TXT_SWITCH,
+    TXT_MAX
+};
 
 struct stOptions {
     /** Whether the menu is still running */
@@ -37,10 +71,21 @@ struct stOptions {
     int dfps;
     /** Whether we are running in speed run mode (i.e., should display the timer) */
     int speedrun;
+    /** Selected language */
+    int lang;
 };
 
 // Initialize variables used by the event module
 GFraMe_event_setup();
+
+/**
+ * Render a localized text to the screen
+ * 
+ * @param text The text
+ * @param X Horizontal position
+ * @param Y Vertical position
+ */
+static void _op_renderLang(struct stOptions *op, int text, int X, int Y);
 
 /**
  * Render some text into the screen
@@ -51,6 +96,10 @@ GFraMe_event_setup();
  * @param l Text length
  */
 static void _op_renderText(char *text, int X, int Y, int l);
+#define _op_renderTextStatic(text, X, Y) \
+        _op_renderText(text, X, Y, sizeof(text) - 1)
+#define _op_renderValueStatic(text, X, Y) \
+        _op_renderText(text, X + tab, Y, sizeof(text) - 1)
 
 /**
  * Render a input mode, on the desired position
@@ -125,7 +174,12 @@ state options() {
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     rv = GFraMe_save_write_int(&sv, "speedrun", op.speedrun);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
+    rv = GFraMe_save_write_int(&sv, "lang", op.lang);
+    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
     ret = MENUSTATE;
+    
+    // Update the current language
+    gl_lang = op.lang;
 __ret:
     if (pSv) {
         GFraMe_save_close(pSv);
@@ -164,6 +218,9 @@ static void op_init(struct stOptions *op) {
     rv = GFraMe_save_read_int(&sv, "speedrun", &op->speedrun);
     if (rv != GFraMe_ret_ok)
         op->speedrun = 0;
+    rv = GFraMe_save_read_int(&sv, "lang", &op->lang);
+    if (rv != GFraMe_ret_ok)
+        op->lang = EN_US;
     
 __ret:
     if (pSv)
@@ -175,14 +232,20 @@ __ret:
  */
 static void op_draw(struct stOptions *op) {
     GFraMe_event_draw_begin();
-        int i, pl1, pl2, x, y, _y;
+        int i, pl1, pl2, tab, x, y, _y;
         
         ctr_getModes(&pl1, &pl2);
         
-        _op_renderText("OPTIONS", 16/*x*/, 3/*y*/, sizeof("OPTIONS")-1);
+        _op_renderLang(op, TXT_OPTS, 16, 1);
+        if (op->lang == EN_US) {
+            tab = 13;
+        }
+        else if (op->lang == PT_BR) {
+            tab = 22;
+        }
         
 /*
-        "UPDATE RATE "
+        "UPDATE RATE " 
         "DRAW RATE   "
         "ZOOM        "
         "MUSIC       "
@@ -192,156 +255,174 @@ static void op_draw(struct stOptions *op) {
         "PL1 MODE    "
         "PL2 DEVICE  "
         "PL2 MODE    "
+        "LANGUAGE    "
         "BACK        "
+        
+        "TAXA DE ATUALIZACAO  "
+        "TAXA DE RENDERIZACAO "
+        "ZOOM                 "
+        "MUSICA               "
+        "SONS                 "
+        "DICAS                "
+        "DISPOSITIVO PL1      "
+        "CONFIGURACAO PL1     "
+        "DISPOSITIVO PL2      "
+        "CONFIGURACAO PL2     "
+        "IDIOMA               "
+        "VOLTAR               "
 */
         
         x = 2;
-        y = 6;
+        y = 3;
         
-        _op_renderText("<", x-1, y+op->curOpt, 1);
-        _op_renderText(">", x+11, y+op->curOpt, 1);
+        _op_renderText("<", x - 1, y+op->curOpt, 1);
+        _op_renderText(">", x + tab - 2, y + op->curOpt, 1);
         
         i = 0;
         while (i < OPT_MAX) {
             switch (i) {
                 case OPT_UFPS: {
-                    _op_renderText("UPDATE RATE", x, y, sizeof("UPDATE RATE")-1);
+                    _op_renderLang(op, TXT_UPS, x, y);
                     switch (op->ufps) {
-                        case 60: _op_renderText("60", x+13, y, sizeof("60")-1); break;
-                        case 90: _op_renderText("90", x+13, y, sizeof("90")-1); break;
+                        case 60: _op_renderValueStatic("60", x, y); break;
+                        case 90: _op_renderValueStatic("90", x, y); break;
                     }
-                    _op_renderText("FPS", x+16, y, sizeof("FPS")-1);
+                    _op_renderTextStatic("FPS", x + tab + 3, y);
                 } break;
                 case OPT_DFPS: {
-                    _op_renderText("DRAW RATE", x, y, sizeof("DRAW RATE")-1);
+                    _op_renderLang(op, TXT_DPS, x, y);
                     switch (op->dfps) {
-                        case 30: _op_renderText("30", x+13, y, sizeof("30")-1); break;
-                        case 60: _op_renderText("60", x+13, y, sizeof("60")-1); break;
-                        case 90: _op_renderText("90", x+13, y, sizeof("90")-1); break;
+                        case 30: _op_renderValueStatic("30", x, y); break;
+                        case 60: _op_renderValueStatic("60", x, y); break;
+                        case 90: _op_renderValueStatic("90", x, y); break;
                     }
-                    _op_renderText("FPS", x+16, y, sizeof("FPS")-1);
+                    _op_renderTextStatic("FPS", x + tab + 3, y);
                 } break;
                 case OPT_RES: {
-                    _op_renderText("ZOOM", x, y, sizeof("ZOOM")-1);
+                    _op_renderLang(op, TXT_ZOOM, x, y);
                     switch (op->res) {
-                        case 0: _op_renderText("FULLSCREEN", x+13, y, sizeof("FULLSCREEN")-1); break;
-                        case 1: _op_renderText("X1", x+13, y, sizeof("X1")-1); break;
-                        case 2: _op_renderText("X2", x+13, y, sizeof("X2")-1); break;
-                        case 3: _op_renderText("X3", x+13, y, sizeof("X3")-1); break;
-                        case 4: _op_renderText("X4", x+13, y, sizeof("X4")-1); break;
-                    }
+                        case 0: _op_renderValueStatic("FULLSCREEN", x, y); break;
+                        case 1: _op_renderValueStatic("X1", x, y); break;
+                        case 2: _op_renderValueStatic("X2", x, y); break;
+                        case 3: _op_renderValueStatic("X3", x, y); break;
+                        case 4: _op_renderValueStatic("X4", x, y); break; }
                 } break;
                 case OPT_MUSIC: {
                     float volume;
                     
-                    _op_renderText("MUSIC", x, y, sizeof("MUSIC")-1);
+                    _op_renderLang(op, TXT_MUSIC, x, y);
                     
                     volume = audio_getVolume();
-                    if (volume== 0) _op_renderText("MUTED", x+13, y, sizeof("MUTED")-1);
-                    else if (volume== 10) _op_renderText("10%", x+13, y, sizeof("10%")-1);
-                    else if (volume== 20) _op_renderText("20%", x+13, y, sizeof("20%")-1);
-                    else if (volume== 30) _op_renderText("30%", x+13, y, sizeof("30%")-1);
-                    else if (volume== 40) _op_renderText("40%", x+13, y, sizeof("40%")-1);
-                    else if (volume== 50) _op_renderText("50%", x+13, y, sizeof("50%")-1);
-                    else if (volume== 60) _op_renderText("60%", x+13, y, sizeof("60%")-1);
-                    else if (volume== 70) _op_renderText("70%", x+13, y, sizeof("70%")-1);
-                    else if (volume== 80) _op_renderText("80%", x+13, y, sizeof("80%")-1);
-                    else if (volume== 90) _op_renderText("90%", x+13, y, sizeof("90%")-1);
-                    else if (volume== 100) _op_renderText("100%", x+13, y, sizeof("100%")-1);
+                         if (volume== 0)   _op_renderLang(op, TXT_MUTED, x + tab, y);
+                    else if (volume== 10)  _op_renderValueStatic("10%", x, y);
+                    else if (volume== 20)  _op_renderValueStatic("20%", x, y);
+                    else if (volume== 30)  _op_renderValueStatic("30%", x, y);
+                    else if (volume== 40)  _op_renderValueStatic("40%", x, y);
+                    else if (volume== 50)  _op_renderValueStatic("50%", x, y);
+                    else if (volume== 60)  _op_renderValueStatic("60%", x, y);
+                    else if (volume== 70)  _op_renderValueStatic("70%", x, y);
+                    else if (volume== 80)  _op_renderValueStatic("80%", x, y);
+                    else if (volume== 90)  _op_renderValueStatic("90%", x, y);
+                    else if (volume== 100) _op_renderValueStatic("100%", x, y);
                 } break;
                 case OPT_SFX: {
                     float sfx;
                     
-                    _op_renderText("SFX", x, y, sizeof("SFX")-1);
+                    _op_renderLang(op, TXT_SFX, x, y);
                     
                     sfx = sfx_getVolume();
-                    if (sfx == 0) _op_renderText("MUTED", x+13, y, sizeof("MUTED")-1);
-                    else if (sfx == 10) _op_renderText("10%", x+13, y, sizeof("10%")-1);
-                    else if (sfx == 20) _op_renderText("20%", x+13, y, sizeof("20%")-1);
-                    else if (sfx == 30) _op_renderText("30%", x+13, y, sizeof("30%")-1);
-                    else if (sfx == 40) _op_renderText("40%", x+13, y, sizeof("40%")-1);
-                    else if (sfx == 50) _op_renderText("50%", x+13, y, sizeof("50%")-1);
-                    else if (sfx == 60) _op_renderText("60%", x+13, y, sizeof("60%")-1);
-                    else if (sfx == 70) _op_renderText("70%", x+13, y, sizeof("70%")-1);
-                    else if (sfx == 80) _op_renderText("80%", x+13, y, sizeof("80%")-1);
-                    else if (sfx == 90) _op_renderText("90%", x+13, y, sizeof("90%")-1);
-                    else if (sfx == 100) _op_renderText("100%", x+13, y, sizeof("100%")-1);
+                         if (sfx == 0)   _op_renderLang(op, TXT_MUTED, x + tab, y);
+                    else if (sfx == 10)  _op_renderValueStatic("10%", x, y);
+                    else if (sfx == 20)  _op_renderValueStatic("20%", x, y);
+                    else if (sfx == 30)  _op_renderValueStatic("30%", x, y);
+                    else if (sfx == 40)  _op_renderValueStatic("40%", x, y);
+                    else if (sfx == 50)  _op_renderValueStatic("50%", x, y);
+                    else if (sfx == 60)  _op_renderValueStatic("60%", x, y);
+                    else if (sfx == 70)  _op_renderValueStatic("70%", x, y);
+                    else if (sfx == 80)  _op_renderValueStatic("80%", x, y);
+                    else if (sfx == 90)  _op_renderValueStatic("90%", x, y);
+                    else if (sfx == 100) _op_renderValueStatic("100%", x, y);
                 } break;
                 case OPT_HINT: {
-                    _op_renderText("HINT", x, y, sizeof("HINT")-1);
+                    _op_renderLang(op, TXT_HINT, x, y);
                     if (op->hint)
-                        _op_renderText("ENABLED", x+13, y, sizeof("ENABLED")-1);
+                        _op_renderLang(op, TXT_ENABLED, x + tab, y);
                     else
-                        _op_renderText("DISABLED", x+13, y, sizeof("DISABLED")-1);
+                        _op_renderLang(op, TXT_DISABLED, x + tab, y);
                 } break;
                 case OPT_SPEEDRUN: {
-                    _op_renderText("SPEEDRUN", x, y, sizeof("SPEEDRUN")-1);
+                    _op_renderLang(op, TXT_SPEEDRUN, x, y);
                     if (op->speedrun)
-                        _op_renderText("ENABLED", x+13, y, sizeof("ENABLED")-1);
+                        _op_renderLang(op, TXT_ENABLED, x + tab, y);
                     else
-                        _op_renderText("DISABLED", x+13, y, sizeof("DISABLED")-1);
+                        _op_renderLang(op, TXT_DISABLED, x + tab, y);
                 } break;
                 case OPT_P1DEV: {
-                    _op_renderText("PL1 DEVICE", x, y, sizeof("PL1 DEVICE")-1);
+                    _op_renderLang(op, TXT_PL1DEV, x, y);
                     if (pl1 < CTR_PAD1_A)
-                        _op_renderText("KEYBOARD", x+13, y, sizeof("KEYBOARD")-1);
+                        _op_renderLang(op, TXT_KEYBOARD, x + tab, y);
                     else if (pl1 < CTR_PAD2_A)
-                        _op_renderText("GAMEPAD1", x+13, y, sizeof("GAMEPAD1")-1);
+                        _op_renderLang(op, TXT_GAMEPAD1, x + tab, y);
                     else
-                        _op_renderText("GAMEPAD2", x+13, y, sizeof("GAMEPAD2")-1);
+                        _op_renderLang(op, TXT_GAMEPAD2, x + tab, y);
                 } break;
                 case OPT_P1MODE: {
-                    _op_renderText("PL1 MODE", x, y, sizeof("PL1 MODE")-1);
+                    _op_renderLang(op, TXT_PL1MODE, x, y);
                     if (pl1 % 4 == 0)
-                        _op_renderText("TYPE A ", x+13, y, sizeof("TYPE A")-1);
+                        _op_renderLang(op, TXT_TYPEA, x + tab, y);
                     else if (pl1 % 4 == 1)
-                        _op_renderText("TYPE B ", x+13, y, sizeof("TYPE B")-1);
+                        _op_renderLang(op, TXT_TYPEB, x + tab, y);
                     else if (pl1 % 4 == 2)
-                        _op_renderText("TYPE C ", x+13, y, sizeof("TYPE C")-1);
+                        _op_renderLang(op, TXT_TYPEC, x + tab, y);
                     else if (pl1 % 4 == 3)
-                        _op_renderText("TYPE D ", x+13, y, sizeof("TYPE D")-1);
+                        _op_renderLang(op, TXT_TYPED, x + tab, y);
                 } break;
                 case OPT_P2DEV: {
-                    _op_renderText("PL2 DEVICE", x, y, sizeof("PL2 DEVICE")-1);
+                    _op_renderLang(op, TXT_PL2DEV, x, y);
                     if (pl2 < CTR_PAD1_A)
-                        _op_renderText("KEYBOARD", x+13, y, sizeof("KEYBOARD")-1);
+                        _op_renderLang(op, TXT_KEYBOARD, x + tab, y);
                     else if (pl2 < CTR_PAD2_A)
-                        _op_renderText("GAMEPAD1", x+13, y, sizeof("GAMEPAD1")-1);
+                        _op_renderLang(op, TXT_GAMEPAD1, x + tab, y);
                     else
-                        _op_renderText("GAMEPAD2", x+13, y, sizeof("GAMEPAD2")-1);
+                        _op_renderLang(op, TXT_GAMEPAD2, x + tab, y);
                 } break;
                 case OPT_P2MODE: {
-                    _op_renderText("PL2 MODE", x, y, sizeof("PL2 MODE")-1);
+                    _op_renderLang(op, TXT_PL2MODE, x, y);
                     if (pl2 % 4 == 0)
-                        _op_renderText("TYPE A ", x+13, y, sizeof("TYPE A")-1);
+                        _op_renderLang(op, TXT_TYPEA, x + tab, y);
                     else if (pl2 % 4 == 1)
-                        _op_renderText("TYPE B ", x+13, y, sizeof("TYPE B")-1);
+                        _op_renderLang(op, TXT_TYPEB, x + tab, y);
                     else if (pl2 % 4 == 2)
-                        _op_renderText("TYPE C ", x+13, y, sizeof("TYPE C")-1);
+                        _op_renderLang(op, TXT_TYPEC, x + tab, y);
                     else if (pl2 % 4 == 3)
-                        _op_renderText("TYPE D ", x+13, y, sizeof("TYPE D")-1);
+                        _op_renderLang(op, TXT_TYPED, x + tab, y);
+                } break;
+                case OPT_LANG: {
+                    _op_renderLang(op, TXT_LANG, x, y);
+                    if (op->lang == EN_US)
+                        _op_renderValueStatic("ENGLISH", x, y);
+                    else if (op->lang == PT_BR)
+                        _op_renderValueStatic("PORTUGUES", x, y);
                 } break;
                 case OPT_BACK: {
-                    _op_renderText("BACK", x, y, sizeof("BACK")-1);
+                    _op_renderLang(op, TXT_BACK, x, y);
                 } break;
             }
             y++;
             i++;
         }
         
-        y += 3;
-        
-        _op_renderText("PLAYER1", x+13, y, sizeof("PLAYER1")-1);
-        _op_renderText("PLAYER2", x+24, y, sizeof("PLAYER2")-1);
-        y += 2;
+        _op_renderTextStatic("PLAYER1", x+13, y);
+        _op_renderTextStatic("PLAYER2", x+24, y);
+        y++;
         
         _y = y;
-        _op_renderText("LEFT", x, _y++, sizeof("LEFT")-1);
-        _op_renderText("RIGHT", x, _y++, sizeof("RIGHT")-1);
-        _op_renderText("UP", x, _y++, sizeof("UP")-1);
-        _op_renderText("JUMP", x, _y++, sizeof("JUMP")-1);
-        _op_renderText("ITEM", x, _y++, sizeof("ITEM")-1);
-        _op_renderText("SWITCH", x, _y++, sizeof("SWITCH")-1);
+        _op_renderLang(op, TXT_LEFT, x, _y++);
+        _op_renderLang(op, TXT_RIGHT, x, _y++);
+        _op_renderLang(op, TXT_UP, x, _y++);
+        _op_renderLang(op, TXT_JUMP, x, _y++);
+        _op_renderLang(op, TXT_ITEM, x, _y++);
+        _op_renderLang(op, TXT_SWITCH, x, _y++);
         
         _op_renderMode(pl1, x+12, y);
         _op_renderMode(pl2, x+23, y);
@@ -617,6 +698,18 @@ static void op_update(struct stOptions *op) {
                 else op->lastPressedTime += 100;
                 op->firstPress = 1;
             }
+            else if (op->curOpt == OPT_LANG && (isLeft || isRight)) {
+                if (op->lang == EN_US) {
+                    op->lang = PT_BR;
+                }
+                else if (op->lang == PT_BR) {
+                    op->lang = EN_US;
+                }
+                // Avoid multi presses
+                if (!op->firstPress) op->lastPressedTime += 300;
+                else op->lastPressedTime += 100;
+                op->firstPress = 1;
+            }
         }
         isEnter = GFraMe_keys.enter;
         isEnter = isEnter || GFraMe_keys.z;
@@ -662,6 +755,60 @@ static void op_event(struct stOptions *op) {
 }
 
 /**
+ * Render a localized text to the screen
+ * 
+ * @param text The text
+ * @param X Horizontal position
+ * @param Y Vertical position
+ */
+static void _op_renderLang(struct stOptions *op, int text, int X, int Y) {
+    char *pText;
+    int len;
+    
+    switch (text) {
+#define selectLang(textEN, textPT) \
+  do { \
+    if (op->lang == EN_US) { pText = textEN; len = sizeof(textEN) - 1; } \
+    else if (op->lang == PT_BR) { pText = textPT; len = sizeof(textPT) - 1; } \
+  } while (0)
+        case TXT_OPTS:     selectLang("OPTIONS",     "OPCOES"); break;
+        case TXT_UPS:      selectLang("UPDATE RATE", "TAXA DE ATUALIZACAO"); break;
+        case TXT_DPS:      selectLang("DRAW RATE",   "TAXA DE RENDERIZACAO"); break;
+        case TXT_ZOOM:     selectLang("ZOOM",        "ZOOM"); break;
+        case TXT_MUSIC:    selectLang("MUSIC",       "MUSICA"); break;
+        case TXT_SFX:      selectLang("SFX",         "SONS"); break;
+        case TXT_HINT:     selectLang("HINT",        "DICAS"); break;
+        case TXT_SPEEDRUN: selectLang("SPEEDRUN",    "MODO 'SPEEDRUN'"); break;
+        case TXT_PL1DEV:   selectLang("PL1 DEVICE",  "DISPOSITIVO PL1"); break;
+        case TXT_PL1MODE:  selectLang("PL1 MODE",    "CONFIGURACAO PL1"); break;
+        case TXT_PL2DEV:   selectLang("PL2 DEVICE",  "DISPOSITIVO PL2"); break;
+        case TXT_PL2MODE:  selectLang("PL2 MODE",    "CONFIGURACAO PL2"); break;
+        case TXT_LANG:     selectLang("LANGUAGE",    "IDIOMA"); break;
+        case TXT_BACK:     selectLang("BACK",        "VOLTAR"); break;
+        case TXT_ENABLED:  selectLang("ENABLED",     "HABILITADO"); break;
+        case TXT_DISABLED: selectLang("DISABLED",    "DESABILITADO"); break;
+        case TXT_MUTED:    selectLang("MUTED",       "MUDO"); break;
+        case TXT_KEYBOARD: selectLang("KEYBOARD",    "TECLADO"); break;
+        case TXT_GAMEPAD1: selectLang("GAMEPAD 1",   "CONTROLE 1"); break;
+        case TXT_GAMEPAD2: selectLang("GAMEPAD 2",   "CONTROLE 2"); break;
+        case TXT_TYPEA:    selectLang("TYPE A",      "MODO A"); break;
+        case TXT_TYPEB:    selectLang("TYPE B",      "MODO B"); break;
+        case TXT_TYPEC:    selectLang("TYPE C",      "MODO C"); break;
+        case TXT_TYPED:    selectLang("TYPE D",      "MODO D"); break;
+        case TXT_LEFT:     selectLang("LEFT", "ESQUERDA"); break;
+        case TXT_RIGHT:    selectLang("RIGHT", "DIREITA"); break;
+        case TXT_UP:       selectLang("UP", "CIMA"); break;
+        case TXT_JUMP:     selectLang("JUMP", "SALTAR"); break;
+        case TXT_ITEM:     selectLang("USE ITEM", "USAR ITEM"); break;
+        case TXT_SWITCH:   selectLang("SWITCH ITEM", "TROCAR ITEM"); break;
+#undef selectLang
+        default: return;
+    }
+    
+    _op_renderText(pText, X, Y, len);
+}
+
+/**
  * Render some text into the screen
  * 
  * @param text The text
@@ -673,8 +820,8 @@ static void _op_renderText(char *text, int X, int Y, int l) {
     int i, x, y;
     
     i = 0;
-    x = X*8;
-    y = Y*8;
+    x = X * 8;
+    y = Y * 10;
     // Draw the text
     while (i < l) {
         char c;
