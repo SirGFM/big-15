@@ -65,7 +65,8 @@ static void cr_event(struct stCredits *cr);
  * Menustate implementation. Must initialize it, run the loop and clean it up
  */
 state credits() {
-    char text[] =
+    char *text;
+    char textEN[] =
 "               GAME OVER    \n"
 "\n"
 "    THANK YOU FOR PLAYING THIS GAME    \n"
@@ -74,25 +75,49 @@ state credits() {
 "\n"
 "             DEATH COUNT:    \n"
 "\n"
-"            PLAYER1: 00000    \n"
-"            PLAYER2: 00000    \n"
+"           PLAYER 1:  00000   \n"
+"           PLAYER 2:  00000   \n"
 "\n"
 "\n"
 "              TOTAL TIME:        \n"
 "\n"
 "              00:00:00.000";
-    int i, j, val;
+    char textPT[] = 
+"              FIM DE JOGO   \n"
+"\n"
+"          OBRIGADO POR JOGAR!          \n"
+"\n"
+"\n"
+"\n"
+"           NUMERO DE MORTES: \n"
+"\n"
+"           JOGADOR 1: 00000   \n"
+"           JOGADOR 2: 00000   \n"
+"\n"
+"\n"
+"              TEMPO TOTAL:       \n"
+"\n"
+"              00:00:00.000";
+    int i, j, len, val;
     state ret;
     struct stCredits cr;
     
     ret = -1;
-    cr_init(&cr, text, (int)sizeof(text) - 1, 0, 7);
+    if (gl_lang == EN_US) {
+        text = textEN;
+        len = (int)sizeof(textEN);
+    }
+    else if (gl_lang == PT_BR) {
+        text = textPT;
+        len = (int)sizeof(textEN);
+    }
+    cr_init(&cr, text, len - 1, 0, 7);
     
     i = 0;
     // Search for the first '0'
-    while (text[i] != '0' && i < sizeof(text)) i++;
+    while (text[i] != '0' && i < len) i++;
     // Go to the last '0'
-    while (text[i] == '0' && i < sizeof(text)) i++;
+    while (text[i] == '0' && i < len) i++;
     j = i;
     val = gv_getValue(PL1_DEATH);
     // Print the player 1 death count
@@ -103,9 +128,9 @@ state credits() {
     }
     i = j+1;
     // Search for the first '0' for player 2
-    while (text[i] != '0' && i < sizeof(text)) i++;
+    while (text[i] != '0' && i < len) i++;
     // Go to the last '0'
-    while (text[i] == '0' && i < sizeof(text)) i++;
+    while (text[i] == '0' && i < len) i++;
     val = gv_getValue(PL2_DEATH);
     // Print the player 2 death count
     while (val > 0) {
@@ -114,9 +139,9 @@ state credits() {
         val /= 10;
     }
     
-    i = sizeof(text) - 1 - 12;
+    i = len - 1 - 12;
     timer_getString(text + i);
-    while (i < sizeof(text) - 1) {
+    while (i < len - 1) {
         text[i] += '!';
         i++;
     }
