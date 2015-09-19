@@ -36,29 +36,51 @@ static char *_ce_names[CE_MAX+1] = {
     "ce_max"
 };
 
-static char _ce_hjboots_text[] = 
-"YOU GOT THE HIGH JUMP BOOTS!\n"
-"     \n"
-"JUST EQUIP IT TO JUMP HIGHER.\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ce_hjboots_textPT[] = 
+ "VOCE OBTEVE AS BOTAS DE SALTO!\n"
+ "    \n"
+ "EQUIPE-AS PARA PULAR MAIS ALTO.\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ce_hjboots_textEN[] = 
+ "YOU GOT THE HIGH JUMP BOOTS!\n"
+ "     \n"
+ "JUST EQUIP IT TO JUMP HIGHER.\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
-static char _ce_telp_text[] = 
-"YOU GOT THE TELEPORTER!\n"
-"     \n"
-"USE IT TO TELEPORT TO A PLACED SIGNAL\n"
-"OR THE SIGNALER HOLDER.\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ce_telp_textPT[] = 
+ "VOCE OBTEVE O TELETRANSPORTADOR!\n"
+ "     \n"
+ "USE-O PARA SE TELETRANSPORTAR PARA O\n"
+ "SINALIZADOR OU PARA AQUELE QUE O\n"
+ "ESTIVER SEGURANDO.\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ce_telp_textEN[] = 
+ "YOU GOT THE TELEPORTER!\n"
+ "     \n"
+ "USE IT TO TELEPORT TO A PLACED SIGNAL\n"
+ "OR THE SIGNALER HOLDER.\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
-static char _ce_sign_text[] = 
-"YOU GOT THE SIGNALER!\n"
-"     \n"
-"USE IT TO PLACE A SIGNAL FOR THE\n"
-"TELEPORTER OR SIMPLY HOLD IT, SO\n"
-"YOU'LL ACT AS THE TELEPORTER TARGET.\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ce_sign_textPT[] = 
+ "VOCE OBTEVE O SINALIZADOR!\n"
+ "     \n"
+ "USE-O PARA MARCAR A POSICAO DE\n"
+ "DESTINO DO TELETRANSPORTADOR OU\n"
+ "SEGURE-O PARA SERVIR DE ALVO\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ce_sign_textEN[] = 
+ "YOU GOT THE SIGNALER!\n"
+ "     \n"
+ "USE IT TO PLACE A SIGNAL FOR THE\n"
+ "TELEPORTER OR SIMPLY HOLD IT, SO\n"
+ "YOU'LL ACT AS THE TELEPORTER TARGET.\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
 /** Object that caused the event to be called */
 static void *_ce_caller = NULL;
@@ -341,20 +363,38 @@ void ce_callEvent(commonEvent ce) {
             gv_setBit(ITEMS, item);
             // And Equip the player
             if ((prevItems & item) == 0) {
+                char *pText;
+                int h, len;
+                
                 if (player_getID(pPl) == ID_PL1)
                     gv_setValue(PL1_ITEM, item);
                 else if (player_getID(pPl) == ID_PL2)
                     gv_setValue(PL2_ITEM, item);
                 
+                #define setLang(textEN, textPT) \
+                  do { \
+                    if (gl_lang == EN_US) { pText = textEN; len = sizeof(textEN); } \
+                    else if (gl_lang == PT_BR) { pText = textPT; len = sizeof(textPT); } \
+                  } while (0)
                 if (item == ID_HIGHJUMP) {
-                    ps_showText(_ce_hjboots_text, sizeof(_ce_hjboots_text), 0, 0, 40, 8);
+                    setLang(_ce_hjboots_textEN, _ce_hjboots_textPT);
+                    h = 8;
                 }
                 else if (item == ID_TELEPORT) {
-                    ps_showText(_ce_telp_text, sizeof(_ce_telp_text), 0, 0, 40, 9);
+                    setLang(_ce_telp_textEN, _ce_telp_textPT);
+                    if (gl_lang == EN_US) {
+                        h = 9;
+                    }
+                    else if (gl_lang == PT_BR) {
+                        h = 10;
+                    }
                 }
                 else if (item == ID_SIGNALER) {
-                    ps_showText(_ce_sign_text, sizeof(_ce_sign_text), 0, 0, 40, 9);
+                    setLang(_ce_sign_textEN, _ce_sign_textPT);
+                    h = 9;
                 }
+                #undef setLang
+                ps_showText(pText, len, 0, 0, 40, h);
             }
         } break;
         case CE_HIDDEN_PATH: {
