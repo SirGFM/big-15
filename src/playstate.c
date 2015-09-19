@@ -58,17 +58,27 @@ static int _maxUfps;
 static int _maxDfps;
 static int _ps_isSpeedrun;
 
-static char _ps_map001_text[] = 
-"PRESS UP ON TERMINALS TO ACTIVATE\n"
-"DOORS.\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ps_map001_textPT[] =
+ "PRESSIONE PARA CIMA EM TERMINAIS\n"
+ "PARA ATIVAR PORTAS\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ps_map001_textEN[] =
+ "PRESS UP ON TERMINALS TO ACTIVATE\n"
+ "DOORS.\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
-static char _ps_map_afterItem[] = 
-"REMEMBER: YOU CAN ONLY SWITCH ITEMS\n"
-"WHEN BOTH PLAYERS ARE CLOSE!\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ps_map_afterItemPT[] =
+ "NOTA: AMBOS OS JOGADORES DEVEM ESTAR\n"
+ "PROXIMOS PARA TROCAR DE ITEM\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ps_map_afterItemEN[] = 
+ "REMEMBER: YOU CAN ONLY SWITCH ITEMS\n"
+ "WHEN BOTH PLAYERS ARE CLOSE!\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
 /**
  * Initialize the playstate
@@ -396,10 +406,20 @@ static GFraMe_ret ps_switchMap() {
                 map = gv_getValue(MAP);
                 
                 if (map == 1) {
-                    ps_showText(_ps_map001_text, sizeof(_ps_map001_text), 0, 0, 40, 6);
+                    if (gl_lang == EN_US) {
+                        ps_showText(_ps_map001_textEN, sizeof(_ps_map001_textEN), 0, 0, 40, 6);
+                    }
+                    else if (gl_lang == PT_BR) {
+                        ps_showText(_ps_map001_textPT, sizeof(_ps_map001_textPT), 0, 0, 40, 6);
+                    }
                 }
                 else if (map == 8 || map == 13) {
-                    ps_showText(_ps_map_afterItem, sizeof(_ps_map_afterItem), 0, 0, 40, 6);
+                    if (gl_lang == EN_US) {
+                        ps_showText(_ps_map_afterItemEN, sizeof(_ps_map_afterItemEN), 0, 0, 40, 6);
+                    }
+                    else if (gl_lang == PT_BR) {
+                        ps_showText(_ps_map_afterItemPT, sizeof(_ps_map_afterItemPT), 0, 0, 40, 6);
+                    }
                 }
                 
                 gv_setValue(SWITCH_MAP, 0);
