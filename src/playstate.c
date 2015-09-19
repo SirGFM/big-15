@@ -766,25 +766,35 @@ static void ps_doPause() {
 static void ps_drawPause() {
     int x, y;
     
+#define selectLang(textEN, textPT) \
+  do { \
+    if (gl_lang == EN_US) { _op_renderText(textEN, x, y, sizeof(textEN)-1); } \
+    else if (gl_lang == PT_BR) { _op_renderText(textPT, x, y, sizeof(textPT)-1); } \
+  } while (0)
+    
     // Draw the overlay
     transition_drawPause();
     // Render the text
-    _op_renderText("--PAUSED--", 15, 8, sizeof("--PAUSED--")-1);
+    x = 14;
+    y = 6;
+    selectLang(" --PAUSED--", "--PAUSADO--");
     
     x = 14;
-    y = 16;
+    y = 10;
     
     _op_renderText("--", x-2, y+_ps_opt, 2);
     
-    _op_renderText("CONTINUE", x, y, sizeof("CONTINUE")-1);
+    selectLang("CONTINUE", "CONTINUAR");
     y++;
-    _op_renderText("RETRY", x, y, sizeof("RETRY")-1);
+    selectLang("RETRY", "REINICIAR MAPA");
     y++;
-    _op_renderText("OPTIONS", x, y, sizeof("OPTIONS")-1);
+    selectLang("OPTIONS", "OPCOES");
     y++;
-    _op_renderText("QUIT TO MENU", x, y, sizeof("QUIT TO MENU")-1);
+    selectLang("QUIT TO MENU", "VOLTAR AO MENU");
     y++;
-    _op_renderText("EXIT GAME", x, y, sizeof("EXIT GAME")-1);
+    selectLang("EXIT GAME", "SAIR DO JOGO");
+    
+#undef selectLang
 }
 
 /**
@@ -800,7 +810,7 @@ static void _op_renderText(char *text, int X, int Y, int l) {
     
     i = 0;
     x = X*8;
-    y = Y*8;
+    y = Y * 10;
     // Draw the text
     while (i < l) {
         char c;
