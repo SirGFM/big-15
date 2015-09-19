@@ -10,6 +10,8 @@
 #include <GFraMe/GFraMe_save.h>
 #include <GFraMe/GFraMe_spriteset.h>
 
+#include <string.h>
+
 #include "audio.h"
 #include "camera.h"
 #include "commonEvent.h"
@@ -287,32 +289,30 @@ static void ms_clean(struct stMenustate *ms) {
  * Draw the current frame
  */
 static void ms_draw(struct stMenustate *ms) {
-    char options[] = "  CONTINUE  \n"
-                     "  NEW GAME  \n"
-                     "  OPTIONS   \n"
-                     "  QUIT";
-    char devText[] = "A GAME BY";
+    char optionsEN[] = "  CONTINUE  \n"
+                       "  NEW GAME  \n"
+                       "  OPTIONS   \n"
+                       "  QUIT";
+    char optionsPT[] = "  CONTINUAR \n"
+                       "  NOVO JOGO \n"
+                       "  OPCOES    \n"
+                       "  SAIR";
+    char devTextEN[]   = "A GAME BY";
+    char devTextPT[]   = "UM JOGO DE";
     char twitterText[] = "@SIRGFM";
+    char *options, *devText;
+    
+    if (gl_lang == EN_US) {
+        options = optionsEN;
+        devText = devTextEN;
+    }
+    else if (gl_lang == PT_BR) {
+        options = optionsPT;
+        devText = devTextPT;
+    }
+    
     GFraMe_event_draw_begin();
-        if (!ms->isTitleSet) {
-            int x, y;
-            
-            // Draw the BG
-            x = 0;
-            y = 0;
-            while (1) {
-                GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
-                x += 8;
-                if (x >= 320) {
-                    x = 0;
-                    y += 8;
-                }
-                if (y >= 240) {
-                    break;
-                }
-            }
-        }
-        else {
+        if (ms->isTitleSet) {
             int i, l;
             
             map_draw(ms->pM);
@@ -322,16 +322,16 @@ static void ms_draw(struct stMenustate *ms) {
                 options[i] = '-'; options[i+1] = '-';
             }
             // Render texts
-            l = sizeof(options);
+            l = strlen(options) + 1;
             if (!ms->hasSave) {
                 _ms_renderText(options, ms->textX, ms->textY + 8, 13/*i*/, l);
             }
             else {
                 _ms_renderText(options, ms->textX, ms->textY, 0/*i*/, l);
             }
-            l = sizeof(devText);
+            l = strlen(devText) + 1;
             _ms_renderText(devText, ms->iconX - l*8, ms->iconY + 16, 0, l);
-            l = sizeof(twitterText);
+            l = strlen(twitterText) + 1;
             _ms_renderText(twitterText, ms->iconX - l*8, ms->iconY + 24, 0, l);
             // Render the dev icon
             GFraMe_spriteset_draw(gl_sset32x32, GFM_ICON, ms->iconX, ms->iconY, 0);
