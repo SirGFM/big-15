@@ -34,17 +34,11 @@ Or, for the release version:
 $ make RELEASE=yes
 ```
 
-The main difference between both version are some debug features (like, being able to move to the mouse cursor) and the assets folder location. The release version requires the assets folder to be on the same directory as the binary, while the debug version requires it to be on the binary's parent folder.
+The main difference between both version are some debug features (like, being able to move to the mouse cursor) and the assets folder location. The release version requires the assets folder to be on the same directory as the binary, while the debug version requires it to be on current directory (instead of the binary's).
 
-So, if you compile the release version, run:
+After building the game, it'll be missing some assets. You can retrieve the assets from the game's release here on github: https://github.com/SirGFM/big-15/releases/tag/v1.0.0. On some systems it may need the songs to have a '.dat' extension, while on other it won't... So you may also have to modify that!
 
-```
-$ mv ./bin/game .
-```
-from the cloned directory.
-
-After building the game, it'll be missing the songs. You must render every song before being able to run the game. To do so, go into big-15/assets/vmml and compile every song using a mml player/renderer. The one used was [VMML by Benjamin Soule] (http://benjaminsoule.fr/tools/vmml/).
-
+For future reference: the songs were rendered using [VMML by Benjamin Soule] (http://benjaminsoule.fr/tools/vmml/).
 The relation between .mml and .wav are as follow:
 
 |MML file           | WAVE file       |
