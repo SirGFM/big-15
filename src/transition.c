@@ -166,15 +166,19 @@ void transition_draw() {
     x = 0;
     y = 0;
     while (i < DATA_LEN) {
+        int tile;
         
-        GFraMe_spriteset_draw
-            (
-             gl_sset8x8,
-             data[i],
-             x,
-             y,
-             0 // flipped
-            );
+        tile = data[i];
+        if (tile != 249) {
+            GFraMe_spriteset_draw
+                (
+                 gl_sset8x8,
+                 data[i],
+                 x,
+                 y,
+                 0 // flipped
+                );
+        }
         
         x += 8;
         if (x >= SCR_W) {

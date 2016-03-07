@@ -25,6 +25,7 @@
   GFraMe_audio * gl_aud_##AUD
 
 static int gl_isInit = 0;
+int gl_lang;
 int gl_running;
 
 GFraMe_texture gl_tex;

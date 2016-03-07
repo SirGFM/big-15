@@ -59,18 +59,33 @@ static void _dm_renderText(char *text, int X, int Y, int l);
  * @return The next state
  */
 state demo() {
-    char text1[] =
-"IN THE DISTANT FUTURE, A MONSTER HAS\n"
-"BEEN WREAKING HAVOC THROUGH THE\n"
-"GALAXY.          \n"
-"NO KNOWN WEAPON SEEMS TO HURT IT.         \n"
-"ALL BEINGS LIVE IN FEAR OF THE\n"
-"CREATURE'S NEXT ATTACK.\n";
-    char text2[] =
+    char text1PT[] =
+ "EM UM FUTURO DISTANTE, UM MONSTRO TEM\n"
+ "ESPALHADO O CAOS E A DESTRUICAO PELA\n"
+ "GALAXIA.        \n"
+ "NAO HA ARMA CONHECIDA QUE O ATINJA.  \n"
+ "TODOS OS SERES TEMEM O PROXIMO ATAQUE\n"
+ "DA CRIATURA.\n";
+    char text2PT[] =
+ "MAS DOIS AVENTUREIROS, QUE NADA TEMEM,\n"
+ "ALEM DO TEDIO E DA FALTA DE PERIGOS,\n"
+ "DECIDIRAM ENFRENTA-LO!";
+    char text3PT[] =
+ "ELES VOLTARAM NO TEMPO E INVADIRAM SEU\n"
+ "ESCONDERIJO, PARA DESTRUI-LO ANTES QUE\n"
+ "ELE PUDESSE SE TORNAR UMA AMEACA!";
+    char text1EN[] =
+ "IN THE DISTANT FUTURE, A MONSTER HAS\n"
+ "BEEN WREAKING HAVOC THROUGH THE\n"
+ "GALAXY.          \n"
+ "NO KNOWN WEAPON SEEMS TO HURT IT.         \n"
+ "ALL BEINGS LIVE IN FEAR OF THE\n"
+ "CREATURE'S NEXT ATTACK.\n";
+    char text2EN[] =
 "BUT TWO ADVENTURERS, FEARING NOTHING\n"
 "BUT BOREDOM AND THE LACK OF DANGER\n"
 "DECIDED TO FIGHT BACK!\n";
-    char text3[] =
+    char text3EN[] =
 "THEY WENT BACK IN TIME AND INTO THE\n"
 "MONSTER'S LAIR, TO DESTROY IT BEFORE\n"
 "IT COULD BECOME A THREAT!\n";
@@ -83,12 +98,22 @@ state demo() {
     dm.textMaxLen = 0;
     dm.textX = 8;
     dm.textY = 96;
-    dm.text1 = text1;
-    dm.text1Size = sizeof(text1);
-    dm.text2 = text2;
-    dm.text2Size = sizeof(text2);
-    dm.text3 = text3;
-    dm.text3Size = sizeof(text3);
+    if (gl_lang == EN_US) {
+        dm.text1 = text1EN;
+        dm.text1Size = sizeof(text1EN);
+        dm.text2 = text2EN;
+        dm.text2Size = sizeof(text2EN);
+        dm.text3 = text3EN;
+        dm.text3Size = sizeof(text3EN);
+    }
+    else if (gl_lang == PT_BR) {
+        dm.text1 = text1PT;
+        dm.text1Size = sizeof(text1PT);
+        dm.text2 = text2PT;
+        dm.text2Size = sizeof(text2PT);
+        dm.text3 = text3PT;
+        dm.text3Size = sizeof(text3PT);
+    }
     
     GFraMe_event_init(GAME_UFPS, GAME_DFPS);
     
@@ -107,22 +132,6 @@ state demo() {
  */
 static void dm_draw(struct stDemo *dm) {
     GFraMe_event_draw_begin();
-        int x, y;
-        
-        // Draw the BG
-        x = 0;
-        y = 0;
-        while (1) {
-            GFraMe_spriteset_draw(gl_sset8x8, 64, x, y, 0/*flipped*/);
-            x += 8;
-            if (x >= 320) {
-                x = 0;
-                y += 8;
-            }
-            if (y >= 240) {
-                break;
-            }
-        }
         // Draw the text
         if (dm->text)
             _dm_renderText(dm->text, dm->textX, dm->textY, dm->textLen);

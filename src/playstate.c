@@ -58,17 +58,27 @@ static int _maxUfps;
 static int _maxDfps;
 static int _ps_isSpeedrun;
 
-static char _ps_map001_text[] = 
-"PRESS UP ON TERMINALS TO ACTIVATE\n"
-"DOORS.\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ps_map001_textPT[] =
+ "PRESSIONE PARA CIMA EM TERMINAIS\n"
+ "PARA ATIVAR PORTAS\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ps_map001_textEN[] =
+ "PRESS UP ON TERMINALS TO ACTIVATE\n"
+ "DOORS.\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
-static char _ps_map_afterItem[] = 
-"REMEMBER: YOU CAN ONLY SWITCH ITEMS\n"
-"WHEN BOTH PLAYERS ARE CLOSE!\n"
-"\n"
-"PRESS ANY KEY/BUTTON TO CONTINUE...";
+static char _ps_map_afterItemPT[] =
+ "NOTA: AMBOS OS JOGADORES DEVEM ESTAR\n"
+ "PROXIMOS PARA TROCAR DE ITEM\n"
+ "\n"
+ "PRESSIONE QUALQUER TECLA/BOTAO...";
+static char _ps_map_afterItemEN[] = 
+ "REMEMBER: YOU CAN ONLY SWITCH ITEMS\n"
+ "WHEN BOTH PLAYERS ARE CLOSE!\n"
+ "\n"
+ "PRESS ANY KEY/BUTTON TO CONTINUE...";
 
 /**
  * Initialize the playstate
@@ -396,10 +406,20 @@ static GFraMe_ret ps_switchMap() {
                 map = gv_getValue(MAP);
                 
                 if (map == 1) {
-                    ps_showText(_ps_map001_text, sizeof(_ps_map001_text), 0, 0, 40, 6);
+                    if (gl_lang == EN_US) {
+                        ps_showText(_ps_map001_textEN, sizeof(_ps_map001_textEN), 0, 0, 40, 6);
+                    }
+                    else if (gl_lang == PT_BR) {
+                        ps_showText(_ps_map001_textPT, sizeof(_ps_map001_textPT), 0, 0, 40, 6);
+                    }
                 }
                 else if (map == 8 || map == 13) {
-                    ps_showText(_ps_map_afterItem, sizeof(_ps_map_afterItem), 0, 0, 40, 6);
+                    if (gl_lang == EN_US) {
+                        ps_showText(_ps_map_afterItemEN, sizeof(_ps_map_afterItemEN), 0, 0, 40, 6);
+                    }
+                    else if (gl_lang == PT_BR) {
+                        ps_showText(_ps_map_afterItemPT, sizeof(_ps_map_afterItemPT), 0, 0, 40, 6);
+                    }
                 }
                 
                 gv_setValue(SWITCH_MAP, 0);
@@ -766,25 +786,35 @@ static void ps_doPause() {
 static void ps_drawPause() {
     int x, y;
     
+#define selectLang(textEN, textPT) \
+  do { \
+    if (gl_lang == EN_US) { _op_renderText(textEN, x, y, sizeof(textEN)-1); } \
+    else if (gl_lang == PT_BR) { _op_renderText(textPT, x, y, sizeof(textPT)-1); } \
+  } while (0)
+    
     // Draw the overlay
     transition_drawPause();
     // Render the text
-    _op_renderText("--PAUSED--", 15, 8, sizeof("--PAUSED--")-1);
+    x = 14;
+    y = 6;
+    selectLang(" --PAUSED--", "--PAUSADO--");
     
     x = 14;
-    y = 16;
+    y = 10;
     
     _op_renderText("--", x-2, y+_ps_opt, 2);
     
-    _op_renderText("CONTINUE", x, y, sizeof("CONTINUE")-1);
+    selectLang("CONTINUE", "CONTINUAR");
     y++;
-    _op_renderText("RETRY", x, y, sizeof("RETRY")-1);
+    selectLang("RETRY", "REINICIAR MAPA");
     y++;
-    _op_renderText("OPTIONS", x, y, sizeof("OPTIONS")-1);
+    selectLang("OPTIONS", "OPCOES");
     y++;
-    _op_renderText("QUIT TO MENU", x, y, sizeof("QUIT TO MENU")-1);
+    selectLang("QUIT TO MENU", "VOLTAR AO MENU");
     y++;
-    _op_renderText("EXIT GAME", x, y, sizeof("EXIT GAME")-1);
+    selectLang("EXIT GAME", "SAIR DO JOGO");
+    
+#undef selectLang
 }
 
 /**
@@ -800,7 +830,7 @@ static void _op_renderText(char *text, int X, int Y, int l) {
     
     i = 0;
     x = X*8;
-    y = Y*8;
+    y = Y * 10;
     // Draw the text
     while (i < l) {
         char c;
