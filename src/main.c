@@ -112,10 +112,11 @@ int main(int argc, char *argv[]) {
             case       OPTIONS: st = options(); break;
             case          DEMO: st = demo(); break;
             case       CREDITS: st = credits(); break;
-            default: GFraMe_assertRet(0, "Invalid state!", __ret);
+            default: rv = 123; GFraMe_assertRet(0, "Invalid state!", __ret);
         }
     }
     
+    rv = 0;
 __ret:
     if (pSv)
         GFraMe_save_close(pSv);
@@ -125,7 +126,7 @@ __ret:
     GFraMe_controller_close();
     GFraMe_quit();
     
-    return 0;
+    return rv;
 }
 
 void setIcon() {
