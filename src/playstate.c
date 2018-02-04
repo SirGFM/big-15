@@ -47,6 +47,7 @@ GFraMe_event_setup();
 
 int switchState;
 static int _ps_pause;
+static int _ps_justRetry;
 static int _ps_firstPress;
 static int _ps_lastPress;
 static int _ps_opt;
@@ -136,6 +137,7 @@ state playstate(int doLoad) {
     GFraMe_event_init(_maxUfps, _maxDfps);
     
     _ps_pause = 0;
+    _ps_justRetry = 0;
     _psRunning = 1;
     while (gl_running && _psRunning) {
 #ifdef DEBUG
@@ -426,6 +428,12 @@ static GFraMe_ret ps_switchMap() {
                 switchState = 0;
                 signal_release();
                 
+                if (_ps_justRetry) {
+                   player_resetVerticalSpeed(p1);
+                   player_resetVerticalSpeed(p2);
+                   _ps_justRetry = 0;
+                }
+                
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);
                 // Save the current state
@@ -606,6 +614,11 @@ static void ps_update() {
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
         }
+        else if (!player_isInsideMap(p1)) {
+           // P1 is OOB... Heck yeah, great strat!
+           player_resetVerticalSpeed(p1);
+        }
+        
         if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
             GFraMe_ret rv;
             // Recover previous state
@@ -619,6 +632,10 @@ static void ps_update() {
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
+        }
+        else if (!player_isInsideMap(p2)) {
+           // P2 is OOB... Heck yeah, great strat!
+           player_resetVerticalSpeed(p2);
         }
     GFraMe_event_update_end();
     
@@ -767,6 +784,7 @@ static void ps_doPause() {
                         gv_setValue(PL1_HP, 0);
                         gv_setValue(PL2_HP, 0);
                         _ps_pause = 0;
+                        _ps_justRetry = 1;
                     } break;
                     case OPT_OPTIONS: {
                         _ps_onOptions = 1;

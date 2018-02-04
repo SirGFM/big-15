@@ -27,6 +27,7 @@
 
 #define PL1_ICON 286
 #define PL2_ICON 287
+#define IFRAMES_MS 500
 
 enum {
     PL_STAND,
@@ -72,6 +73,8 @@ struct stPlayer {
     int tt;
     
     int step;
+    int iframes;
+    int skip;
 };
 
 /**
@@ -160,6 +163,8 @@ GFraMe_ret player_init(player **ppPl, int ID, int firstTile, int x, int y) {
     pPl->tt = -1;
     
     pPl->step = 0;
+    pPl->iframes = 0;
+    pPl->skip = 0;
     
     // Set the return variables
     *ppPl = pPl;
@@ -211,6 +216,14 @@ void player_update(player *pPl, int ms) {
     // Decrease item switch cooldown
     if (pPl->lastItemSwitch > 0)
         pPl->lastItemSwitch -= ms;
+
+    // Decrease the iframes
+    if (pPl->curAnim != PL_HURT && pPl->iframes > ms) {
+        pPl->iframes -= ms;
+    }
+    else if (pPl->curAnim != PL_HURT) {
+        pPl->iframes = 0;
+    }
     
     obj = GFraMe_sprite_get_object(&pPl->spr);
     
@@ -371,6 +384,15 @@ __ret:
  */
 void player_draw(player *pPl) {
     int x, y;
+
+    if (pPl->iframes != 0 && pPl->curAnim != PL_HURT) {
+        // Skip two frames every two frames, if with iframes.
+        // (i.e., render 2, then skip 2)
+        pPl->skip = (pPl->skip + 1) & 0x3;
+        if (pPl->skip & 0x2) {
+            return;
+        }
+    }
     
     // Check if the player is inside the camera
     x = pPl->spr.obj.x - cam_x;
@@ -495,7 +517,7 @@ void player_getCenter(int *pX, int *pY, player *pPl) {
 }
 
 /**
- * Set a destination to this player
+ * Set a destination to this player. Does nothing if the player is in hitstun.
  * 
  * @param pPl The player
  * @param map The map index
@@ -503,6 +525,10 @@ void player_getCenter(int *pX, int *pY, player *pPl) {
  * @param y The vertical position inside the new map
  */
 void player_setDestMap(player *pPl, int map, int x, int y) {
+    if (pPl->curAnim == PL_HURT) {
+        return;
+    }
+
     pPl->map = map;
     pPl->map_x = x;
     pPl->map_y = y;
@@ -743,6 +769,7 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
     
     // Check that the player isn't "hurting"
     ASSERT_NR(pPl->curAnim != PL_HURT);
+    ASSERT_NR(pPl->iframes == 0);
     
     // Decreate the health
     if (pPl->spr.id == ID_PL1) {
@@ -784,6 +811,8 @@ void player_hurt(player *pPl, int dmg, GFraMe_direction dir) {
     // Play the 'hurt' animation
     player_setAnimation(pPl, PL_HURT);
     sfx_plHurt();
+    // Set some iframes
+    pPl->iframes = IFRAMES_MS;
 __ret:
     return;
 }
@@ -826,3 +855,12 @@ int player_isInsideMap(player *pPl) {
     return pPl->spr.obj.y <= h;
 }
 
+/**
+ * Resets a player vertical speed.
+ * Only used when 'retry' is selected from the pause menu.
+ * 
+ * @param pPl The player
+ */
+void player_resetVerticalSpeed(player *pPl) {
+    pPl->spr.obj.vy = 0;
+}
