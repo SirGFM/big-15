@@ -614,6 +614,11 @@ static void ps_update() {
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
         }
+        else if (!player_isInsideMap(p1)) {
+           // P1 is OOB... Heck yeah, great strat!
+           player_resetVerticalSpeed(p1);
+        }
+        
         if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
             GFraMe_ret rv;
             // Recover previous state
@@ -627,6 +632,10 @@ static void ps_update() {
             GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
+        }
+        else if (!player_isInsideMap(p2)) {
+           // P2 is OOB... Heck yeah, great strat!
+           player_resetVerticalSpeed(p2);
         }
     GFraMe_event_update_end();
     
