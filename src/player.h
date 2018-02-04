@@ -192,5 +192,13 @@ int player_isAlive(player *pPl);
  */
 int player_isInsideMap(player *pPl);
 
+/**
+ * Resets a player vertical speed.
+ * Only used when 'retry' is selected from the pause menu.
+ * 
+ * @param pPl The player
+ */
+void player_resetVerticalSpeed(player *pPl);
+
 #endif
 

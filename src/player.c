@@ -826,3 +826,12 @@ int player_isInsideMap(player *pPl) {
     return pPl->spr.obj.y <= h;
 }
 
+/**
+ * Resets a player vertical speed.
+ * Only used when 'retry' is selected from the pause menu.
+ * 
+ * @param pPl The player
+ */
+void player_resetVerticalSpeed(player *pPl) {
+    pPl->spr.obj.vy = 0;
+}
