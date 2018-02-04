@@ -892,6 +892,8 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 75:
         case 76:
         case 77:
+        case 102:
+        case 103:
         case 104:
         case 105:
         case 106:
@@ -899,6 +901,7 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 108:
         case 109:
         case 110:
+        case 135:
         case 136:
         case 137:
         case 138:
@@ -906,7 +909,9 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 140:
         case 141:
         case 142:
+        case 167:
         case 174:
+        case 199:
         case 206:
             return GFraMe_ret_ok;
         default:
