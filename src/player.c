@@ -495,7 +495,7 @@ void player_getCenter(int *pX, int *pY, player *pPl) {
 }
 
 /**
- * Set a destination to this player
+ * Set a destination to this player. Does nothing if the player is in hitstun.
  * 
  * @param pPl The player
  * @param map The map index
@@ -503,6 +503,10 @@ void player_getCenter(int *pX, int *pY, player *pPl) {
  * @param y The vertical position inside the new map
  */
 void player_setDestMap(player *pPl, int map, int x, int y) {
+    if (pPl->curAnim == PL_HURT) {
+        return;
+    }
+
     pPl->map = map;
     pPl->map_x = x;
     pPl->map_y = y;
