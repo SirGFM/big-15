@@ -433,6 +433,8 @@ static GFraMe_ret ps_switchMap() {
                    player_resetVerticalSpeed(p2);
                    _ps_justRetry = 0;
                 }
+                player_resetTeleport(p1);
+                player_resetTeleport(p2);
                 
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);

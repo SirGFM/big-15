@@ -200,5 +200,12 @@ int player_isInsideMap(player *pPl);
  */
 void player_resetVerticalSpeed(player *pPl);
 
+/**
+ * Resets a player teleporting state. Fixes the "screen wrap" bug.
+ *
+ * @param pPl The player
+ */
+void player_resetTeleport(player *pPl);
+
 #endif
 
