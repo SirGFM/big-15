@@ -221,6 +221,9 @@ static GFraMe_ret ps_init(int isLoading) {
         plX = 16;
         plY = 184;
         map = 0;
+        gv_setValue(DOOR_X, 16 / 8);
+        gv_setValue(DOOR_Y, 184 / 8);
+        gv_setValue(MAP, 0);
     }
     else {
         rv = gv_load(SAVEFILE);
@@ -606,13 +609,25 @@ static void ps_update() {
             
             // Recover previous state
             rv = gv_load(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
             // Increase death counter
             gv_inc(PL1_DEATH);
-            // Save death counter
-            gv_setValue(GAME_TIME, timer_getTime());
-            rv = gv_save(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+            if (rv != GFraMe_ret_ok && gv_getValue(MAP) == 0) {
+                int death1 = gv_getValue(PL1_DEATH);
+                int death2 = gv_getValue(PL2_DEATH);
+                gv_init();
+                gv_setValue(DOOR_X, 16 / 8);
+                gv_setValue(DOOR_Y, 184 / 8);
+                gv_setValue(MAP, 0);
+                gv_setValue(PL1_DEATH, death1);
+                gv_setValue(PL2_DEATH, death2);
+            }
+            else {
+                GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
+                // Save death counter
+                gv_setValue(GAME_TIME, timer_getTime());
+                rv = gv_save(SAVEFILE);
+                GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+            }
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
         }
@@ -625,13 +640,25 @@ static void ps_update() {
             GFraMe_ret rv;
             // Recover previous state
             rv = gv_load(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
             // Increase death counter
             gv_inc(PL2_DEATH);
-            // Save death counter
-            gv_setValue(GAME_TIME, timer_getTime());
-            rv = gv_save(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+            if (rv != GFraMe_ret_ok && gv_getValue(MAP) == 0) {
+                int death1 = gv_getValue(PL1_DEATH);
+                int death2 = gv_getValue(PL2_DEATH);
+                gv_init();
+                gv_setValue(DOOR_X, 16 / 8);
+                gv_setValue(DOOR_Y, 184 / 8);
+                gv_setValue(MAP, 0);
+                gv_setValue(PL1_DEATH, death1);
+                gv_setValue(PL2_DEATH, death2);
+            }
+            else {
+                GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
+                // Save death counter
+                gv_setValue(GAME_TIME, timer_getTime());
+                rv = gv_save(SAVEFILE);
+                GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+            }
             // Force reload
             gv_setValue(SWITCH_MAP, 1);
         }
