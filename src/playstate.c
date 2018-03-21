@@ -86,7 +86,7 @@ static char _ps_map_afterItemEN[] =
  * 
  * @return GFraMe error code
  */
-static GFraMe_ret ps_init(int isLoading);
+static GFraMe_ret ps_init(playstateCmd cmd);
 /**
  * Clean up the playstate
  */
@@ -126,12 +126,12 @@ static unsigned int _ltime;
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
-state playstate(int doLoad) {
+state playstate(playstateCmd cmd) {
     GFraMe_ret rv;
     state ret;
     
     ret = -1;
-    rv = ps_init(doLoad);
+    rv = ps_init(cmd);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
     GFraMe_event_init(_maxUfps, _maxDfps);
@@ -193,7 +193,7 @@ __ret:
  * 
  * @return GFraMe error code
  */
-static GFraMe_ret ps_init(int isLoading) {
+static GFraMe_ret ps_init(playstateCmd cmd) {
     GFraMe_ret rv;
     GFraMe_save sv, *pSv;
     int map, plX, plY, time;
@@ -215,12 +215,17 @@ static GFraMe_ret ps_init(int isLoading) {
     GFraMe_save_close(&sv);
     pSv = 0;
     
-    if (!isLoading) {
+    if (cmd != CONTINUE) {
         gv_init();
         
         plX = 16;
         plY = 184;
-        map = 0;
+        if (cmd == NEWGAME) {
+            map = 0;
+        }
+        else if (cmd == MT_VERSION) {
+            map = 21;
+        }
     }
     else {
         rv = gv_load(SAVEFILE);
@@ -233,13 +238,13 @@ static GFraMe_ret ps_init(int isLoading) {
     time = gv_getValue(GAME_TIME);
     timer_init(time);
     
-    if (map >= 20) {
+    if ((map % 21) >= 20) {
         audio_playBoss();
     }
-    else if (map >= 15) {
+    else if ((map % 21)>= 15) {
         audio_playTensionGoesUp();
     }
-    else if (map >= 4) {
+    else if ((map % 21) >= 4) {
         audio_playMovingOn();
     }
     else {
