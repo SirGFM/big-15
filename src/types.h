@@ -10,6 +10,7 @@ enum enTypesState {
     MENUSTATE = 0,
     NEW_PLAYSTATE,
     CNT_PLAYSTATE,
+    MT_PLAYSTATE,
     OPTIONS,
     CREDITS,
     DEMO

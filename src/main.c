@@ -109,6 +109,7 @@ int main(int argc, char *argv[]) {
             case     MENUSTATE: st = menustate(); break;
             case NEW_PLAYSTATE: st = playstate(NEWGAME); break;
             case CNT_PLAYSTATE: st = playstate(CONTINUE); break;
+            case  MT_PLAYSTATE: st = playstate(MT_VERSION); break;
             case       OPTIONS: st = options(); break;
             case          DEMO: st = demo(); break;
             case       CREDITS: st = credits(); break;
