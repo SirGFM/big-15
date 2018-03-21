@@ -226,6 +226,9 @@ static GFraMe_ret ps_init(playstateCmd cmd) {
         else if (cmd == MT_VERSION) {
             map = 21;
         }
+        gv_setValue(DOOR_X, 16 / 8);
+        gv_setValue(DOOR_Y, 184 / 8);
+        gv_setValue(MAP, map);
     }
     else {
         rv = gv_load(SAVEFILE);
@@ -438,6 +441,8 @@ static GFraMe_ret ps_switchMap() {
                    player_resetVerticalSpeed(p2);
                    _ps_justRetry = 0;
                 }
+                player_resetTeleport(p1);
+                player_resetTeleport(p2);
                 
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);
@@ -604,44 +609,65 @@ static void ps_update() {
             return;
         }
         
-        if (!player_isAlive(p1) && !player_isInsideMap(p1)) {
-            GFraMe_ret rv;
-            
-            // Recover previous state
-            rv = gv_load(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
-            // Increase death counter
-            gv_inc(PL1_DEATH);
-            // Save death counter
-            gv_setValue(GAME_TIME, timer_getTime());
-            rv = gv_save(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
-            // Force reload
-            gv_setValue(SWITCH_MAP, 1);
-        }
-        else if (!player_isInsideMap(p1)) {
-           // P1 is OOB... Heck yeah, great strat!
-           player_resetVerticalSpeed(p1);
-        }
-        
-        if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
-            GFraMe_ret rv;
-            // Recover previous state
-            rv = gv_load(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
-            // Increase death counter
-            gv_inc(PL2_DEATH);
-            // Save death counter
-            gv_setValue(GAME_TIME, timer_getTime());
-            rv = gv_save(SAVEFILE);
-            GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
-            // Force reload
-            gv_setValue(SWITCH_MAP, 1);
-        }
-        else if (!player_isInsideMap(p2)) {
-           // P2 is OOB... Heck yeah, great strat!
-           player_resetVerticalSpeed(p2);
-        }
+        do {
+            int didDie = 0;
+
+            // Check if any of the players died/is OOB
+            if (!player_isAlive(p1) && !player_isInsideMap(p1)) {
+                didDie = 1;
+            }
+            else if (!player_isInsideMap(p1)) {
+               // P1 is OOB... Heck yeah, great strat!
+               player_resetVerticalSpeed(p1);
+            }
+            if (!player_isAlive(p2) && !player_isInsideMap(p2)) {
+                didDie |= 2;
+            }
+            else if (!player_isInsideMap(p2)) {
+               // P2 is OOB... Heck yeah, great strat!
+               player_resetVerticalSpeed(p2);
+            }
+
+            if (didDie != 0) {
+                GFraMe_ret rv;
+
+                // Recover previous state. Ignore errors if on the first map.
+                rv = gv_load(SAVEFILE);
+
+                // Increase death counter
+                if (didDie & 1) {
+                    gv_inc(PL1_DEATH);
+                }
+                if (didDie & 2) {
+                    gv_inc(PL2_DEATH);
+                }
+
+                if (rv != GFraMe_ret_ok && gv_getValue(MAP) == 0) {
+                    int death1, death2;
+
+                    death1 = gv_getValue(PL1_DEATH);
+                    death2 = gv_getValue(PL2_DEATH);
+
+                    // Reset the variables (since it's most likely a buggy situation)
+                    gv_init();
+                    gv_setValue(DOOR_X, 16 / 8);
+                    gv_setValue(DOOR_Y, 184 / 8);
+                    gv_setValue(MAP, 0);
+                    gv_setValue(PL1_DEATH, death1);
+                    gv_setValue(PL2_DEATH, death2);
+                }
+                else {
+                    // Save death counter and timer
+                    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error loading map", __err_ret);
+                    gv_setValue(GAME_TIME, timer_getTime());
+                    rv = gv_save(SAVEFILE);
+                    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error saving map", __err_ret);
+                }
+
+                // Force reload
+                gv_setValue(SWITCH_MAP, 1);
+            }
+        } while (0);
     GFraMe_event_update_end();
     
     return;
