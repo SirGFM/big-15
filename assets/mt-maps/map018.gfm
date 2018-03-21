@@ -30,7 +30,7 @@ tm:[
 105,105,105,105,106,64,64,64,64,64,67,64,64,64,64,64,68,100,101,65,65,65,65,65,100,101,69,64,64,64,64,64,64,64,64,64,143,175,175,175,
 105,105,105,105,108,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,73,
 ]
-ev: { x:40 y:24 w:1 h:6 ce:"ce_switch_map" int:17 int:1 int:7 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:24 w:1 h:6 ce:"ce_switch_map" int:38 int:1 int:7 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 mob: { x:33 y:200 f:"eye" }
 mob: { x:95 y:176 f:"eyel" }
 mob: { x:95 y:152 f:"eyel" }
@@ -45,4 +45,4 @@ mob: { x:169 y:226 f:"jumper" }
 mob: { x:225 y:226 f:"jumper" }
 mob: { x:65 y:226 f:"jumper" }
 mob: { x:185 y:34 f:"jumper" }
-ev: { x:-1 y:4 w:1 h:6 ce:"ce_switch_map" int:19 int:78 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:4 w:1 h:6 ce:"ce_switch_map" int:40 int:78 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }

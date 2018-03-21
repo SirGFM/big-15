@@ -31,7 +31,7 @@ tm:[
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 ]
 mob: { x:96 y:192 f:"charger" }
-ev: { x:-1 y:20 w:1 h:6 ce:"ce_switch_map" int:11 int:44 int:8 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:20 w:1 h:6 ce:"ce_switch_map" int:32 int:44 int:8 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 mob: { x:192 y:192 f:"charger" }
 mob: { x:120 y:104 f:"charger" }
-ev: { x:40 y:-2 w:1 h:8 ce:"ce_switch_map" int:13 int:1 int:16 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:-2 w:1 h:8 ce:"ce_switch_map" int:34 int:1 int:16 int:-1 t:"is_player"|"on_enter"|"keep_active"     }

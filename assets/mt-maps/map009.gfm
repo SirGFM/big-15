@@ -30,8 +30,8 @@ tm:[
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 ]
-ev: { x:40 y:19 w:1 h:6 ce:"ce_switch_map" int:6 int:1 int:11 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
-ev: { x:-1 y:19 w:1 h:6 ce:"ce_switch_map" int:8 int:1 int:11 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:19 w:1 h:6 ce:"ce_switch_map" int:27 int:1 int:11 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:19 w:1 h:6 ce:"ce_switch_map" int:29 int:1 int:11 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 ev: { x:11 y:17 w:13 h:3 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
 ev: { x:11 y:13 w:20 h:6 ce:"ce_hidden_path" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter"     }
 obj: { x:27 y:16 w:2 h:2 ce:"ce_unhide_on_gv" f:"heartup"|"hidden" var:"heartup02-hidden" var:"heartup02" }

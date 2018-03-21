@@ -34,7 +34,7 @@ mob: { x:120 y:200 f:"boss_wheel" }
 mob: { x:137 y:170 f:"boss_head" }
 mob: { x:133 y:168 f:"boss_tank" }
 mob: { x:117 y:188 f:"boss_plat" }
-ev: { x:40 y:12 w:1 h:6 ce:"ce_switch_map" int:19 int:1 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:12 w:1 h:6 ce:"ce_switch_map" int:40 int:1 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 obj: { x:39 y:13 w:1 h:4 ce:"ce_handle_notdoor" f:"door"|"static" var:"map020-a_door" }
 ev: { x:24 y:17 w:15 h:9 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_enter" var:"map020-a_door"    }
 ev: { x:1 y:13 w:2 h:2 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"terminal026"    }

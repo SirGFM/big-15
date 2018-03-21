@@ -54,7 +54,7 @@ tm:[
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 ]
-ev: { x:40 y:34 w:1 h:6 ce:"ce_switch_map" int:7 int:1 int:13 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:34 w:1 h:6 ce:"ce_switch_map" int:28 int:1 int:13 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 obj: { x:20 y:46 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map008-a_door" }
 obj: { x:13 y:46 w:1 h:4 ce:"ce_handle_notdoor" f:"door"|"static" var:"map008-a_door" }
 obj: { x:8 y:13 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map008-b_door" }
@@ -67,7 +67,7 @@ obj: { x:12 y:20 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map008-d_doo
 obj: { x:1 y:42 w:4 h:1 ce:"ce_handle_notdoor" f:"door-hor"|"static" var:"map008-c_door" }
 obj: { x:34 y:20 w:4 h:1 ce:"ce_handle_notdoor" f:"door-hor"|"static" var:"map008-e_door" }
 ev: { x:33 y:4 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map008-e_door"    }
-ev: { x:40 y:12 w:1 h:6 ce:"ce_switch_map" int:9 int:1 int:22 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:12 w:1 h:6 ce:"ce_switch_map" int:30 int:1 int:22 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 mob: { x:97 y:280 f:"eye" }
 mob: { x:287 y:368 f:"eyel" }
 mob: { x:287 y:192 f:"eyel" }

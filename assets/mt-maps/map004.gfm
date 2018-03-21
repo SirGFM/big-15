@@ -30,8 +30,8 @@ tm:[
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 ]
-ev: { x:-1 y:2 w:1 h:6 ce:"ce_switch_map" int:3 int:38 int:24 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
-ev: { x:40 y:2 w:1 h:6 ce:"ce_switch_map" int:10 int:1 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:2 w:1 h:6 ce:"ce_switch_map" int:24 int:38 int:24 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:40 y:2 w:1 h:6 ce:"ce_switch_map" int:31 int:1 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 mob: { x:128 y:50 f:"jumper" }
 mob: { x:208 y:50 f:"jumper" }
 mob: { x:88 y:202 f:"jumper" }

@@ -40,7 +40,7 @@ tm:[
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,105,
 ]
-ev: { x:54 y:26 w:1 h:6 ce:"ce_switch_map" int:5 int:1 int:40 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:54 y:26 w:1 h:6 ce:"ce_switch_map" int:26 int:1 int:40 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 obj: { x:33 y:27 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map006-a_door" }
 obj: { x:30 y:20 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map006-b_door" }
 ev: { x:42 y:22 w:2 h:2 ce:"ce_open_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map006-a_door"    }
@@ -56,8 +56,8 @@ obj: { x:14 y:17 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map006-c_doo
 obj: { x:14 y:33 w:1 h:4 ce:"ce_handle_door" f:"door"|"static" var:"map006-c_door" }
 ev: { x:17 y:19 w:2 h:2 ce:"ce_close_door" int:-1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"map006-b_door"    }
 obj: { x:36 y:25 w:4 h:1 ce:"ce_handle_notdoor" f:"door-hor"|"static" var:"map006-a_door" }
-ev: { x:-1 y:32 w:1 h:6 ce:"ce_switch_map" int:7 int:38 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
-ev: { x:-1 y:8 w:1 h:6 ce:"ce_switch_map" int:9 int:38 int:22 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:32 w:1 h:6 ce:"ce_switch_map" int:28 int:38 int:15 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
+ev: { x:-1 y:8 w:1 h:6 ce:"ce_switch_map" int:30 int:38 int:22 int:-1 t:"is_player"|"on_enter"|"keep_active"     }
 obj: { x:42 y:22 w:2 h:2 ce:"ce_set_anim_off" f:"term" var:"terminal006" }
 ev: { x:42 y:22 w:2 h:2 ce:"ce_set_gv" int:1 int:-1 int:-1 int:-1 t:"is_player"|"on_pressed" var:"terminal006"    }
 obj: { x:17 y:19 w:2 h:2 ce:"ce_set_anim_off" f:"term" var:"terminal008" }
