@@ -244,7 +244,7 @@ static GFraMe_ret ps_init(playstateCmd cmd) {
     if ((map % 21) >= 20) {
         audio_playBoss();
     }
-    else if ((map % 21)>= 15) {
+    else if ((map % 21) >= 15) {
         audio_playTensionGoesUp();
     }
     else if ((map % 21) >= 4) {
@@ -372,13 +372,13 @@ static GFraMe_ret ps_switchMap() {
                 rv = map_loadi(m, map);
                 ASSERT(rv == GFraMe_ret_ok, rv);
                 
-                if (map >= 20) {
+                if ((map % 21) >= 20) {
                     audio_playBoss();
                 }
-                else if (map >= 15) {
+                else if ((map % 21) >= 15) {
                     audio_playTensionGoesUp();
                 }
-                else if (map >= 4) {
+                else if ((map % 21) >= 4) {
                     audio_playMovingOn();
                 }
                 else {
