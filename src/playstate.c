@@ -441,8 +441,14 @@ static GFraMe_ret ps_switchMap() {
                    player_resetVerticalSpeed(p2);
                    _ps_justRetry = 0;
                 }
-                player_resetTeleport(p1);
-                player_resetTeleport(p2);
+                if (!_ps_isSpeedrun) {
+                    // If speedrun mode is enabled, this is skipped. By doing that, the
+                    // teleport target is loaded from the previous saved state (i.e.,
+                    // it become the last position teleported to).
+                    // This only works on the first frame after loading a level, though.
+                    player_resetTeleport(p1);
+                    player_resetTeleport(p2);
+                }
                 
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);
