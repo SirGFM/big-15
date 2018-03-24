@@ -793,7 +793,7 @@ GFraMe_ret parsef_map(map **ppM, char *fn) {
     ASSERT(ppM, GFraMe_ret_bad_param);
     ASSERT(fn, GFraMe_ret_bad_param);
     
-    fp = fopen(fn, "rt");
+    fp = fopen(fn, "rb");
     ASSERT(fp, GFraMe_ret_file_not_found);
     
     // Get the working map
