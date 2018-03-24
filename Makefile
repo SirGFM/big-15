@@ -99,7 +99,7 @@ OBJS := $(OBJDIR)/audio.o $(OBJDIR)/bullet.o $(OBJDIR)/camera.o \
     $(OBJDIR)/quadtree/qtnode.o $(OBJDIR)/quadtree/qtstatic.o \
     $(OBJDIR)/quadtree/quadtree.o
 
-WINICON := assets/icons/icon.o
+WINICON := obj/$(TGTDIR)/assets_icon.o
 
 #=========================================================================
 # Helper build targets
@@ -139,7 +139,7 @@ obj/$(TGTDIR)/%.o: %.c
 	@ echo "[ CC] $< -> $@"
 	@ $(CC) $(myCFLAGS) -o $@ -c $<
 
-%.o: %.rc
+obj/$(TGTDIR)/assets_%.o: assets/icons/%.rc
 	@ echo "[ICN] $@"
 	@ $(WINDRES) $< $@
 
