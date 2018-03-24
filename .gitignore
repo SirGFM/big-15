@@ -32,7 +32,6 @@
 *.png
 *.xcf
 *.gif
-*atlas.dat
 *.wav
 
 # Temp files
@@ -40,32 +39,5 @@
 *.swp
 *bin/
 
-# Generate audio files
-assets/blHit
-assets/bombExpl
-assets/bossExpl
-assets/bossMove
-assets/charger
-assets/door
-assets/fall
-assets/getItem
-assets/heartup
-assets/highjump
-assets/jump
-assets/jumpeJump
-assets/jumperFall
-assets/jumperJump
-assets/menuMove
-assets/menuSelect
-assets/pause
-assets/plDeath
-assets/plHit
-assets/plStep
-assets/shootBoss
-assets/shootEn
-assets/signaler
-assets/switchItem
-assets/teleport
-assets/terminal
-assets/text
-
+# Generate assets
+assets/*.dat
