@@ -632,17 +632,18 @@ void player_checkTeleport(player *pPl) {
     GFraMe_object *pObj;
     int item, otherItem, x, y;
     int isSide;
-    
+#define WALL (GFraMe_direction_left | GFraMe_direction_right)
+
     // Get both players' items
     if (pPl->spr.id == ID_PL1) {
         item = gv_getValue(PL1_ITEM);
         otherItem = gv_getValue(PL2_ITEM);
-        isSide = p2->spr.obj.hit & (GFraMe_direction_left | GFraMe_direction_right);
+        isSide = p2->spr.obj.hit & WALL;
     }
     else if (pPl->spr.id == ID_PL2) {
         item = gv_getValue(PL2_ITEM);
         otherItem = gv_getValue(PL1_ITEM);
-        isSide = p1->spr.obj.hit & (GFraMe_direction_left | GFraMe_direction_right);
+        isSide = p1->spr.obj.hit & WALL;
     }
     else {
         ASSERT_NR(0);
@@ -653,15 +654,15 @@ void player_checkTeleport(player *pPl) {
     pPl->pressedTeleport = 1;
     // Check that it was triggered
     ASSERT_NR(ctr_item(pPl->spr.id));
-    
+
     pObj = GFraMe_sprite_get_object(&pPl->spr);
     // Find the destination position
     x = gv_getValue(SIGL_X);
     y = gv_getValue(SIGL_Y);
     if (x == -1 || y == -1) {
         // Check whether teleporting is possible
-        ASSERT_NR(otherItem == ID_SIGNALER && !isSide);
-        
+        ASSERT_NR(otherItem == ID_SIGNALER && (isSide & WALL) != WALL);
+
         // If the signaler isn't set, teleport to the other player
         if (pPl->spr.id == ID_PL1) {
             x = gv_getValue(PL2_CX);
@@ -673,7 +674,16 @@ void player_checkTeleport(player *pPl) {
         }
         x -= pObj->hitbox.hw;
         y -= pObj->hitbox.hh;
-        
+
+        // Nudge the teleporting player slightly to the side if the other is
+        // touching a wall (to avoid clipping into it).
+        if (isSide & GFraMe_direction_left) {
+            x += 4;
+        }
+        else if (isSide & GFraMe_direction_right) {
+            x -= 4;
+        }
+
         signal_setPos(x+4, y+6);
         signal_release();
     }
@@ -682,7 +692,7 @@ void player_checkTeleport(player *pPl) {
     }
     gv_setValue(TELP_X, x);
     gv_setValue(TELP_Y, y);
-    
+
     pPl->isTeleporting = 1;
     signal_release();
 __ret:
@@ -693,7 +703,8 @@ __ret:
         // TODO fix this check
         // TODO play failure sound
     }
-    
+
+#undef WALL
     return;
 }
 

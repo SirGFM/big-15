@@ -28,7 +28,7 @@
 //                                                                            //
 //============================================================================//
 
-#define TM_MAX 21
+#define TM_MAX 42
 /** Lookup table for tilemap files */
 char *_map_tms[TM_MAX] = {
     "maps/map000.gfm",
@@ -51,7 +51,28 @@ char *_map_tms[TM_MAX] = {
     "maps/map017.gfm",
     "maps/map018.gfm",
     "maps/map019.gfm",
-    "maps/map020.gfm"
+    "maps/map020.gfm",
+    "mt-maps/map000.gfm",
+    "mt-maps/map001.gfm",
+    "mt-maps/map002.gfm",
+    "mt-maps/map003.gfm",
+    "mt-maps/map004.gfm",
+    "mt-maps/map005.gfm",
+    "mt-maps/map006.gfm",
+    "mt-maps/map007.gfm",
+    "mt-maps/map008.gfm",
+    "mt-maps/map009.gfm",
+    "mt-maps/map010.gfm",
+    "mt-maps/map011.gfm",
+    "mt-maps/map012.gfm",
+    "mt-maps/map013.gfm",
+    "mt-maps/map014.gfm",
+    "mt-maps/map015.gfm",
+    "mt-maps/map016.gfm",
+    "mt-maps/map017.gfm",
+    "mt-maps/map018.gfm",
+    "mt-maps/map019.gfm",
+    "mt-maps/map020.gfm"
 };
 //============================================================================//
 //                                                                            //
@@ -409,7 +430,7 @@ static GFraMe_ret _map_loadf(map *pM, char *fn) {
  * @return GFraMe error code
  */
 GFraMe_ret map_loadf(map *pM, char *fn) {
-    #define MAX_NAME_LEN 128
+    #define MAX_NAME_LEN 256
     char name[MAX_NAME_LEN];
     GFraMe_ret rv;
     int len;
@@ -436,7 +457,7 @@ __ret:
  * @return GFraMe error code
  */
 GFraMe_ret map_loadi(map *m, int i) {
-    #define MAX_NAME_LEN 128
+    #define MAX_NAME_LEN 256
     char name[MAX_NAME_LEN];
     GFraMe_ret rv;
     int len;
@@ -892,6 +913,8 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 75:
         case 76:
         case 77:
+        case 102:
+        case 103:
         case 104:
         case 105:
         case 106:
@@ -899,6 +922,7 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 108:
         case 109:
         case 110:
+        case 135:
         case 136:
         case 137:
         case 138:
@@ -906,7 +930,9 @@ static GFraMe_ret map_isWall(unsigned char tile) {
         case 140:
         case 141:
         case 142:
+        case 167:
         case 174:
+        case 199:
         case 206:
             return GFraMe_ret_ok;
         default:

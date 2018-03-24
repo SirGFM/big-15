@@ -86,7 +86,7 @@ static char _ps_map_afterItemEN[] =
  * 
  * @return GFraMe error code
  */
-static GFraMe_ret ps_init(int isLoading);
+static GFraMe_ret ps_init(playstateCmd cmd);
 /**
  * Clean up the playstate
  */
@@ -126,12 +126,12 @@ static unsigned int _ltime;
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
-state playstate(int doLoad) {
+state playstate(playstateCmd cmd) {
     GFraMe_ret rv;
     state ret;
     
     ret = -1;
-    rv = ps_init(doLoad);
+    rv = ps_init(cmd);
     GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init playstate", __ret);
     
     GFraMe_event_init(_maxUfps, _maxDfps);
@@ -193,7 +193,7 @@ __ret:
  * 
  * @return GFraMe error code
  */
-static GFraMe_ret ps_init(int isLoading) {
+static GFraMe_ret ps_init(playstateCmd cmd) {
     GFraMe_ret rv;
     GFraMe_save sv, *pSv;
     int map, plX, plY, time;
@@ -215,15 +215,20 @@ static GFraMe_ret ps_init(int isLoading) {
     GFraMe_save_close(&sv);
     pSv = 0;
     
-    if (!isLoading) {
+    if (cmd != CONTINUE) {
         gv_init();
         
         plX = 16;
         plY = 184;
-        map = 0;
+        if (cmd == NEWGAME) {
+            map = 0;
+        }
+        else if (cmd == MT_VERSION) {
+            map = 21;
+        }
         gv_setValue(DOOR_X, 16 / 8);
         gv_setValue(DOOR_Y, 184 / 8);
-        gv_setValue(MAP, 0);
+        gv_setValue(MAP, map);
     }
     else {
         rv = gv_load(SAVEFILE);
@@ -236,13 +241,13 @@ static GFraMe_ret ps_init(int isLoading) {
     time = gv_getValue(GAME_TIME);
     timer_init(time);
     
-    if (map >= 20) {
+    if ((map % 21) >= 20) {
         audio_playBoss();
     }
-    else if (map >= 15) {
+    else if ((map % 21) >= 15) {
         audio_playTensionGoesUp();
     }
-    else if (map >= 4) {
+    else if ((map % 21) >= 4) {
         audio_playMovingOn();
     }
     else {
@@ -367,13 +372,13 @@ static GFraMe_ret ps_switchMap() {
                 rv = map_loadi(m, map);
                 ASSERT(rv == GFraMe_ret_ok, rv);
                 
-                if (map >= 20) {
+                if ((map % 21) >= 20) {
                     audio_playBoss();
                 }
-                else if (map >= 15) {
+                else if ((map % 21) >= 15) {
                     audio_playTensionGoesUp();
                 }
-                else if (map >= 4) {
+                else if ((map % 21) >= 4) {
                     audio_playMovingOn();
                 }
                 else {
@@ -436,8 +441,14 @@ static GFraMe_ret ps_switchMap() {
                    player_resetVerticalSpeed(p2);
                    _ps_justRetry = 0;
                 }
-                player_resetTeleport(p1);
-                player_resetTeleport(p2);
+                if (!_ps_isSpeedrun) {
+                    // If speedrun mode is enabled, this is skipped. By doing that, the
+                    // teleport target is loaded from the previous saved state (i.e.,
+                    // it become the last position teleported to).
+                    // This only works on the first frame after loading a level, though.
+                    player_resetTeleport(p1);
+                    player_resetTeleport(p2);
+                }
                 
                 // Set the update time (for using on events)
                 gv_setValue(GAME_UPS, GFraMe_event_elapsed);

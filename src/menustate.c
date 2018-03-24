@@ -47,7 +47,7 @@ static void _ms_renderText(char *text, int X, int Y, int i, int l);
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
-enum {OPT_CONTINUE, OPT_NEWGAME, OPT_OPTIONS, OPT_QUIT, OPT_MAX};
+enum {OPT_CONTINUE, OPT_NEWGAME, OPT_MTVERSION, OPT_OPTIONS, OPT_QUIT, OPT_MAX};
 struct stMenustate {
     /** Whether there's already a saved game */
     int hasSave;
@@ -151,6 +151,8 @@ state menustate() {
         ret = CNT_PLAYSTATE;
     else if (ms.curOpt == OPT_NEWGAME)
         ret = NEW_PLAYSTATE;
+    else if (ms.curOpt == OPT_MTVERSION)
+        ret = MT_PLAYSTATE;
     else if (ms.curOpt == OPT_OPTIONS)
         ret = OPTIONS;
     else if (ms.curOpt == OPT_MAX)
@@ -291,10 +293,12 @@ static void ms_clean(struct stMenustate *ms) {
 static void ms_draw(struct stMenustate *ms) {
     char optionsEN[] = "  CONTINUE  \n"
                        "  NEW GAME  \n"
+                       "  MT MODE   \n"
                        "  OPTIONS   \n"
                        "  QUIT";
     char optionsPT[] = "  CONTINUAR \n"
                        "  NOVO JOGO \n"
+                       "  VERSAO MT \n"
                        "  OPCOES    \n"
                        "  SAIR";
     char devTextEN[]   = "A GAME BY";

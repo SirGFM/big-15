@@ -8,10 +8,17 @@
 
 #include "types.h"
 
+enum enPlaystateCmd {
+    NEWGAME = 0
+  , CONTINUE
+  , MT_VERSION
+};
+typedef enum enPlaystateCmd playstateCmd;
+
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up
  */
-state playstate(int doLoad);
+state playstate(playstateCmd cmd);
 
 /**
  * Set a text to be shown
