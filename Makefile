@@ -1,177 +1,177 @@
+#=========================================================================
+# This Makefile have the following targets:
+#   - linux32
+#   - linux64
+#   - win32
+#   - win64
+#   - *_debug
 
-CC=gcc
-.SUFFIXES=.c .o
+#=========================================================================
+# Set the target and the lib's version
+TARGET := game
 
-#==============================================================================
-# Define compilation target
-#==============================================================================
-  TARGET := game
-#==============================================================================
+#=========================================================================
+# Set the default CC (may be overriden into something like mingw)
+CC ?= gcc
 
-#==============================================================================
-# Define every object required by compilation
-#==============================================================================
- OBJS =                                \
-         $(OBJDIR)/audio.o             \
-         $(OBJDIR)/bullet.o            \
-         $(OBJDIR)/camera.o            \
-         $(OBJDIR)/collision.o         \
-         $(OBJDIR)/commonEvent.o       \
-         $(OBJDIR)/controller.o        \
-         $(OBJDIR)/credits.o           \
-         $(OBJDIR)/demo.o              \
-         $(OBJDIR)/event.o             \
-         $(OBJDIR)/global.o            \
-         $(OBJDIR)/globalVar.o         \
-         $(OBJDIR)/main.o              \
-         $(OBJDIR)/map.o               \
-         $(OBJDIR)/menustate.o         \
-         $(OBJDIR)/mob.o               \
-         $(OBJDIR)/object.o            \
-         $(OBJDIR)/options.o           \
-         $(OBJDIR)/parser.o            \
-         $(OBJDIR)/player.o            \
-         $(OBJDIR)/playstate.o         \
-         $(OBJDIR)/registry.o          \
-         $(OBJDIR)/signal.o            \
-         $(OBJDIR)/textwindow.o        \
-         $(OBJDIR)/timer.o             \
-         $(OBJDIR)/transition.o        \
-         $(OBJDIR)/types.o             \
-         $(OBJDIR)/ui.o                \
-         $(OBJDIR)/quadtree/qthitbox.o \
-         $(OBJDIR)/quadtree/qtnode.o   \
-         $(OBJDIR)/quadtree/qtstatic.o \
-         $(OBJDIR)/quadtree/quadtree.o
-#==============================================================================
-
-#==============================================================================
-# Set OS flag
-#==============================================================================
-  OS := $(shell uname)
-  ifeq ($(OS), MINGW32_NT-6.1)
-    OS := Win
-#   Also, set the icon
+#=========================================================================
+# Parse the configuration from the target goal
+ifneq (, $(findstring _debug, $(MAKECMDGOALS)))
+    MODE := debug
+    STRIP := touch
+else
+    MODE := release
+endif
+ifneq (, $(findstring linux, $(MAKECMDGOALS)))
+    OS := linux
+    ifndef $(DEBUG)
+        STRIP := strip
+    endif
+endif
+ifneq (, $(findstring win, $(MAKECMDGOALS)))
+    ifdef $(OS)
+        ifeq ($(OS), linux)
+            $(error More than a single OS target was specified)
+        endif
+    endif
+    OS := win
+    EXT := .exe
+    # ICON is lazily resolved
     ICON = $(WINICON)
-  endif
-#==============================================================================
-
-#==============================================================================
-# Define CFLAGS (compiler flags)
-#==============================================================================
-# Add all warnings and default include path
-  CFLAGS := -Wall
-# Add the framework includes
-  CFLAGS := $(CFLAGS) -I"./lib/GFraMe/include/"
-# Add architecture flag
-  ARCH := $(shell uname -m)
-  ifeq ($(ARCH), x86_64)
-    CFLAGS := $(CFLAGS) -m64
-  else
-    CFLAGS := $(CFLAGS) -m32
-  endif
-# Add debug flags
-  ifneq ($(RELEASE), yes)
-    CFLAGS := $(CFLAGS) -g -O0 -DDEBUG
-    ifeq ($(FAST), yes)
-      CFLAGS := $(CFLAGS) -DFAST_TRANSITION
+endif
+ifneq (, $(findstring 32, $(MAKECMDGOALS)))
+    ARCH := 32
+endif
+ifneq (, $(findstring 64, $(MAKECMDGOALS)))
+    ifdef $(ARCH)
+        ifneq ($(ARCH), 32)
+            $(error More than a single target architecture was specified)
+        endif
     endif
-    ifeq ($(RESETGV), yes)
-      CFLAGS := $(CFLAGS) -DRESET_GV
-    endif
-  else
-    CFLAGS := $(CFLAGS) -O1
-  endif
-# Add quadtree debug
-  ifeq ($(QTDBG), yes)
-    CFLAGS := $(CFLAGS) -DQT_DEBUG_DRAW
-  endif
-#==============================================================================
+    ARCH := 64
+endif
 
-#==============================================================================
-# Define LFLAGS (linker flags)
-#==============================================================================
-# Add the framework library
- LFLAGS := -lGFraMe -lm
-# Add dependencies
- ifeq ($(OS), Win)
-   LFLAGS := -L./lib/GFraMe/bin/Win -mwindows -lmingw32 $(LFLAGS) -lSDL2main
-   ifeq ($(USE_OPENGL), yes)
-     LFLAGS := $(LFLAGS) -lopengl32
-   endif
- else
-   LFLAGS := -L./lib/GFraMe/bin/Linux $(LFLAGS)
-   ifeq ($(USE_OPENGL), yes)
-     LFLAGS := $(LFLAGS) -lGL
-   endif
- endif
- LFLAGS := $(LFLAGS) -lSDL2
-#==============================================================================
+#=========================================================================
+# Setup path to the lib
+TGTDIR := $(OS)$(ARCH)_$(MODE)
+LIBDIR := ./lib/GFraMe/bin/$(OS)$(ARCH)_$(MODE)
 
-#==============================================================================
-# Define library (to force compilation)
-#==============================================================================
- LIB := ./lib/GFraMe/bin/Linux/libGFraMe.a
-#==============================================================================
+#=========================================================================
+# Setup CFLAGS and LDFLAGS (NOTE: the submodule lib is placed early in the
+# search path to force its use)
+myCFLAGS := -I"./lib/GFraMe/include/" $(CFLAGS) -Wall
+ifeq ($(ARCH), 64)
+    myCFLAGS := $(myCFLAGS) -m64
+else
+    myCFLAGS := $(myCFLAGS) -m32
+endif
 
-#==============================================================================
-# Define the generated icon
-#==============================================================================
- WINICON := assets/icons/icon.o
-#==============================================================================
+ifeq ($(MODE), debug)
+    myCFLAGS := $(myCFLAGS) -O0 -g -DDEBUG
+else
+    myCFLAGS := $(myCFLAGS) -O1
+endif
 
-#==============================================================================
-# Define where source files can be found and where objects & binary are output
-#==============================================================================
- VPATH := src:src/quadtree
- OBJDIR := obj
- BINDIR := bin
-#==============================================================================
+myLDFLAGS := -L$(LIBDIR) $(LDFLAGS)
+myLDFLAGS := $(myLDFLAGS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
+ifeq ($(OS), win)
+    myLDFLAGS := $(myLDFLAGS) -mwindows -lmingw32
+else
+    myCFLAGS := $(myCFLAGS) -fPIC
+endif
+myLDFLAGS := $(myLDFLAGS)  -lSDL2main -lSDL2
 
-#==============================================================================
-# Make the objects list constant (and the icon, if any)
-#==============================================================================
- OBJS := $(OBJS)
- ICON := $(ICON)
-#==============================================================================
+#=========================================================================
+# Paths and objects
+VPATH := src
+OBJDIR := obj/$(TGTDIR)
+BINDIR := bin/$(TGTDIR)
 
-#==============================================================================
-# Define default compilation rule
-#==============================================================================
-all: MKDIRS $(BINDIR)/$(TARGET)
-	date
-#==============================================================================
+OBJS := $(OBJDIR)/audio.o $(OBJDIR)/bullet.o $(OBJDIR)/camera.o \
+    $(OBJDIR)/collision.o $(OBJDIR)/commonEvent.o $(OBJDIR)/controller.o \
+    $(OBJDIR)/credits.o $(OBJDIR)/demo.o $(OBJDIR)/event.o \
+    $(OBJDIR)/global.o $(OBJDIR)/globalVar.o $(OBJDIR)/main.o $(OBJDIR)/map.o \
+    $(OBJDIR)/menustate.o $(OBJDIR)/mob.o $(OBJDIR)/object.o \
+    $(OBJDIR)/options.o $(OBJDIR)/parser.o $(OBJDIR)/player.o \
+    $(OBJDIR)/playstate.o $(OBJDIR)/registry.o $(OBJDIR)/signal.o \
+    $(OBJDIR)/textwindow.o $(OBJDIR)/timer.o $(OBJDIR)/transition.o \
+    $(OBJDIR)/types.o $(OBJDIR)/ui.o $(OBJDIR)/quadtree/qthitbox.o \
+    $(OBJDIR)/quadtree/qtnode.o $(OBJDIR)/quadtree/qtstatic.o \
+    $(OBJDIR)/quadtree/quadtree.o
 
-$(WINICON):
-	windres assets/icons/icon.rc $(WINICON)
+WINICON := obj/$(TGTDIR)/assets_icon.o
 
-$(BINDIR)/$(TARGET): MKDIRS $(LIB) $(OBJS) $(ICON)
-	$(CC) $(CFLAGS) -o $(BINDIR)/$(TARGET) $(OBJS) $(ICON) $(LFLAGS)
+#=========================================================================
+# Helper build targets
+.PHONY: help linux32 linux64 linux32_debug linux64_debug win32 win64 \
+    win32_debug win64_debug clean reallyclean LIB
 
-$(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+help:
+	@ echo "Build targets:"
+	@ echo "  linux32"
+	@ echo "  linux64"
+	@ echo "  linux32_debug"
+	@ echo "  linux64_debug"
+	@ echo "  win32"
+	@ echo "  win64"
+	@ echo "  win32_debug"
+	@ echo "  win64_debug"
+	@ echo "  clean"
 
-$(LIB):
-	make static --directory=./lib/GFraMe/ USE_OPENGL=$(USE_OPENGL)
+linux32: bin/linux32_release/$(TARGET)
+linux32_debug: bin/linux32_debug/$(TARGET)
+linux64: bin/linux64_release/$(TARGET)
+linux64_debug: bin/linux64_debug/$(TARGET)
+win32: bin/win32_release/$(TARGET).exe
+win32_debug: bin/win32_debug/$(TARGET).exe
+win64: bin/win64_release/$(TARGET).exe
+win64_debug: bin/win64_debug/$(TARGET).exe
 
-MKDIRS: | $(OBJDIR) $(BINDIR)
+#=========================================================================
+# Build targets
+bin/$(TGTDIR)/$(TARGET)$(EXT): $(OBJS) $(ICON)
+	@ echo "[ CC] $@"
+	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS)
+	@ echo "[STP] $@"
+	@ $(STRIP) $@
 
-$(OBJDIR):
-	@mkdir -p $(OBJDIR)
-	@mkdir -p $(OBJDIR)/quadtree
+obj/$(TGTDIR)/%.o: %.c
+	@ echo "[ CC] $< -> $@"
+	@ $(CC) $(myCFLAGS) -o $@ -c $<
 
-$(BINDIR):
-	@mkdir -p $(BINDIR)
+obj/$(TGTDIR)/assets_%.o: assets/icons/%.rc
+	@ echo "[ICN] $@"
+	@ $(WINDRES) $< $@
 
-.PHONY: clean mostlyclean
+#=========================================================================
+# Helper build targets (for dependencies and directories)
+bin/$(TGTDIR)/$(TARGET)$(EXT): | LIB
+
+LIB:
+	@ echo "[LIB] Building dependencies..."
+	@ make $(MAKECMDGOALS) --directory=./lib/GFraMe/
+
+$(OBJS): | obj/$(TGTDIR) obj/$(TGTDIR)/quadtree bin/$(TGTDIR)
+
+obj/$(TGTDIR):
+	@ echo "[MKD] $@"
+	@ mkdir -p obj/$(TGTDIR)
+
+obj/$(TGTDIR)/quadtree:
+	@ echo "[MKD] $@"
+	@ mkdir -p obj/$(TGTDIR)/quadtree
+
+bin/$(TGTDIR):
+	@ echo "[MKD] $@"
+	@ mkdir -p bin/$(TGTDIR)
 
 clean:
-	@rm -f $(OBJS)
-	@rm -f $(BINDIR)/$(TARGET)
+	@ echo "[ RM] ./*"
+	@ rm -rf obj/
+	@ rm -rf bin/
 
-mostlyclean:
-	@make clean
-	@rm -rf $(OBJDIR)
-	@rm -rf $(BINDIR)
-	@make clean --directory=./lib/GFraMe/
-
+reallyclean:
+	@ echo "[ RM] ./* ./lib/*"
+	@ rm -rf obj/
+	@ rm -rf bin/
+	@ make clean --directory=./lib/GFraMe/

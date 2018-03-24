@@ -371,6 +371,7 @@ static GFraMe_ret ps_switchMap() {
                 
                 rv = map_loadi(m, map);
                 ASSERT(rv == GFraMe_ret_ok, rv);
+                rg_updateObjects(0);
                 
                 if ((map % 21) >= 20) {
                     audio_playBoss();
