@@ -11,6 +11,10 @@
 TARGET := game
 
 #=========================================================================
+# Run make using bash, so syntax for conditionals works as expected
+SHELL := /bin/bash
+
+#=========================================================================
 # Set the default CC (may be overriden into something like mingw)
 CC ?= gcc
 
@@ -18,15 +22,12 @@ CC ?= gcc
 # Parse the configuration from the target goal
 ifneq (, $(findstring _debug, $(MAKECMDGOALS)))
     MODE := debug
-    STRIP := touch
 else
     MODE := release
 endif
 ifneq (, $(findstring linux, $(MAKECMDGOALS)))
     OS := linux
-    ifndef $(DEBUG)
-        STRIP := strip
-    endif
+    STRIP := strip
 endif
 ifneq (, $(findstring win, $(MAKECMDGOALS)))
     ifdef $(OS)
@@ -132,8 +133,8 @@ win64_debug: bin/win64_debug/$(TARGET).exe
 bin/$(TGTDIR)/$(TARGET)$(EXT): $(OBJS) $(ICON)
 	@ echo "[ CC] $@"
 	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS)
-	@ echo "[STP] $@"
-	@ $(STRIP) $@
+	@ if [ "$(MODE)" == "release" ]; then echo "[STP] $@"; fi
+	@ if [ "$(MODE)" == "release" ]; then $(STRIP) $@; fi
 
 obj/$(TGTDIR)/%.o: %.c
 	@ echo "[ CC] $< -> $@"
