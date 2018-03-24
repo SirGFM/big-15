@@ -35,6 +35,7 @@ ifneq (, $(findstring win, $(MAKECMDGOALS)))
         endif
     endif
     OS := win
+    EXT := .exe
     # ICON is lazily resolved
     ICON = $(WINICON)
 endif
@@ -56,28 +57,29 @@ TGTDIR := $(OS)$(ARCH)_$(MODE)
 LIBDIR := ./lib/GFraMe/bin/$(OS)$(ARCH)_$(MODE)
 
 #=========================================================================
-# Setup CFLAGS and LDFLAGS
-CFLAGS := $(CFLAGS) -Wall -I"./lib/GFraMe/include/"
+# Setup CFLAGS and LDFLAGS (NOTE: the submodule lib is placed early in the
+# search path to force its use)
+myCFLAGS := -I"./lib/GFraMe/include/" $(CFLAGS) -Wall
 ifeq ($(ARCH), 64)
-    CFLAGS := $(CFLAGS) -m64
+    myCFLAGS := $(myCFLAGS) -m64
 else
-    CFLAGS := $(CFLAGS) -m32
+    myCFLAGS := $(myCFLAGS) -m32
 endif
 
 ifeq ($(MODE), debug)
-    CFLAGS := $(CFLAGS) -O0 -g -DDEBUG
+    myCFLAGS := $(myCFLAGS) -O0 -g -DDEBUG
 else
-    CFLAGS := $(CFLAGS) -O1
+    myCFLAGS := $(myCFLAGS) -O1
 endif
 
-LDFLAGS := $(LDFLAGS) -L$(LIBDIR)
-LDFLAGS := $(LDFLAGS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
+myLDFLAGS := -L$(LIBDIR) $(LDFLAGS)
+myLDFLAGS := $(myLDFLAGS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
 ifeq ($(OS), win)
-    LDFLAGS := $(LDFLAGS) -mwindows -lmingw32
+    myLDFLAGS := $(myLDFLAGS) -mwindows -lmingw32
 else
-    CFLAGS := $(CFLAGS) -fPIC
+    myCFLAGS := $(myCFLAGS) -fPIC
 endif
-LDFLAGS := $(LDFLAGS)  -lSDL2main -lSDL2
+myLDFLAGS := $(myLDFLAGS)  -lSDL2main -lSDL2
 
 #=========================================================================
 # Paths and objects
@@ -127,15 +129,15 @@ win64_debug: bin/win64_debug/$(TARGET).exe
 
 #=========================================================================
 # Build targets
-bin/$(TGTDIR)/$(TARGET): $(OBJS) $(ICON)
+bin/$(TGTDIR)/$(TARGET)$(EXT): $(OBJS) $(ICON)
 	@ echo "[ CC] $@"
-	@ $(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS)
 	@ echo "[STP] $@"
 	@ $(STRIP) $@
 
 obj/$(TGTDIR)/%.o: %.c
 	@ echo "[ CC] $< -> $@"
-	@ $(CC) $(CFLAGS) -o $@ -c $<
+	@ $(CC) $(myCFLAGS) -o $@ -c $<
 
 %.o: %.rc
 	@ echo "[ICN] $@"
@@ -143,7 +145,7 @@ obj/$(TGTDIR)/%.o: %.c
 
 #=========================================================================
 # Helper build targets (for dependencies and directories)
-bin/$(TGTDIR)/$(TARGET): | LIB
+bin/$(TGTDIR)/$(TARGET)$(EXT): | LIB
 
 LIB:
 	@ echo "[LIB] Building dependencies..."
