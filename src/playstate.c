@@ -30,6 +30,7 @@
 #include "playstate.h"
 #include "registry.h"
 #include "signal.h"
+#include "state.h"
 #include "textwindow.h"
 #include "timer.h"
 #include "transition.h"
@@ -58,6 +59,11 @@ static int _ps_text;
 static int _maxUfps;
 static int _maxDfps;
 static int _ps_isSpeedrun;
+
+struct stGame {
+    struct stateHandler hnd;
+    playstateCmd cmd;
+};
 
 static char _ps_map001_textPT[] =
  "PRESSIONE PARA CIMA EM TERMINAIS\n"
@@ -122,6 +128,98 @@ static int _drwCalls;
 static unsigned int _time;
 static unsigned int _ltime;
 #endif
+
+int playstate_setup(void *self) {
+    struct stGame *ps = (struct stGame*)self;
+    GFraMe_ret rv;
+
+    rv = ps_init(ps->cmd);
+    if (rv == GFraMe_ret_ok) {
+        GFraMe_event_init(_maxUfps, _maxDfps);
+
+        _ps_pause = 0;
+        _ps_justRetry = 0;
+        _psRunning = 1;
+    }
+
+    return rv;
+}
+
+int playstate_isRunning(void *self) {
+    return _psRunning && !_ps_onOptions;
+}
+
+void playstate_update(void *self) {
+#ifdef DEBUG
+    unsigned int t;
+#endif
+
+    ps_event();
+    timer_update();
+    if (_ps_pause)
+        ps_doPause();
+    else {
+        if (gv_isZero(SWITCH_MAP))
+            ps_update();
+        else {
+            GFraMe_ret rv = ps_switchMap();
+            if (rv != GFraMe_ret_ok) {
+                // TODO Throw the error somehow
+                //GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to switch maps",
+                //    __ret);
+            }
+        }
+    }
+    ps_draw();
+
+#ifdef DEBUG
+    t = SDL_GetTicks();
+    if (t >= _time) {
+        GFraMe_log("t=%04i, U=%03i/%03i D=%03i/%03i", _time - _ltime,
+            _updCalls, _maxUfps, _drwCalls, _maxDfps);
+        _updCalls = 0;
+        _drwCalls = 0;
+        _ltime = _time;
+        _time = SDL_GetTicks() + 1000;
+    }
+#endif
+}
+
+int playstate_nextState(void *self) {
+    if (_ps_onOptions) {
+        _ps_onOptions = 0;
+        _ps_lastPress = 300;
+        return OPTIONS;
+    }
+    else if (_timerTilCredits >= 5000)
+        return CREDITS;
+    else
+        return MENUSTATE;
+}
+
+void playstate_release(void *self) {
+    ps_clean();
+}
+
+static struct stGame global_ps;
+void *playstate_getHnd(playstateCmd cmd) {
+    struct stateHandler *hnd = &(global_ps.hnd);
+
+    memset(&global_ps, 0x0, sizeof(global_ps));
+    hnd->setup = &playstate_setup;
+    hnd->isRunning = &playstate_isRunning;
+    hnd->update = &playstate_update;
+    hnd->nextState = &playstate_nextState;
+    hnd->release = &playstate_release;
+    global_ps.cmd = cmd;
+
+    return &global_ps;
+}
+
+int isPlaystate(void *hnd) {
+    return hnd == &global_ps;
+}
+
 
 /**
  * Playstate implementation. Must initialize it, run the loop and clean it up

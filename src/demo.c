@@ -11,12 +11,14 @@
 #include "audio.h"
 #include "demo.h"
 #include "global.h"
+#include "state.h"
 #include "types.h"
 
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
 struct stDemo {
+    struct stateHandler hnd;
     char *text;
     int textLen;
     int textMaxLen;
@@ -29,6 +31,7 @@ struct stDemo {
     char *text3;
     int text3Size;
     int time;
+    int running;
 };
 
 /**
@@ -52,6 +55,106 @@ static int dm_event();
  * @param l Text length
  */
 static void _dm_renderText(char *text, int X, int Y, int l);
+
+char _text1PT[] =
+ "EM UM FUTURO DISTANTE, UM MONSTRO TEM\n"
+ "ESPALHADO O CAOS E A DESTRUICAO PELA\n"
+ "GALAXIA.        \n"
+ "NAO HA ARMA CONHECIDA QUE O ATINJA.  \n"
+ "TODOS OS SERES TEMEM O PROXIMO ATAQUE\n"
+ "DA CRIATURA.\n";
+char _text2PT[] =
+ "MAS DOIS AVENTUREIROS, QUE NADA TEMEM,\n"
+ "ALEM DO TEDIO E DA FALTA DE PERIGOS,\n"
+ "DECIDIRAM ENFRENTA-LO!";
+char _text3PT[] =
+ "ELES VOLTARAM NO TEMPO E INVADIRAM SEU\n"
+ "ESCONDERIJO, PARA DESTRUI-LO ANTES QUE\n"
+ "ELE PUDESSE SE TORNAR UMA AMEACA!";
+char _text1EN[] =
+ "IN THE DISTANT FUTURE, A MONSTER HAS\n"
+ "BEEN WREAKING HAVOC THROUGH THE\n"
+ "GALAXY.          \n"
+ "NO KNOWN WEAPON SEEMS TO HURT IT.         \n"
+ "ALL BEINGS LIVE IN FEAR OF THE\n"
+ "CREATURE'S NEXT ATTACK.\n";
+char _text2EN[] =
+"BUT TWO ADVENTURERS, FEARING NOTHING\n"
+"BUT BOREDOM AND THE LACK OF DANGER\n"
+"DECIDED TO FIGHT BACK!\n";
+char _text3EN[] =
+"THEY WENT BACK IN TIME AND INTO THE\n"
+"MONSTER'S LAIR, TO DESTROY IT BEFORE\n"
+"IT COULD BECOME A THREAT!\n";
+
+int demo_setup(void *self) {
+    struct stDemo *dm = (struct stDemo*)self;
+
+    dm->time = 0;
+    dm->text = 0;
+    dm->textLen = 0;
+    dm->textMaxLen = 0;
+    dm->textX = 8;
+    dm->textY = 96;
+    if (gl_lang == EN_US) {
+        dm->text1 = _text1EN;
+        dm->text1Size = sizeof(_text1EN);
+        dm->text2 = _text2EN;
+        dm->text2Size = sizeof(_text2EN);
+        dm->text3 = _text3EN;
+        dm->text3Size = sizeof(_text3EN);
+    }
+    else if (gl_lang == PT_BR) {
+        dm->text1 = _text1PT;
+        dm->text1Size = sizeof(_text1PT);
+        dm->text2 = _text2PT;
+        dm->text2Size = sizeof(_text2PT);
+        dm->text3 = _text3PT;
+        dm->text3Size = sizeof(_text3PT);
+    }
+
+    GFraMe_event_init(GAME_UFPS, GAME_DFPS);
+
+    return 0;
+}
+
+int demo_isRunning(void *self) {
+    struct stDemo *dm = (struct stDemo*)self;
+    return dm->running;
+}
+
+void demo_update(void *self) {
+    struct stDemo *dm = (struct stDemo*)self;
+
+    dm->running = dm->running && !dm_event();
+    dm->running = dm->running && !dm_update(dm);
+    dm_draw(dm);
+}
+
+int demo_nextState(void *self) {
+    return MENUSTATE;
+}
+
+void demo_release(void *self) {
+    return;
+}
+
+
+static struct stDemo global_dm;
+void *demo_getHnd() {
+    struct stateHandler *hnd = &(global_dm.hnd);
+
+    memset(&global_dm, 0x0, sizeof(global_dm));
+    hnd->setup = &demo_setup;
+    hnd->isRunning = &demo_isRunning;
+    hnd->update = &demo_update;
+    hnd->nextState = &demo_nextState;
+    hnd->release = &demo_release;
+
+    global_dm.running = 1;
+    return &global_dm;
+}
+
 
 /**
  * Play the demo

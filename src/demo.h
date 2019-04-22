@@ -15,5 +15,8 @@
  */
 state demo();
 
+/** Retrieve a new 'stateHandler' for the demo 'state'. */
+void *demo_getHnd();
+
 #endif
 

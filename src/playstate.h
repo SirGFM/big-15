@@ -21,6 +21,16 @@ typedef enum enPlaystateCmd playstateCmd;
 state playstate(playstateCmd cmd);
 
 /**
+ * Retrieve a new 'stateHandler' for the playstate 'state'.
+ *
+ * @param [in]cmd In which mode the playstate should start.
+ */
+void *playstate_getHnd(playstateCmd cmd);
+
+/** Check whether the given state is a playstate. */
+int isPlaystate(void *hnd);
+
+/**
  * Set a text to be shown
  * 
  * @param text Text (the pointer will be copied)

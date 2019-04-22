@@ -15,5 +15,8 @@
  */
 state options();
 
+/** Retrieve a new 'stateHandler' for the options 'state'. */
+void *options_getHnd();
+
 #endif
 

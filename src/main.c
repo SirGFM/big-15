@@ -18,16 +18,17 @@
 #include "menustate.h"
 #include "options.h"
 #include "playstate.h"
+#include "state.h"
 #include "types.h"
 
 void setIcon();
 
 int main(int argc, char *argv[]) {
+    struct stateHandler *curState;
     GFraMe_ret rv;
     GFraMe_save sv, *pSv;
     GFraMe_wndext ext;
     int zoom, lang;
-    state st;
     
     ext.atlas = "atlas";
     ext.atlasWidth = 256;
@@ -102,18 +103,56 @@ int main(int argc, char *argv[]) {
     
     GFraMe_controller_init(1);
     
-    st = MENUSTATE;
-    // st = CREDITS;
+    curState = (struct stateHandler*)menustate_getHnd();
     while (gl_running) {
-        switch (st) {
-            case     MENUSTATE: st = menustate(); break;
-            case NEW_PLAYSTATE: st = playstate(NEWGAME); break;
-            case CNT_PLAYSTATE: st = playstate(CONTINUE); break;
-            case  MT_PLAYSTATE: st = playstate(MT_VERSION); break;
-            case       OPTIONS: st = options(); break;
-            case          DEMO: st = demo(); break;
-            case       CREDITS: st = credits(); break;
-            default: rv = 123; GFraMe_assertRet(0, "Invalid state!", __ret);
+        state next;
+
+        curState->setup(curState);
+_skip_setup:
+        while (gl_running && curState->isRunning(curState))
+            curState->update(curState);
+        next = curState->nextState(curState);
+        if (!gl_running)
+            break;
+        else if (next != OPTIONS && next != POP)
+            curState->release(curState);
+        switch (next) {
+            case MENUSTATE:
+                curState = (struct stateHandler*)menustate_getHnd();
+                break;
+            case NEW_PLAYSTATE:
+                curState = (struct stateHandler*)playstate_getHnd(NEWGAME);
+                break;
+            case CNT_PLAYSTATE:
+                curState = (struct stateHandler*)playstate_getHnd(CONTINUE);
+                break;
+            case MT_PLAYSTATE:
+                curState = (struct stateHandler*)playstate_getHnd(MT_VERSION);
+                break;
+            case OPTIONS:
+                push(&curState, options_getHnd());
+                break;
+            case DEMO:
+                curState = (struct stateHandler*)demo_getHnd();
+                break;
+            case CREDITS:
+                curState = (struct stateHandler*)credits_getHnd();
+                break;
+            case POP:
+                /* XXX: When exiting the options from the playstate,
+                 * everything works correctly and the state's setup
+                 * shouldn't be executed.
+                 * However, there's a bug in the menustate the causes it to
+                 * keep looping back to the options menu. Although not
+                 * optimal, calling its setup break out from that loop.
+                 */
+                pop(&curState);
+                if (isPlaystate(curState))
+                    goto _skip_setup;
+                break;
+            default:
+                rv = 123;
+                GFraMe_assertRet(0, "Invalid state!", __ret);
         }
     }
     

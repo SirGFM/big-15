@@ -15,5 +15,8 @@
  */
 state menustate();
 
+/** Retrieve a new 'stateHandler' for the menustate 'state'. */
+void *menustate_getHnd();
+
 #endif
 

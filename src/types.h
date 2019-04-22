@@ -13,7 +13,8 @@ enum enTypesState {
     MT_PLAYSTATE,
     OPTIONS,
     CREDITS,
-    DEMO
+    DEMO,
+    POP
 };
 typedef enum enTypesState state;
 

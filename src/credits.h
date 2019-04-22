@@ -13,5 +13,8 @@
  */
 state credits();
 
+/** Retrieve a new 'stateHandler' for the credits 'state'. */
+void *credits_getHnd();
+
 #endif
 

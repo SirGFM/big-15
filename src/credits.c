@@ -12,11 +12,13 @@
 #include "audio.h"
 #include "global.h"
 #include "globalVar.h"
+#include "state.h"
 #include "timer.h"
 #include "transition.h"
 #include "types.h"
 
 struct stCredits {
+    struct stateHandler hnd;
     char *text;
     int maxLen;
     int len;
@@ -60,6 +62,129 @@ static void cr_update(struct stCredits *cr);
  * Handle every event
  */
 static void cr_event(struct stCredits *cr);
+
+char _textEN[] =
+"               GAME OVER    \n"
+"\n"
+"    THANK YOU FOR PLAYING THIS GAME    \n"
+"\n"
+"\n"
+"\n"
+"             DEATH COUNT:    \n"
+"\n"
+"           PLAYER 1:  00000   \n"
+"           PLAYER 2:  00000   \n"
+"\n"
+"\n"
+"              TOTAL TIME:        \n"
+"\n"
+"              00:00:00.000";
+char _textPT[] =
+"              FIM DE JOGO   \n"
+"\n"
+"          OBRIGADO POR JOGAR!          \n"
+"\n"
+"\n"
+"\n"
+"           NUMERO DE MORTES: \n"
+"\n"
+"           JOGADOR 1: 00000   \n"
+"           JOGADOR 2: 00000   \n"
+"\n"
+"\n"
+"              TEMPO TOTAL:       \n"
+"\n"
+"              00:00:00.000";
+
+int credits_setup(void *self) {
+    struct stCredits *cr = (struct stCredits*)self;
+    char *text;
+    int i, j, len, val;
+
+    if (gl_lang == PT_BR) {
+        text = _textPT;
+        len = (int)sizeof(_textEN);
+    }
+    else /* if (gl_lang == EN_US) */ {
+        text = _textEN;
+        len = (int)sizeof(_textEN);
+    }
+    cr_init(cr, text, len - 1, 0, 7);
+
+    i = 0;
+    // Search for the first '0'
+    while (text[i] != '0' && i < len) i++;
+    // Go to the last '0'
+    while (text[i] == '0' && i < len) i++;
+    j = i;
+    val = gv_getValue(PL1_DEATH);
+    // Print the player 1 death count
+    while (val > 0) {
+        i--;
+        text[i] = (char)('0' + (val % 10));
+        val /= 10;
+    }
+    i = j+1;
+    // Search for the first '0' for player 2
+    while (text[i] != '0' && i < len) i++;
+    // Go to the last '0'
+    while (text[i] == '0' && i < len) i++;
+    val = gv_getValue(PL2_DEATH);
+    // Print the player 2 death count
+    while (val > 0) {
+        i--;
+        text[i] = (char)('0' + (val % 10));
+        val /= 10;
+    }
+
+    i = len - 1 - 12;
+    timer_getString(text + i);
+    while (i < len - 1) {
+        text[i] += '!';
+        i++;
+    }
+
+    GFraMe_event_init(GAME_UFPS, GAME_DFPS);
+
+    return 0;
+}
+
+int credits_isRunning(void *self) {
+    struct stCredits *cr = (struct stCredits*)self;
+
+    return cr->running;
+}
+
+void credits_update(void *self) {
+    struct stCredits *cr = (struct stCredits*)self;
+
+    cr_event(cr);
+    cr_update(cr);
+    cr_draw(cr);
+}
+
+int credits_nextState(void *self) {
+    return MENUSTATE;
+}
+
+void credits_release(void *self) {
+    return;
+}
+
+static struct stCredits global_cr;
+void *credits_getHnd() {
+    struct stateHandler *hnd = &(global_cr.hnd);
+
+    memset(&global_cr, 0x0, sizeof(global_cr));
+    hnd->setup = &credits_setup;
+    hnd->isRunning = &credits_isRunning;
+    hnd->update = &credits_update;
+    hnd->nextState = &credits_nextState;
+    hnd->release = &credits_release;
+
+    return &global_cr;
+}
+
 
 /**
  * Menustate implementation. Must initialize it, run the loop and clean it up

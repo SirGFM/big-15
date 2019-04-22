@@ -20,6 +20,7 @@
 #include "globalVar.h"
 #include "map.h"
 #include "object.h"
+#include "state.h"
 #include "transition.h"
 #include "types.h"
 
@@ -49,6 +50,7 @@ GFraMe_event_setup();
 
 enum {OPT_CONTINUE, OPT_NEWGAME, OPT_MTVERSION, OPT_OPTIONS, OPT_QUIT, OPT_MAX};
 struct stMenustate {
+    struct stateHandler hnd;
     /** Whether there's already a saved game */
     int hasSave;
     /** For how long the last key has been pressed */
@@ -123,6 +125,68 @@ static void ms_update(struct stMenustate *ms);
  * Handle every event
  */
 static void ms_event(struct stMenustate *ms);
+
+int menustate_setup(void *self) {
+    GFraMe_ret rv;
+
+    struct stMenustate *ms = (struct stMenustate*)self;
+
+    rv = ms_init(ms);
+    if (rv == GFraMe_ret_ok)
+        GFraMe_event_init(GAME_UFPS, GAME_DFPS);
+
+    return rv;
+}
+
+int menustate_isRunning(void *self) {
+    struct stMenustate *ms = (struct stMenustate*)self;
+
+    return ms->runMenu;
+}
+
+void menustate_update(void *self) {
+    struct stMenustate *ms = (struct stMenustate*)self;
+
+    ms_event(ms);
+    ms_update(ms);
+    ms_draw(ms);
+}
+
+int menustate_nextState(void *self) {
+    struct stMenustate *ms = (struct stMenustate*)self;
+
+    if (ms->curOpt == OPT_CONTINUE)
+        return CNT_PLAYSTATE;
+    else if (ms->curOpt == OPT_NEWGAME)
+        return NEW_PLAYSTATE;
+    else if (ms->curOpt == OPT_MTVERSION)
+        return MT_PLAYSTATE;
+    else if (ms->curOpt == OPT_OPTIONS)
+        return OPTIONS;
+    else if (ms->curOpt == OPT_MAX)
+        return DEMO;
+    return (state)-1;
+}
+
+void menustate_release(void *self) {
+    struct stMenustate *ms = (struct stMenustate*)self;
+
+    ms_clean(ms);
+}
+
+static struct stMenustate global_ms;
+void *menustate_getHnd() {
+    struct stateHandler *hnd = &(global_ms.hnd);
+
+    memset(&global_ms, 0x0, sizeof(global_ms));
+    hnd->setup = &menustate_setup;
+    hnd->isRunning = &menustate_isRunning;
+    hnd->update = &menustate_update;
+    hnd->nextState = &menustate_nextState;
+    hnd->release = &menustate_release;
+
+    return &global_ms;
+}
 
 /**
  * Menustate implementation. Must initialize it, run the loop and clean it up
