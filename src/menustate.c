@@ -306,13 +306,13 @@ static void ms_draw(struct stMenustate *ms) {
     char twitterText[] = "@SIRGFM";
     char *options, *devText;
     
-    if (gl_lang == EN_US) {
-        options = optionsEN;
-        devText = devTextEN;
-    }
-    else if (gl_lang == PT_BR) {
+    if (gl_lang == PT_BR) {
         options = optionsPT;
         devText = devTextPT;
+    }
+    else /* if (gl_lang == EN_US) */ {
+        options = optionsEN;
+        devText = devTextEN;
     }
     
     GFraMe_event_draw_begin();

@@ -237,12 +237,10 @@ static void op_draw(struct stOptions *op) {
         ctr_getModes(&pl1, &pl2);
         
         _op_renderLang(op, TXT_OPTS, 16, 1);
-        if (op->lang == EN_US) {
-            tab = 13;
-        }
-        else if (op->lang == PT_BR) {
+        if (op->lang == PT_BR)
             tab = 22;
-        }
+        else /* if (op->lang == EN_US) */
+            tab = 13;
         
 /*
         "UPDATE RATE " 

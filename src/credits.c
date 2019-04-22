@@ -103,12 +103,12 @@ state credits() {
     struct stCredits cr;
     
     ret = -1;
-    if (gl_lang == EN_US) {
-        text = textEN;
+    if (gl_lang == PT_BR) {
+        text = textPT;
         len = (int)sizeof(textEN);
     }
-    else if (gl_lang == PT_BR) {
-        text = textPT;
+    else /* if (gl_lang == EN_US) */ {
+        text = textEN;
         len = (int)sizeof(textEN);
     }
     cr_init(&cr, text, len - 1, 0, 7);

@@ -220,11 +220,11 @@ static GFraMe_ret ps_init(playstateCmd cmd) {
         
         plX = 16;
         plY = 184;
-        if (cmd == NEWGAME) {
-            map = 0;
-        }
-        else if (cmd == MT_VERSION) {
+        if (cmd == MT_VERSION) {
             map = 21;
+        }
+        else /* if (cmd == NEWGAME) */ {
+            map = 0;
         }
         gv_setValue(DOOR_X, 16 / 8);
         gv_setValue(DOOR_Y, 184 / 8);
