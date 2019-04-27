@@ -189,44 +189,6 @@ void *menustate_getHnd() {
 }
 
 /**
- * Menustate implementation. Must initialize it, run the loop and clean it up
- * 
- * @return To which state it's switching
- */
-state menustate() {
-    GFraMe_ret rv;
-    state ret;
-    struct stMenustate ms;
-    
-    ret = -1;
-    rv = ms_init(&ms);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to init menustate", __ret);
-    
-    GFraMe_event_init(GAME_UFPS, GAME_DFPS);
-    
-    // Run the menu
-    while (gl_running && ms.runMenu) {
-        ms_event(&ms);
-        ms_update(&ms);
-        ms_draw(&ms);
-    }
-    // Set the next menu
-    if (ms.curOpt == OPT_CONTINUE)
-        ret = CNT_PLAYSTATE;
-    else if (ms.curOpt == OPT_NEWGAME)
-        ret = NEW_PLAYSTATE;
-    else if (ms.curOpt == OPT_MTVERSION)
-        ret = MT_PLAYSTATE;
-    else if (ms.curOpt == OPT_OPTIONS)
-        ret = OPTIONS;
-    else if (ms.curOpt == OPT_MAX)
-        ret = DEMO;
-__ret:
-    ms_clean(&ms);
-    return ret;
-}
-
-/**
  * Initialize the menustate
  * 
  * @return GFraMe error code

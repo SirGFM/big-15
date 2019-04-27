@@ -218,66 +218,6 @@ void *options_getHnd() {
 }
 
 /**
- * Menustate options. Must initialize it, run the loop and clean it up
- * 
- * @return To which state it's switching
- */
-state options() {
-    GFraMe_ret rv;
-    GFraMe_save sv, *pSv;
-    int pl1, pl2;
-    state ret;
-    struct stOptions op;
-    
-    op_init(&op);
-    
-    GFraMe_event_init(GAME_UFPS, GAME_DFPS);
-    while (gl_running && op.running) {
-        op_event(&op);
-        op_update(&op);
-        op_draw(&op);
-    }
-    
-    pSv = 0;
-    ret = -1;
-    // Get the current input mode
-    ctr_getModes(&pl1, &pl2);
-    // Save it into a file
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
-    pSv = &sv;
-    rv = GFraMe_save_write_int(&sv, "ctr_pl1", pl1);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "ctr_pl2", pl2);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "hint", op.hint);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "zoom", op.res);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "music", audio_getVolume());
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "sfx", sfx_getVolume());
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "ufps", op.ufps);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "dfps", op.dfps);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "speedrun", op.speedrun);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "lang", op.lang);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    ret = MENUSTATE;
-    
-    // Update the current language
-    gl_lang = op.lang;
-__ret:
-    if (pSv) {
-        GFraMe_save_close(pSv);
-    }
-    return ret;
-}
-
-/**
  * Initialize everything!!!
  */
 static void op_init(struct stOptions *op) {
