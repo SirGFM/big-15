@@ -201,6 +201,10 @@ void playstate_release(void *self) {
     ps_clean();
 }
 
+int playstate_getExitError(void *self) {
+    return 0;
+}
+
 static struct stGame global_ps;
 void *playstate_getHnd(playstateCmd cmd) {
     struct stateHandler *hnd = &(global_ps.hnd);
@@ -211,6 +215,7 @@ void *playstate_getHnd(playstateCmd cmd) {
     hnd->update = &playstate_update;
     hnd->nextState = &playstate_nextState;
     hnd->release = &playstate_release;
+    hnd->getExitError = &playstate_getExitError;
     global_ps.cmd = cmd;
 
     return &global_ps;

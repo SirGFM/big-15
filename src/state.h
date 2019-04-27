@@ -43,6 +43,13 @@ struct stateHandler {
      */
     void (*release)(void *self);
 
+    /**
+     * Retrieve the error that caused the state to exit.
+     *
+     * @return The 'jjatError' describing the issue.
+     */
+    int (*getExitError)(void *self);
+
     /** State to which we should return on 'pop()'. */
     struct stateHandler *parent;
 };

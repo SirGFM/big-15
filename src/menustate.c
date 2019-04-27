@@ -174,6 +174,10 @@ void menustate_release(void *self) {
     ms_clean(ms);
 }
 
+int menustate_getExitError(void *self) {
+    return 0;
+}
+
 static struct stMenustate global_ms;
 void *menustate_getHnd() {
     struct stateHandler *hnd = &(global_ms.hnd);
@@ -184,6 +188,7 @@ void *menustate_getHnd() {
     hnd->update = &menustate_update;
     hnd->nextState = &menustate_nextState;
     hnd->release = &menustate_release;
+    hnd->getExitError = &menustate_getExitError;
 
     return &global_ms;
 }

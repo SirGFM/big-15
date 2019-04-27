@@ -171,6 +171,10 @@ void credits_release(void *self) {
     return;
 }
 
+int credits_getExitError(void *self) {
+    return 0;
+}
+
 static struct stCredits global_cr;
 void *credits_getHnd() {
     struct stateHandler *hnd = &(global_cr.hnd);
@@ -181,6 +185,7 @@ void *credits_getHnd() {
     hnd->update = &credits_update;
     hnd->nextState = &credits_nextState;
     hnd->release = &credits_release;
+    hnd->getExitError = &credits_getExitError;
 
     return &global_cr;
 }

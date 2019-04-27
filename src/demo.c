@@ -139,6 +139,9 @@ void demo_release(void *self) {
     return;
 }
 
+int demo_getExitError(void *self) {
+    return 0;
+}
 
 static struct stDemo global_dm;
 void *demo_getHnd() {
@@ -150,6 +153,7 @@ void *demo_getHnd() {
     hnd->update = &demo_update;
     hnd->nextState = &demo_nextState;
     hnd->release = &demo_release;
+    hnd->getExitError = &demo_getExitError;
 
     global_dm.running = 1;
     return &global_dm;

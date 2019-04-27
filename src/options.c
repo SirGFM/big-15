@@ -203,6 +203,10 @@ void options_release(void *self) {
     return;
 }
 
+int options_getExitError(void *self) {
+    return 0;
+}
+
 static struct stOptions global_op;
 void *options_getHnd() {
     struct stateHandler *hnd = &(global_op.hnd);
@@ -213,6 +217,7 @@ void *options_getHnd() {
     hnd->update = &options_update;
     hnd->nextState = &options_nextState;
     hnd->release = &options_release;
+    hnd->getExitError = &options_getExitError;
 
     return &global_op;
 }
