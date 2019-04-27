@@ -98,7 +98,7 @@ OBJS := $(OBJDIR)/audio.o $(OBJDIR)/bullet.o $(OBJDIR)/camera.o \
     $(OBJDIR)/textwindow.o $(OBJDIR)/timer.o $(OBJDIR)/transition.o \
     $(OBJDIR)/types.o $(OBJDIR)/ui.o $(OBJDIR)/quadtree/qthitbox.o \
     $(OBJDIR)/quadtree/qtnode.o $(OBJDIR)/quadtree/qtstatic.o \
-    $(OBJDIR)/quadtree/quadtree.o $(OBJDIR)/state.o
+    $(OBJDIR)/quadtree/quadtree.o $(OBJDIR)/state.o $(OBJDIR)/errorstate.o
 
 WINICON := obj/$(TGTDIR)/assets_icon.o
 

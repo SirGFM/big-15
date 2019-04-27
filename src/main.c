@@ -14,6 +14,7 @@
 #include "credits.h"
 #include "controller.h"
 #include "demo.h"
+#include "errorstate.h"
 #include "global.h"
 #include "menustate.h"
 #include "options.h"
@@ -106,12 +107,14 @@ int main(int argc, char *argv[]) {
     curState = (struct stateHandler*)menustate_getHnd();
     while (gl_running) {
         state next;
+        int jerr;
 
         curState->setup(curState);
 _skip_setup:
         while (gl_running && curState->isRunning(curState))
             curState->update(curState);
         next = curState->nextState(curState);
+        jerr = curState->getExitError(curState);
         if (!gl_running)
             break;
         else if (next != OPTIONS && next != POP)
@@ -149,6 +152,9 @@ _skip_setup:
                 pop(&curState);
                 if (isPlaystate(curState))
                     goto _skip_setup;
+                break;
+            case ERRORSTATE:
+                curState = errorstate_getHnd(jerr, 0 /* gfmErr */);
                 break;
             default:
                 rv = 123;

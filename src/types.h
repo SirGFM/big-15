@@ -14,7 +14,8 @@ enum enTypesState {
     OPTIONS,
     CREDITS,
     DEMO,
-    POP
+    POP,
+    ERRORSTATE
 };
 typedef enum enTypesState state;
 
@@ -103,6 +104,13 @@ enum enTypesTrigger {
                         | ON_ENTER_UP
 };
 typedef enum enTypesTrigger trigger;
+
+/** Error describing the issue that triggered a state to exit */
+enum enJjatError {
+    JERR_NONE = 0
+  , JERR_LOAD_MAP
+};
+typedef enum enJjatError jjatError;
 
 
 //#  ifdef __PARSER_H_
