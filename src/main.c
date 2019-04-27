@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     curState = (struct stateHandler*)menustate_getHnd();
     while (gl_running) {
         state next;
-        int jerr;
+        int jerr, gfmErr = 0;
 
         curState->setup(curState);
 _skip_setup:
@@ -115,6 +115,8 @@ _skip_setup:
             curState->update(curState);
         next = curState->nextState(curState);
         jerr = curState->getExitError(curState);
+        if (isPlaystate(curState))
+            gfmErr = playstate_getGfmError(curState);
         if (!gl_running)
             break;
         else if (next != OPTIONS && next != POP)
@@ -154,7 +156,7 @@ _skip_setup:
                     goto _skip_setup;
                 break;
             case ERRORSTATE:
-                curState = errorstate_getHnd(jerr, 0 /* gfmErr */);
+                curState = errorstate_getHnd(jerr, gfmErr);
                 break;
             default:
                 rv = 123;

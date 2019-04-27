@@ -42,5 +42,8 @@ int isPlaystate(void *hnd);
  */
 void ps_showText(char *text, int textLen, int x, int y, int w, int h);
 
+/** Retrieve the last gfm error that caused a state transition. */
+int playstate_getGfmError(void *self);
+
 #endif
 

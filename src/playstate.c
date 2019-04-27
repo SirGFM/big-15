@@ -63,6 +63,8 @@ static int _ps_isSpeedrun;
 struct stGame {
     struct stateHandler hnd;
     playstateCmd cmd;
+    jjatError err;
+    GFraMe_ret lastRv;
 };
 
 static char _ps_map001_textPT[] =
@@ -146,10 +148,13 @@ int playstate_setup(void *self) {
 }
 
 int playstate_isRunning(void *self) {
-    return _psRunning && !_ps_onOptions;
+    struct stGame *ps = (struct stGame*)self;
+
+    return _psRunning && !_ps_onOptions && ps->err == JERR_NONE;
 }
 
 void playstate_update(void *self) {
+    struct stGame *ps = (struct stGame*)self;
 #ifdef DEBUG
     unsigned int t;
 #endif
@@ -162,11 +167,10 @@ void playstate_update(void *self) {
         if (gv_isZero(SWITCH_MAP))
             ps_update();
         else {
-            GFraMe_ret rv = ps_switchMap();
-            if (rv != GFraMe_ret_ok) {
-                // TODO Throw the error somehow
-                //GFraMe_assertRet(rv == GFraMe_ret_ok, "Failed to switch maps",
-                //    __ret);
+            ps->lastRv = ps_switchMap();
+            if (ps->lastRv != GFraMe_ret_ok) {
+                ps->err = JERR_LOAD_MAP;
+                return;
             }
         }
     }
@@ -186,7 +190,11 @@ void playstate_update(void *self) {
 }
 
 int playstate_nextState(void *self) {
-    if (_ps_onOptions) {
+    struct stGame *ps = (struct stGame*)self;
+
+    if (ps->err != JERR_NONE)
+        return ERRORSTATE;
+    else if (_ps_onOptions) {
         _ps_onOptions = 0;
         _ps_lastPress = 300;
         return OPTIONS;
@@ -202,7 +210,9 @@ void playstate_release(void *self) {
 }
 
 int playstate_getExitError(void *self) {
-    return 0;
+    struct stGame *ps = (struct stGame*)self;
+
+    return (int)ps->err;
 }
 
 static struct stGame global_ps;
@@ -975,3 +985,7 @@ __ret:
         GFraMe_save_close(pSv);
 }
 
+int playstate_getGfmError(void *self) {
+    struct stGame *ps = (struct stGame*)self;
+    return ps->lastRv;
+}
