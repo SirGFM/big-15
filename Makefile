@@ -130,17 +130,17 @@ win64_debug: bin/win64_debug/$(TARGET).exe
 
 #=========================================================================
 # Build targets
-bin/$(TGTDIR)/$(TARGET)$(EXT): $(OBJS) $(ICON)
+bin/$(TGTDIR)/$(TARGET)$(EXT): $(OBJS) $(ICON) | bin/$(TGTDIR)/$(TARGET).mkdir
 	@ echo "[ CC] $@"
 	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS)
 	@ if [ "$(MODE)" == "release" ]; then echo "[STP] $@"; fi
 	@ if [ "$(MODE)" == "release" ]; then $(STRIP) $@; fi
 
-obj/$(TGTDIR)/%.o: %.c
+obj/$(TGTDIR)/%.o: %.c | obj/$(TGTDIR)/%.mkdir
 	@ echo "[ CC] $< -> $@"
 	@ $(CC) $(myCFLAGS) -o $@ -c $<
 
-obj/$(TGTDIR)/assets_%.o: assets/icons/%.rc
+obj/$(TGTDIR)/assets_%.o: assets/icons/%.rc | obj/$(TGTDIR)/assets_%.mkdir
 	@ echo "[ICN] $@"
 	@ $(WINDRES) $< $@
 
@@ -152,20 +152,6 @@ LIB:
 	@ echo "[LIB] Building dependencies..."
 	@ make $(MAKECMDGOALS) --directory=./lib/GFraMe/
 
-$(OBJS): | obj/$(TGTDIR) obj/$(TGTDIR)/quadtree bin/$(TGTDIR)
-
-obj/$(TGTDIR):
-	@ echo "[MKD] $@"
-	@ mkdir -p obj/$(TGTDIR)
-
-obj/$(TGTDIR)/quadtree:
-	@ echo "[MKD] $@"
-	@ mkdir -p obj/$(TGTDIR)/quadtree
-
-bin/$(TGTDIR):
-	@ echo "[MKD] $@"
-	@ mkdir -p bin/$(TGTDIR)
-
 clean:
 	@ echo "[ RM] ./*"
 	@ rm -rf obj/
@@ -176,3 +162,9 @@ reallyclean:
 	@ rm -rf obj/
 	@ rm -rf bin/
 	@ make clean --directory=./lib/GFraMe/
+
+#=========================================================================
+# Automatically generate directories
+%.mkdir:
+	@ mkdir -p $(@D)
+	@ touch $@
