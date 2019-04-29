@@ -22,6 +22,10 @@
 
 #include "quadtree/quadtree.h"
 
+#if defined(EMCC)
+GFraMe_ret GFraMe_assets_clean_filename(char *dst, char *src, int *len);
+#endif
+
 //============================================================================//
 //                                                                            //
 // Maps lookup table                                                          //

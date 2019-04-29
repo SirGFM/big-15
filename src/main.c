@@ -24,9 +24,30 @@
 
 void setIcon();
 
+#if defined(EMCC)
+#  include <stdio.h>
+#  include <stdlib.h>
+#  include <emscripten.h>
+#endif
+
 void mainloop(void **ctx) {
     struct stateHandler **pHandle = (struct stateHandler**)ctx;
     struct stateHandler *curState = *pHandle;
+
+#if defined(EMCC)
+    do {
+        /* Issue a new frame on web */
+        SDL_Event event;
+        SDL_UserEvent userevent;
+
+        memset(&userevent, 0x0, sizeof(userevent));
+        userevent.type = SDL_USEREVENT;
+        event.type = SDL_USEREVENT;
+        event.user = userevent;
+
+        SDL_PushEvent(&event);
+    } while (0);
+#endif
 
     if (gl_running && curState->isRunning(curState))
         curState->update(curState);
@@ -163,8 +184,25 @@ int main(int argc, char *argv[]) {
     
     curState = (struct stateHandler*)menustate_getHnd();
     curState->setup(curState);
+#if defined(EMCC)
+    do {
+        struct stateHandler **ctx;
+
+        ctx = (struct stateHandler**)malloc(sizeof(ctx));
+        if (!ctx) {
+            printf("Failed to alloc memory for the contex!\n");
+            goto __ret;
+        }
+        *ctx = curState;
+
+        emscripten_set_main_loop_arg((em_arg_callback_func)mainloop, ctx, 0, 0);
+        /* Done setting up emscripten, let everything do their work. */
+        return 0;
+    } while (0);
+#else
     while (gl_running)
         mainloop((void**)&curState);
+#endif
     
     rv = 0;
 __ret:

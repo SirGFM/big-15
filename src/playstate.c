@@ -41,7 +41,16 @@
 
 #define PL_TWEEN_DELAY 1000
 
-enum {OPT_CONT, OPT_RETRY, OPT_OPTIONS, OPT_MENU, OPT_EXIT, OPT_MAX};
+enum {
+    OPT_CONT,
+    OPT_RETRY,
+    OPT_OPTIONS,
+    OPT_MENU,
+#if !defined(EMCC)
+    OPT_EXIT,
+#endif
+    OPT_MAX
+};
 
 // Initialize variables used by the event module
 GFraMe_event_setup();
@@ -866,7 +875,9 @@ static void ps_doPause() {
                         _ps_lastPress = 500;
                     } break;
                     case OPT_MENU: _psRunning = 0; break;
+#if !defined(EMCC)
                     case OPT_EXIT: gl_running = 0; break;
+#endif
                 }
             }
         }
@@ -904,8 +915,10 @@ static void ps_drawPause() {
     selectLang("OPTIONS", "OPCOES");
     y++;
     selectLang("QUIT TO MENU", "VOLTAR AO MENU");
+#if !defined(EMCC)
     y++;
     selectLang("EXIT GAME", "SAIR DO JOGO");
+#endif
     
 #undef selectLang
 }

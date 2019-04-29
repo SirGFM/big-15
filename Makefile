@@ -18,6 +18,14 @@ SHELL := /bin/bash
 # Set the default CC (may be overriden into something like mingw)
 CC ?= gcc
 
+# To find every .c file in src:
+#   FILES := $(call rwildcard, src/, *.c)
+# To find all the .c and .h files in src:
+#   FILES := $(call rwildcard, src/, *.c *.h)
+rwildcard=$(foreach d,$(wildcard $1*), \
+    $(call rwildcard,$d/,$2) \
+    $(filter $(subst *,%,$2),$d))
+
 #=========================================================================
 # Parse the configuration from the target goal
 ifneq (, $(findstring _debug, $(MAKECMDGOALS)))
@@ -28,8 +36,7 @@ endif
 ifneq (, $(findstring linux, $(MAKECMDGOALS)))
     OS := linux
     STRIP := strip
-endif
-ifneq (, $(findstring win, $(MAKECMDGOALS)))
+else ifneq (, $(findstring win, $(MAKECMDGOALS)))
     ifdef $(OS)
         ifeq ($(OS), linux)
             $(error More than a single OS target was specified)
@@ -39,16 +46,21 @@ ifneq (, $(findstring win, $(MAKECMDGOALS)))
     EXT := .exe
     # ICON is lazily resolved
     ICON = $(WINICON)
+else ifneq (, $(findstring web, $(MAKECMDGOALS)))
+    CC := emcc
+    OS := web
+    ARCH := 32
+    # Since the game's .bc is the main intermediate before a .js, use that
+    #EXT := .bc
+
+    GFRAME_SRC := $(call rwildcard, lib/GFraMe/src/, *.c)
+
+    WEB_RES := $(call rwildcard, $(ASSET_PREFIX)/assets/, *)
+    WEB_RES := $(foreach res,$(WEB_RES),--preload-file $(res)@$(res:$(ASSET_PREFIX)/%=%))
 endif
 ifneq (, $(findstring 32, $(MAKECMDGOALS)))
     ARCH := 32
-endif
-ifneq (, $(findstring 64, $(MAKECMDGOALS)))
-    ifdef $(ARCH)
-        ifneq ($(ARCH), 32)
-            $(error More than a single target architecture was specified)
-        endif
-    endif
+else ifneq (, $(findstring 64, $(MAKECMDGOALS)))
     ARCH := 64
 endif
 
@@ -69,18 +81,24 @@ endif
 
 ifeq ($(MODE), debug)
     myCFLAGS := $(myCFLAGS) -O0 -g -DDEBUG
+else ifeq ($(OS), web)
+    myCFLAGS := $(myCFLAGS) -O2
 else
     myCFLAGS := $(myCFLAGS) -O1
 endif
 
-myLDFLAGS := -L$(LIBDIR) $(LDFLAGS)
-myLDFLAGS := $(myLDFLAGS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
-ifeq ($(OS), win)
-    myLDFLAGS := $(myLDFLAGS) -mwindows -lmingw32
+ifeq ($(OS), web)
+    myCFLAGS := $(myCFLAGS) -DEMCC -s USE_SDL=2 -s WASM=1
 else
-    myCFLAGS := $(myCFLAGS) -fPIC
+    myLDFLAGS := -L$(LIBDIR) $(LDFLAGS)
+    myLDFLAGS := $(myLDFLAGS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
+    ifeq ($(OS), win)
+        myLDFLAGS := $(myLDFLAGS) -mwindows -lmingw32
+    else
+        myCFLAGS := $(myCFLAGS) -fPIC
+    endif
+    myLDFLAGS := $(myLDFLAGS)  -lSDL2main -lSDL2
 endif
-myLDFLAGS := $(myLDFLAGS)  -lSDL2main -lSDL2
 
 #=========================================================================
 # Paths and objects
@@ -118,6 +136,7 @@ help:
 	@ echo "  win64"
 	@ echo "  win32_debug"
 	@ echo "  win64_debug"
+	@ echo "  web"
 	@ echo "  clean"
 
 linux32: bin/linux32_release/$(TARGET)
@@ -128,6 +147,7 @@ win32: bin/win32_release/$(TARGET).exe
 win32_debug: bin/win32_debug/$(TARGET).exe
 win64: bin/win64_release/$(TARGET).exe
 win64_debug: bin/win64_debug/$(TARGET).exe
+web: bin/web32_release/$(TARGET).html
 
 #=========================================================================
 # Build targets
@@ -169,3 +189,22 @@ reallyclean:
 %.mkdir:
 	@ mkdir -p $(@D)
 	@ touch $@
+
+#=========================================================================
+# web target
+bin/$(TGTDIR)/$(TARGET).html: bin/$(TGTDIR)/$(TARGET).bc bin/$(TGTDIR)/libGFraMe.bc | $(ASSET_PREFIX)/assets/ bin/$(TGTDIR)/$(TARGET).mkdir
+	@ echo "[EMC] $@"
+	@ $(CC) -s TOTAL_MEMORY=134217728 $(myCFLAGS) -o $@ $^ $(WEB_RES)
+
+$(ASSET_PREFIX)/assets/:
+	@ echo 'Could not find the pre-compiled assets!'
+	@ echo 'Be sure to set $$ASSET_PREFIX to point to a valid directory'
+	@ false
+
+bin/$(TGTDIR)/$(TARGET).bc: $(OBJS) | bin/$(TGTDIR)/$(TARGET).mkdir
+	@ echo "[ CC] $@"
+	@ $(CC) $(myCFLAGS) $^ -o $@
+
+bin/$(TGTDIR)/libGFraMe.bc: | bin/$(TGTDIR)/libGFraMe.mkdir
+	@ echo "[ CC] $@"
+	$(CC) $(myCFLAGS) -o $@ $(GFRAME_SRC)

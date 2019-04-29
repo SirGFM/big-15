@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>Emscripten-Generated JJAT</title>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <p style="visibility:hidden;" id="output" />
+        <script>
+            var Module = {
+                print: (function() {
+                    var element = document.getElementById('output');
+                    return function(text) {
+                        element.innerHTML += text + "<br>";
+                    };
+                })(),
+                printErr: function(text) {
+                        if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+                        if (0) {
+                            dump(text + '\n');
+                        }
+                },
+                canvas: (function() {
+                    var canvas = document.getElementById('canvas');
+                    return canvas;
+                })()
+            };
+        </script>
+        <script src="game.js"></script>
+    </body>
+</html>

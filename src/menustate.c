@@ -48,7 +48,17 @@ static void _ms_renderText(char *text, int X, int Y, int i, int l);
 // Initialize variables used by the event module
 GFraMe_event_setup();
 
-enum {OPT_CONTINUE, OPT_NEWGAME, OPT_MTVERSION, OPT_OPTIONS, OPT_QUIT, OPT_MAX};
+enum {
+    OPT_CONTINUE,
+    OPT_NEWGAME,
+    OPT_MTVERSION,
+    OPT_OPTIONS,
+#if !defined(EMCC)
+    OPT_QUIT,
+#endif
+    OPT_MAX
+};
+
 struct stMenustate {
     struct stateHandler hnd;
     /** Whether there's already a saved game */
@@ -306,13 +316,19 @@ static void ms_draw(struct stMenustate *ms) {
     char optionsEN[] = "  CONTINUE  \n"
                        "  NEW GAME  \n"
                        "  MT MODE   \n"
-                       "  OPTIONS   \n"
-                       "  QUIT";
+                       "  OPTIONS   "
+#if !defined(EMCC)
+                       "\n  QUIT"
+#endif
+                       "";
     char optionsPT[] = "  CONTINUAR \n"
                        "  NOVO JOGO \n"
                        "  VERSAO MT \n"
-                       "  OPCOES    \n"
-                       "  SAIR";
+#if !defined(EMCC)
+                       "  OPCOES    "
+                       " \n SAIR"
+#endif
+                       "";
     char devTextEN[]   = "A GAME BY";
     char devTextPT[]   = "UM JOGO DE";
     char twitterText[] = "@SIRGFM";
@@ -466,8 +482,10 @@ static void ms_update(struct stMenustate *ms) {
             if (isEnter) {
                 sfx_menuSelect();
                 ms->runMenu = 0;
+#if !defined(EMCC)
                 if (ms->curOpt == OPT_QUIT)
                     gl_running = 0;
+#endif
             }
             
             ms->idleTime += GFraMe_event_elapsed;

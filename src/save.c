@@ -79,8 +79,10 @@ void setup_blocks() {
     _gameSlot[SIGL_Y] = -1;
 
     /* Try to initialize both from their files */
+#if !defined(EMCC)
     setup_conf();
     setup_game();
+#endif
 }
 
 void write_slot(enum enBlock block, int slot, int val) {
@@ -144,6 +146,9 @@ void read_block(enum enBlock block, int *val, int num) {
 }
 
 static int flush_conf() {
+#if defined(EMCC)
+    return 0;
+#else
     GFraMe_save sv, *pSv;
     int rv;
 
@@ -164,9 +169,13 @@ __ret:
         GFraMe_save_close(pSv);
 
     return rv;
+#endif
 }
 
 static int flush_game() {
+#if defined(EMCC)
+    return 0;
+#else
     GFraMe_save sv, *pSv;
     int gv, rv;
     char varname[sizeof("var000")];
@@ -193,6 +202,7 @@ __ret:
         GFraMe_save_close(pSv);
 
     return rv;
+#endif
 }
 
 int flush_block(enum enBlock block) {
@@ -208,6 +218,9 @@ int flush_block(enum enBlock block) {
 }
 
 int block_has_data(enum enBlock block) {
+#if defined(EMCC)
+    return (block == BLK_GAME && _gameHasSave);
+#else
     GFraMe_save sv;
     int rv;
 
@@ -232,4 +245,5 @@ int block_has_data(enum enBlock block) {
     GFraMe_save_close(&sv);
 
     return rv;
+#endif
 }
