@@ -7,7 +7,6 @@
 #include <GFraMe/GFraMe_event.h>
 #include <GFraMe/GFraMe_error.h>
 #include <GFraMe/GFraMe_keys.h>
-#include <GFraMe/GFraMe_save.h>
 #include <GFraMe/GFraMe_spriteset.h>
 
 #include <string.h>
@@ -20,6 +19,7 @@
 #include "globalVar.h"
 #include "map.h"
 #include "object.h"
+#include "save.h"
 #include "state.h"
 #include "transition.h"
 #include "types.h"
@@ -200,33 +200,15 @@ void *menustate_getHnd() {
  */
 static GFraMe_ret ms_init(struct stMenustate *ms) {
     GFraMe_ret rv;
-    GFraMe_save sv;
     int tmp, ctrPl1, ctrPl2;
     
     ms->pO = 0;
     ms->pM = 0;
-    // Check if there's already a saved game
-    rv = GFraMe_save_bind(&sv, SAVEFILE);
-    ASSERT_NR(rv == GFraMe_ret_ok);
-    // Check if something other than the version is written
-    if (sv.size > 50)
-        ms->hasSave = 1;
-    else
-        ms->hasSave = 0;
-    GFraMe_save_close(&sv);
+    ms->hasSave = block_has_data(BLK_GAME);
     
-    // Check the configurations
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
     // Try to read both players control mode
-    ctrPl1 = -1;
-    ctrPl2 = -1;
-    rv = GFraMe_save_read_int(&sv, "ctr_pl1", &tmp);
-    if (rv == GFraMe_ret_ok)
-        ctrPl1 = tmp;
-    rv = GFraMe_save_read_int(&sv, "ctr_pl2", &tmp);
-    if (rv == GFraMe_ret_ok)
-        ctrPl2 = tmp;
+    ctrPl1 = read_slot(BLK_CONFIG, sv_ctr_pl1);
+    ctrPl2 = read_slot(BLK_CONFIG, sv_ctr_pl2);
     // set the control scheme
     if (ctrPl1 != -1 && ctrPl2 != -1) {
         tmp = ctr_setModeForce(ID_PL1, ctrPl1);
@@ -239,18 +221,17 @@ static GFraMe_ret ms_init(struct stMenustate *ms) {
     else
         ctr_setDef();
     // Set the song volume
-    rv = GFraMe_save_read_int(&sv, "music", &tmp);
-    if (rv == GFraMe_ret_ok)
+    tmp = read_slot(BLK_CONFIG, sv_music);
+    if (tmp != -1)
         audio_setVolume(tmp);
     else
         audio_setVolume(60);
     // Set the sfx volume
-    rv = GFraMe_save_read_int(&sv, "sfx", &tmp);
-    if (rv == GFraMe_ret_ok)
+    tmp = read_slot(BLK_CONFIG, sv_sfx);
+    if (tmp != -1)
         sfx_setVolume(tmp);
     else
         sfx_setVolume(50);
-    GFraMe_save_close(&sv);
     
     // Zero some variables
     ms->lastPressedTime = 0;

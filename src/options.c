@@ -13,6 +13,7 @@
 #include "controller.h"
 #include "global.h"
 #include "options.h"
+#include "save.h"
 #include "state.h"
 #include "types.h"
 
@@ -155,48 +156,27 @@ void options_update(void *self) {
 
 int options_nextState(void *self) {
     struct stOptions *op = (struct stOptions*)self;
-    GFraMe_save sv, *pSv;
-    GFraMe_ret rv;
     int pl1, pl2;
-    int ret;
 
-    pSv = 0;
-    ret = -1;
     // Get the current input mode
     ctr_getModes(&pl1, &pl2);
     // Save it into a file
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
-    pSv = &sv;
-    rv = GFraMe_save_write_int(&sv, "ctr_pl1", pl1);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "ctr_pl2", pl2);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "hint", op->hint);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "zoom", op->res);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "music", audio_getVolume());
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "sfx", sfx_getVolume());
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "ufps", op->ufps);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "dfps", op->dfps);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "speedrun", op->speedrun);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    rv = GFraMe_save_write_int(&sv, "lang", op->lang);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error writing variable", __ret);
-    ret = POP;
+    write_slot(BLK_CONFIG, sv_ctr_pl1, pl1);
+    write_slot(BLK_CONFIG, sv_ctr_pl2, pl2);
+    write_slot(BLK_CONFIG, sv_hint, op->hint);
+    write_slot(BLK_CONFIG, sv_zoom, op->res);
+    write_slot(BLK_CONFIG, sv_music, audio_getVolume());
+    write_slot(BLK_CONFIG, sv_sfx, sfx_getVolume());
+    write_slot(BLK_CONFIG, sv_ufps, op->ufps);
+    write_slot(BLK_CONFIG, sv_dfps, op->dfps);
+    write_slot(BLK_CONFIG, sv_speedrun, op->speedrun);
+    write_slot(BLK_CONFIG, sv_lang, op->lang);
+    flush_block(BLK_CONFIG);
 
     // Update the current language
     gl_lang = op->lang;
-__ret:
-    if (pSv) {
-        GFraMe_save_close(pSv);
-    }
-    return ret;
+
+    return POP;
 }
 
 void options_release(void *self) {
@@ -226,40 +206,33 @@ void *options_getHnd() {
  * Initialize everything!!!
  */
 static void op_init(struct stOptions *op) {
-    GFraMe_ret rv;
-    GFraMe_save sv, *pSv;
-    
     op->running = 1;
     
     op->lastPressedTime = 0;
     op->firstPress = 0;
     op->curOpt = 0;
     
-    pSv = 0;
-    /* Try to read the hint mode and zoom from the file */
-    op->hint = 1;
-    op->res = 2;
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error opening file", __ret);
-    pSv = &sv;
-    GFraMe_save_read_int(&sv, "hint", &op->hint);
-    GFraMe_save_read_int(&sv, "zoom", &op->res);
-    rv = GFraMe_save_read_int(&sv, "ufps", &op->ufps);
-    if (rv != GFraMe_ret_ok)
+    /* Try to read every option from the saved file */
+    op->hint = read_slot(BLK_CONFIG, sv_hint);
+    op->res = read_slot(BLK_CONFIG, sv_zoom);
+    op->ufps = read_slot(BLK_CONFIG, sv_ufps);
+    op->dfps = read_slot(BLK_CONFIG, sv_dfps);
+    op->speedrun = read_slot(BLK_CONFIG, sv_speedrun);
+    op->lang = read_slot(BLK_CONFIG, sv_lang);
+
+    /* Set uninitialized values to their defaults */
+    if (op->hint == -1)
+        op->hint = 1;
+    if (op->res == -1)
+        op->res = 2;
+    if (op->ufps == -1)
         op->ufps = GAME_UFPS;
-    rv = GFraMe_save_read_int(&sv, "dfps", &op->dfps);
-    if (rv != GFraMe_ret_ok)
+    if (op->dfps == -1)
         op->dfps = GAME_DFPS;
-    rv = GFraMe_save_read_int(&sv, "speedrun", &op->speedrun);
-    if (rv != GFraMe_ret_ok)
+    if (op->speedrun == -1)
         op->speedrun = 0;
-    rv = GFraMe_save_read_int(&sv, "lang", &op->lang);
-    if (rv != GFraMe_ret_ok)
+    if (op->lang == -1)
         op->lang = EN_US;
-    
-__ret:
-    if (pSv)
-        GFraMe_save_close(pSv);
 }
 
 /**

@@ -11,7 +11,6 @@
 #ifdef DEBUG
 #  include <GFraMe/GFraMe_pointer.h>
 #endif
-#include <GFraMe/GFraMe_save.h>
 #include <GFraMe/GFraMe_util.h>
 
 #ifdef DEBUG
@@ -29,6 +28,7 @@
 #include "player.h"
 #include "playstate.h"
 #include "registry.h"
+#include "save.h"
 #include "signal.h"
 #include "state.h"
 #include "textwindow.h"
@@ -242,25 +242,18 @@ int isPlaystate(void *hnd) {
  */
 static GFraMe_ret ps_init(playstateCmd cmd) {
     GFraMe_ret rv;
-    GFraMe_save sv, *pSv;
     int map, plX, plY, time;
     
-    // Open the configurations
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
-    pSv = &sv;
     // Read the desired fps (for update and drawing)
-    rv = GFraMe_save_read_int(&sv, "ufps", &_maxUfps);
-    if (rv != GFraMe_ret_ok)
+    _maxUfps = read_slot(BLK_CONFIG, sv_ufps);
+    if (_maxUfps == -1)
         _maxUfps = GAME_UFPS;
-    rv = GFraMe_save_read_int(&sv, "dfps", &_maxDfps);
-    if (rv != GFraMe_ret_ok)
+    _maxDfps = read_slot(BLK_CONFIG, sv_dfps);
+    if (_maxDfps == -1)
         _maxDfps = GAME_DFPS;
-    rv = GFraMe_save_read_int(&sv, "speedrun", &_ps_isSpeedrun);
-    if (rv != GFraMe_ret_ok)
+    _ps_isSpeedrun = read_slot(BLK_CONFIG, sv_speedrun);
+    if (_ps_isSpeedrun == -1)
         _ps_isSpeedrun = 0;
-    GFraMe_save_close(&sv);
-    pSv = 0;
     
     if (cmd != CONTINUE) {
         gv_init();
@@ -336,9 +329,6 @@ static GFraMe_ret ps_init(playstateCmd cmd) {
     
     rv = GFraMe_ret_ok;
 __ret:
-    if (pSv)
-        GFraMe_save_close(pSv);
-    
     return rv;
 }
 
@@ -963,26 +953,14 @@ static void _op_renderText(char *text, int X, int Y, int l) {
  * @param h Window's height (in tiles)
  */
 void ps_showText(char *text, int textLen, int x, int y, int w, int h) {
-    GFraMe_ret rv;
-    GFraMe_save sv, *pSv;
     int hint;
     
-    hint = 1;
-    pSv = 0;
-    // Open the configurations
-    rv = GFraMe_save_bind(&sv, CONFFILE);
-    GFraMe_assertRet(rv == GFraMe_ret_ok, "Error reading config file", __ret);
-    pSv = &sv;
     // Check if the user disabled it
-    GFraMe_save_read_int(&sv, "hint", &hint);
-    
-    if (hint) {
+    hint = read_slot(BLK_CONFIG, sv_hint);
+    if (hint == -1 || hint) {
         textWnd_init(x, y, w, h, text, textLen);
         _ps_text = 1;
     }
-__ret:
-    if (pSv)
-        GFraMe_save_close(pSv);
 }
 
 int playstate_getGfmError(void *self) {
