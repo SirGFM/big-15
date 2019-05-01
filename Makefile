@@ -124,7 +124,7 @@ WINICON := obj/$(TGTDIR)/assets_icon.o
 #=========================================================================
 # Helper build targets
 .PHONY: help linux32 linux64 linux32_debug linux64_debug win32 win64 \
-    win32_debug win64_debug clean reallyclean LIB
+    win32_debug win64_debug web package_web clean reallyclean LIB
 
 help:
 	@ echo "Build targets:"
@@ -137,6 +137,7 @@ help:
 	@ echo "  win32_debug"
 	@ echo "  win64_debug"
 	@ echo "  web"
+	@ echo "  package_web"
 	@ echo "  clean"
 
 linux32: bin/linux32_release/$(TARGET)
@@ -192,6 +193,14 @@ reallyclean:
 
 #=========================================================================
 # web target
+package_web: bin/web32_release/$(TARGET).html misc/index.html
+	@ echo "[WEB] Packaging..."
+	@ mkdir -p jjat_web
+	@ cp misc/index.html jjat_web/
+	@ cp bin/$(TGTDIR)/$(TARGET).data jjat_web/
+	@ cp bin/$(TGTDIR)/$(TARGET).js jjat_web/
+	@ cp bin/$(TGTDIR)/$(TARGET).wasm jjat_web/
+
 bin/$(TGTDIR)/$(TARGET).html: bin/$(TGTDIR)/$(TARGET).bc bin/$(TGTDIR)/libGFraMe.bc | $(ASSET_PREFIX)/assets/ bin/$(TGTDIR)/$(TARGET).mkdir
 	@ echo "[EMC] $@"
 	@ $(CC) -s TOTAL_MEMORY=134217728 $(myCFLAGS) -o $@ $^ $(WEB_RES)

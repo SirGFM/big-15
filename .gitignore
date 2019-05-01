@@ -41,3 +41,6 @@
 
 # Generate assets
 assets/*.dat
+
+# Web packge
+jjat_web/
