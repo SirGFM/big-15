@@ -324,8 +324,8 @@ static void ms_draw(struct stMenustate *ms) {
     char optionsPT[] = "  CONTINUAR \n"
                        "  NOVO JOGO \n"
                        "  VERSAO MT \n"
-#if !defined(EMCC)
                        "  OPCOES    "
+#if !defined(EMCC)
                        " \n SAIR"
 #endif
                        "";
