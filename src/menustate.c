@@ -331,16 +331,31 @@ static void ms_draw(struct stMenustate *ms) {
                        "";
     char devTextEN[]   = "A GAME BY";
     char devTextPT[]   = "UM JOGO DE";
+#if defined(EMCC)
+    char warnEN[]   = "**WARNING**: SAVING IS NOT SUPPORTED\n"
+                      "             IN THE WEB VERSION!";
+    char warnPT[]   = "**ATENCAO**: A VERSAO WEB DESTE JOGO\n"
+                      "             NAO SALVA O PROGRESSO!";
+#endif
     char twitterText[] = "@SIRGFM";
     char *options, *devText;
+#if defined(EMCC)
+    char *warn;
+#endif
     
     if (gl_lang == PT_BR) {
         options = optionsPT;
         devText = devTextPT;
+#if defined(EMCC)
+        warn = warnPT;
+#endif
     }
     else /* if (gl_lang == EN_US) */ {
         options = optionsEN;
         devText = devTextEN;
+#if defined(EMCC)
+        warn = warnEN;
+#endif
     }
     
     GFraMe_event_draw_begin();
@@ -365,6 +380,10 @@ static void ms_draw(struct stMenustate *ms) {
             _ms_renderText(devText, ms->iconX - l*8, ms->iconY + 16, 0, l);
             l = strlen(twitterText) + 1;
             _ms_renderText(twitterText, ms->iconX - l*8, ms->iconY + 24, 0, l);
+#if defined(EMCC)
+            l = strlen(warn) + 1;
+            _ms_renderText(warn, 8, 8, 0, l);
+#endif
             // Render the dev icon
             GFraMe_spriteset_draw(gl_sset32x32, GFM_ICON, ms->iconX, ms->iconY, 0);
             // Draw both characters
