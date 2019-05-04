@@ -17,8 +17,28 @@
 #include "state.h"
 #include "types.h"
 
-enum { OPT_UFPS, OPT_DFPS, OPT_RES, OPT_MUSIC, OPT_SFX, OPT_HINT, OPT_SPEEDRUN,
-       OPT_P1DEV, OPT_P1MODE, OPT_P2DEV, OPT_P2MODE, OPT_LANG, OPT_BACK, OPT_MAX };
+enum {
+    OPT_UFPS,
+    OPT_DFPS,
+#if !defined(EMCC)
+    OPT_RES,
+#endif /* !defined(EMCC) */
+    OPT_MUSIC,
+    OPT_SFX,
+    OPT_HINT,
+    OPT_SPEEDRUN,
+    OPT_P1DEV,
+    OPT_P1MODE,
+    OPT_P2DEV,
+    OPT_P2MODE,
+    OPT_LANG,
+    OPT_BACK,
+    OPT_MAX,
+#if defined(EMCC)
+    /* Avoid compiler errors by pushing this down */
+    OPT_RES,
+#endif /* defined(EMCC) */
+};
 
 enum {
     TXT_OPTS,
