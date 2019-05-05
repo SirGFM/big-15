@@ -64,7 +64,11 @@ void sfx_setVolume(int val) {
 void audio_muteSong() {
     if (!isSongMuted) {
         isSongMuted = 1;
+#if defined(EMCC)
+        GFraMe_audio_player_play_bgm(gl_aud_menu, 0.f);
+#else
         GFraMe_audio_player_play_bgm(0, 0.60f);
+#endif
     }
 }
 
