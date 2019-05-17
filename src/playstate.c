@@ -41,6 +41,11 @@
 
 #define PL_TWEEN_DELAY 1000
 
+#if defined(EMCC)
+/** Overrides the library's Numpad Enter. Manually set on the playstate. */
+extern int emcc_numenter;
+#endif /* defined(EMCC) */
+
 enum {
     OPT_CONT,
     OPT_RETRY,
@@ -741,6 +746,10 @@ static void ps_event() {
         GFraMe_event_on_mouse_moved();
 #endif
         GFraMe_event_on_key_down();
+#if defined(EMCC)
+            if (event.key.keysym.scancode == SDL_SCANCODE_F24)
+                emcc_numenter = 1;
+#endif /* defined(EMCC) */
             if (ctr_pause() && (!_ps_pause || !GFraMe_keys.enter)) {
                 _ps_pause = !_ps_pause;
                 _ps_firstPress = 0;
@@ -753,6 +762,10 @@ static void ps_event() {
                 _ps_text = 0;
             }
         GFraMe_event_on_key_up();
+#if defined(EMCC)
+            if (event.key.keysym.scancode == SDL_SCANCODE_F24)
+                emcc_numenter = 0;
+#endif /* defined(EMCC) */
             _ps_firstPress = 0;
             _ps_lastPress = 0;
         GFraMe_event_on_controller();

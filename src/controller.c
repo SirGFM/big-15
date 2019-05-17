@@ -11,6 +11,11 @@
 #include "global.h"
 #include "types.h"
 
+#if defined(EMCC)
+/** Overrides the library's Numpad Enter. Manually set on the playstate. */
+int emcc_numenter = 0;
+#endif /* defined(EMCC) */
+
 /** Define which control scheme is currently being used */
 static ctr_mode _ctr_pl1 = CTR_PAD1_C;
 static ctr_mode _ctr_pl2 = CTR_PAD1_D;
@@ -250,7 +255,11 @@ int ctr_item(int ID) {
     switch (mode) {
         case CTR_KEYS_A: return GFraMe_keys.lshift;
         case CTR_KEYS_B: return GFraMe_keys.c;
+#if defined(EMCC)
+        case CTR_KEYS_C: return emcc_numenter;
+#else
         case CTR_KEYS_C: return GFraMe_keys.nenter;
+#endif /* defined(EMCC) */
         case CTR_KEYS_D: return GFraMe_keys.g;
         case CTR_PAD1_A: return GFraMe_controller_max > 0 && GFraMe_controllers[0].b;
         case CTR_PAD1_B: return GFraMe_controller_max > 0 && GFraMe_controllers[0].b;

@@ -106,6 +106,29 @@
             var loadingElement = document.getElementById('loadingbox');
             var canvasElement = document.getElementById('canvas');
 
+            let filterKeyEvent = function (e) {
+                if (e.keyCode == 13 && e.location == 3) {
+                    /* Overwrite Numpad's Enter with F24 (yes, F24!!) */
+                    val = {
+                        "key":         "F24",
+                        "keyCode":     135,
+                        "code":        "F24",
+                        "location":    0,
+                        "ctrlKey":     e.ctrlKey,
+                        "shiftKey":    e.shiftKey,
+                        "altKey":      e.altKey,
+                        "metaKey":     e.metaKey,
+                        "repeat":      e.repeat,
+                        "isComposing": e.isComposing,
+                        "charCode":    135,
+                        "which":       135,
+                    };
+                    new_event = new KeyboardEvent(e.type, val)
+                    window.dispatchEvent(new_event);
+                    e.stopImmediatePropagation();
+                }
+            }
+
             var Module = {
                 now: Date.now(),
                 print: (function() {
@@ -179,8 +202,17 @@
                     if (text) Module.printErr('[post-exception status] ' + text);
                 };
             };
+            window.addEventListener("keypress",
+                                    function(e) {
+                                        filterKeyEvent(e);
+                                    })
+            window.addEventListener("keyup",
+                                    function(e) {
+                                        filterKeyEvent(e);
+                                    })
             window.addEventListener("keydown",
                                     function(e) {
+                                        filterKeyEvent(e);
                                         // space and arrow keys
                                         if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
                                             e.preventDefault();
