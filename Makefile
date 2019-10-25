@@ -5,10 +5,7 @@
 #   - win32
 #   - win64
 #   - *_debug
-
-#=========================================================================
-# Set the target and the lib's version
-TARGET := game
+#   - web
 
 #=========================================================================
 # Run make using bash, so syntax for conditionals works as expected
@@ -27,152 +24,119 @@ rwildcard=$(foreach d,$(wildcard $1*), \
     $(filter $(subst *,%,$2),$d))
 
 #=========================================================================
-# Parse the configuration from the target goal
-ifneq (, $(findstring _debug, $(MAKECMDGOALS)))
-    MODE := debug
-else
-    MODE := release
-endif
-ifneq (, $(findstring linux, $(MAKECMDGOALS)))
-    OS := linux
-    STRIP := strip
-else ifneq (, $(findstring win, $(MAKECMDGOALS)))
-    ifdef $(OS)
-        ifeq ($(OS), linux)
-            $(error More than a single OS target was specified)
-        endif
-    endif
-    OS := win
-    EXT := .exe
-    # ICON is lazily resolved
-    ICON = $(WINICON)
-else ifneq (, $(findstring web, $(MAKECMDGOALS)))
-    CC := emcc
-    OS := web
-    ARCH := 32
-    # Since the game's .bc is the main intermediate before a .js, use that
-    #EXT := .bc
+# Set specific CFLAGS, LDFLAGS and LDLIBS based on the target
+WEB := false
 
+myCFLAGS := -I ./lib/GFraMe/include/ $(CFLAGS) -Wall
+myLDFLAGS := -L ./lib/GFraMe/bin/$(MAKECMDGOALS) $(LDFLAGS)
+myLDLIBS := $(myLDLIBS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
+
+ifneq (, $(findstring win, $(MAKECMDGOALS)))
+    # ICON is generated from a resource file and a .ico
+    ICON := obj/$(MAKECMDGOALS)/assets_icon.o
+    myLDLIBS := $(myLDLIBS) -mwindows -lmingw32
+else ifneq (, $(findstring linux, $(MAKECMDGOALS)))
+    myCFLAGS := $(myCFLAGS) -fPIC
+    STRIP := strip
+else ifneq (, $(findstring web, $(MAKECMDGOALS)))
+    # The web build is slightly different...
+    #   - It only compiles in release mode
+    #   - LDLIBS and LDFLAGS are ignored
+    #   - The game library is built from this Makefile
+    # So this pretty much overrides everything
+    WEB := true
+
+    # Ignore anything set on the command line and use emcc
+    override CC := emcc
+    myCFLAGS := $(myCFLAGS) -DEMCC -s USE_SDL=2 -s WASM=1
+
+    # List for every source in the game library
     GFRAME_SRC := $(call rwildcard, lib/GFraMe/src/, *.c)
 
+    # List every resource (to be embedded) preceded by a --preload-file
     WEB_RES := $(call rwildcard, $(ASSET_PREFIX)/assets/, *)
     WEB_RES := $(foreach res,$(WEB_RES),--preload-file $(res)@$(res:$(ASSET_PREFIX)/%=%))
 endif
-ifneq (, $(findstring 32, $(MAKECMDGOALS)))
-    ARCH := 32
-else ifneq (, $(findstring 64, $(MAKECMDGOALS)))
-    ARCH := 64
+
+myLDLIBS := $(myLDLIBS)  -lSDL2main -lSDL2 $(LDLIBS)
+
+# Since CFLAGS are modified here once again (to add optimization), some flags
+# are overriden for the web build (since that's somewhat special)
+ifeq ($(WEB), true)
+    myCFLAGS := $(myCFLAGS) -O2
+    undefine myLDLIBS
+    undefine myLDFLAGS
+else ifneq (, $(findstring _debug, $(MAKECMDGOALS)))
+    myCFLAGS := $(myCFLAGS) -O0 -g -DDEBUG
+else
+    myCFLAGS := $(myCFLAGS) -O1
 endif
 
-#=========================================================================
-# Setup path to the lib
-TGTDIR := $(OS)$(ARCH)_$(MODE)
-LIBDIR := ./lib/GFraMe/bin/$(OS)$(ARCH)_$(MODE)
-
-#=========================================================================
-# Setup CFLAGS and LDFLAGS (NOTE: the submodule lib is placed early in the
-# search path to force its use)
-myCFLAGS := -I"./lib/GFraMe/include/" $(CFLAGS) -Wall
-ifeq ($(ARCH), 64)
+ifneq (, $(findstring 64, $(MAKECMDGOALS)))
     myCFLAGS := $(myCFLAGS) -m64
 else
     myCFLAGS := $(myCFLAGS) -m32
 endif
 
-ifeq ($(MODE), debug)
-    myCFLAGS := $(myCFLAGS) -O0 -g -DDEBUG
-else ifeq ($(OS), web)
-    myCFLAGS := $(myCFLAGS) -O2
-else
-    myCFLAGS := $(myCFLAGS) -O1
-endif
-
-ifeq ($(OS), web)
-    myCFLAGS := $(myCFLAGS) -DEMCC -s USE_SDL=2 -s WASM=1
-else
-    myLDFLAGS := -L$(LIBDIR) $(LDFLAGS)
-    myLDFLAGS := $(myLDFLAGS) -Wl,-Bstatic -lGFraMe -Wl,-Bdynamic -lm
-    ifeq ($(OS), win)
-        myLDFLAGS := $(myLDFLAGS) -mwindows -lmingw32
-    else
-        myCFLAGS := $(myCFLAGS) -fPIC
-    endif
-    myLDFLAGS := $(myLDFLAGS)  -lSDL2main -lSDL2
-endif
-
 #=========================================================================
 # Paths and objects
-VPATH := src
-OBJDIR := obj/$(TGTDIR)
-BINDIR := bin/$(TGTDIR)
-
-OBJS := $(OBJDIR)/audio.o $(OBJDIR)/bullet.o $(OBJDIR)/camera.o \
-    $(OBJDIR)/collision.o $(OBJDIR)/commonEvent.o $(OBJDIR)/controller.o \
-    $(OBJDIR)/credits.o $(OBJDIR)/demo.o $(OBJDIR)/event.o \
-    $(OBJDIR)/global.o $(OBJDIR)/globalVar.o $(OBJDIR)/main.o $(OBJDIR)/map.o \
-    $(OBJDIR)/menustate.o $(OBJDIR)/mob.o $(OBJDIR)/object.o \
-    $(OBJDIR)/options.o $(OBJDIR)/parser.o $(OBJDIR)/player.o \
-    $(OBJDIR)/playstate.o $(OBJDIR)/registry.o $(OBJDIR)/signal.o \
-    $(OBJDIR)/textwindow.o $(OBJDIR)/timer.o $(OBJDIR)/transition.o \
-    $(OBJDIR)/types.o $(OBJDIR)/ui.o $(OBJDIR)/quadtree/qthitbox.o \
-    $(OBJDIR)/quadtree/qtnode.o $(OBJDIR)/quadtree/qtstatic.o \
-    $(OBJDIR)/quadtree/quadtree.o $(OBJDIR)/state.o $(OBJDIR)/errorstate.o \
-    $(OBJDIR)/save.o
-
-WINICON := obj/$(TGTDIR)/assets_icon.o
+SRC := $(call rwildcard, src/, *.c)
+OBJS := $(SRC:src/%.c=obj/$(MAKECMDGOALS)/%.o)
 
 #=========================================================================
 # Helper build targets
-.PHONY: help linux32 linux64 linux32_debug linux64_debug win32 win64 \
-    win32_debug win64_debug web package_web clean reallyclean LIB
+.PHONY: help linux32_release linux64_release linux32_debug linux64_debug \
+    win32_release win64_release win32_debug win64_debug web package_web \
+    clean reallyclean LIB
 
 help:
 	@ echo "Build targets:"
-	@ echo "  linux32"
-	@ echo "  linux64"
+	@ echo "  linux32_release"
+	@ echo "  linux64_release"
 	@ echo "  linux32_debug"
 	@ echo "  linux64_debug"
-	@ echo "  win32"
-	@ echo "  win64"
+	@ echo "  win32_release"
+	@ echo "  win64_release"
 	@ echo "  win32_debug"
 	@ echo "  win64_debug"
 	@ echo "  web"
 	@ echo "  package_web"
 	@ echo "  clean"
+	@ echo "  reallyclean"
 
-linux32: bin/linux32_release/$(TARGET)
-linux32_debug: bin/linux32_debug/$(TARGET)
-linux64: bin/linux64_release/$(TARGET)
-linux64_debug: bin/linux64_debug/$(TARGET)
-win32: bin/win32_release/$(TARGET).exe
-win32_debug: bin/win32_debug/$(TARGET).exe
-win64: bin/win64_release/$(TARGET).exe
-win64_debug: bin/win64_debug/$(TARGET).exe
-web: bin/web32_release/$(TARGET).html
+linux32_release: bin/linux32_release/game.bin
+linux32_debug: bin/linux32_debug/game.bin
+linux64_release: bin/linux64_release/game.bin
+linux64_debug: bin/linux64_debug/game.bin
+win32_release: bin/win32_release/game.exe
+win32_debug: bin/win32_debug/game.exe
+win64_release: bin/win64_release/game.exe
+win64_debug: bin/win64_debug/game.exe
+web: bin/web/game.html
 
 #=========================================================================
 # Build targets
-bin/$(TGTDIR)/$(TARGET)$(EXT): $(OBJS) $(ICON) | bin/$(TGTDIR)/$(TARGET).mkdir
+%.exe: $(OBJS) $(ICON) | %.mkdir LIB
 	@ echo "[ CC] $@"
-	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS)
+	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS) $(myLDLIBS)
+
+%.bin: $(OBJS) $(ICON) | %.mkdir LIB
+	@ echo "[ CC] $@"
+	@ $(CC) $(myCFLAGS) -o $@ $^ $(myLDFLAGS) $(myLDLIBS)
 	@ if [ "$(MODE)" == "release" ]; then echo "[STP] $@"; fi
-	@ if [ "$(MODE)" == "release" ]; then $(STRIP) $@; fi
+	@ if [ "$(MODE)" == "release" ]; then strip $@; fi
 
-obj/$(TGTDIR)/%.o: %.c | obj/$(TGTDIR)/%.mkdir
+obj/$(MAKECMDGOALS)/%.o: src/%.c | obj/$(MAKECMDGOALS)/%.mkdir
 	@ echo "[ CC] $< -> $@"
-	@ $(CC) $(myCFLAGS) -o $@ -c $<
+	$(CC) $(myCFLAGS) -o $@ -c $<
 
-obj/$(TGTDIR)/assets_%.o: assets/icons/%.rc | obj/$(TGTDIR)/assets_%.mkdir
+obj/$(MAKECMDGOALS)/assets_icon.o: assets/icons/icon.rc | obj/$(MAKECMDGOALS)/assets_icon.mkdir
 	@ echo "[ICN] $@"
 	@ $(WINDRES) $< $@
 
-#=========================================================================
-# Helper build targets (for dependencies and directories)
-bin/$(TGTDIR)/$(TARGET)$(EXT): | LIB
-
 LIB:
 	@ echo "[LIB] Building dependencies..."
-	@ make $(MAKECMDGOALS) --directory=./lib/GFraMe/
+	@ make $(subst _release,,$(MAKECMDGOALS)) --directory=./lib/GFraMe/
 
 clean:
 	@ echo "[ RM] ./*"
@@ -193,27 +157,27 @@ reallyclean:
 
 #=========================================================================
 # web target
-package_web: bin/web32_release/$(TARGET).html misc/index.html
+package_web: bin/web/game.html misc/index.html
 	@ echo "[WEB] Packaging..."
 	@ mkdir -p jjat_web
 	@ cp misc/index.html jjat_web/
-	@ cp bin/$(TGTDIR)/$(TARGET).data jjat_web/
-	@ cp bin/$(TGTDIR)/$(TARGET).js jjat_web/
-	@ cp bin/$(TGTDIR)/$(TARGET).wasm jjat_web/
+	@ cp bin/web/game.data jjat_web/
+	@ cp bin/web/game.js jjat_web/
+	@ cp bin/web/game.wasm jjat_web/
 
-bin/$(TGTDIR)/$(TARGET).html: bin/$(TGTDIR)/$(TARGET).bc bin/$(TGTDIR)/libGFraMe.bc | $(ASSET_PREFIX)/assets/ bin/$(TGTDIR)/$(TARGET).mkdir
+bin/web/game.html: bin/web/game.bc bin/web/libGFraMe.bc | $(ASSET_PREFIX)/assets/ bin/web/game.mkdir
 	@ echo "[EMC] $@"
-	@ $(CC) -s TOTAL_MEMORY=134217728 $(myCFLAGS) -o $@ $^ $(WEB_RES)
+	$(CC) -s TOTAL_MEMORY=134217728 $(myCFLAGS) -o $@ $^ $(WEB_RES)
 
 $(ASSET_PREFIX)/assets/:
 	@ echo 'Could not find the pre-compiled assets!'
 	@ echo 'Be sure to set $$ASSET_PREFIX to point to a valid directory'
 	@ false
 
-bin/$(TGTDIR)/$(TARGET).bc: $(OBJS) | bin/$(TGTDIR)/$(TARGET).mkdir
+bin/web/game.bc: $(OBJS) | bin/web/game.mkdir
 	@ echo "[ CC] $@"
-	@ $(CC) $(myCFLAGS) $^ -o $@
+	$(CC) $(myCFLAGS) $^ -o $@
 
-bin/$(TGTDIR)/libGFraMe.bc: | bin/$(TGTDIR)/libGFraMe.mkdir
+bin/web/libGFraMe.bc: | bin/web/libGFraMe.mkdir
 	@ echo "[ CC] $@"
 	$(CC) $(myCFLAGS) -o $@ $(GFRAME_SRC)
