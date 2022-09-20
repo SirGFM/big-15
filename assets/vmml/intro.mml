@@ -1,1 +1,67 @@
-t180;// [bass]@2 o3 l2. q7> r4[a+ g+ f+ g+]7a+ g+ f+ g+2; // [/bass]// [melody]#TABLE 2 { (100, 48)8, (64, 12)8 };#TABLE 3 { 50, 24, 44, 20, 40, 16, 36, 12, 32, 8, 28, 4, 24, 0 };@0 q6o5 l4 na2f a+. g+8a+8g+8f2 c+ d+2c+ >a+2<f a+. g+8a+8g+8<c c+ c> a+2g+ a+2f a+. g+8a+8g+8f2 c+ d+2c+ >a+2<f a+. g+8a+8g+8<c c+ c f2d+ f2><f a+2 g+ d+2>a+< c+2 c d+2f a+2 g+ <c+ c>g+a+2g+a+2f a+2 g+ d+2>a+< c+2 c d+2f a+2 g+ <c>a+g+a+rg+a+r; // [melody]// [percussion]#H=g;#S=v8 b;#K=v10 <g>;#C=na1 q6 g4 na0 q1;#TABLE 0 { 128};#TABLE 1 { 60, 60, 56, 56, 52, 52, 48, 48, 44, 44, 40, 40, 36, 36, 32, 32, 28, 28, 24, 24 };// HiHat + Crash@1 q1 l16 v6 na0 [HHHH r4 Hr8. [Hr8. r4 Hr8.]3]8;// Snare + Kick@1 q1 l16 [[r4 Kr8. r4]3 r4 KrKr Kr8.]8;// [percussion]
+mml2
+
+t180
+
+// [bass]
+w2 o3 l2. q70 env(100, 60, 30, 15, 8)
+
+>
+// |-------|--------|--------|
+     r4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2^
+      4 a+   g+ f+4^  2 g+2
+
+; // [/bass]
+
+// [melody]
+
+w0 q60 env(100, 48, 64, 64, 12)
+
+o5 l4
+
+// |------------------|---------------|-------------|
+     f a+4. g+8a+8g+8   f2    c+ d+4^   4  c+ >a+2<
+     f a+4. g+8a+8g+8   <c c+ c> a+4^   4  g+  a+2
+     f a+4. g+8a+8g+8   f2    c+ d+4^   4  c+ >a+2<
+     f a+4. g+8a+8g+8   <c c+ c   f4^   4  d+  f2>
+
+<
+
+// |----------|---------------|-------------|
+     f a+2 g+   d+2 >a+< c+4^   4 c  d+2
+     f a+2 g+  <c+ c> g+ a+4^   4 g+ a+2
+     f a+2 g+   d+2 >a+< c+4^   4 c  d+2
+     f a+2 g+  <c> a+ g+ a+     r g+ a+ r
+
+; // [melody]
+
+// [HiHat + Crash]
+
+l16
+
+#H v5 w5 o4 l16 k3 q12 h80 g;
+
+[
+    HHHH rrrr Hrrr Hrrr
+    rrrr Hrrr Hrrr rrrr
+    Hrrr Hrrr rrrr Hrrr
+]8
+
+; // [HiHat + Crash]
+
+// Kick
+
+l16
+
+#K w4 o2 l16 k0 q20 h40 env(90, 95, 35, 10, 10) b;
+
+[
+    rrrr Krrr rrrr rrrr
+    Krrr rrrr rrrr Krrr
+    rrrr rrrr KrKr Krrr
+]8
